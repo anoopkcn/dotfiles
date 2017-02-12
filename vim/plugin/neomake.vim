@@ -1,7 +1,7 @@
 autocmd! BufWritePost * Neomake
 
-let g:neomake_error_sign = {'texthl': 'NeomakeErrorSign', 'text': '❗'}
-let g:neomake_warning_sign={'text': '⚠', 'texthl': 'NeomakeErrorMsg'}
+let g:neomake_error_sign = {'texthl': 'NeomakeErrorSign', 'text': '✗'}
+let g:neomake_warning_sign={'texthl': 'NeomakeErrorMsg', 'text': '⚠'}
 let g:neomake_message_sign = {'texthl': 'NeomakeMessageSign', 'text': '¶'}
 let g:neomake_info_sign = {'texthl': 'MyInfoMsg', 'text': '¡'}
 
