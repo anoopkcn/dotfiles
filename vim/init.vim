@@ -159,7 +159,7 @@ let maplocalleader = "\\"
 let g:netrw_banner       = 0
 let g:netrw_liststyle    = 3
 let g:netrw_sort_options = 'i'
-" let g:netrw_winsize = 25
+let g:netrw_winsize = 25
 " let g:netrw_altv=1
 " let g:netrw_browse_split = 4
 " let g:netrw_dirhistmax = 0 "store no history or bookmarks
@@ -256,10 +256,6 @@ highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
-"Markdown
-autocmd BufNewFile,BufReadPost *.md,*.txt,*.html call plugin#functions#plaintext()
-au BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn,README.md  setf markdown
-command! -nargs=* -complete=file Preview call plugin#functions#preview(<f-args>)
 
 "Git
 autocmd Filetype gitcommit setlocal textwidth=72
@@ -269,9 +265,6 @@ au BufReadPost *.html,htm set syntax=html
 
 "Gnuplot
 au BufNewFile,BufRead *.gpl,*.gp setf sh
-
-"Fortran
-"Fortran files are in ~/.dotfiles/vim/dotvim/ftplugin/fortran.vim
 
 runtime macros/matchit.vim
 
