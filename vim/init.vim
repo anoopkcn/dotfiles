@@ -3,7 +3,6 @@
 "- BASIC
 "- MAPPINGS
 "- LANGUAGE
-"- PLUGINS
 
 "Plugins.vim file containing all the plugin settings except the keymap(bottom)
 "Functions.vim file contains all the functions that are used in this file
