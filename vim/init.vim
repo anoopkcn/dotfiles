@@ -189,7 +189,7 @@ vnoremap / /\v
 nnoremap ? ?\v
 vnoremap ? ?\v
 " Switching tabs
-nnoremap tn :tabnew<space>
+nnoremap tn :Texplore<CR>
 map <Leader>p <esc>:tabprevious<CR>
 map <Leader>n <esc>:tabnext<CR>
 
@@ -217,7 +217,7 @@ nnoremap c* *Ncgn
 " Sorting words or characters alphabetically
 " noremap <Leader>s :sort<CR>
 
-nnoremap <leader>k :Vex<CR>
+nnoremap <leader>k :Vexplore<CR>
 "create a file in the current dir and edit it
 nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
@@ -234,8 +234,8 @@ nnoremap <silent> <Leader>h :nohl<CR>
 nnoremap <silent> <leader>l :call plugin#functions#toggle_laststatus()<cr>
 
 
-map <F6> :call plugin#functions#spell()<CR>
-imap <F6> :call plugin#functions#spell()<CR>
+map <localleader>l :call plugin#functions#spell()<CR>
+imap <localleader>l :call plugin#functions#spell()<CR>
 
 "Ignore certain things
 set wildignore+=*.a,*.o
