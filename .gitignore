@@ -1,0 +1,7 @@
+*.swp
+*.un~
+ssh/*
+ssh/config
+tmux/dottmux/*
+tmux/resurrect/*
+*.netrwhist

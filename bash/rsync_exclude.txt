@@ -1,0 +1,14 @@
+out*
+*.save*
+*.out
+*.x
+*.exe
+*.gz
+*.UPF
+*.o
+*.o*
+*.e*
+*.mod
+*.h5
+*.hdf5
+*.wfc*
