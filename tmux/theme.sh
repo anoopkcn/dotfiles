@@ -9,7 +9,7 @@ tm_color_sysinfo=colour110
 tm_separator_left_bold=""
 tm_separator_left_thin=""
 tm_separator_right_bold=""
-tm_separator_right_thin=" ❐ "
+tm_separator_right_thin=" ▣ "
 
 set -g status-left-length 32
 set -g status-right-length 150
