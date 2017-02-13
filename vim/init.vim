@@ -1,13 +1,9 @@
 "                   RUN COMMANDS (rc) file for Vi[M]
 "-----------------------------------------------------------------------
-"- BASIC
-"- MAPPINGS
-"- LANGUAGE
-
-"Plugins.vim file containing all the plugin settings except the keymap(bottom)
-"Functions.vim file contains all the functions that are used in this file
-"[ Tip: go to file using `gf` and `<c+o>` to come back. For opening in a new
-"window use `<c-w>f` or `<c-w>gf` to open it in a new tab. ]
+" Plugins.vim file containing all the plugin settings except the keymap(bottom)
+" Functions.vim file contains all the functions that are used in this file
+" [ Tip: go to file using `gf` and `<c+o>` to come back. For opening in a new
+" split-window use `<c-w>f` or `<c-w>gf` to open it in a new tab. ]
 scriptencoding utf-8
 
 source $HOME/.dotfiles/vim/plugin/plugins.vim
@@ -34,13 +30,13 @@ set visualbell t_vb= "setting visual bell to null
 
 set hidden                            " allows you to hide buffers with unsaved changes without being prompted
 
-"Search Settings
+" Search Settings
 set hlsearch
 set ignorecase
 "set incsearch
 set smartcase
 
-"Swap, Undo and Backup files
+" Swap, Undo and Backup files
 if exists('$SUDO_USER')
 	set nobackup
 	set noswapfile
@@ -55,7 +51,7 @@ else
 	set undofile "poor man's version controll
 endif
 
-"Remember where i left off
+" Remember where i left off
 au BufWinLeave ?* mkview
 au BufWinEnter ?* silent! loadview
 
@@ -64,7 +60,7 @@ set path+=** "Fuzzy file search
 set wildmenu "Display all matching files on tab complete
 set complete+=kspell
 
-"TAB settings "
+" TAB settings "
 set autoindent
 set expandtab
 set shiftround
@@ -83,14 +79,14 @@ set shortmess+=a                      " use abbreviations in messages eg. `[RO]`
 set shortmess+=o                      " overwrite file-written messages
 set shortmess+=t                      " truncate file messages at start
 
-"Show Tabline
+" Show Tabline
 " set showtabline=2
-"Status line settings"
+" Status line settings"
 set statusline=
 " set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%=%-12(\ %c,%l/%L\ %)%P\ %{fugitive#statusline()}
 " hi StatusLine ctermbg=NONE ctermfg=3  cterm=NONE "transparent statusline
 
-"Theme Settings"
+" Theme Settings"
 if has('gui_running')
     set guioptions-=r
     set guioptions-=L
@@ -145,12 +141,19 @@ if has('folding')
 	set foldlevelstart=99
 endif
 
-
 set whichwrap=b,h,l,s,<,>,[,],~
 set wildmode=longest:full,full
 
+" Ignore certain things
+set wildignore+=*.a,*.o
+set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png
+set wildignore+=.DS_Store,.hg,.svn
+set wildignore+=*~,*.swp,*.tmp
+
+runtime macros/matchit.vim
 
 "====================[ MAPPINGS ]====================================="
+"
 " Remapping the leader key
 let mapleader ="\<Space>"
 let maplocalleader = "\\"
@@ -159,8 +162,6 @@ let g:netrw_banner       = 0
 let g:netrw_liststyle    = 3
 let g:netrw_sort_options = 'i'
 let g:netrw_winsize = 25
-" let g:netrw_altv=1
-" let g:netrw_browse_split = 4
 " let g:netrw_dirhistmax = 0 "store no history or bookmarks
 
 " Remove bad Habits
@@ -173,24 +174,17 @@ let g:netrw_winsize = 25
 nnoremap q: <Nop>
 nnoremap Q <Nop>
 
-" Remaping basic keys
-" nnoremap ; :
-
 " Using the dot . to repeat in the visualmode as well
 vnoremap . :normal .<CR>
 
-"readline like behaviour for beging and end of the line
+" Readline like behaviour for beging and end of the line
 nnoremap 9 g_
 
-"Enable magic mode for regex
+" Enable magic mode for regex
 nnoremap / /\v
 vnoremap / /\v
 nnoremap ? ?\v
 vnoremap ? ?\v
-" Switching tabs
-nnoremap tn :Texplore<CR>
-map <Leader>p <esc>:tabprevious<CR>
-map <Leader>n <esc>:tabnext<CR>
 
 " Moving around in split windows
 map <c-j> <c-w>j
@@ -210,60 +204,49 @@ vnoremap > >gv
 vmap Q gq
 nmap Q gqap
 
-"multy variable change
+" Multy variable change
 nnoremap c* *Ncgn
 
-" Sorting words or characters alphabetically
-" noremap <Leader>s :sort<CR>
+" Switching tabs
+nnoremap tn :Texplore<CR>
+
+"-------------------------[ Leader Mappings ]--------------------------------"
+nnoremap <Leader>p <esc>:tabprevious<CR>
+nnoremap <Leader>n <esc>:tabnext<CR>
 
 nnoremap <leader>k :Vexplore<CR>
-"create a file in the current dir and edit it
-nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
-
-"Toggle relative number "
-nnoremap <silent><localleader>n :call plugin#functions#number_toggle()<cr>
 
 " Remove extra whitespace
-nmap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
+nnoremap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
 
 " Redraws the screen and removes any search highlighting.
 nnoremap <silent> <Leader>h :nohl<CR>
 
-"Toggle Status line
+" Toggle Status line
 nnoremap <silent> <leader>l :call plugin#functions#toggle_laststatus()<cr>
 
+"-----------------------------[ LocalLeader Mappings]------------------------"
+" Create a file in the current dir and edit it
+nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
-map <localleader>l :call plugin#functions#spell()<CR>
-imap <localleader>l :call plugin#functions#spell()<CR>
+" Toggle relative number "
+nnoremap <silent><localleader>n :call plugin#functions#number_toggle()<cr>
 
-"Ignore certain things
-set wildignore+=*.a,*.o
-set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png
-set wildignore+=.DS_Store,.hg,.svn
-set wildignore+=*~,*.swp,*.tmp
-
+" Toggle spell settings
+nnoremap <localleader>l :call plugin#functions#spell()<CR>
 
 "===============================[ LANGUAGE ]==========================="
-"Spell Settings
-" set spell spelllang=en_gb
-highlight clear SpellBad
+" Spell Settings
 highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
-highlight clear SpellCap
-highlight SpellCap term=underline cterm=underline
-highlight clear SpellRare
-highlight SpellRare term=underline cterm=underline
-highlight clear SpellLocal
-highlight SpellLocal term=underline cterm=underline
 
+" Spell settings for plintext  markdown and gitcommit
+autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
 
-"Git
+" Git
 autocmd Filetype gitcommit setlocal textwidth=72
 
-"HTML
+" HTML
 au BufReadPost *.html,htm set syntax=html
 
-"Gnuplot
+" Gnuplot
 au BufNewFile,BufRead *.gpl,*.gp setf sh
-
-runtime macros/matchit.vim
-
