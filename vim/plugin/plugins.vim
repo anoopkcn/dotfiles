@@ -29,4 +29,5 @@ call plug#begin('~/.conf/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'airblade/vim-gitgutter'
+  Plug 'morhetz/gruvbox'
 call plug#end()

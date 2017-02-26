@@ -13,7 +13,7 @@ let g:github='https://github.com/strivetobelazy'
 
 "Vim-airline
 set laststatus=2
-let g:airline_theme='solarized'
+let g:airline_theme='gruvbox'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 0
@@ -25,4 +25,5 @@ let g:UltiSnipsExpandTrigger="<c-b>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsMappingsToIgnore = ['autocomplete']
+
 
