@@ -16,18 +16,20 @@ filetype off
 syntax enable
 filetype plugin indent on
 set shellcmdflag=-ic "Exicute shell commands in vim
-set number "relative number is a toogle function <leader>n
+set number "relative number is a toogle function <LocalLeaderleader>n
 set showmatch "Show matching [] and {}
 set formatoptions+=r formatoptions+=c
 set modifiable
-set cursorline
+" set cursorline "slows doen vim
 " set foldmethod=indent
+set lazyredraw
+set synmaxcol=128
+syntax sync minlines=256
 
 " set clipboard+=unnamed "Compile with +clipboard block paste doent work
 "to check `vim --version | grep clipboard`
 
 set visualbell t_vb= "setting visual bell to null
-
 set hidden                            " allows you to hide buffers with unsaved changes without being prompted
 
 " Search Settings
@@ -38,17 +40,17 @@ set smartcase
 
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
-	set nobackup
-	set noswapfile
-	set nowritebackup
-	set noundofile
+    set nobackup
+    set noswapfile
+    set nowritebackup
+    set noundofile
 else
-	let g:netrw_home=$HOME.'/.tmp/'
-	set directory=$HOME/.tmp/vimswap//
-	set backupdir=$HOME/.tmp/vimswap//
-	set undodir=$HOME/.tmp/vimswap//
+    let g:netrw_home=$HOME.'/.tmp/'
+    set directory=$HOME/.tmp/vimswap//
+    set backupdir=$HOME/.tmp/vimswap//
+    set undodir=$HOME/.tmp/vimswap//
     set viewdir=$HOME/.tmp/views//
-	set undofile "poor man's version controll
+    set undofile "poor man's version controll
 endif
 
 " Remember where i left off
@@ -82,29 +84,8 @@ set shortmess+=t                      " truncate file messages at start
 " Show Tabline
 " set showtabline=2
 " Status line settings"
-set statusline=
 " set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%=%-12(\ %c,%l/%L\ %)%P\ %{fugitive#statusline()}
 " hi StatusLine ctermbg=NONE ctermfg=3  cterm=NONE "transparent statusline
-
-" Theme Settings"
-if has('gui_running')
-    set guioptions-=r
-    set guioptions-=L
-else
-    set encoding=utf-8  "UTF-8 encoding to show certain characters
-    set t_Co=256  " Setting terminal to 256 color scheme
-	set background=dark
-	colorscheme solarized
-endif
-
-
-"80 Character Limit "
-" au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>81v.\+', -1) "Highli line>80 l
-" OR
-" if exists('+colorcolumn')
-" 	let &l:colorcolumn='+'.join(range(0,254),',+')
-" endif
-
 
 if has('linebreak')
   set linebreak                       " wrap long lines at characters in 'breakat'
@@ -112,7 +93,7 @@ endif
 
 set list                              " show whitespace
 set listchars=nbsp:⦸
-set listchars+=tab:⇥\ 
+set listchars+=tab:⇥\                 "should be a space after this
 " set listchars+=eol:¬
 " set listchars+=trail:⋅
 set listchars+=extends:❯
@@ -127,18 +108,18 @@ if has('linebreak')
 endif
 
 if has('linebreak')
-	set breakindent
-	if exists('&breakindentopt')
-		set breakindentopt=shift:2
-	endif
+    set breakindent
+    if exists('&breakindentopt')
+        set breakindentopt=shift:2
+    endif
 endif
 
 if has('folding')
-	if has('windows')
-		set fillchars+=vert:│
-	endif
-	set foldmethod=indent
-	set foldlevelstart=99
+    if has('windows')
+        set fillchars+=vert:│
+    endif
+    set foldmethod=indent
+    set foldlevelstart=99
 endif
 
 set whichwrap=b,h,l,s,<,>,[,],~
