@@ -21,6 +21,7 @@ set showmatch "Show matching [] and {}
 set formatoptions+=r formatoptions+=c
 set modifiable
 " set cursorline "slows doen vim
+set nocursorline
 " set foldmethod=indent
 set lazyredraw
 set synmaxcol=128
