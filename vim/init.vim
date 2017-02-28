@@ -15,7 +15,6 @@ set nocompatible "Remove back compatability for vi
 filetype off
 syntax enable
 filetype plugin indent on
-set shellcmdflag=-ic "Exicute shell commands in vim
 set number "relative number is a toogle function <LocalLeaderleader>n
 set showmatch "Show matching [] and {}
 set formatoptions+=r formatoptions+=c
@@ -23,9 +22,11 @@ set modifiable
 " set cursorline "slows doen vim
 set nocursorline
 " set foldmethod=indent
+" Syntax highlighting when needed for fast performance
 set lazyredraw
 set synmaxcol=128
 syntax sync minlines=256
+set spell spelllang=en_gb
 
 " set clipboard+=unnamed "Compile with +clipboard block paste doent work
 "to check `vim --version | grep clipboard`
@@ -64,13 +65,13 @@ set wildmenu "Display all matching files on tab complete
 set complete+=kspell
 
 " TAB settings "
-set autoindent
-set expandtab
-set shiftround
-set shiftwidth=4
-set smartindent
-set softtabstop=4
-set tabstop=4
+    set autoindent
+    set expandtab
+    set shiftround
+    set shiftwidth=4
+    set smartindent
+    set softtabstop=4
+    set tabstop=4
 
 set scrolloff=3                       " start scrolling 3 lines before edge of viewport
 " set shortmess+=A                      " ignore annoying swapfile messages
@@ -92,21 +93,22 @@ if has('linebreak')
   set linebreak                       " wrap long lines at characters in 'breakat'
 endif
 
-set list                              " show whitespace
-set listchars=nbsp:⦸
-set listchars+=tab:⇥\                 "should be a space after this
-" set listchars+=eol:¬
-" set listchars+=trail:⋅
-set listchars+=extends:❯
-set listchars+=precedes:❮
-set listchars+=trail:•
-set nojoinspaces                      " don't autoinsert two spaces after '.', '?', '!' for join command
-set fillchars+=vert:│
-hi VertSplit ctermbg=NONE guibg=NONE
+" List
+    set list                              " show whitespace
+    set listchars=nbsp:⦸
+    set listchars+=tab:⇥\                 "should be a space after this
+    " set listchars+=eol:¬
+    " set listchars+=trail:⋅
+    set listchars+=extends:❯
+    set listchars+=precedes:❮
+    set listchars+=trail:•
+    set nojoinspaces                      " don't autoinsert two spaces after '.', '?', '!' for join command
+    set fillchars+=vert:│
+    hi VertSplit ctermbg=NONE guibg=NONE
 
-if has('linebreak')
-  let &showbreak='⤷ '               " ARROW POINTING DOWNWARDS THEN CURVING RIGHTWARDS (U+2937, UTF-8: E2 A4 B7)
-endif
+    if has('linebreak')
+    let &showbreak='⤷ '               " ARROW POINTING DOWNWARDS THEN CURVING RIGHTWARDS (U+2937, UTF-8: E2 A4 B7)
+    endif
 
 if has('linebreak')
     set breakindent
@@ -182,11 +184,11 @@ vnoremap K :m '<-2<CR>gv=gv
 vnoremap < <gv
 vnoremap > >gv
 
-" Easier formatting of paragrphs
+" Easier formatting of paragraphs
 vmap Q gq
 nmap Q gqap
 
-" Multy variable change
+" Multi variable change
 nnoremap c* *Ncgn
 
 " Switching tabs
@@ -222,13 +224,13 @@ nnoremap <localleader>l :call plugin#functions#spell()<CR>
 highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
 
 " Spell settings for plintext  markdown and gitcommit
-autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
+" autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
 
 " Git
-autocmd Filetype gitcommit setlocal textwidth=72
+" autocmd Filetype gitcommit setlocal textwidth=72
 
 " HTML
-au BufReadPost *.html,htm set syntax=html
+" au BufReadPost *.html,htm set syntax=html
 
 " Gnuplot
-au BufNewFile,BufRead *.gpl,*.gp setf sh
+" au BufNewFile,BufRead *.gpl,*.gp setf sh
