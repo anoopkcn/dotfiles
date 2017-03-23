@@ -1,4 +1,4 @@
-autocmd! BufWritePost,BufEnter * Neomake
+autocmd! BufWritePost * Neomake
 
 highlight NeomakeErrorSign ctermfg=red
 highlight NeomakeErrorMsg ctermfg=227

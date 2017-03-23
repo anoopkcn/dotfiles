@@ -1,6 +1,6 @@
 "ctrlP
 let g:ctrlp_show_hidden = 1
-nmap <silent> <leader>b :CtrlPBuffer<cr>
+nmap <silent> <c-b> :CtrlPBuffer<cr>
 nnoremap <Leader>f :CtrlPFunky<Cr>
 let g:ctrlp_use_caching = 0
 if executable('ag')

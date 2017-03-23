@@ -16,6 +16,7 @@ filetype off
 syntax enable
 filetype plugin indent on
 set number "relative number is a toogle function <LocalLeaderleader>n
+set relativenumber
 set showmatch "Show matching [] and {}
 set formatoptions+=r formatoptions+=c
 set modifiable
@@ -224,13 +225,13 @@ nnoremap <localleader>l :call plugin#functions#spell()<CR>
 highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
 
 " Spell settings for plintext  markdown and gitcommit
-" autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
+ autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
 
 " Git
-" autocmd Filetype gitcommit setlocal textwidth=72
+autocmd Filetype gitcommit setlocal textwidth=72
 
 " HTML
-" au BufReadPost *.html,htm set syntax=html
+au BufReadPost *.html,htm set syntax=html
 
 " Gnuplot
-" au BufNewFile,BufRead *.gpl,*.gp setf sh
+au BufNewFile,BufRead *.gpl,*.gp setf sh

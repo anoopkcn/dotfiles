@@ -1,7 +1,7 @@
 # ~/.tmuxinator/mhpc.yml
 
 name: mhpc
-root: <%= @args[0] %>
+root: ~/Dropbox/Workbench/MHPC
 
 # Optional tmux socket
 # socket_name: foo

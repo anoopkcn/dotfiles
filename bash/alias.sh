@@ -1,7 +1,7 @@
 #vim alias
 alias vi='nvim -u NONE'
 alias e='nvim'
-alias vim='nvim'
+alias vim='/usr/bin/vim'
 
 #tmux alias
 alias ta='tmux attach -t'

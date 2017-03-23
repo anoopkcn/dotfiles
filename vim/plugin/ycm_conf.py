@@ -1,4 +1,5 @@
-# Partially stolen from https://bitbucket.org/mblum/libgp/src/2537ea7329ef/.ycm_extra_conf.py
+# Partially stolen from
+# https://bitbucket.org/mblum/libgp/src/2537ea7329ef/.ycm_extra_conf.py
 import os
 import ycm_core
 
@@ -12,9 +13,11 @@ flags = [
     '-Wno-long-long',
     '-Wno-variadic-macros',
     '-fexceptions',
-    # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
+    # THIS IS IMPORTANT! Without a "-std=<something>" flag,
+    # clang won't know which
     # language to use when compiling headers. So it will guess. Badly. So C++
-    # headers will be compiled as C headers. You don't want that so ALWAYS specify
+    # headers will be compiled as C headers.
+    # You don't want that so ALWAYS specify
     # a "-std=<something>".
     # For a C project, you would set this to something like 'c99' instead of
     # 'c++11'.
@@ -24,7 +27,8 @@ flags = [
     # relevant for c++ headers.
     # For a C project, you would set this to 'c' instead of 'c++'.
     '-x', 'c++',
-    # This path will only work on OS X, but extra paths that don't exist are not
+    # This path will only work on OS X, but extra paths that
+    # don't exist are not
     # harmful
     '-isystem', '/System/Library/Frameworks/Python.framework/Headers',
     '-isystem', '/usr/local/include',

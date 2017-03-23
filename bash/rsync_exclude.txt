@@ -1,10 +1,9 @@
+out
 out*
 *.save*
 *.out
 *.x
 *.exe
-*.gz
-*.UPF
 *.o
 *.o*
 *.e*
