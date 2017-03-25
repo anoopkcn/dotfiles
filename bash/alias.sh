@@ -1,3 +1,4 @@
+#!/bin/bash
 #vim alias
 alias vi='nvim -u NONE'
 alias e='nvim'

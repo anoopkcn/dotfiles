@@ -69,7 +69,7 @@ function! plugin#functions#number_toggle()
   else
     set relativenumber
   endif
-endfunc
+endfunction
 
 "Spelling toggle
 function! plugin#functions#spell()
@@ -79,6 +79,8 @@ function! plugin#functions#spell()
     set nospell
   endif
 endfunction
+
+
 
 "Build Sub Directory if doesnt exists
 "Form : Damian Conway

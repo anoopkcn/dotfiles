@@ -13,6 +13,7 @@ let g:snips_github='https://github.com/strivetobelazy'
 let g:github='https://github.com/strivetobelazy'
 
 "Vim-airline
+set laststatus=1
 " set laststatus=2
 let g:airline_theme='papercolor'
 

@@ -76,7 +76,7 @@ set complete+=kspell
     set tabstop=4
 
 set scrolloff=3                       " start scrolling 3 lines before edge of viewport
-" set shortmess+=A                      " ignore annoying swapfile messages
+set shortmess+=A                      " ignore annoying swapfile messages
 set shortmess+=I                      " no splash screen
 set shortmess+=O                      " file-read message overwrites previous
 set shortmess+=T                      " truncate non-file messages in middle
@@ -84,6 +84,7 @@ set shortmess+=W                      " don't echo "[w]"/"[written]" when writin
 set shortmess+=a                      " use abbreviations in messages eg. `[RO]` instead of `[readonly]`
 set shortmess+=o                      " overwrite file-written messages
 set shortmess+=t                      " truncate file messages at start
+" set cmdheight=4
 
 " Show Tabline
 " set showtabline=2
@@ -222,9 +223,6 @@ nnoremap <silent><localleader>n :call plugin#functions#number_toggle()<cr>
 nnoremap <localleader>l :call plugin#functions#spell()<CR>
 
 "===============================[ LANGUAGE ]==========================="
-" Spell Settings
-" highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
-
 " Spell settings for plintext  markdown and gitcommit
  autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
 
