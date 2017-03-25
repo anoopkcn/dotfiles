@@ -6,8 +6,11 @@ out*
 *.exe
 *.o
 *.o*
+*.a
 *.e*
 *.mod
 *.h5
 *.hdf5
 *.wfc*
+*.pdf
+*.git

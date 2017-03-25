@@ -7,7 +7,7 @@ call plug#begin('~/.conf/plugged')
 "linter
  Plug 'neomake/neomake'
 "Autocomplete
-  Plug 'Valloric/YouCompleteMe'
+  " Plug 'Valloric/YouCompleteMe'
 "snippets
   Plug 'SirVer/ultisnips'
   Plug 'honza/vim-snippets'
@@ -20,14 +20,13 @@ call plug#begin('~/.conf/plugged')
   Plug 'godlygeek/tabular'
 "Latex Support
   Plug 'vim-latex/vim-latex'
-"html
-  Plug 'mattn/emmet-vim'
 "YAML
- Plug 'stephpy/vim-yaml'
+  Plug 'stephpy/vim-yaml'
 "Others
   " Plug 'strivetobelazy/vim-startify' "forked from mhinz
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   " Plug 'airblade/vim-gitgutter'
-  Plug 'morhetz/gruvbox'
+  " Plug 'morhetz/gruvbox'
+  Plug 'NLKNguyen/papercolor-theme'
 call plug#end()

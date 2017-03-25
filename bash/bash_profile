@@ -10,3 +10,4 @@ export PATH="/usr/local/bin:$PATH"
 
 # added by Anaconda3 4.3.0 installer
 export PATH="/Users/lazy/conda3/bin:$PATH"
+

@@ -20,6 +20,7 @@ set relativenumber
 set showmatch "Show matching [] and {}
 set formatoptions+=r formatoptions+=c
 set modifiable
+set backspace =indent,eol,start
 " set cursorline "slows doen vim
 set nocursorline
 " set foldmethod=indent
@@ -222,7 +223,7 @@ nnoremap <localleader>l :call plugin#functions#spell()<CR>
 
 "===============================[ LANGUAGE ]==========================="
 " Spell Settings
-highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
+" highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
 
 " Spell settings for plintext  markdown and gitcommit
  autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
