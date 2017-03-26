@@ -28,12 +28,20 @@ nnoremap <localleader>l :call plugin#functions#spell()<CR>
 
 
 "===============================[ LANGUAGE ]==========================="
+
+augroup vimrc
+   au FileType gitcommit nnoremap <buffer> <silent> cd :<C-U>Gcommit --amend --date="$(date)"<CR>
+    " Automatic rename of tmux window
+    if exists('$TMUX') && !exists('$NORENAME')
+        au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
+        au VimLeave * call system('tmux set-window automatic-rename on')
+    endif
+augroup END
 " Spell settings for plintext  markdown and gitcommit
 autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
 
 " Git
 autocmd Filetype gitcommit setlocal textwidth=72
-au FileType gitcommit nnoremap <buffer> <silent> cd :<C-U>Gcommit --amend --date="$(date)"<CR>
 
 " HTML
 au BufReadPost *.html,htm set syntax=html
@@ -101,3 +109,5 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
+
+
