@@ -228,3 +228,5 @@ au BufReadPost *.html,htm set syntax=html
 
 " Gnuplot
 au BufNewFile,BufRead *.gpl,*.gp setf sh
+
+
