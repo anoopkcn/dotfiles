@@ -19,14 +19,35 @@ source ~/.dotfiles/bash/git-prompt.sh
 source ~/.dotfiles/bash/alias.sh
 source ~/.dotfiles/bash/functions.sh
 source ~/.dotfiles/bash/git-completion.bash
+source ~/.dotfiles/bash/fzf_functions.sh
 
 ## Add git branch if its present to PS1
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
-export PS1='\[\033[00;32m\]\u@Anoop \[\033[00;33m\]\W\[\033[00;34m\]$(__git_ps1)\[\033[01;32m\] >\[\033[00m\]'
+# parse_git_branch() {
+#      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+# }
+# export PS1='\[\033[00;32m\]\u@Anoop \[\033[00;33m\]\W\[\033[00;34m\]$(__git_ps1)\[\033[01;32m\] >\[\033[00m\]'
+#
+# export GIT_PS1_SHOWDIRTYSTATE=1
 
-export GIT_PS1_SHOWDIRTYSTATE=1
+
+# Prompt
+# --------------------------------------------------------------------
+
+if [ "$PLATFORM" = Linux ]; then
+  PS1="\[\e[1;38m\]\u\[\e[1;34m\]@\[\e[1;31m\]\h\[\e[1;30m\]:"
+  PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
+else
+  ### git-prompt
+  __git_ps1() { :;}
+  if [ -e ~/.git-prompt.sh ]; then
+    source ~/.git-prompt.sh
+  fi
+  # PROMPT_COMMAND='history -a; history -c; history -r; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%m/%d\ %H:%M:%S))"'
+  PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%m/%d\ %H:%M:%S))"'
+  PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]\h\[\e[35m\]:"
+  PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
+fi
+
 
 export VISUAL=vim
 export EDITOR="$VISUAL"
@@ -38,9 +59,9 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-# export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
-export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
---height 30% --reverse --inline-info --border
---color=light,fg:#333333,bg:#eaf5fb,bg+:#eaf5fb,hl:#b82e2e,hl+:#b82e2e,info:27
+--height 30% --reverse --inline-info
+--color=light,fg:#333333,bg:#e7f3fe,bg+:#e7f3fe,hl:#b82e2e,hl+:#b82e2e,info:27
 '
