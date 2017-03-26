@@ -38,12 +38,9 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_OPTS='--height 25% --reverse --border'
+# export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_DEFAULT_COMMAND='ag -g ""'
-export FZF_DEFAULT_OPTS="--reverse --inline-info"
-export FZF_TMUX='1'
-export FZF_TMUX_HEIGHT='25%'
-# Solarized colors
 export FZF_DEFAULT_OPTS='
---color=light,fg:#333333,bg:#d9d9d9,bg+:#d9d9d9,hl:#009900,hl+:#009900,info:27
+--height 30% --reverse --inline-info --border
+--color=light,fg:#333333,bg:#eaf5fb,bg+:#eaf5fb,hl:#b82e2e,hl+:#b82e2e,info:27
 '
