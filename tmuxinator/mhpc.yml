@@ -31,11 +31,11 @@ root: ~/Dropbox/Workbench/MHPC
 # post: tmux -CC attach -t test
 
 windows:
-  - editor:
+  - local:
       layout: main-vertical
       panes:
         - clear
-  - local:
+  - remote:
       layout: main-vertical
       panes:
         - clear

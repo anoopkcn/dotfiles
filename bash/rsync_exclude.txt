@@ -1,3 +1,5 @@
+.git
+.gitignore
 out
 out*
 *.save*
@@ -14,3 +16,5 @@ out*
 *.wfc*
 *.pdf
 *.git
+*.html
+*.htm

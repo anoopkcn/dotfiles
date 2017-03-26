@@ -1,11 +1,14 @@
 "Plug plugin manager
 call plug#begin('~/.conf/plugged')
 "File Navigation
-  Plug 'kien/ctrlp.vim'
+  " Plug 'kien/ctrlp.vim'
+  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
   Plug 'tacahiroy/ctrlp-funky'
   Plug 'tpope/vim-vinegar'
 "linter
- Plug 'neomake/neomake'
+  Plug 'neomake/neomake'
+" ctags append
+  Plug 'craigemery/vim-autotag'
 "Autocomplete
   " Plug 'Valloric/YouCompleteMe'
 "snippets
@@ -21,7 +24,7 @@ call plug#begin('~/.conf/plugged')
 "Latex Support
   Plug 'vim-latex/vim-latex'
 "YAML
-  Plug 'stephpy/vim-yaml'
+    Plug 'stephpy/vim-yaml'
 "Others
   " Plug 'strivetobelazy/vim-startify' "forked from mhinz
   Plug 'vim-airline/vim-airline'

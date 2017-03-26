@@ -1,6 +1,6 @@
-# ~/.tmuxinator/code.yml
+# ~/.tmuxinator/uly.yml
 
-name: code
+name: uly
 root: <%= @args[0] %>
 
 # Optional tmux socket
@@ -31,11 +31,11 @@ root: <%= @args[0] %>
 # post: tmux -CC attach -t test
 
 windows:
-  - bash:
+  - local:
       layout: main-vertical
       panes:
         - clear
-  - editor:
+  - remote:
       layout: main-vertical
       panes:
-        - clear && vim
+        - ssh uly

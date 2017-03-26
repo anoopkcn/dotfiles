@@ -36,3 +36,14 @@ export GREP_OPTIONS='--color=auto'
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export FZF_DEFAULT_OPTS='--height 25% --reverse --border'
+export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_DEFAULT_OPTS="--reverse --inline-info"
+export FZF_TMUX='1'
+export FZF_TMUX_HEIGHT='25%'
+# Solarized colors
+export FZF_DEFAULT_OPTS='
+--color=light,fg:#333333,bg:#d9d9d9,bg+:#d9d9d9,hl:#009900,hl+:#009900,info:27
+'
