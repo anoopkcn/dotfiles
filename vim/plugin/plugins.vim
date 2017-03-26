@@ -28,4 +28,5 @@ call plug#begin('~/.conf/plugged')
 "Others
   " Plug 'morhetz/gruvbox'
   Plug 'NLKNguyen/papercolor-theme'
+  Plug 'junegunn/goyo.vim'
 call plug#end()

@@ -1,3 +1,5 @@
+"
+"=======[ General Settings ]===========
 let s:darwin = has('mac')
 ":Root | Change directory to the root of the Git repository
 function! s:root()
@@ -20,7 +22,10 @@ if s:darwin
   \ :call system('"atom" '.expand('%:p'))<cr>
 endif
 
-"======================[ PLUGINS ]====================================="
+"======================[ PLUGINS ]========================"
+let g:goyo_width=95
+let g:goyo_height=90
+
 " Snippets variables
 let g:snips_author='Anoop Chandran'
 let g:author='Anoop Chandran'
