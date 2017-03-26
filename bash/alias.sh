@@ -1,6 +1,14 @@
 #!/bin/bash
-#vim alias
-alias vi='nvim -u NONE'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias cd.='cd ..'
+alias cd..='cd ..'
+alias l='ls -alF'
+alias ll='ls -l'
+alias vi='vim -u NONE'
 alias e='nvim'
 
 #tmux alias
@@ -11,8 +19,6 @@ alias tsend='tmux send -t'
 alias tkill='tmux kill-session -t'
 alias ts='tmuxinator start'
 
-#git alias
-alias gstatus='git status'
-alias gwrite='git add'
-alias gcommit='git commit'
-alias gdiff='git diff'
+
+#git
+alias gs='git status'

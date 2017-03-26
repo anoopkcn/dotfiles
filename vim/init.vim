@@ -4,6 +4,7 @@
 " Functions.vim file contains all the functions that are used in this file
 " [ Tip: go to file using `gf` and `<c+o>` to come back. For opening in a new
 " split-window use `<c-w>f` or `<c-w>gf` to open it in a new tab. ]
+
 scriptencoding utf-8
 
 source $HOME/.dotfiles/vim/plugin/plugins.vim
@@ -24,6 +25,7 @@ set backspace =indent,eol,start
 " set cursorline "slows doen vim
 set nocursorline
 " set foldmethod=indent
+
 " Syntax highlighting when needed for fast performance
 set lazyredraw
 set synmaxcol=128
@@ -34,7 +36,7 @@ set spell spelllang=en_gb
 "to check `vim --version | grep clipboard`
 
 set visualbell t_vb= "setting visual bell to null
-set hidden                            " allows you to hide buffers with unsaved changes without being prompted
+set hidden  " allows you to hide buffers with unsaved changes without being prompted
 
 " Search Settings
 set hlsearch
@@ -84,13 +86,7 @@ set shortmess+=W                      " don't echo "[w]"/"[written]" when writin
 set shortmess+=a                      " use abbreviations in messages eg. `[RO]` instead of `[readonly]`
 set shortmess+=o                      " overwrite file-written messages
 set shortmess+=t                      " truncate file messages at start
-" set cmdheight=4
 
-" Show Tabline
-" set showtabline=2
-" Status line settings"
-" set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%=%-12(\ %c,%l/%L\ %)%P\ %{fugitive#statusline()}
-" hi StatusLine ctermbg=NONE ctermfg=3  cterm=NONE "transparent statusline
 
 if has('linebreak')
   set linebreak                       " wrap long lines at characters in 'breakat'
@@ -164,9 +160,6 @@ nnoremap Q <Nop>
 " Using the dot . to repeat in the visualmode as well
 vnoremap . :normal .<CR>
 
-" Readline like behaviour for beging and end of the line
-nnoremap 9 g_
-
 " Enable magic mode for regex
 nnoremap / /\v
 vnoremap / /\v
@@ -210,6 +203,7 @@ nnoremap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
 nnoremap <silent> <Leader>h :nohl<CR>
 
 " Toggle Status line
+set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
 nnoremap <silent> <leader>l :call plugin#functions#toggle_laststatus()<cr>
 
 "-----------------------------[ LocalLeader Mappings]------------------------"

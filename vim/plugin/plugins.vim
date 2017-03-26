@@ -26,10 +26,6 @@ call plug#begin('~/.conf/plugged')
 "YAML
     Plug 'stephpy/vim-yaml'
 "Others
-  " Plug 'strivetobelazy/vim-startify' "forked from mhinz
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
-  " Plug 'airblade/vim-gitgutter'
   " Plug 'morhetz/gruvbox'
   Plug 'NLKNguyen/papercolor-theme'
 call plug#end()

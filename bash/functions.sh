@@ -1,6 +1,4 @@
 #!/bin/bash
-source ~/.dotfiles/bash/git-prompt.sh
-
 #system information
 function system(){
 clear
