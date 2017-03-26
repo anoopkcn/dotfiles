@@ -11,5 +11,3 @@ let fortran_do_enddo=1
 autocmd filetype fortran nnoremap <leader>e :w <bar> exec '!gfortran '
       \.shellescape('%').' -o '.shellescape('%:r').'
       \&& ./'.shellescape('%:r')<CR>
-"Easy aligh
-nnoremap <silent><leader>a :%EasyAlign /::/<CR>

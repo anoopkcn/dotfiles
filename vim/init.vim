@@ -2,8 +2,6 @@
 "-----------------------------------------------------------------------
 " Plugins.vim file containing all the plugin settings except the keymap(bottom)
 " Functions.vim file contains all the functions that are used in this file
-" [ Tip: go to file using `gf` and `<c+o>` to come back. For opening in a new
-" split-window use `<c-w>f` or `<c-w>gf` to open it in a new tab. ]
 
 scriptencoding utf-8
 
@@ -16,13 +14,12 @@ set nocompatible "Remove back compatability for vi
 filetype off
 syntax enable
 filetype plugin indent on
+
 set number "relative number is a toogle function <LocalLeaderleader>n
-set relativenumber
 set showmatch "Show matching [] and {}
 set formatoptions+=r formatoptions+=c
 set modifiable
 set backspace =indent,eol,start
-" set cursorline "slows doen vim
 set nocursorline
 " set foldmethod=indent
 
@@ -86,7 +83,6 @@ set shortmess+=W                      " don't echo "[w]"/"[written]" when writin
 set shortmess+=a                      " use abbreviations in messages eg. `[RO]` instead of `[readonly]`
 set shortmess+=o                      " overwrite file-written messages
 set shortmess+=t                      " truncate file messages at start
-
 
 if has('linebreak')
   set linebreak                       " wrap long lines at characters in 'breakat'
@@ -189,44 +185,3 @@ nnoremap c* *Ncgn
 
 " Switching tabs
 nnoremap tn :Texplore<CR>
-
-"-------------------------[ Leader Mappings ]--------------------------------"
-nnoremap <Leader>p <esc>:tabprevious<CR>
-nnoremap <Leader>n <esc>:tabnext<CR>
-
-nnoremap <leader>k :Vexplore<CR>
-
-" Remove extra whitespace
-nnoremap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
-
-" Redraws the screen and removes any search highlighting.
-nnoremap <silent> <Leader>h :nohl<CR>
-
-" Toggle Status line
-set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
-nnoremap <silent> <leader>l :call plugin#functions#toggle_laststatus()<cr>
-
-"-----------------------------[ LocalLeader Mappings]------------------------"
-" Create a file in the current dir and edit it
-nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
-
-" Toggle relative number "
-nnoremap <silent><localleader>n :call plugin#functions#number_toggle()<cr>
-
-" Toggle spell settings
-nnoremap <localleader>l :call plugin#functions#spell()<CR>
-
-"===============================[ LANGUAGE ]==========================="
-" Spell settings for plintext  markdown and gitcommit
- autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
-
-" Git
-autocmd Filetype gitcommit setlocal textwidth=72
-
-" HTML
-au BufReadPost *.html,htm set syntax=html
-
-" Gnuplot
-au BufNewFile,BufRead *.gpl,*.gp setf sh
-
-
