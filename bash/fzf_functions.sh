@@ -1,19 +1,19 @@
 #!/bin/bash
 fzf-down() {
-  fzf --height 50% "$@" --border
+  fzf --height 35% "$@" --border
 }
 
 # fd - cd to selected directory
 fd() {
   local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
+  dir=$(find ${1:-.} -type d 2> /dev/null | fzf-down +m) && cd "$dir"
 }
 
 # fdf - cd into the directory of the selected file
 fdf() {
    local file
    local dir
-   file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+   file=$(fzf-down +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
 }
 
 # v - open files in ~/.viminfo
@@ -22,7 +22,7 @@ v() {
   files=$(grep '^>' ~/.viminfo | cut -c3- |
           while read line; do
             [ -f "${line/\~/$HOME}" ] && echo "$line"
-          done | fzf -d -m -q "$*" -1) && vim ${files//\~/$HOME}
+          done | fzf-down -d -m -q "$*" -1) && vim ${files//\~/$HOME}
 }
 
 # ftags - search ctags
@@ -31,7 +31,7 @@ ftags() {
   [ -e tags ] &&
   line=$(
     awk 'BEGIN { FS="\t" } !/^!/ {print toupper($4)"\t"$1"\t"$2"\t"$3}' tags |
-    cut -c1-$COLUMNS | fzf --nth=2 --tiebreak=begin
+    cut -c1-$COLUMNS | fzf-down --nth=2 --tiebreak=begin
   ) && $EDITOR $(cut -f3 <<< "$line") -c "set nocst" \
                                       -c "silent tag $(cut -f2 <<< "$line")"
 }
@@ -43,7 +43,7 @@ ftags() {
 #   - Exit if there's no match (--exit-0)
 fe() {
   local file
-  file=$(fzf --query="$1" --select-1 --exit-0)
+  file=$(fzf-down --query="$1" --select-1 --exit-0)
   [ -n "$file" ] && ${EDITOR:-vim} "$file"
 }
 # Modified version where you can press
@@ -51,7 +51,7 @@ fe() {
 #   - CTRL-E or Enter key to open with the $EDITOR
 fo() {
   local out file key
-  IFS=$'\n' read -d '' -r -a out < <(fzf --query="$1" --exit-0 --expect=ctrl-o,ctrl-e)
+  IFS=$'\n' read -d '' -r -a out < <(fzf-down --query="$1" --exit-0 --expect=ctrl-o,ctrl-e)
   key=${out[0]}
   file=${out[1]}
   if [ -n "$file" ]; then
@@ -82,7 +82,7 @@ fco() {
 fshow() {
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+  fzf-down --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
       --header "Press CTRL-S to toggle sort" \
       --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
                  xargs -I % sh -c 'git show --color=always % | head -200 '" \
@@ -94,7 +94,7 @@ fshow() {
 fcoc() {
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
-  commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+  commit=$(echo "$commits" | fzf-down --tac +s +m -e) &&
   git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
@@ -103,7 +103,7 @@ fcoc() {
 fsha() {
   local commits commit
   commits=$(git log --color=always --pretty=oneline --abbrev-commit --reverse) &&
-  commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse) &&
+  commit=$(echo "$commits" | fzf-down --tac +s +m -e --ansi --reverse) &&
   echo -n $(echo "$commit" | sed "s/ .*//")
 }
 
@@ -116,7 +116,7 @@ fstash() {
   local out q k sha
   while out=$(
     git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
-    fzf --ansi --no-sort --query="$q" --print-query \
+    fzf-down --ansi --no-sort --query="$q" --print-query \
         --expect=ctrl-d,ctrl-b);
   do
     mapfile -t out <<< "$out"
@@ -174,7 +174,7 @@ gh() {
   is_in_git_repo || return
   git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
   fzf-down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
-    --header 'Press CTRL-S to toggle sort' \
+   --header 'Press CTRL-S to toggle sort' \
     --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
   grep -o "[a-f0-9]\{7,\}"
 }

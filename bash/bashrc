@@ -29,9 +29,9 @@ else
   if [ -e ${git_prompt} ]; then
     source ${git_prompt}
   fi
-  PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
-  # PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%m/%d\ %H:%M:%S))"'
-  PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]\h\[\e[35m\]:"
+  # PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
+  PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%d/%m\ %H:%M:%S))"'
+  PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]anoop\[\e[35m\]:"
   PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
 fi
 export GIT_PS1_SHOWDIRTYSTATE=1
@@ -50,9 +50,9 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
---height 30% --reverse --inline-info
---color=light,fg:#333333,bg:#e7f3fe,bg+:#e7f3fe,hl:#b82e2e,hl+:#b82e2e,info:27
-'
+--border --height 35% --reverse --inline-info --color=light,fg:232,bg:255,bg+:255,hl:196,hl+:196,info:27'
+# export FZF_TMUX="1"
+# export FZF_TMUX_HEIGHT="35"
 
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'

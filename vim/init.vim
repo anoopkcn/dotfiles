@@ -51,9 +51,12 @@ else
     let g:netrw_home=$HOME.'/.tmp/'
     set directory=$HOME/.tmp/vimswap//
     set backupdir=$HOME/.tmp/vimswap//
-    set undodir=$HOME/.tmp/vimswap//
     set viewdir=$HOME/.tmp/views//
     set undofile "poor man's version controll
+endif
+if has("persistent_undo")
+    set undodir=$HOME/.tmp/vimswap//
+    set undofile
 endif
 
 " Remember where i left off
@@ -135,7 +138,7 @@ runtime macros/matchit.vim
 "
 " Remapping the leader key
 let mapleader ="\<Space>"
-let maplocalleader = "\\"
+let maplocalleader = "\,"
 
 let g:netrw_banner       = 0
 let g:netrw_liststyle    = 3
@@ -185,3 +188,18 @@ nnoremap c* *Ncgn
 
 " Switching tabs
 nnoremap tn :Texplore<CR>
+
+" ctags
+set tags=./tags
+
+" Spell settings for plintext  markdown and gitcommit
+autocmd BufNewFile,BufReadPost *.md,*.txt,*.html,gitcommit call plugin#functions#plaintext()
+
+" Git
+autocmd Filetype gitcommit setlocal textwidth=72
+
+" HTML
+au BufReadPost *.html,htm set syntax=html
+
+" Gnuplot
+au BufNewFile,BufRead *.gpl,*.gp setf sh
