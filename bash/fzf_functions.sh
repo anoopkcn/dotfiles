@@ -37,7 +37,6 @@ ftags() {
 }
 
 
-
 # fe [FUZZY PATTERN] - Open the selected file with the default editor
 #   - Bypass fuzzy finder if there's only one match (--select-1)
 #   - Exit if there's no match (--exit-0)
@@ -64,8 +63,27 @@ fo() {
 }
 
 #=========[ GIT ]===========
-# fco - checkout git branch/tag
-fco() {
+
+is_in_git_repo() {
+  git rev-parse HEAD > /dev/null 2>&1
+}
+
+# gshow - git commit browser
+gshow() {
+  is_in_git_repo || return
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf-down --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --header "Press CTRL-S to toggle sort" \
+      --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
+                 xargs -I % sh -c 'git show --color=always % | head -200 '" \
+      --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
+              xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
+}
+
+# gco - checkout git branch/tag
+gco() {
+  is_in_git_repo || return
   local tags branches target
   tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
   branches=$(
@@ -78,41 +96,32 @@ fco() {
   git checkout $(echo "$target" | awk '{print $2}')
 }
 
-# fshow - git commit browser
-fshow() {
-  git log --graph --color=always \
-      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf-down --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --header "Press CTRL-S to toggle sort" \
-      --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-                 xargs -I % sh -c 'git show --color=always % | head -200 '" \
-      --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-              xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
-}
-
-# fcoc - checkout git commit
-fcoc() {
+# gcoc - checkout git commit
+gcoc() {
+  is_in_git_repo || return
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
   commit=$(echo "$commits" | fzf-down --tac +s +m -e) &&
   git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
-# fcs - get git commit sha
-# example usage: git rebase -i `fsha`
-fsha() {
+# gsha - get git commit sha
+# example usage: git rebase -i `gsha`
+gsha() {
+  is_in_git_repo || return
   local commits commit
   commits=$(git log --color=always --pretty=oneline --abbrev-commit --reverse) &&
   commit=$(echo "$commits" | fzf-down --tac +s +m -e --ansi --reverse) &&
   echo -n $(echo "$commit" | sed "s/ .*//")
 }
 
-# fstash - easier way to deal with stashes
-# type fstash to get a list of your stashes
+# gstash - easier way to deal with stashes
+# type gstash to get a list of your stashes
 # enter shows you the contents of the stash
 # ctrl-d shows a diff of the stash against your current HEAD
 # ctrl-b checks the stash out as a branch, for easier merging
-fstash() {
+gstash() {
+  is_in_git_repo || return
   local out q k sha
   while out=$(
     git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
@@ -136,15 +145,6 @@ fstash() {
   done
 }
 
-
-
-#other git stuff
-# GIT heart FZF
-# -------------
-
-is_in_git_repo() {
-  git rev-parse HEAD > /dev/null 2>&1
-}
 
 gf() {
   is_in_git_repo || return
