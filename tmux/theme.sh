@@ -25,12 +25,12 @@ set-option -g status-attr default
 # default window title colors
 set-window-option -g window-status-fg $tm_color_inactive
 set-window-option -g window-status-bg default
-set -g window-status-format "#I:#W#F"
+set -g window-status-format "#I:#W[#F]"
 
 # active window title colors
 set-window-option -g window-status-current-fg $tm_color_active
 set-window-option -g window-status-current-bg default
-set-window-option -g  window-status-current-format "#[bold]#I:#W#F"
+set-window-option -g  window-status-current-format "#[bold]#I:#W[#F]"
 
 # pane border
 set-option -g pane-border-fg $tm_color_inactive
@@ -50,7 +50,7 @@ set-window-option -g clock-mode-colour $tm_color_active
 # tm_sysinfo=" #[fg=$tm_color_sysinfo,bright]#(tmux-mem-cpu-load -m 2 -g 0 -a 1)"
 tm_date="#[fg=colour115]%d-%b#[fg=colour95] %l:%M"
 tm_host="#[fg=$tm_color_feature,bold]@Anoop"
-tm_session_name="#[fg=$tm_color_feature,bold]$tm_separator_left_thin[#S]"
+tm_session_name="#[fg=$tm_color_feature,bold]$tm_separator_left_thin(#S) "
 
 #settings
 set -g status-left '' #$tm_separator_right_thin

@@ -22,17 +22,23 @@ source ~/.dotfiles/bash/fzf_functions.sh
 
 if [ "$PLATFORM" = Linux ]; then
   PS1="\[\e[1;38m\]\u\[\e[1;34m\]@\[\e[1;31m\]\h\[\e[1;30m\]:"
-  PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
+  truncDir='$(pwd|awk -F/ -v "n=$(tput cols)" -v "h=^$HOME" '\''{sub(h,"~");n=0.3*n;b=$1"/"$2} length($0)<=n || NF==3 {print;next;} NF>3{b=b"/../"; e=$NF; n-=length(b $NF); for (i=NF-1;i>3 && n>length(e)+1;i--) e=$i"/"e;} {print b e;}'\'') '
+  # PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
+  # PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
+  PS1="$PS1\[\e[m\]$truncDir\[\e[1;31m\]> \[\e[0m\]"
 else
   ### git-prompt
   __git_ps1() { :;}
   if [ -e ${git_prompt} ]; then
     source ${git_prompt}
   fi
-  # PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
-  PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%d/%m\ %H:%M:%S))"'
+  PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
+  # PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%d/%m\ %H:%M:%S))"'
   PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]anoop\[\e[35m\]:"
-  PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
+
+  truncDir='$(pwd|awk -F/ -v "n=$(tput cols)" -v "h=^$HOME" '\''{sub(h,"~");n=0.3*n;b=$1"/"$2} length($0)<=n || NF==3 {print;next;} NF>3{b=b"/../"; e=$NF; n-=length(b $NF); for (i=NF-1;i>3 && n>length(e)+1;i--) e=$i"/"e;} {print b e;}'\'') '
+  # PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
+  PS1="$PS1\[\e[m\]$truncDir\[\e[1;31m\]> \[\e[0m\]"
 fi
 export GIT_PS1_SHOWDIRTYSTATE=1
 
@@ -50,10 +56,14 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
---border --height 35% --reverse --inline-info --color=light,fg:232,bg:255,bg+:255,hl:196,hl+:196,info:27'
+--height 35% --reverse --inline-info 
+--color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
+--color info:150,prompt:110,spinner:150,pointer:167,marker:174
+'
+# --color=light,fg:232,bg:255,bg+:255,hl:196,hl+:196,info:27'
 # export FZF_TMUX="1"
 # export FZF_TMUX_HEIGHT="35"
-
+#
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
 bind '"\C-g\C-b": "$(gb)\e\C-e\er"'

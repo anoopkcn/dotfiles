@@ -23,7 +23,7 @@ let g:neomake_c_gcc_maker = {
 let g:neomake_fortran_gfortran_maker = {
             \ 'errorformat': '%-C %#,'.'%-C  %#%.%#,'.'%A%f:%l%[.:]%c:,'.
             \ '%Z%\m%\%%(Fatal %\)%\?%trror: %m,'.'%Z%tarning: %m,'.'%-G%.%#',
-            \'args':['-fsyntax-only', '-Wall', '-Wextra',
+            \'args':['-fsyntax-only', '-cpp', '-Wall', '-Wextra',
             \'-I.', '-I./modules/.', '-I../modules/.'
         \],
         \}

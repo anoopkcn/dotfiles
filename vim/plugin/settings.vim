@@ -2,11 +2,17 @@
 "=== ===[ General Settings ]===========
 let s:darwin = has('mac')
 
+"change gutter color
+highlight clear SignColumn
+
 "-------------------------[ Leader Mappings ]--------------------------------"
+"TODO
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
 nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
+nmap     <Leader>g :Gstatus<CR>gg<c-n>
+nnoremap <Leader>d :Gdiff<CR>
 
 " Remove extra whitespace
 nnoremap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
@@ -15,9 +21,11 @@ nnoremap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
 nnoremap <silent> <Leader>h :nohl<CR>
 
 " Toggle Status line
-set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
+" set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
 
 nnoremap <silent> <leader>l :call plugin#functions#toggle_laststatus()<cr>
+
+nnoremap <localleader>bs :cex []<BAR>bufdo vimgrepadd @@g %<BAR>cw<s-left><s-left><right>
 
 "-----------------------------[ LocalLeader Mappings]------------------------"
 " Create a file in the current dir and edit it
@@ -28,7 +36,6 @@ nnoremap <silent><localleader>r :call plugin#functions#number_toggle()<cr>
 
 " Toggle spell settings
 nnoremap <localleader>l :call plugin#functions#spell()<CR>
-
 "===============================[ LANGUAGE ]==========================="
 
 augroup vimrc
@@ -56,7 +63,7 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 
 " open atom
 if s:darwin
-  nnoremap <silent> <leader>ia
+  nnoremap <silent> <leader>1
   \ :call system('"atom" '.expand('%:p'))<cr>
 endif
 
@@ -66,15 +73,20 @@ set diffopt+=vertical
 
 "NerdTree
 " <F10> | NERD Tree
-nnoremap <C-k> :NERDTreeToggle<cr>
+nnoremap <leader>k :NERDTreeToggle<cr>
 
 "Ultisnips
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-a>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:snips_author="Anoop Chandran"
 let g:snips_email="strivetobelazy@gmail.com"
 let g:snips_github="https://github.com/strivetobelazy"
+
+
+"airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_min_count =2
 
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
@@ -93,16 +105,6 @@ nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
 nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
 xnoremap <leader>? "gy:call <SID>goog(@g, 0)<cr>gv
 xnoremap <leader>! "gy:call <SID>goog(@g, 1)<cr>gv
-
-"fzf file completio and other functions
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
 
 "undotree
 " let g:undotree_WindowLayout = 2
@@ -140,7 +142,6 @@ nnoremap <silent> gi :<c-u>call <SID>go_indent(v:count1, 1)<cr>
 nnoremap <silent> gpi :<c-u>call <SID>go_indent(v:count1, -1)<cr>
 
 
-
 " If buffer modified, update any 'Last modified: ' in the first 20 lines.
 " 'Last modified: ' can have up to 10 characters before (they are retained).
 " Restores cursor and window position using save_cursor variable.
@@ -155,3 +156,39 @@ function! LastModified()
   endif
 endfun
 autocmd BufWritePre * call LastModified()
+
+function! s:todo() abort
+  let entries = []
+  for cmd in ['git grep -niI -e TODO -e FIXME -e XXX 2> /dev/null',
+            \ 'grep -rniI -e TODO -e FIXME -e XXX * 2> /dev/null']
+    let lines = split(system(cmd), '\n')
+    if v:shell_error != 0 | continue | endif
+    for line in lines
+      let [fname, lno, text] = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')[1:3]
+      call add(entries, { 'filename': fname, 'lnum': lno, 'text': text })
+    endfor
+    break
+  endfor
+
+  if !empty(entries)
+    call setqflist(entries)
+    copen
+  endif
+endfunction
+command! Todo call s:todo()
+
+
+" ----------------------------------------------------------------------------
+" EX | chmod +x
+" ----------------------------------------------------------------------------
+command! EX if !empty(expand('%'))
+         \|   write
+         \|   call system('chmod +x '.expand('%'))
+         \|   silent e
+         \| else
+         \|   echohl WarningMsg
+         \|   echo 'Save the file first'
+         \|   echohl None
+         \| endif
+
+

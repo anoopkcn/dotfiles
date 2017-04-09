@@ -22,6 +22,7 @@ call plug#begin('~/.conf/plugged')
     Plug 'craigemery/vim-autotag'
 
 "snippets
+    Plug 'ervandew/supertab'
     Plug 'SirVer/ultisnips'
     Plug 'strivetobelazy/vim-snippets'
 "Git
@@ -31,16 +32,24 @@ call plug#begin('~/.conf/plugged')
     Plug 'tomtom/tcomment_vim'
     Plug 'tpope/vim-surround'
     Plug 'terryma/vim-multiple-cursors'
+    " Plug 'wincent/scalpel'
 
 "Latex Support
     Plug 'vim-latex/vim-latex'
 
 "YAML
     Plug 'stephpy/vim-yaml'
+"language
+    Plug 'beloglazov/vim-online-thesaurus'
+"themes
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
 
 "Others
-    " Plug 'morhetz/gruvbox'
-    Plug 'NLKNguyen/papercolor-theme'
+    Plug 'strivetobelazy/gruvbox' "forked from morhetz/gruvbox
+    " Plug 'NLKNguyen/papercolor-theme'
     Plug 'mbbill/undotree'
+    Plug 'justinmk/vim-gtfo'
+    Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
