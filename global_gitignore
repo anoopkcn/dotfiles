@@ -1,2 +1,6 @@
 tags
 .DS_Store
+*.out
+*.x
+*.o
+*.mod
