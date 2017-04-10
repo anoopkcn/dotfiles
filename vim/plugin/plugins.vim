@@ -14,7 +14,7 @@ call plug#begin('~/.conf/plugged')
             \| endif
     augroup END
 
-"linter
+" linter
     Plug 'neomake/neomake'
     Plug 'metakirby5/codi.vim'
 
@@ -25,28 +25,32 @@ call plug#begin('~/.conf/plugged')
     Plug 'ervandew/supertab'
     Plug 'SirVer/ultisnips'
     Plug 'strivetobelazy/vim-snippets'
+
 "Git
     Plug 'tpope/vim-fugitive'
 
 "Code Formatting
+    Plug 'tpope/vim-repeat'
     Plug 'tomtom/tcomment_vim'
     Plug 'tpope/vim-surround'
     Plug 'terryma/vim-multiple-cursors'
     " Plug 'wincent/scalpel'
 
-"Latex Support
+" Latex Support
     Plug 'vim-latex/vim-latex'
 
-"YAML
+" YAML
     Plug 'stephpy/vim-yaml'
-"language
+
+" language
     Plug 'beloglazov/vim-online-thesaurus'
-"themes
+
+" themes
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
 
-"Others
-    Plug 'strivetobelazy/gruvbox' "forked from morhetz/gruvbox
+" Others
+    Plug 'strivetobelazy/gruvbox'
     " Plug 'NLKNguyen/papercolor-theme'
     Plug 'mbbill/undotree'
     Plug 'justinmk/vim-gtfo'
