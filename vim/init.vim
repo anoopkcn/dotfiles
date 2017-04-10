@@ -99,7 +99,7 @@ endif
     " set listchars+=trail:⋅
     set listchars+=extends:❯
     set listchars+=precedes:❮
-    set listchars+=trail:•
+    set listchars+=trail:␣
     set nojoinspaces                      " don't autoinsert two spaces after '.', '?', '!' for join command
     set fillchars+=vert:│
     hi VertSplit ctermbg=NONE guibg=NONE

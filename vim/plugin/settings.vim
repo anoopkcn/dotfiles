@@ -6,6 +6,7 @@ let s:darwin = has('mac')
 highlight clear SignColumn
 
 "-------------------------[ Leader Mappings ]--------------------------------"
+"
 "TODO
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
@@ -36,8 +37,8 @@ nnoremap <silent><localleader>r :call plugin#functions#number_toggle()<cr>
 
 " Toggle spell settings
 nnoremap <localleader>l :call plugin#functions#spell()<CR>
-"===============================[ LANGUAGE ]==========================="
 
+"===============================[ LANGUAGE ]==========================="
 augroup vimrc
     " Automatic rename of tmux window
     if exists('$TMUX') && !exists('$NORENAME')
@@ -180,7 +181,7 @@ command! Todo call s:todo()
 
 " ----------------------------------------------------------------------------
 " EX | chmod +x
-" ----------------------------------------------------------------------------
+
 command! EX if !empty(expand('%'))
          \|   write
          \|   call system('chmod +x '.expand('%'))

@@ -9,6 +9,7 @@ else
     set background=dark
     colorscheme gruvbox
     " colorscheme PaperColor
+
     highlight clear SpellBad
     highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
     highlight clear SpellCap

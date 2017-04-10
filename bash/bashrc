@@ -46,12 +46,12 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
-#folder file colouring
+# folder file colouring
 export GREP_OPTIONS='--color=auto'
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
-#fzf settings
+# fzf settings
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -60,10 +60,9 @@ export FZF_DEFAULT_OPTS='
 --color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
 --color info:150,prompt:110,spinner:150,pointer:167,marker:174
 '
-# --color=light,fg:232,bg:255,bg+:255,hl:196,hl+:196,info:27'
 # export FZF_TMUX="1"
 # export FZF_TMUX_HEIGHT="35"
-#
+
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
 bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
