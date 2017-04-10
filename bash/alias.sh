@@ -11,7 +11,7 @@ alias ll='ls -l'
 alias vi='vim -u NONE'
 alias e='nvim'
 
-#tmux alias
+# tmux alias
 alias ta='tmux attach -t'
 alias tnew='tmux new -s'
 alias tls='tmux ls'
