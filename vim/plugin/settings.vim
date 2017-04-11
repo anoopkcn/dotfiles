@@ -199,3 +199,5 @@ cnoremap        <M-b> <S-Left>
 cnoremap        <M-f> <S-Right>
 silent! exe "set <S-Left>=\<Esc>b"
 silent! exe "set <S-Right>=\<Esc>f"
+
+

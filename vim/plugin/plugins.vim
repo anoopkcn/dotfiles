@@ -58,5 +58,6 @@ call plug#begin('~/.conf/plugged')
     Plug 'justinmk/vim-gtfo'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'terryma/vim-smooth-scroll'
+    Plug 'tpope/vim-tbone'
 
 call plug#end()

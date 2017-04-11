@@ -166,3 +166,12 @@ do
 done
 fi
 }
+
+#git specific
+gitzip() {
+  git archive -o $(basename $PWD).zip HEAD
+}
+
+gittgz() {
+  git archive -o $(basename $PWD).tgz HEAD
+}

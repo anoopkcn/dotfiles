@@ -166,10 +166,10 @@ nnoremap ? ?\v
 vnoremap ? ?\v
 
 " Moving around in split windows
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
-map <c-h> <c-w>h
+" map <c-j> <c-w>j
+" map <c-k> <c-w>k
+" map <c-l> <c-w>l
+" map <c-h> <c-w>h
 
 " Move visual block
 vnoremap J :m '>+1<CR>gv=gv

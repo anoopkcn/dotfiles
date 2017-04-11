@@ -15,3 +15,5 @@ ln -sf ~/.dotfiles/vim~/.conf/nvim
 ln -sf ~/.dotfiles/pip ~/.pip
 # ln -sf ~/.dotfiles/ssh/config ~/.ssh/config
 
+
+
