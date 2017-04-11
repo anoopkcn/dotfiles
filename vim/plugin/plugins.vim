@@ -20,6 +20,7 @@ call plug#begin('~/.conf/plugged')
 
 " ctags append
     Plug 'craigemery/vim-autotag'
+    " Plug 'majutsushi/tagbar'
 
 "snippets
     Plug 'ervandew/supertab'
@@ -34,7 +35,6 @@ call plug#begin('~/.conf/plugged')
     Plug 'tomtom/tcomment_vim'
     Plug 'tpope/vim-surround'
     Plug 'terryma/vim-multiple-cursors'
-    " Plug 'wincent/scalpel'
 
 " Latex Support
     Plug 'vim-latex/vim-latex'
@@ -46,12 +46,11 @@ call plug#begin('~/.conf/plugged')
     Plug 'beloglazov/vim-online-thesaurus'
 
 " themes
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
+    " Plug 'vim-airline/vim-airline'
+    " Plug 'vim-airline/vim-airline-themes'
 
 " Others
     Plug 'strivetobelazy/gruvbox'
-    " Plug 'NLKNguyen/papercolor-theme'
     Plug 'mbbill/undotree'
     Plug 'justinmk/vim-gtfo'
     Plug 'christoomey/vim-tmux-navigator'
