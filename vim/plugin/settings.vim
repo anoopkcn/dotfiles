@@ -4,6 +4,8 @@ let s:darwin = has('mac')
 
 "change gutter color
 highlight clear SignColumn
+" split separator for windows removed
+hi VertSplit ctermbg=NONE guibg=NONE
 
 "-------------------------[ Leader Mappings ]--------------------------------"
 "
@@ -20,11 +22,6 @@ nnoremap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
 
 " Redraws the screen and removes any search highlighting.
 nnoremap <silent> <Leader>h :nohl<CR>
-
-" Toggle Status line
-" set statusline=%<[%n]\ %F\ %m%r%y\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}\ %=%-14.(%l,%c%V%)\ %P
-
-nnoremap <silent> <leader>l :call plugin#functions#toggle_laststatus()<cr>
 
 nnoremap <localleader>bs :cex []<BAR>bufdo vimgrepadd @@g %<BAR>cw<s-left><s-left><right>
 
@@ -86,8 +83,8 @@ let g:snips_github="https://github.com/strivetobelazy"
 
 
 "airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_min_count =2
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#buffer_min_count =2
 
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
@@ -118,7 +115,7 @@ nnoremap U :UndotreeToggle<CR>
 function! s:indent_len(str)
   return type(a:str) == 1 ? len(matchstr(a:str, '^\s*')) : 0
 endfunction
-"
+
 " #gi / #gpi | go to next/previous indentation level
 " ----------------------------------------------------------------------------
 function! s:go_indent(times, dir)
@@ -191,5 +188,4 @@ command! EX if !empty(expand('%'))
          \|   echo 'Save the file first'
          \|   echohl None
          \| endif
-
 
