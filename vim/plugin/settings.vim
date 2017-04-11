@@ -1,4 +1,3 @@
-"
 "--- ---[ General Settings ]-----------
 let s:darwin = has('mac')
 
@@ -8,8 +7,6 @@ highlight clear SignColumn
 hi VertSplit ctermbg=NONE guibg=NONE
 
 "-------------------------[ Leader Mappings ]--------------------------------"
-"
-"TODO
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
 nnoremap <localleader>p <esc>:tabprevious<CR>
@@ -35,36 +32,6 @@ nnoremap <silent><localleader>r :call plugin#functions#number_toggle()<cr>
 " Toggle spell settings
 nnoremap <localleader>l :call plugin#functions#spell()<CR>
 
-"-------------------------------[ LANGUAGE ]---------------------------"
-augroup vimrc
-    " Automatic rename of tmux window
-    if exists('$TMUX') && !exists('$NORENAME')
-        au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
-        au VimLeave * call system('tmux set-window automatic-rename on')
-    endif
-augroup END
-"
-":Root | Change directory to the root of the Git repository
-function! s:root()
-  let root = systemlist('git rev-parse --show-toplevel')[0]
-  if v:shell_error
-    echo 'Not in git repo'
-  else
-    execute 'lcd' root
-    echo 'Changed directory to: '.root
-  endif
-endfunction
-command! Root call s:root()
-
-" #!! | Shebang
-inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
-
-" open atom
-if s:darwin
-  nnoremap <silent> <leader>1
-  \ :call system('"atom" '.expand('%:p'))<cr>
-endif
-
 "----------------------[ PLUGINS ]------------------------"
 "fugitive
 set diffopt+=vertical
@@ -72,6 +39,10 @@ set diffopt+=vertical
 "NerdTree
 " <F10> | NERD Tree
 nnoremap <leader>k :NERDTreeToggle<cr>
+
+"undotree
+" let g:undotree_WindowLayout = 2
+nnoremap U :UndotreeToggle<CR>
 
 "Ultisnips
 let g:UltiSnipsExpandTrigger="<c-a>"
@@ -81,8 +52,8 @@ let g:snips_author="Anoop Chandran"
 let g:snips_email="strivetobelazy@gmail.com"
 let g:snips_github="https://github.com/strivetobelazy"
 
-"" <Leader>?/! | Google it / Feeling lucky
 " ----------------------------------------------------------------------------
+"" <Leader>?/! | Google it / Feeling lucky
 function! s:goog(pat, lucky)
   let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
   let q = substitute(q, '[[:punct:] ]',
@@ -96,20 +67,15 @@ nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
 xnoremap <leader>? "gy:call <SID>goog(@g, 0)<cr>gv
 xnoremap <leader>! "gy:call <SID>goog(@g, 1)<cr>gv
 
-"undotree
-" let g:undotree_WindowLayout = 2
-nnoremap U :UndotreeToggle<CR>
-
-
+" ----------------------------------------------------------------------------
 " ?ii / ?ai | indent-object
 " ?io       | strictly-indent-object
-" ----------------------------------------------------------------------------
 function! s:indent_len(str)
   return type(a:str) == 1 ? len(matchstr(a:str, '^\s*')) : 0
 endfunction
 
-" #gi / #gpi | go to next/previous indentation level
 " ----------------------------------------------------------------------------
+" #gi / #gpi | go to next/previous indentation level
 function! s:go_indent(times, dir)
   for _ in range(a:times)
     let l = line('.')
@@ -132,9 +98,8 @@ nnoremap <silent> gi :<c-u>call <SID>go_indent(v:count1, 1)<cr>
 nnoremap <silent> gpi :<c-u>call <SID>go_indent(v:count1, -1)<cr>
 
 
+"---------------------------------------------------------------------------
 " If buffer modified, update any 'Last modified: ' in the first 20 lines.
-" 'Last modified: ' can have up to 10 characters before (they are retained).
-" Restores cursor and window position using save_cursor variable.
 function! LastModified()
   if &modified
     let save_cursor = getpos(".")
@@ -147,6 +112,8 @@ function! LastModified()
 endfun
 autocmd BufWritePre * call LastModified()
 
+"---------------------------------------------------------------------------
+"Shows a list of places where TODO/FIXME/XXX is written
 function! s:todo() abort
   let entries = []
   for cmd in ['git grep -niI -e TODO -e FIXME -e XXX 2> /dev/null',
@@ -181,17 +148,45 @@ command! EX if !empty(expand('%'))
          \|   echohl None
          \| endif
 
+
+"---------------------------------------------------------------------------
 " smooth scroll plugin
-" noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-" noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-" noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-" noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 25, 1)<CR>20j
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 25, 1)<CR>20k
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2-2, 25, 1)<CR>
 noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2-2, 25, 1)<CR>
 
-"bufferline
+"---------------------------------------------------------------------------
+" rename tmux pane according to the buffer name
+augroup vimrc
+    " Automatic rename of tmux window
+    if exists('$TMUX') && !exists('$NORENAME')
+        au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
+        au VimLeave * call system('tmux set-window automatic-rename on')
+    endif
+augroup END
 
-" let g:bufferline_echo = 1
-" let g:bufferline_rotate = 2
+"---------------------------------------------------------------------------
+":Root | Change directory to the root of the Git repository
+function! s:root()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    echo 'Not in git repo'
+  else
+    execute 'lcd' root
+    echo 'Changed directory to: '.root
+  endif
+endfunction
+command! Root call s:root()
+
+"---------------------------------------------------------------------------
+" #!! | Shebang
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+
+"---------------------------------------------------------------------------
+" open atom
+if s:darwin
+  nnoremap <silent> <leader>1
+  \ :call system('"atom" '.expand('%:p'))<cr>
+endif
+
