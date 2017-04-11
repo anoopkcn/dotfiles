@@ -13,7 +13,9 @@ source $HOME/.dotfiles/vim/plugin/functions.vim
 set nocompatible "Remove back compatability for vi
 filetype off
 syntax enable
+" filetype plugin on
 filetype plugin indent on
+set omnifunc=syntaxcomplete#Complete
 
 set number "relative number is a toogle function <LocalLeaderleader>n
 set showmatch "Show matching [] and {}
@@ -94,7 +96,7 @@ endif
 " List
     set list                              " show whitespace
     set listchars=nbsp:⦸
-    set listchars+=tab:⇥\                 "should be a space after this
+    set listchars+=tab:⇥\                  "should be a space after this
     " set listchars+=eol:¬
     " set listchars+=trail:⋅
     set listchars+=extends:❯
@@ -203,3 +205,10 @@ au BufReadPost *.html,htm set syntax=html
 
 " Gnuplot
 au BufNewFile,BufRead *.gpl,*.gp setf sh
+
+"set pwd to dir of the file
+autocmd BufEnter * silent! lcd %:p:h
+
+"remove preview window ex:omnicomplete after complete
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
