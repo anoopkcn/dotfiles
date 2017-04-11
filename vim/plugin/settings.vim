@@ -81,14 +81,6 @@ let g:snips_author="Anoop Chandran"
 let g:snips_email="strivetobelazy@gmail.com"
 let g:snips_github="https://github.com/strivetobelazy"
 
-
-"airline
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#buffer_min_count =2
-
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
 "" <Leader>?/! | Google it / Feeling lucky
 " ----------------------------------------------------------------------------
 function! s:goog(pat, lucky)
@@ -194,7 +186,12 @@ command! EX if !empty(expand('%'))
 " noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
 " noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
 " noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
-noremap <silent> <c-u> :call smooth_scroll#up(20, 25, 1)<CR>20j
-noremap <silent> <c-d> :call smooth_scroll#down(20, 25, 1)<CR>20k
-noremap <silent> <c-b> :call smooth_scroll#up(40, 25, 1)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(40, 25, 1)<CR>
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 25, 1)<CR>20j
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 25, 1)<CR>20k
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2-2, 25, 1)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2-2, 25, 1)<CR>
+
+"bufferline
+
+" let g:bufferline_echo = 1
+" let g:bufferline_rotate = 2
