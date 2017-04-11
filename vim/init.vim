@@ -13,9 +13,7 @@ source $HOME/.dotfiles/vim/plugin/functions.vim
 set nocompatible "Remove back compatability for vi
 filetype off
 syntax enable
-" filetype plugin on
-filetype plugin indent on
-set omnifunc=syntaxcomplete#Complete
+filetype plugin on
 
 set number "relative number is a toogle function <LocalLeaderleader>n
 set showmatch "Show matching [] and {}
@@ -154,9 +152,9 @@ let g:netrw_winsize = 25
 " noremap <Left> <NOP>
 " noremap <Right> <NOP>
 
-" Prevent Ex-mode
-nnoremap q: <Nop>
-nnoremap Q <Nop>
+" Prevent Ex-mode -> Ex mode is usefull
+" nnoremap q: <Nop>
+" nnoremap Q <Nop>
 
 " Using the dot . to repeat in the visualmode as well
 vnoremap . :normal .<CR>
@@ -182,8 +180,8 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Easier formatting of paragraphs
-vmap Q gq
-nmap Q gqap
+" vmap Q gq
+" nmap Q gqap
 
 " Multi variable change
 nnoremap c* *Ncgn
@@ -206,9 +204,3 @@ au BufReadPost *.html,htm set syntax=html
 " Gnuplot
 au BufNewFile,BufRead *.gpl,*.gp setf sh
 
-"set pwd to dir of the file
-autocmd BufEnter * silent! lcd %:p:h
-
-"remove preview window ex:omnicomplete after complete
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif

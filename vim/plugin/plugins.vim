@@ -14,6 +14,9 @@ call plug#begin('~/.conf/plugged')
             \| endif
     augroup END
 
+"buffer navigation
+    Plug 'bling/vim-bufferline'
+
 " linter
     Plug 'neomake/neomake'
     Plug 'metakirby5/codi.vim'
@@ -54,5 +57,6 @@ call plug#begin('~/.conf/plugged')
     Plug 'mbbill/undotree'
     Plug 'justinmk/vim-gtfo'
     Plug 'christoomey/vim-tmux-navigator'
+    Plug 'terryma/vim-smooth-scroll'
 
 call plug#end()
