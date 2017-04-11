@@ -1,8 +1,8 @@
 "
-"=== ===[ General Settings ]===========
+"--- ---[ General Settings ]-----------
 let s:darwin = has('mac')
 
-"change gutter color
+"change gutter colour
 highlight clear SignColumn
 " split separator for windows removed
 hi VertSplit ctermbg=NONE guibg=NONE
@@ -17,7 +17,7 @@ nnoremap <localleader>n <esc>:tabnext<CR>
 nmap     <Leader>g :Gstatus<CR>gg<c-n>
 nnoremap <Leader>d :Gdiff<CR>
 
-" Remove extra whitespace
+" Remove extra white space
 nnoremap <silent><leader>zz :call plugin#functions#trim_trailing()<cr>
 
 " Redraws the screen and removes any search highlighting.
@@ -35,7 +35,7 @@ nnoremap <silent><localleader>r :call plugin#functions#number_toggle()<cr>
 " Toggle spell settings
 nnoremap <localleader>l :call plugin#functions#spell()<CR>
 
-"===============================[ LANGUAGE ]==========================="
+"-------------------------------[ LANGUAGE ]---------------------------"
 augroup vimrc
     " Automatic rename of tmux window
     if exists('$TMUX') && !exists('$NORENAME')
@@ -65,7 +65,7 @@ if s:darwin
   \ :call system('"atom" '.expand('%:p'))<cr>
 endif
 
-"======================[ PLUGINS ]========================"
+"----------------------[ PLUGINS ]------------------------"
 "fugitive
 set diffopt+=vertical
 
@@ -189,3 +189,12 @@ command! EX if !empty(expand('%'))
          \|   echohl None
          \| endif
 
+" smooth scroll plugin
+" noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+" noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+" noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+" noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-u> :call smooth_scroll#up(20, 25, 1)<CR>20j
+noremap <silent> <c-d> :call smooth_scroll#down(20, 25, 1)<CR>20k
+noremap <silent> <c-b> :call smooth_scroll#up(40, 25, 1)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(40, 25, 1)<CR>
