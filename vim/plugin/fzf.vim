@@ -31,3 +31,6 @@ nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\
 nnoremap <silent> <leader>b :Buffers<cr>
 nnoremap <leader>t :Tags 
 
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
