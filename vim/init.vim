@@ -69,13 +69,13 @@ set wildmenu "Display all matching files on tab complete
 set complete+=kspell
 
 " TAB settings "
-    set autoindent
-    set expandtab
-    set shiftround
-    set shiftwidth=4
-    set smartindent
-    set softtabstop=4
-    set tabstop=4
+set autoindent
+set expandtab
+set shiftround
+set shiftwidth=4
+set smartindent
+set softtabstop=4
+set tabstop=4
 
 set scrolloff=3                       " start scrolling 3 lines before edge of viewport
 set shortmess+=A                      " ignore annoying swapfile messages
@@ -146,12 +146,6 @@ let g:netrw_sort_options = 'i'
 let g:netrw_winsize = 25
 " let g:netrw_dirhistmax = 0 "store no history or bookmarks
 
-" Remove bad Habits
-" noremap <Up> <NOP>
-" noremap <Down> <NOP>
-" noremap <Left> <NOP>
-" noremap <Right> <NOP>
-
 " Prevent Ex-mode -> Ex mode is usefull
 " nnoremap q: <Nop>
 " nnoremap Q <Nop>
@@ -164,12 +158,6 @@ nnoremap / /\v
 vnoremap / /\v
 nnoremap ? ?\v
 vnoremap ? ?\v
-
-" Moving around in split windows
-" map <c-j> <c-w>j
-" map <c-k> <c-w>k
-" map <c-l> <c-w>l
-" map <c-h> <c-w>h
 
 " Move visual block
 vnoremap J :m '>+1<CR>gv=gv
