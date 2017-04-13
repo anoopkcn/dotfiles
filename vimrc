@@ -32,7 +32,6 @@ set listchars+=extends:❯
 set listchars+=precedes:❮
 set listchars+=trail:␣
 set nojoinspaces
-set fillchars+=vert:│
 
 if has('linebreak')
     set linebreak
@@ -294,7 +293,8 @@ nnoremap <localleader>l :call Spell()<CR>
 nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
 "---------------------------------------------------------------------------
-" Themeing
+" " Themeing
+highlight Normal ctermbg=234
 highlight clear SpellBad
 highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
 highlight clear SpellCap
@@ -304,9 +304,12 @@ highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
-hi VertSplit ctermbg=NONE guibg=NONE
 highlight clear SignColumn
 highlight LineNr ctermfg=242
 hi Comment ctermfg=240
 hi Identifier cterm=bold
 hi Function cterm=bold
+
+hi StatusLineNC ctermbg=239 ctermfg=235
+hi StatusLine ctermbg=230 ctermfg=235
+hi VertSplit cterm=NONE
