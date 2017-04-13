@@ -3,10 +3,12 @@
 " ------------------------------------------------------------------
 scriptencoding utf-8
 set nocompatible
+unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
 set number
+set relativenumber
 set showmatch
 set backspace=indent,eol,start
 
@@ -19,6 +21,9 @@ set smartindent
 set softtabstop=4
 set tabstop=4
 set scrolloff=3
+set shortmess=aIT
+set nocursorline
+set formatoptions+=1
 
 set path+=**
 set wildmenu
@@ -31,6 +36,7 @@ set listchars+=extends:❯
 set listchars+=precedes:❮
 set listchars+=trail:␣
 set nojoinspaces
+set diffopt=filler,vertical
 
 if has('linebreak')
     set linebreak
@@ -39,11 +45,13 @@ endif
 
 set visualbell t_vb=
 set hidden
+set autoread
 
 " Search Settings
 set hlsearch
 set ignorecase
 set smartcase
+set incsearch
 
 let mapleader ="\<Space>"
 let maplocalleader = "\,"
@@ -75,49 +83,13 @@ call plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-repeat'
+    Plug 'neomake/neomake'
+    Plug 'ervandew/supertab'
+    " Plug 'metakirby5/codi.vim'
 call plug#end()
-
-"fzf settings
-let g:fzf_layout = { 'down': '~35%' }
-let g:fzf_history_dir = '~/.conf/fzf-history'
-"maps
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-" Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-" Advanced customization using autoload functions
-inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
-
-"fzf file completion and other functions
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-nnoremap <leader><leader> :Files<cr>
-nnoremap <silent> <leader>b :Buffers<cr>
-nnoremap <leader>t :Tags
-nnoremap <silent> <Leader>` :Marks<CR>
-
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
-nnoremap <leader>n :bn<cr>
-nnoremap <leader>p :bp<cr>
-nnoremap <localleader>p <esc>:tabprevious<CR>
-nnoremap <localleader>n <esc>:tabnext<CR>
-nmap     <Leader>g :Gstatus<CR>gg<c-n>
-nnoremap <Leader>d :Gdiff<CR>
-
-set diffopt+=vertical
-
+"---------------------------------------------------------------------------
+" My functions
 augroup vimrc
     " Automatic rename of tmux window
     if exists('$TMUX') && !exists('$NORENAME')
@@ -308,11 +280,89 @@ hi SpellLocal term=underline cterm=underline
 
 hi clear SignColumn
 hi LineNr ctermfg=237
-hi Comment ctermfg=239
+hi Comment ctermfg=243
 hi Identifier cterm=bold
 hi Function cterm=bold
 
-hi StatusLineNC ctermfg=235
-hi StatusLine ctermbg=230 ctermfg=235
+hi StatusLineNC ctermbg=237 ctermfg=235
+hi StatusLine ctermbg=243 ctermfg=235
 hi VertSplit cterm=NONE
 hi SpecialKey  term=bold ctermfg=237
+hi Search cterm=NONE ctermfg=245 ctermbg=237
+hi visual cterm=NONE ctermfg=245 ctermbg=237
+
+
+"---------------------------------------------------------------------------
+" Plugin setttings
+
+"fzf settings
+let g:fzf_layout = { 'down': '~35%' }
+let g:fzf_history_dir = '~/.conf/fzf-history'
+"maps
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+" Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
+
+"fzf file completion and other functions
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+nnoremap <leader><leader> :Files<cr>
+nnoremap <silent> <leader>b :Buffers<cr>
+nnoremap <leader>t :Tags
+nnoremap <silent> <Leader>` :Marks<CR>
+
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+nnoremap <leader>n :bn<cr>
+nnoremap <leader>p :bp<cr>
+nnoremap <localleader>p <esc>:tabprevious<CR>
+nnoremap <localleader>n <esc>:tabnext<CR>
+nmap     <Leader>g :Gstatus<CR>gg<c-n>
+nnoremap <Leader>d :Gdiff<CR>
+
+"for fugitive
+set diffopt+=vertical
+
+"Neomake
+autocmd! BufWritePost * Neomake
+highlight NeomakeErrorSign ctermfg=red
+highlight NeomakeErrorMsg ctermfg=227
+"ctermbg=237
+" let g:neomake_verbose=3
+let g:neomake_error_sign = {'texthl': 'NeomakeErrorSign', 'text': '✗'}
+let g:neomake_warning_sign={'texthl': 'NeomakeErrorMsg', 'text': '⚠'}
+let g:neomake_message_sign = {'texthl': 'NeomakeMessageSign', 'text': '¶'}
+let g:neomake_info_sign = {'texthl': 'MyInfoMsg', 'text': '☂'}
+
+let g:neomake_c_enabled_makers = ['gcc']
+let g:neomake_cpp_enabled_makers = ['gcc']
+let g:neomake_fortran_enabled_makers = ['gfortran']
+
+let g:neomake_c_gcc_maker = {
+            \'args':[
+            \'-Os','-g',
+            \'-Wall','-Wextra','-Wno-unused-parameter','-Wno-unused-variable','-pedantic',
+            \'-I.', '-I./include/.', '-I../include/.'
+        \]}
+
+let g:neomake_fortran_gfortran_maker = {
+            \ 'errorformat': '%-C %#,'.'%-C  %#%.%#,'.'%A%f:%l%[.:]%c:,'.
+            \ '%Z%\m%\%%(Fatal %\)%\?%trror: %m,'.'%Z%tarning: %m,'.'%-G%.%#',
+            \'args':['-fsyntax-only', '-cpp', '-Wall', '-Wextra',
+            \'-I.', '-I./modules/.', '-I../modules/.'
+        \],
+        \}
