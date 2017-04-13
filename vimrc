@@ -6,7 +6,6 @@ set nocompatible
 syntax on
 filetype plugin indent on
 
-"set spell spelllang=en_gb
 set number
 set showmatch
 set backspace=indent,eol,start
@@ -74,8 +73,8 @@ endif
 call plug#begin('~/.vim/bundle')
     Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
     Plug 'tpope/vim-fugitive'
-    " Plug 'strivetobelazy/gruvbox'
     Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-surround'
 call plug#end()
 
 "fzf settings
@@ -147,7 +146,6 @@ function! Trim_trailing()
 endfunction
 nnoremap <silent><leader>zz :call Trim_trailing()<cr>
 
-nnoremap <silent> <Leader>h :nohl<CR>
 
 "" <Leader>?/! | Google it / Feeling lucky
 function! s:goog(pat, lucky)
@@ -292,24 +290,29 @@ nnoremap <localleader>l :call Spell()<CR>
 "create and edit file
 nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
+nnoremap <silent> <Leader>h :nohl<CR>
+
+"turn on spell cheking for filetypes
+autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
 "---------------------------------------------------------------------------
 " " Themeing
-highlight Normal ctermbg=234
-highlight clear SpellBad
-highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
-highlight clear SpellCap
-highlight SpellCap term=underline cterm=underline
-highlight clear SpellRare
-highlight SpellRare term=underline cterm=underline
-highlight clear SpellLocal
-highlight SpellLocal term=underline cterm=underline
+hi Normal ctermbg=234
+hi clear SpellBad
+hi SpellBad term=standout ctermfg=1 term=underline cterm=underline
+hi clear SpellCap
+hi SpellCap term=underline cterm=underline ctermfg=green
+hi clear SpellRare
+hi SpellRare term=underline cterm=underline
+hi clear SpellLocal
+hi SpellLocal term=underline cterm=underline
 
-highlight clear SignColumn
-highlight LineNr ctermfg=242
-hi Comment ctermfg=240
+hi clear SignColumn
+hi LineNr ctermfg=237
+hi Comment ctermfg=239
 hi Identifier cterm=bold
 hi Function cterm=bold
 
-hi StatusLineNC ctermbg=239 ctermfg=235
+hi StatusLineNC ctermfg=235
 hi StatusLine ctermbg=230 ctermfg=235
 hi VertSplit cterm=NONE
+hi SpecialKey  term=bold ctermfg=237
