@@ -97,7 +97,6 @@ endfunction
 nnoremap <silent> gi :<c-u>call <SID>go_indent(v:count1, 1)<cr>
 nnoremap <silent> gpi :<c-u>call <SID>go_indent(v:count1, -1)<cr>
 
-
 "---------------------------------------------------------------------------
 " If buffer modified, update any 'Last modified: ' in the first 20 lines.
 function! LastModified()
@@ -133,7 +132,6 @@ function! s:todo() abort
   endif
 endfunction
 command! Todo call s:todo()
-
 
 " ----------------------------------------------------------------------------
 " EX | chmod +x
@@ -200,4 +198,10 @@ cnoremap        <M-f> <S-Right>
 silent! exe "set <S-Left>=\<Esc>b"
 silent! exe "set <S-Right>=\<Esc>f"
 
-
+" ----------------------------------------------------------------------------
+" Close preview window
+  if exists('##CompleteDone')
+    au CompleteDone * pclose
+  else
+    au InsertLeave * if !pumvisible() && (!exists('*getcmdwintype') || empty(getcmdwintype())) | pclose | endif
+  endif

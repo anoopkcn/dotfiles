@@ -175,3 +175,9 @@ gitzip() {
 gittgz() {
   git archive -o $(basename $PWD).tgz HEAD
 }
+
+doi2bib(){
+    echo >> bib.bib;
+    curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
+    echo >> bib.bib;
+}

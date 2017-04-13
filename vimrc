@@ -338,7 +338,7 @@ nnoremap <Leader>d :Gdiff<CR>
 set diffopt+=vertical
 
 "Neomake
-autocmd! BufWritePost * Neomake
+" autocmd! BufWritePost * Neomake
 highlight NeomakeErrorSign ctermfg=red
 highlight NeomakeErrorMsg ctermfg=227
 "ctermbg=237
