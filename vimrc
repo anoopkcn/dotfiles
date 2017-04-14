@@ -21,9 +21,11 @@ set smartindent
 set softtabstop=4
 set tabstop=4
 set scrolloff=3
-set shortmess=aIT
+" set shortmess=aIT
+set shortmess=filnxtToOI
 set nocursorline
 set formatoptions+=1
+set mouse=a
 
 set path+=**
 set wildmenu
@@ -37,6 +39,10 @@ set listchars+=precedes:❮
 set listchars+=trail:␣
 set nojoinspaces
 set diffopt=filler,vertical
+set splitright
+set splitbelow
+set omnifunc=syntaxcomplete#Complete
+set tags=tags;$HOME
 
 if has('linebreak')
     set linebreak
@@ -58,6 +64,17 @@ let maplocalleader = "\,"
 vnoremap < <gv
 vnoremap > >gv
 
+nnoremap j gj
+nnoremap k gk
+nnoremap ^ g^
+nnoremap 0 g0
+nnoremap $ g$
+nnoremap gj j
+nnoremap gk k
+nnoremap g^ ^
+nnoremap g$ $
+nnoremap g0 0
+
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
     set nobackup
@@ -76,6 +93,8 @@ if has("persistent_undo")
     set undodir=$HOME/.tmp/vimswap//
     set undofile
 endif
+
+autocmd InsertEnter * :setlocal nohlsearch
 
 " plugins
 call plug#begin('~/.vim/bundle')
@@ -219,6 +238,7 @@ silent! exe "set <S-Left>=\<Esc>b"
 silent! exe "set <S-Right>=\<Esc>f"
 
 "---------------------------------------------------------------------------
+set laststatus=1
 " Status line settings
 set statusline=%<[%n]\ %F\ %m%r%y\ %=%-14.(%l,%c%V%)\ %P\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}
 
@@ -321,7 +341,7 @@ omap <leader><tab> <plug>(fzf-maps-o)
 
 nnoremap <leader><leader> :Files<cr>
 nnoremap <silent> <leader>b :Buffers<cr>
-nnoremap <leader>t :Tags
+nnoremap <leader>t :Tags  " easy tags
 nnoremap <silent> <Leader>` :Marks<CR>
 
 command! -bang -nargs=? -complete=dir Files
@@ -366,3 +386,4 @@ let g:neomake_fortran_gfortran_maker = {
             \'-I.', '-I./modules/.', '-I../modules/.'
         \],
         \}
+
