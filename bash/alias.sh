@@ -22,3 +22,7 @@ alias ts='tmuxinator start'
 
 #git
 alias gs='git status'
+
+#other
+alias duh="du -h -d 0 [^.]*"
+
