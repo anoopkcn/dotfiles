@@ -9,7 +9,8 @@ alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
 alias vi='vim -u NONE'
-alias e='nvim'
+alias vim='nvim'
+alias e='/usr/local/bin/vim'
 
 # tmux alias
 alias ta='tmux attach -t'
@@ -22,6 +23,8 @@ alias ts='tmuxinator start'
 
 #git
 alias gs='git status'
+alias gn='git next'
+alias gp='git prev'
 
 #other
 alias duh="du -h -d 0 [^.]*"

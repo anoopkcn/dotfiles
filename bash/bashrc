@@ -1,25 +1,18 @@
 # /etc/skel/.bashrc
-# Test for an interactive shell.  There is no need to set anything
-# past this point for scp and rcp, and it's important to refrain from
-# outputting anything in those cases.
 if [[ $- != *i* ]] ; then
     # Shell is non-interactive.  Be done now!
     return
 fi
-
 
 git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
 
 source ~/.dotfiles/bash/alias.sh
 source ~/.dotfiles/bash/functions.sh
+source ~/.dotfiles/bash/tmux_functions.sh
 source ~/.dotfiles/bash/fzf_functions.sh
 
-
-
 # Prompt
-# --------------------------------------------------------------------
-
 if [ "$PLATFORM" = Linux ]; then
   PS1="\[\e[1;38m\]\u\[\e[1;34m\]@\[\e[1;31m\]\h\[\e[1;30m\]:"
   truncDir='$(pwd|awk -F/ -v "n=$(tput cols)" -v "h=^$HOME" '\''{sub(h,"~");n=0.3*n;b=$1"/"$2} length($0)<=n || NF==3 {print;next;} NF>3{b=b"/../"; e=$NF; n-=length(b $NF); for (i=NF-1;i>3 && n>length(e)+1;i--) e=$i"/"e;} {print b e;}'\'') '
@@ -42,9 +35,7 @@ else
 fi
 export GIT_PS1_SHOWDIRTYSTATE=1
 
-
 export EDITOR=vim
-
 # folder file colouring
 export GREP_OPTIONS='--color=auto'
 export CLICOLOR=1
@@ -62,7 +53,7 @@ export FZF_DEFAULT_OPTS='
 # export FZF_TMUX="1"
 # export FZF_TMUX_HEIGHT="35"
 
-bind TAB:menu-complete
+# bind TAB:menu-complete
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
 bind '"\C-g\C-b": "$(gb)\e\C-e\er"'

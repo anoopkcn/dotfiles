@@ -1,0 +1,11 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+    name = strivetobelazy
+    email = strivetobelazy@gmail.com
+[core]
+	editor = vim
+	excludesfile = /Users/lazy/.dotfiles/global_gitignore
+[alias]
+	next = !git checkout `git rev-list HEAD..demo-end | tail -1`
+	prev = checkout HEAD^

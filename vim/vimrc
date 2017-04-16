@@ -136,7 +136,6 @@ function! Trim_trailing()
 endfunction
 nnoremap <silent><leader>zz :call Trim_trailing()<cr>
 
-
 "" <Leader>?/! | Google it / Feeling lucky
 function! s:goog(pat, lucky)
   let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
