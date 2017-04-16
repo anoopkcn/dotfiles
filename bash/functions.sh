@@ -95,7 +95,6 @@ function extract() {
     fi
 }
 
-
 function glog(){
 if [ $# -eq 0 ]; then
     echo "No arguments supplied"
@@ -134,36 +133,6 @@ elif [[ "$#" -eq 1 ]]; then
     fi
 else
     rsync -arzv $2 -e ssh $1:$3
-fi
-}
-
-function tm(){
-# abort if we're already inside a TMUX session
-if ( [ "$TMUX" == "" ] ) ;then
-# startup a "default" session if non currently exists
-# tmux has-session -t _default || tmux new-session -s _default -d
-
-# present menu for user to choose which workspace to open
-PS3="Please choose your session: "
-options=($(tmux list-sessions -F "#S" 2>/dev/null) "New Session" "quit")
-echo "Available sessions"
-echo "------------------"
-select opt in "${options[@]}"
-do
-	case $opt in
-		"New Session")
-			read -p "Enter new session name: " SESSION_NAME
-			tmux new -s "$SESSION_NAME"
-			break
-			;;
-		"quit")
-			break;;
-		*)
-			tmux attach-session -t $opt
-			break
-			;;
-	esac
-done
 fi
 }
 
