@@ -31,10 +31,18 @@ done
 fi
 }
 
+tls(){
+    t_sessions=($(tmux ls | cut -d : -f 1));
+    for i in ${!t_sessions[@]};do
+        echo -e "\e[1;31m"${t_sessions[i]}"\e[0m";
+        (tmux lsw -t ${t_sessions[i]} | gawk '{print $1,$2}');
+    done
+}
+
 tkillall(){
     t_sessions=($(tmux ls | cut -d : -f 1));
-    for i in ${!t_sessions[@]};do 
-        tmux kill-session -t  ${t_sessions[i]} ; 
+    for i in ${!t_sessions[@]};do
+        tmux kill-session -t  ${t_sessions[i]} ;
     done
 }
 

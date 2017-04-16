@@ -27,6 +27,13 @@ function colours() {
     done
 }
 
+light(){
+echo -e "\033]50;SetProfile=light\a"
+}
+dark(){
+echo -e "\033]50;SetProfile=dark\a"
+}
+
 # Create a new directory and enter it
 function md() {
     mkdir -p "$@" && cd "$@"

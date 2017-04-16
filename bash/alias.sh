@@ -9,13 +9,10 @@ alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
 alias vi='vim -u NONE'
-alias vim='nvim'
-alias e='/usr/local/bin/vim'
 
 # tmux alias
 alias ta='tmux attach -t'
 alias tnew='tmux new -s'
-alias tls='tmux ls'
 alias tsend='tmux send -t'
 alias tkill='tmux kill-session -t'
 alias ts='tmuxinator start'

@@ -4,36 +4,16 @@ if [[ $- != *i* ]] ; then
     return
 fi
 
+source $HOME/.dotfiles/bash/alias.sh
+source $HOME/.dotfiles/bash/functions.sh
+source $HOME/.dotfiles/bash/tmux_functions.sh
+source $HOME/.dotfiles/bash/fzf_functions.sh
+
 git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
-
-source ~/.dotfiles/bash/alias.sh
-source ~/.dotfiles/bash/functions.sh
-source ~/.dotfiles/bash/tmux_functions.sh
-source ~/.dotfiles/bash/fzf_functions.sh
-
-# Prompt
-if [ "$PLATFORM" = Linux ]; then
-  PS1="\[\e[1;38m\]\u\[\e[1;34m\]@\[\e[1;31m\]\h\[\e[1;30m\]:"
-  truncDir='$(pwd|awk -F/ -v "n=$(tput cols)" -v "h=^$HOME" '\''{sub(h,"~");n=0.3*n;b=$1"/"$2} length($0)<=n || NF==3 {print;next;} NF>3{b=b"/../"; e=$NF; n-=length(b $NF); for (i=NF-1;i>3 && n>length(e)+1;i--) e=$i"/"e;} {print b e;}'\'') '
-  # PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
-  # PS1="$PS1\[\e[0;38m\]\w\[\e[1;35m\]> \[\e[0m\]"
-  PS1="$PS1\[\e[m\]$truncDir\[\e[1;31m\]> \[\e[0m\]"
-else
-  ### git-prompt
-  __git_ps1() { :;}
-  if [ -e ${git_prompt} ]; then
+if [ -e ${git_prompt} ]; then
     source ${git_prompt}
-  fi
-  PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
-  # PROMPT_COMMAND='history -a; printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1) ($(date +%d/%m\ %H:%M:%S))"'
-  PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]anoop\[\e[35m\]:"
-
-  truncDir='$(pwd|awk -F/ -v "n=$(tput cols)" -v "h=^$HOME" '\''{sub(h,"~");n=0.3*n;b=$1"/"$2} length($0)<=n || NF==3 {print;next;} NF>3{b=b"/../"; e=$NF; n-=length(b $NF); for (i=NF-1;i>3 && n>length(e)+1;i--) e=$i"/"e;} {print b e;}'\'') '
-  # PS1="$PS1\[\e[m\]\w\[\e[1;31m\]> \[\e[0m\]"
-  PS1="$PS1\[\e[m\]$truncDir\[\e[1;31m\]> \[\e[0m\]"
 fi
-export GIT_PS1_SHOWDIRTYSTATE=1
 
 export EDITOR=vim
 # folder file colouring
@@ -41,18 +21,25 @@ export GREP_OPTIONS='--color=auto'
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWSTASHSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+
+# Prompt
+trunc_dir='$(pwd|awk -F/ -v "n=$(tput cols)" -v "h=^$HOME" '\''{sub(h,"~");n=0.3*n;b=$1"/"$2} length($0)<=n || NF==3 {print;next;} NF>3{b=b"/../"; e=$NF; n-=length(b $NF); for (i=NF-1;i>3 && n>length(e)+1;i--) e=$i"/"e;} {print b e;}'\'')'
+PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]anoop\[\e[35m\]:"
+PS1="$PS1\[\e[m\]$trunc_dir\[\e[38;5;59m\]\$(__git_ps1)\[\e[1;31m\]: \[\e[0m\]"
+# PS1="$PS1\[\e[m\]\w\[\e[1;31m\]: \[\e[0m\]"
+
 # fzf settings
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
 --height 35% --reverse --inline-info 
---color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
---color info:150,prompt:110,spinner:150,pointer:167,marker:174
+--color fg:188,bg:233,hl:103,fg+:222,bg+:234,hl+:104
+--color info:183,prompt:110,spinner:107,pointer:167,marker:215
 '
-# export FZF_TMUX="1"
-# export FZF_TMUX_HEIGHT="35"
-
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
@@ -62,3 +49,5 @@ bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
 bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 
 export BLOG="/Users/lazy/Dropbox/Workbench/CODE/web/strivetobelazy/"
+export GOPATH="/Users/lazy/go"
+export PATH="$GOPATH/bin:$PATH"
