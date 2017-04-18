@@ -7,7 +7,13 @@ set nocompatible
 unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
-colorscheme lazy
+
+if $VIMBG=='light'
+    set background=light
+else
+    set background=dark
+endif
+colorscheme PaperColor
 
 set number
 set relativenumber
@@ -33,7 +39,8 @@ set wildmenu
 
 set list
 set listchars=nbsp:⦸
-set listchars+=tab:⇥\ 
+" set listchars+=tab:▸\ 
+set listchars+=tab:\ \ 
 " set listchars+=eol:¬
 set listchars+=extends:❯
 set listchars+=precedes:❮
@@ -48,6 +55,7 @@ set tags=tags;$HOME
 if has('linebreak')
     set linebreak
     let &showbreak='⤷ '
+    set breakindentopt=shift:2
 endif
 
 set visualbell t_vb=
@@ -106,6 +114,7 @@ call plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-repeat'
     Plug 'neomake/neomake'
     Plug 'ervandew/supertab'
+    Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 call plug#end()
 "---------------------------------------------------------------------------
 " My functions
@@ -331,7 +340,11 @@ nnoremap <Leader>d :Gdiff<CR>
 set diffopt+=vertical
 
 "Neomake
-" autocmd! BufWritePost * Neomake
+augroup mneo
+    au!
+    autocmd! BufWritePost *.f90,*.f03,*.f08,*.c,*.cpp,*.go Neomake
+augroup end
+
 highlight NeomakeErrorSign ctermfg=red
 highlight NeomakeErrorMsg ctermfg=227
 "ctermbg=237

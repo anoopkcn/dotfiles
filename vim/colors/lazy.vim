@@ -43,5 +43,5 @@ hi Comment ctermfg=243 ctermbg=NONE cterm=NONE
 
 hi StatusLineNC ctermbg=244 ctermfg=235 cterm=NONE
 hi VertSplit cterm=NONE
-hi SpecialKey  term=bold ctermfg=237 cterm=NONE
+hi SpecialKey  term=NONE ctermfg=245 cterm=NONE
 

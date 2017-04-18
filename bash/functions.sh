@@ -28,10 +28,12 @@ function colours() {
 }
 
 light(){
-echo -e "\033]50;SetProfile=light\a"
+    export VIMBG=light
+    echo -e "\033]50;SetProfile=light\a"
 }
 dark(){
-echo -e "\033]50;SetProfile=dark\a"
+    export VIMBG=dark
+    echo -e "\033]50;SetProfile=dark\a"
 }
 
 # Create a new directory and enter it
@@ -156,4 +158,7 @@ doi2bib(){
     echo >> bib.bib;
     curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
     echo >> bib.bib;
+}
+pyc(){
+    echo $(python -c $1)
 }

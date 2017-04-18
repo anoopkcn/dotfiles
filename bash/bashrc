@@ -37,7 +37,7 @@ export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
 --height 35% --reverse --inline-info 
---color fg:188,bg:233,hl:103,fg+:222,bg+:234,hl+:104
+--color fg:188,bg:#1c1c1c,hl:103,fg+:222,bg+:234,hl+:104
 --color info:183,prompt:110,spinner:107,pointer:167,marker:215
 '
 # bind TAB:menu-complete
@@ -51,3 +51,4 @@ bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 export BLOG="/Users/lazy/Dropbox/Workbench/CODE/web/strivetobelazy/"
 export GOPATH="/Users/lazy/go"
 export PATH="$GOPATH/bin:$PATH"
+export VIMBG=dark
