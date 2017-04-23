@@ -115,6 +115,10 @@ call plug#begin('~/.vim/bundle')
     Plug 'neomake/neomake'
     Plug 'ervandew/supertab'
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+    Plug 'junegunn/vim-easy-align'
+    Plug 'metakirby5/codi.vim'
+    Plug 'vim-scripts/indentpython.vim'
+    Plug 'Valloric/YouCompleteMe'
 call plug#end()
 "---------------------------------------------------------------------------
 " My functions
@@ -339,11 +343,11 @@ nnoremap <Leader>d :Gdiff<CR>
 "for fugitive
 set diffopt+=vertical
 
+"Easy align
+nmap ga <Plug>(EasyAlign)
+
 "Neomake
-augroup mneo
-    au!
-    autocmd! BufWritePost *.f90,*.f03,*.f08,*.c,*.cpp,*.go Neomake
-augroup end
+autocmd! BufWritePost *.f90,*.f03,*.f08,*.c,*.cpp,*.go Neomake
 
 highlight NeomakeErrorSign ctermfg=red
 highlight NeomakeErrorMsg ctermfg=227
@@ -372,4 +376,3 @@ let g:neomake_fortran_gfortran_maker = {
             \'-I.', '-I./modules/.', '-I../modules/.'
         \],
         \}
-
