@@ -34,7 +34,7 @@ fi
 tls(){
     t_sessions=($(tmux ls | cut -d : -f 1));
     for i in ${!t_sessions[@]};do
-        echo -e "\e[1;31m"${t_sessions[i]}"\e[0m";
+        printf "\e[31m${t_sessions[i]}\e[0m\n"
         (tmux lsw -t ${t_sessions[i]} | gawk '{print $1,$2}');
     done
 }

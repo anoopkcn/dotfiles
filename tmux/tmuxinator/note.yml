@@ -1,0 +1,11 @@
+# ~/.tmuxinator/note.yml
+
+name: note
+root: <%= @args[0] %>
+attach: false
+
+windows:
+  - jupyter-notebook:
+      layout: main-vertical
+      panes:
+        - jupyter notebook

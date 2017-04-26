@@ -8,12 +8,12 @@ unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
-if $VIMBG=='light'
-    set background=light
-else
-    set background=dark
-endif
-colorscheme PaperColor
+" if $VIMBG=='light'
+"     set background=light
+" else
+"     set background=dark
+" endif
+colo lazy
 
 set number
 set relativenumber

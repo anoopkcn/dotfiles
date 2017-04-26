@@ -14,34 +14,48 @@ if version >= 700
     "TODO
 endif
 
-hi Normal            ctermfg=15     ctermbg=NONE   cterm=NONE
-hi Visual            ctermfg=251    ctermbg=239    cterm=NONE
-hi Visualnos         ctermfg=251    ctermbg=236    cterm=NONE
-hi Search            ctermfg=1      ctermbg=110    cterm=NONE
-hi SpecialKey        ctermfg=117    ctermbg=NONE   cterm=NONE
-hi WarningMsg        ctermfg=131    ctermbg=15     cterm=bold
-hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
-hi MoreMsg           ctermfg=11     ctermbg=NONE   cterm=NONE
-
 " Syntax highlighting
-hi Function       ctermfg=137    ctermbg=NONE   cterm=bold
-hi Todo           ctermfg=130    ctermbg=NONE   cterm=NONE
+" -------------------
+hi Comment              ctermfg=247         ctermbg=NONE        cterm=NONE
+hi Function             ctermfg=NONE         ctermbg=NONE        cterm=bold
+hi Statement            ctermfg=172         ctermbg=NONE        cterm=NONE
+hi Constant             ctermfg=37          ctermbg=NONE        cterm=NONE
+hi String               ctermfg=41          ctermbg=NONE        cterm=NONE
+hi PreProc              ctermfg=25          ctermbg=NONE        cterm=bold
+hi Type                 ctermfg=28          ctermbg=NONE        cterm=NONE
+hi Special              ctermfg=210         ctermbg=NONE        cterm=NONE
+hi Error                ctermfg=196         ctermbg=NONE        cterm=NONE
+hi Todo                 ctermfg=130         ctermbg=NONE        cterm=NONE
+
+
+" Editor colors
+"------------------
+" hi Normal            ctermfg=15     ctermbg=NONE   cterm=NONE
+" hi Visual            ctermfg=251    ctermbg=239    cterm=NONE
+" hi Visualnos         ctermfg=251    ctermbg=236    cterm=NONE
+" hi Search            ctermfg=1      ctermbg=110    cterm=NONE
+" hi SpecialKey        ctermfg=117    ctermbg=NONE   cterm=NONE
+" hi WarningMsg        ctermfg=131    ctermbg=15     cterm=bold
+" hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
+" hi MoreMsg           ctermfg=11     ctermbg=NONE   cterm=NONE
+
+hi LineNr               ctermfg=243         ctermbg=NONE        cterm=NONE
+hi CursorLineNr         ctermfg=130         ctermbg=NONE        cterm=bold
+hi StatusLine           ctermfg=231         ctermbg=241         cterm=NONE 
+hi StatusLineNC         ctermfg=235         ctermbg=244         cterm=NONE
+hi VertSplit            ctermfg=NONE        ctermbg=NONE        cterm=NONE
+hi SpecialKey           ctermfg=245         ctermbg=NONE        cterm=NONE      term=NONE
 
 "special colors
 hi clear SpellBad
-hi SpellBad term=standout ctermfg=1 term=underline cterm=underline
 hi clear SpellCap
-hi SpellCap term=underline cterm=underline ctermfg=green
 hi clear SpellRare
-hi SpellRare term=underline cterm=underline
 hi clear SpellLocal
-hi SpellLocal term=underline cterm=underline
+
+hi SpellBad         ctermfg=1       ctermbg=NONE       cterm=underline      term=standout       term=underline
+hi SpellCap         ctermfg=green   ctermbg=NONE        cterm=underline     term=underline
+hi SpellRare        ctermfg=NONE    ctermbg=NONE        cterm=underline     term=underline
+hi SpellLocal       ctermfg=NONE    ctermbg=NONE        cterm=underline     term=underline
 
 hi clear SignColumn
-hi LineNr ctermfg=243  ctermbg=NONE cterm=NONE
-hi Comment ctermfg=243 ctermbg=NONE cterm=NONE
-
-hi StatusLineNC ctermbg=244 ctermfg=235 cterm=NONE
-hi VertSplit cterm=NONE
-hi SpecialKey  term=NONE ctermfg=245 cterm=NONE
 

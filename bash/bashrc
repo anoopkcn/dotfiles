@@ -51,4 +51,5 @@ bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 export BLOG="/Users/lazy/Dropbox/Workbench/CODE/web/strivetobelazy/"
 export GOPATH="/Users/lazy/go"
 export PATH="$GOPATH/bin:$PATH"
+export PATH="/Applications/Julia-0.5.app/Contents/Resources/julia/bin:$PATH"
 export VIMBG=dark
