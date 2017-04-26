@@ -21,9 +21,9 @@ hi Function             ctermfg=NONE         ctermbg=NONE        cterm=bold
 hi Statement            ctermfg=172         ctermbg=NONE        cterm=NONE
 hi Constant             ctermfg=37          ctermbg=NONE        cterm=NONE
 hi String               ctermfg=41          ctermbg=NONE        cterm=NONE
-hi PreProc              ctermfg=25          ctermbg=NONE        cterm=bold
+hi PreProc              ctermfg=33          ctermbg=NONE        cterm=NONE
 hi Type                 ctermfg=28          ctermbg=NONE        cterm=NONE
-hi Special              ctermfg=210         ctermbg=NONE        cterm=NONE
+hi Special              ctermfg=204         ctermbg=NONE        cterm=NONE
 hi Error                ctermfg=196         ctermbg=NONE        cterm=NONE
 hi Todo                 ctermfg=130         ctermbg=NONE        cterm=NONE
 
