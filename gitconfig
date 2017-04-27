@@ -9,3 +9,5 @@
 [alias]
 	next = !git checkout `git rev-list HEAD..demo-end | tail -1`
 	prev = checkout HEAD^
+[diff]
+	tool = vimdiff
