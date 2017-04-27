@@ -10,11 +10,8 @@ ln -sf ~/.dotfiles/bash/inputrc ~/.inputrc
 ln -sf ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -sf ~/.dotfiles/tmux/dottmux ~/.tmux
 
-ln -sf ~/.dotfiles/pip ~/.pip
-ln -sf ~/.dotfiles/gitconfig ~/.gitconfig
+ln -sf ~/.dotfiles/python/pip ~/.pip
+ln -sf ~/.dotfiles/git/gitconfig ~/.gitconfig
 
-mkdir -p ~/.vim/colors
-ln -sf ~/.dotfiles/vim/vimrc ~/.vimrc
-ln -sf ~/.dotfiles/vim/lazy.vim ~/.vim/colors/lazy.vim
-
-# ln -sf ~/.dotfiles/ssh/config ~/.ssh/config
+ln -sf ~/.dotfiles/vim/init.vim ~/.vimrc
+ln -sf ~/.dotfiles/vim ~/.vim
