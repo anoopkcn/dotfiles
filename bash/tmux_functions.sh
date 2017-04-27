@@ -1,5 +1,27 @@
 #!/usr/bin/env bash
 # tmux related functions
+# for updating envirnment variable
+function tmux() {
+    local tmux=$(type -fp tmux)
+    case "$1" in
+        update-environment|update-env|env-update)
+            local v
+            while read v; do
+                if [[ $v == -* ]]; then
+                    unset ${v/#-/}
+                else
+                    # Add quotes around the argument
+                    v=${v/=/=\"}
+                    v=${v/%/\"}
+                    eval export $v
+                fi
+            done < <(tmux show-environment)
+            ;;
+        *)
+            $tmux "$@"
+            ;;
+    esac
+}
 
 function tm(){
 # abort if we're already inside a TMUX session

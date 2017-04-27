@@ -8,12 +8,12 @@ unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
-" if $VIMBG=='light'
-"     set background=light
-" else
-"     set background=dark
-" endif
-colo lazy
+if $VIMBG=='light'
+    set background=light
+else
+    set background=dark
+endif
+colorscheme PaperColor
 
 set number
 set relativenumber
@@ -24,10 +24,11 @@ set backspace=indent,eol,start
 set autoindent
 set expandtab
 set shiftround
-set shiftwidth=4
+set shiftwidth=2
 set smartindent
-set softtabstop=4
-set tabstop=4
+set softtabstop=2
+set tabstop=2
+
 set scrolloff=3
 set shortmess=filnxtToOI
 set nocursorline
@@ -119,6 +120,9 @@ call plug#begin('~/.vim/bundle')
     Plug 'metakirby5/codi.vim'
     Plug 'vim-scripts/indentpython.vim'
     Plug 'Valloric/YouCompleteMe'
+    Plug 'google/vim-maktaba'
+    Plug 'google/vim-codefmt'
+    Plug 'google/vim-glaive'
 call plug#end()
 "---------------------------------------------------------------------------
 " My functions

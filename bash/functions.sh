@@ -28,11 +28,11 @@ function colours() {
 
 light(){
     export VIMBG=light
-    echo -e "\033]50;SetProfile=light\a"
+    echo -n -e "\033]50;SetProfile=light\a"
 }
 dark(){
     export VIMBG=dark
-    echo -e "\033]50;SetProfile=dark\a"
+    echo -n -e "\033]50;SetProfile=dark\a"
 }
 
 # Create a new directory and enter it
