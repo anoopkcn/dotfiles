@@ -17,10 +17,10 @@ endif
 " Syntax highlighting
 " -------------------
 hi Comment              ctermfg=247         ctermbg=NONE        cterm=NONE
-hi Function             ctermfg=NONE         ctermbg=NONE        cterm=bold
+hi Function             ctermfg=NONE        ctermbg=NONE        cterm=bold
 hi Statement            ctermfg=172         ctermbg=NONE        cterm=NONE
 hi Constant             ctermfg=37          ctermbg=NONE        cterm=NONE
-hi String               ctermfg=41          ctermbg=NONE        cterm=NONE
+hi String               ctermfg=35          ctermbg=NONE        cterm=NONE
 hi PreProc              ctermfg=33          ctermbg=NONE        cterm=NONE
 hi Type                 ctermfg=28          ctermbg=NONE        cterm=NONE
 hi Special              ctermfg=204         ctermbg=NONE        cterm=NONE
@@ -41,7 +41,7 @@ hi Todo                 ctermfg=130         ctermbg=NONE        cterm=NONE
 
 hi LineNr               ctermfg=243         ctermbg=NONE        cterm=NONE
 hi CursorLineNr         ctermfg=130         ctermbg=NONE        cterm=bold
-hi StatusLine           ctermfg=231         ctermbg=241         cterm=NONE 
+hi StatusLine           ctermfg=231         ctermbg=241         cterm=NONE
 hi StatusLineNC         ctermfg=235         ctermbg=244         cterm=NONE
 hi VertSplit            ctermfg=NONE        ctermbg=NONE        cterm=NONE
 hi SpecialKey           ctermfg=245         ctermbg=NONE        cterm=NONE      term=NONE
@@ -52,7 +52,7 @@ hi clear SpellCap
 hi clear SpellRare
 hi clear SpellLocal
 
-hi SpellBad         ctermfg=1       ctermbg=NONE       cterm=underline      term=standout       term=underline
+hi SpellBad         ctermfg=1       ctermbg=NONE        cterm=underline      term=standout       term=underline
 hi SpellCap         ctermfg=green   ctermbg=NONE        cterm=underline     term=underline
 hi SpellRare        ctermfg=NONE    ctermbg=NONE        cterm=underline     term=underline
 hi SpellLocal       ctermfg=NONE    ctermbg=NONE        cterm=underline     term=underline
