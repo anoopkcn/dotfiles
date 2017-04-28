@@ -4,7 +4,7 @@
     email = strivetobelazy@gmail.com
 [core]
 	editor = vim
-	excludesfile = /Users/lazy/.dotfiles/git/global_gitignore
+	excludesfile = /Users/lazy/.dotfiles/git/ggitignore
 [alias]
 	next = !git checkout `git rev-list HEAD..demo-end | tail -1`
 	prev = checkout HEAD^
@@ -13,3 +13,8 @@
 	tool = vimdiff
 [difftool]
 	prompt = false
+[merge]
+	tool = fugitive
+[mergetool "fugitive"]
+	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
+	keepBackup = false
