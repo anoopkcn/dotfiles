@@ -17,8 +17,9 @@ fi
 # Prompt
 trunc_dir='$(pwd|awk -F/ -v "n=$(tput cols)" -v "h=^$HOME" '\''{sub(h,"~");n=0.3*n;b=$1"/"$2} length($0)<=n || NF==3 {print;next;} NF>3{b=b"/../"; e=$NF; n-=length(b $NF); for (i=NF-1;i>3 && n>length(e)+1;i--) e=$i"/"e;} {print b e;}'\'')'
 PS1="\[\e[34m\]\u\[\e[1;32m\]@\[\e[0;33m\]anoop\[\e[35m\]:"
-PS1="$PS1\[\e[m\]$trunc_dir\[\e[38;5;59m\]\$(__git_ps1)\[\e[1;31m\]: \[\e[0m\]"
-# PS1="$PS1\[\e[m\]\w\[\e[1;31m\]: \[\e[0m\]"
+# PS1="$PS1\[\e[m\]$trunc_dir\[\e[38;5;59m\]\$(__git_ps1)\[\e[1;31m\]: \[\e[0m\]"
+# PS1="$PS1\[\e[m\]\W\[\e[1;31m\]: \[\e[0m\]"
+PS1="$PS1\[\e[m\]\W\[\e[38;5;59m\]\$(__git_ps1)\[\e[1;31m\]: \[\e[0m\]"
 
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'

@@ -19,6 +19,7 @@ set number
 set relativenumber
 set showmatch
 set backspace=indent,eol,start
+set clipboard=unnamed
 
 " TAB settings "
 set autoindent
@@ -117,7 +118,6 @@ call plug#begin('~/.vim/bundle')
     Plug 'ervandew/supertab'
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
     Plug 'junegunn/vim-easy-align'
-    Plug 'metakirby5/codi.vim'
     Plug 'vim-scripts/indentpython.vim'
     Plug 'Valloric/YouCompleteMe'
     Plug 'google/vim-maktaba'
