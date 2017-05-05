@@ -350,3 +350,6 @@ set diffopt+=vertical
 "Easy align
 nmap ga <Plug>(EasyAlign)
 
+" Lose focus 
+" autocmd FocusLost,WinLeave * call autocmds#blur_window()
+" autocmd BufEnter,FocusGained,VimEnter,WinEnter * call autocmds#focus_window()
