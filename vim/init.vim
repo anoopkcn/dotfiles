@@ -113,9 +113,7 @@ call plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-commentary'
     Plug 'neomake/neomake'
-    Plug 'ervandew/supertab'
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-    Plug 'junegunn/vim-easy-align'
     Plug 'Valloric/YouCompleteMe'
     Plug 'google/vim-maktaba'
     Plug 'google/vim-codefmt'
@@ -345,18 +343,8 @@ nnoremap <Leader>d :Gdiff<CR>
 "for fugitive
 set diffopt+=vertical
 
-"Easy align
-nmap ga <Plug>(EasyAlign)
+nnoremap <leader>r :CodiUpdate<cr>
 
-"python with virtualenv support
-py << EOF
-import os
-import sys
-if 'VIRTUAL_ENV' in os.environ:
-  project_base_dir = os.environ['VIRTUAL_ENV']
-  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-  execfile(activate_this, dict(__file__=activate_this))
-EOF
 augroup autoformat_settings
   " autocmd FileType bzl AutoFormatBuffer buildifier
   autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
@@ -367,11 +355,3 @@ augroup autoformat_settings
   " autocmd FileType java AutoFormatBuffer google-java-format
   autocmd FileType python AutoFormatBuffer autopep8
 augroup END
-let g:codi#autocmd='None'
-" let g:codi#rightsplit=0
-let g:codi#rightalign=0
-" let g:codi#width=50
-" let g:codi#raw=1
-
-nnoremap <leader>r :CodiUpdate<cr>
-
