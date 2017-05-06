@@ -112,17 +112,15 @@ call plug#begin('~/.vim/bundle')
     Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-commentary'
-    Plug 'tpope/vim-surround'
-    Plug 'tpope/vim-repeat'
     Plug 'neomake/neomake'
     Plug 'ervandew/supertab'
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
     Plug 'junegunn/vim-easy-align'
-    Plug 'vim-scripts/indentpython.vim'
     Plug 'Valloric/YouCompleteMe'
     Plug 'google/vim-maktaba'
     Plug 'google/vim-codefmt'
     Plug 'google/vim-glaive'
+    Plug 'metakirby5/codi.vim'
 call plug#end()
 "---------------------------------------------------------------------------
 " My functions
@@ -350,6 +348,30 @@ set diffopt+=vertical
 "Easy align
 nmap ga <Plug>(EasyAlign)
 
-" Lose focus 
-" autocmd FocusLost,WinLeave * call autocmds#blur_window()
-" autocmd BufEnter,FocusGained,VimEnter,WinEnter * call autocmds#focus_window()
+"python with virtualenv support
+py << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
+augroup autoformat_settings
+  " autocmd FileType bzl AutoFormatBuffer buildifier
+  autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+  " autocmd FileType dart AutoFormatBuffer dartfmt
+  autocmd FileType go AutoFormatBuffer gofmt
+  " autocmd FileType gn AutoFormatBuffer gn
+  " autocmd FileType html,css,json AutoFormatBuffer js-beautify
+  " autocmd FileType java AutoFormatBuffer google-java-format
+  autocmd FileType python AutoFormatBuffer autopep8
+augroup END
+let g:codi#autocmd='None'
+" let g:codi#rightsplit=0
+let g:codi#rightalign=0
+" let g:codi#width=50
+" let g:codi#raw=1
+
+nnoremap <leader>r :CodiUpdate<cr>
+
