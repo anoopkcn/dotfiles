@@ -114,11 +114,12 @@ call plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-commentary'
     Plug 'neomake/neomake'
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-    Plug 'Valloric/YouCompleteMe'
-    Plug 'google/vim-maktaba'
-    Plug 'google/vim-codefmt'
-    Plug 'google/vim-glaive'
-    Plug 'metakirby5/codi.vim'
+    Plug 'ervandew/supertab'
+    "Plug 'Valloric/YouCompleteMe'
+    "Plug 'google/vim-maktaba'
+    "Plug 'google/vim-codefmt'
+    "Plug 'google/vim-glaive'
+    "Plug 'metakirby5/codi.vim'
 call plug#end()
 "---------------------------------------------------------------------------
 " My functions
