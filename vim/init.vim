@@ -344,15 +344,15 @@ nnoremap <Leader>d :Gdiff<CR>
 "for fugitive
 set diffopt+=vertical
 
-nnoremap <leader>r :CodiUpdate<cr>
+" nnoremap <leader>r :CodiUpdate<cr>
 
-augroup autoformat_settings
-  " autocmd FileType bzl AutoFormatBuffer buildifier
-  autocmd FileType c,proto,javascript AutoFormatBuffer clang-format
-  " autocmd FileType dart AutoFormatBuffer dartfmt
-  autocmd FileType go AutoFormatBuffer gofmt
-  " autocmd FileType gn AutoFormatBuffer gn
-  " autocmd FileType html,css,json AutoFormatBuffer js-beautify
-  " autocmd FileType java AutoFormatBuffer google-java-format
-  autocmd FileType python AutoFormatBuffer autopep8
-augroup END
+" augroup autoformat_settings
+"   " autocmd FileType bzl AutoFormatBuffer buildifier
+"   autocmd FileType c,proto,javascript AutoFormatBuffer clang-format
+"   " autocmd FileType dart AutoFormatBuffer dartfmt
+"   autocmd FileType go AutoFormatBuffer gofmt
+"   " autocmd FileType gn AutoFormatBuffer gn
+"   " autocmd FileType html,css,json AutoFormatBuffer js-beautify
+"   " autocmd FileType java AutoFormatBuffer google-java-format
+"   autocmd FileType python AutoFormatBuffer autopep8
+" augroup END
