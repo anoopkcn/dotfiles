@@ -1,19 +1,22 @@
 " -------
 " Vim run command file
 " -------
-
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
-if $VIMBG=='light'
-    set background=light
-else
-    set background=dark
-endif
-colorscheme PaperColor
+" if $VIMBG=='light'
+"     set background=light
+" else
+"     set background=dark
+" endif
+" colorscheme PaperColor
+syntax enable
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
 
 set number
 set relativenumber
@@ -115,11 +118,6 @@ call plug#begin('~/.vim/bundle')
     Plug 'neomake/neomake'
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
     Plug 'ervandew/supertab'
-    "Plug 'Valloric/YouCompleteMe'
-    "Plug 'google/vim-maktaba'
-    "Plug 'google/vim-codefmt'
-    "Plug 'google/vim-glaive'
-    "Plug 'metakirby5/codi.vim'
 call plug#end()
 "---------------------------------------------------------------------------
 " My functions
