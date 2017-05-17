@@ -42,14 +42,15 @@ set mouse=a
 set path+=**
 set wildmenu
 
-set list
-set listchars=nbsp:⦸
+" set list
+" set listchars=nbsp:⦸
 " set listchars+=tab:▸\ 
-set listchars+=tab:\ \ 
+" set listchars+=tab:\ \ 
 " set listchars+=eol:¬
-set listchars+=extends:❯
-set listchars+=precedes:❮
-set listchars+=trail:␣
+" set listchars+=extends:❯
+" set listchars+=precedes:❮
+" set listchars+=trail:␣
+"
 set nojoinspaces
 set diffopt=filler,vertical
 set splitright
