@@ -1,22 +1,15 @@
 " -------
 " Vim run command file
 " -------
+
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
-" if $VIMBG=='light'
-"     set background=light
-" else
-"     set background=dark
-" endif
-" colorscheme PaperColor
-syntax enable
 set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
+colorscheme PaperColor
 
 set number
 set relativenumber
@@ -42,15 +35,15 @@ set mouse=a
 set path+=**
 set wildmenu
 
-" set list
-" set listchars=nbsp:⦸
-" set listchars+=tab:▸\ 
-" set listchars+=tab:\ \ 
+set list
+set listchars=nbsp:⦸
+set listchars+=tab:▸\ 
+set listchars+=tab:\ \ 
 " set listchars+=eol:¬
-" set listchars+=extends:❯
-" set listchars+=precedes:❮
-" set listchars+=trail:␣
-"
+set listchars+=extends:❯
+set listchars+=precedes:❮
+set listchars+=trail:␣
+
 set nojoinspaces
 set diffopt=filler,vertical
 set splitright
@@ -90,6 +83,11 @@ nnoremap g^ ^
 nnoremap g$ $
 nnoremap g0 0
 
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
     set nobackup
@@ -120,6 +118,7 @@ call plug#begin('~/.vim/bundle')
     Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
     Plug 'ervandew/supertab'
 call plug#end()
+
 "---------------------------------------------------------------------------
 " My functions
 augroup vimrc
@@ -343,8 +342,6 @@ nnoremap <Leader>d :Gdiff<CR>
 "for fugitive
 set diffopt+=vertical
 
-" nnoremap <leader>r :CodiUpdate<cr>
-
 " augroup autoformat_settings
 "   " autocmd FileType bzl AutoFormatBuffer buildifier
 "   autocmd FileType c,proto,javascript AutoFormatBuffer clang-format
@@ -355,3 +352,6 @@ set diffopt+=vertical
 "   " autocmd FileType java AutoFormatBuffer google-java-format
 "   autocmd FileType python AutoFormatBuffer autopep8
 " augroup END
+
+hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
+hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
