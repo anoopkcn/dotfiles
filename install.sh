@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Installation file for bash, vim, tmux, etc..
+# Installation file for bash, vim, tmux, etc..
 # (Optional)install Ag using `brew install the_silver_searcher`
 # tmux is configured using reattach-usernamespace (install using brew)
 

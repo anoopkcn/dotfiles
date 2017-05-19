@@ -83,10 +83,10 @@ nnoremap g^ ^
 nnoremap g$ $
 nnoremap g0 0
 
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
+" noremap <Up> <NOP>
+" noremap <Down> <NOP>
+" noremap <Left> <NOP>
+" noremap <Right> <NOP>
 
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')

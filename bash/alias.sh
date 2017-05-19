@@ -17,7 +17,6 @@ alias tsend='tmux send -t'
 alias tkill='tmux kill-session -t'
 alias ts='tmuxinator start'
 
-
 #git
 alias gs='git status'
 alias gn='git next'
