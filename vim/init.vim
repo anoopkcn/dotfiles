@@ -8,7 +8,7 @@ unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
-set background=dark
+set background=light
 colorscheme PaperColor
 
 set number

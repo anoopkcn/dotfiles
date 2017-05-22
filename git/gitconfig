@@ -14,7 +14,7 @@
 [difftool]
 	prompt = false
 [merge]
-	tool = fugitive
+	tool = code
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 	keepBackup = false

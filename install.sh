@@ -4,14 +4,15 @@
 # (Optional)install Ag using `brew install the_silver_searcher`
 # tmux is configured using reattach-usernamespace (install using brew)
 
-ln -sf ~/.dotfiles/bash/bash_profile ~/.bash_profile
-ln -sf ~/.dotfiles/bash/bashrc ~/.bashrc
-ln -sf ~/.dotfiles/bash/inputrc ~/.inputrc
+ln -sf ~/Dropbox/Dotfiles/bash/bash_profile ~/.bash_profile
+ln -sf ~/Dropbox/Dotfiles/bash/bashrc ~/.bashrc
+ln -sf ~/Dropbox/Dotfiles/bash/inputrc ~/.inputrc
 
-ln -sf ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
+ln -sf ~/Dropbox/Dotfiles/tmux/tmux.conf ~/.tmux.conf
+ln -sf ~/Dropbox/Dotfiles/tmux/tmuxinator ~/.tmuxinator
 
-ln -sf ~/.dotfiles/python/pip ~/.pip
-ln -sf ~/.dotfiles/git/gitconfig ~/.gitconfig
+ln -sf ~/Dropbox/Dotfiles/python/pip ~/.pip
+ln -sf ~/Dropbox/Dotfiles/git/gitconfig ~/.gitconfig
 
-ln -sf ~/.dotfiles/vim/init.vim ~/.vimrc
-ln -sf ~/.dotfiles/vim ~/.vim
+ln -sf ~/Dropbox/Dotfiles/vim/init.vim ~/.vimrc
+ln -sf ~/Dropbox/Dotfiles/vim ~/.vim
