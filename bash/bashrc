@@ -51,6 +51,9 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 # general settings
 export HISTSIZE=10000
 export EDITOR=vim
-export BLOG="/Users/lazy/Dropbox/Workbench/CODE/web/strivetobelazy/"
 export GOPATH="/Users/lazy/go"
 export PATH="$GOPATH/bin:$PATH"
+export BLOG="/Users/lazy/Dropbox/Workbench/CODE/web/strivetobelazy/"
+export QE="/Users/lazy/Dropbox/Workbench/ESPRESSO/"
+export MHPC="/Users/lazy/Dropbox/Workbench/MHPC/"
+export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"

@@ -1,7 +1,7 @@
-# ~/.tmuxinator/iterm.yml
+# ~/.tmuxinator/qe.yml
 
-name: iterm
-root: <%= @args[0] %>
+name: qe
+root: ~/Dropbox/Workbench/ESPRESSO
 
 windows:
   - bash:

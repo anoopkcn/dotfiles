@@ -95,15 +95,15 @@ if exists('$SUDO_USER')
     set nowritebackup
     set noundofile
 else
-    let g:netrw_home=$HOME.'/.tmp/'
-    set directory=$HOME/.tmp/vimswap//
-    set backupdir=$HOME/.tmp/vimswap//
-    set viewdir=$HOME/.tmp/views//
+    let g:netrw_home=$HOME.'/.config/'
+    set directory=$HOME/.config/vimswap//
+    set backupdir=$HOME/.config/vimswap//
+    set viewdir=$HOME/.config/views//
     set undofile "poor man's version controll
 endif
 
 if has("persistent_undo")
-    set undodir=$HOME/.tmp/vimswap//
+    set undodir=$HOME/.config/vimswap//
     set undofile
 endif
 
