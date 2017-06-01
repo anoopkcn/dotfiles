@@ -119,7 +119,7 @@ elif [[ "$#" -eq 1 ]]; then
     curr_path=`pwd`
     if [ "$curr_path" != "$HOME" ]; then
     path=`echo $curr_path | cut -d '/' -f 4-`
-    rsync -arzv --prune-empty-dirs --exclude-from="$HOME/.dotfiles/bash/rsync_exclude.txt" -e ssh $1:~/${path}/. ${curr_path}/.
+    rsync -arzv --prune-empty-dirs --exclude-from="$HOME/Dropbox/Dotfiles/bash/rsync_exclude.txt" -e ssh $1:~/${path}/. ${curr_path}/.
     else
       echo "Warning:Global sync on Home folder is not allowed"
     fi
