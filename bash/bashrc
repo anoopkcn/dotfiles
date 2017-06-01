@@ -35,10 +35,9 @@ export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
 --height 35% --reverse --inline-info
+--color fg:188,bg:#1c1c1c,hl:103,fg+:222,bg+:234,hl+:104
+--color info:183,prompt:110,spinner:107,pointer:167,marker:215
 '
-#--color fg:188,bg:#1c1c1c,hl:103,fg+:222,bg+:234,hl+:104
-#--color info:183,prompt:110,spinner:107,pointer:167,marker:215
-
 # folder file colouring
 export GREP_OPTIONS='--color=auto'
 export CLICOLOR=1
