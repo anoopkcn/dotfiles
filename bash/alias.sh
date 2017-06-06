@@ -8,7 +8,9 @@ alias cd.='cd ..'
 alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
+#application links
 alias vi='vim -u NONE'
+alias inkimg='/Applications/Inkscape.app/Contents/Resources/script'
 
 # tmux alias
 alias ta='tmux attach -t'

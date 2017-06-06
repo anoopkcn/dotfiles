@@ -1,0 +1,29 @@
+{
+  "MarkdownCell": {
+    "cm_config": {
+      "lineWrapping": true
+    }
+  },
+  "CodeCell": {
+    "cm_config": {
+      "lineWrapping": true
+    }
+  },
+  "load_extensions": {
+    "nbextensions_configurator/config_menu/main": true,
+    "contrib_nbextensions_help_item/main": true,
+    "hide_input/main": true,
+    "toggle_all_line_numbers/main": true,
+    "toc2/main": false,
+    "code_font_size/code_font_size": true,
+    "search-replace/main": false,
+    "latex_envs/latex_envs": false,
+    "gist_it/main": true,
+    "spellchecker/main": true,
+    "hide_input_all/main": true,
+    "highlighter/highlighter": false
+  },
+  "zenmode_backgrounds": [
+    ""
+  ]
+}

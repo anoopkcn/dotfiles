@@ -161,3 +161,19 @@ doi2bib(){
 pyc(){
     echo $(python -c $1)
 }
+
+n() {
+  NOTES=${HOME}/Dropbox/Workbench/notes
+  if [[ $# -eq 0 ]];then
+    $EDITOR ${NOTES}/todo.txt
+  elif [[ $# -eq 1 ]];then
+    echo "$(date '+%A %B %d %Y %r') :  ${1}" >> ${NOTES}/todo.txt
+  else
+    echo "$(date '+%A %B %d %Y %r') :  ${2}" >> ${NOTES}/${1}.txt
+  fi
+}
+
+nls() {
+  NOTES=${HOME}/Dropbox/Workbench/notes
+  ls -c ${NOTES}/ | grep "$*"
+}

@@ -56,7 +56,7 @@ fi
 tls(){
     t_sessions=($(tmux ls | cut -d : -f 1));
     for i in ${!t_sessions[@]};do
-        printf "\e[31m${t_sessions[i]}\e[0m\n"
+        printf "\e[96m${t_sessions[i]}\e[0m\n"
         (tmux lsw -t ${t_sessions[i]} | awk '{print $1,$2}');
     done
 }

@@ -1,0 +1,9 @@
+{
+  "leap_motion": {
+    "naturalSwipe": true,
+    "pointerOpacity": 0.5,
+    "pointerColor": "#d80000"
+  },
+  "start_slideshow_at": "selected",
+  "scroll": true
+}
