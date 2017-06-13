@@ -11,6 +11,7 @@ alias ll='ls -l'
 #application links
 alias vi='vim -u NONE'
 alias inkimg='/Applications/Inkscape.app/Contents/Resources/script'
+alias chrome='open -a Google\ Chrome'
 
 # tmux alias
 alias ta='tmux attach -t'

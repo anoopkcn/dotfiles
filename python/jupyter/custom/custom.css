@@ -21,4 +21,7 @@ div#header-container {
 /* #notebook { padding-top:0px !important; } */
 /* .container { width:100% !important; } */
 /* .end_space { min-height:0px !important; } */
-
+.CodeMirror pre {
+      font-family: Monaco; font-size: 11pt;
+      line-height: 1.7em;
+}

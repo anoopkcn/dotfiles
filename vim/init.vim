@@ -115,7 +115,7 @@ call plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-commentary'
     Plug 'neomake/neomake'
-    Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+    " Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
     Plug 'ervandew/supertab'
 call plug#end()
 

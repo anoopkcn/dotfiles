@@ -4,5 +4,8 @@
       "vimMode": true,
       "keyMap": "vim"
     }
+  },
+  "load_extensions": {
+    "codefolding/edit": true
   }
 }
