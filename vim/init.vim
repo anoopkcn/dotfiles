@@ -1,7 +1,6 @@
 " -------
 " Vim run command file
 " -------
-
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
@@ -10,6 +9,7 @@ filetype plugin indent on
 
 set background=light
 colorscheme PaperColor
+set guifont=Monaco:h16
 
 set number
 set relativenumber
@@ -329,8 +329,6 @@ nnoremap <silent> <leader>b :Buffers<cr>
 nnoremap <leader>t :Tags  " easy tags
 nnoremap <silent> <Leader>` :Marks<CR>
 
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
@@ -355,3 +353,14 @@ set diffopt+=vertical
 
 hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
 hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
+
+
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 <bang>0)
+
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
