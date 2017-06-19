@@ -1,6 +1,6 @@
 #!/bin/bash
 fzf-down() {
-  fzf --height 35% "$@" #--border
+  fzf --height 45% "$@" #--border
 }
 
 # fd - cd to selected directory

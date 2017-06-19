@@ -8,12 +8,15 @@ alias cd.='cd ..'
 alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
+alias c='clear'
 #application links
-alias vi='vim -u NONE'
+alias vi='nvim -u NONE'
+alias vim='nvim'
 alias inkimg='/Applications/Inkscape.app/Contents/Resources/script'
 alias chrome='open -a Google\ Chrome'
 
 # tmux alias
+alias tmux="TERM=screen-256color-bce tmux"
 alias ta='tmux attach -t'
 alias tnew='tmux new -s'
 alias tsend='tmux send -t'

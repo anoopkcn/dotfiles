@@ -163,7 +163,7 @@ pyc(){
 }
 
 n() {
-  NOTES=${HOME}/Dropbox/Workbench/notes
+  NOTES=${HOME}/Dropbox/Notes
   if [[ $# -eq 0 ]];then
     $EDITOR ${NOTES}/todo.txt
   elif [[ $# -eq 1 ]];then
@@ -174,6 +174,6 @@ n() {
 }
 
 nls() {
-  NOTES=${HOME}/Dropbox/Workbench/notes
+  NOTES=${HOME}/Dropbox/Notes
   ls -c ${NOTES}/ | grep "$*"
 }

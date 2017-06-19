@@ -7,8 +7,8 @@ unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
-set background=light
-colorscheme PaperColor
+" set background=light
+" colorscheme PaperColor
 set guifont=Monaco:h16
 
 set number
@@ -115,8 +115,8 @@ call plug#begin('~/.vim/bundle')
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-commentary'
     Plug 'neomake/neomake'
-    " Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
     Plug 'ervandew/supertab'
+    " Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 call plug#end()
 
 "---------------------------------------------------------------------------
@@ -353,6 +353,7 @@ set diffopt+=vertical
 
 hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
 hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
+hi LineNr            ctermfg=255         ctermbg=NONE        cterm=NONE
 
 
 command! -bang -nargs=* Ag
@@ -364,3 +365,8 @@ command! -bang -nargs=* Ag
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
+" Openup browser to preview markdown
+function! Preview()
+    silent execute "!open -a 'Google\ Chrome.app' " . shellescape(expand('%'))
+endfunction
+command! Preview :call Preview()
