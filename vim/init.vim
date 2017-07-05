@@ -7,8 +7,6 @@ unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
-" set background=light
-" colorscheme PaperColor
 set guifont=Monaco:h16
 
 set number
@@ -42,7 +40,7 @@ set listchars+=tab:\ \
 " set listchars+=eol:¬
 set listchars+=extends:❯
 set listchars+=precedes:❮
-set listchars+=trail:␣
+"set listchars+=trail:␣
 
 set nojoinspaces
 set diffopt=filler,vertical
@@ -111,13 +109,79 @@ autocmd InsertEnter * :setlocal nohlsearch
 
 " plugins
 call plug#begin('~/.vim/bundle')
-    Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-commentary'
     Plug 'neomake/neomake'
     Plug 'ervandew/supertab'
+    Plug 'kien/ctrlp.vim'
+    Plug 'scrooloose/nerdtree'
+    Plug 'airblade/vim-gitgutter'
+    "Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
     " Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 call plug#end()
+if has('gui')
+  " Turn off scrollbars. (Default on macOS is "egmrL").
+  set background=dark
+  colorscheme PaperColor
+
+  set guioptions-=L
+  set guioptions-=R
+  set guioptions-=b
+  set guioptions-=l
+  set guioptions-=r
+
+else "Run the following only on terminal
+
+  "fzf settings
+  let g:fzf_layout = { 'down': '~35%' }
+  let g:fzf_history_dir = '~/.conf/fzf-history'
+  "maps
+  " Mapping selecting mappings
+  nmap <leader><tab> <plug>(fzf-maps-n)
+  xmap <leader><tab> <plug>(fzf-maps-x)
+  omap <leader><tab> <plug>(fzf-maps-o)
+
+  " Insert mode completion
+  imap <c-x><c-k> <plug>(fzf-complete-word)
+  " Advanced customization using autoload functions
+  inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
+
+  "fzf file completion and other functions
+  " imap <c-x><c-k> <plug>(fzf-complete-word)
+  " imap <c-x><c-f> <plug>(fzf-complete-path)
+  " imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+  imap <c-x><c-l> <plug>(fzf-complete-line)
+
+  nmap <leader><tab> <plug>(fzf-maps-n)
+  xmap <leader><tab> <plug>(fzf-maps-x)
+  omap <leader><tab> <plug>(fzf-maps-o)
+
+  nnoremap <leader><leader> :Files<cr>
+  nnoremap <silent> <leader>b :Buffers<cr>
+  nnoremap <leader>t :Tags  " easy tags
+  nnoremap <silent> <Leader>` :Marks<CR>
+
+
+  command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(<q-args>,
+    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+    \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \                 <bang>0)
+
+  command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+  " Openup browser to preview markdown
+  function! Preview()
+      silent execute "!open -a 'Google\ Chrome.app' " . shellescape(expand('%'))
+  endfunction
+  command! Preview :call Preview()
+
+  nnoremap <leader>f :Ag<space>
+
+endif "terminal endif
+
+
 
 "---------------------------------------------------------------------------
 " My functions
@@ -153,9 +217,9 @@ nnoremap <silent><leader>zz :call Trim_trailing()<cr>
 function! s:goog(pat, lucky)
   let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
   let q = substitute(q, '[[:punct:] ]',
-       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+      \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
   call system(printf('open "https://www.google.com/search?%sq=%s"',
-                   \ a:lucky ? 'btnI&' : '', q))
+                  \ a:lucky ? 'btnI&' : '', q))
 endfunction
 
 nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
@@ -300,36 +364,6 @@ autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
 "---------------------------------------------------------------------------
 " Plugin setttings
 
-"fzf settings
-let g:fzf_layout = { 'down': '~35%' }
-let g:fzf_history_dir = '~/.conf/fzf-history'
-"maps
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-" Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-" Advanced customization using autoload functions
-inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
-
-"fzf file completion and other functions
-" imap <c-x><c-k> <plug>(fzf-complete-word)
-" imap <c-x><c-f> <plug>(fzf-complete-path)
-" imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-
-nnoremap <leader><leader> :Files<cr>
-nnoremap <silent> <leader>b :Buffers<cr>
-nnoremap <leader>t :Tags  " easy tags
-nnoremap <silent> <Leader>` :Marks<CR>
-
-
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
 nnoremap <localleader>p <esc>:tabprevious<CR>
@@ -340,33 +374,17 @@ nnoremap <Leader>d :Gdiff<CR>
 "for fugitive
 set diffopt+=vertical
 
-" augroup autoformat_settings
-"   " autocmd FileType bzl AutoFormatBuffer buildifier
-"   autocmd FileType c,proto,javascript AutoFormatBuffer clang-format
-"   " autocmd FileType dart AutoFormatBuffer dartfmt
-"   autocmd FileType go AutoFormatBuffer gofmt
-"   " autocmd FileType gn AutoFormatBuffer gn
-"   " autocmd FileType html,css,json AutoFormatBuffer js-beautify
-"   " autocmd FileType java AutoFormatBuffer google-java-format
-"   autocmd FileType python AutoFormatBuffer autopep8
-" augroup END
+"file explorer opt
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+let g:ctrlp_map = '<leader><leader>'
+let g:ctrlp_cmd = 'CtrlP'
+nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 
 hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
 hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
 hi LineNr            ctermfg=255         ctermbg=NONE        cterm=NONE
-
-
-command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \                 <bang>0)
-
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
-" Openup browser to preview markdown
-function! Preview()
-    silent execute "!open -a 'Google\ Chrome.app' " . shellescape(expand('%'))
-endfunction
-command! Preview :call Preview()
+hi IncSearch         ctermbg=green
+hi Search            ctermfg=grey ctermbg=148 cterm=NONE
+hi clear SignColumn
