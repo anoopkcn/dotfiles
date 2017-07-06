@@ -12,7 +12,7 @@ colorscheme PaperColor
 set guifont=Monaco:h16
 
 set number
-set relativenumber
+"set relativenumber
 set showmatch
 set backspace=indent,eol,start
 set clipboard=unnamed
@@ -384,7 +384,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
 hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
-" hi LineNr            ctermfg=8         ctermbg=NONE        cterm=NONE
+" hi LineNr            ctermfg=blue        ctermbg=NONE        cterm=NONE
 hi IncSearch         ctermbg=green
 hi Search            ctermfg=grey ctermbg=148 cterm=NONE
 hi clear SignColumn

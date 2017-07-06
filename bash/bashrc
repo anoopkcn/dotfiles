@@ -16,7 +16,7 @@ fi
 
 # Prompt
 PROMPT_COMMAND='printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
-PS1="\[\e[1;31m\]>>> \[\e[0m\]"
+PS1="\w\[\e[1;31m\] >>> \[\e[0m\]"
 
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'
