@@ -162,18 +162,30 @@ pyc(){
     echo $(python -c $1)
 }
 
-n() {
+n(){
   NOTES=${HOME}/Dropbox/Notes
-  if [[ $# -eq 0 ]];then
-    $EDITOR ${NOTES}/todo.txt
-  elif [[ $# -eq 1 ]];then
-    echo "$(date '+%A %B %d %Y %r') :  ${1}" >> ${NOTES}/todo.txt
-  else
-    echo "$(date '+%A %B %d %Y %r') :  ${2}" >> ${NOTES}/${1}.txt
-  fi
-}
-
-nls() {
-  NOTES=${HOME}/Dropbox/Notes
-  ls -c ${NOTES}/ | grep "$*"
+  while [ ! $# -eq 0 ]
+  do
+    case "$1" in
+      --help | -h)
+        echo "this is a help function"
+        ;;
+      --list-notes | -l)
+        ls ${NOTES} #/ | grep "$*"
+        ;;
+      --write-note | -w)
+        shift
+        if [ -z "${1}" ];then
+          echo "Usage: -w < [file_name] string >, string cant be empty"
+        else
+          if [[ $# -eq 1 ]];then
+            echo "$(date '+%A %B %d %Y %r') :  ${1}" >> ${NOTES}/todo
+          else
+            echo "$(date '+%A %B %d %Y %r') :  ${2}" >> ${NOTES}/${1}
+          fi
+        fi
+        ;;
+    esac
+    shift
+  done
 }
