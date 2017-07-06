@@ -7,6 +7,8 @@ unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
+set background=dark
+colorscheme PaperColor
 set guifont=Monaco:h16
 
 set number
@@ -116,13 +118,11 @@ call plug#begin('~/.vim/bundle')
     Plug 'kien/ctrlp.vim'
     Plug 'scrooloose/nerdtree'
     Plug 'airblade/vim-gitgutter'
-    "Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+    Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
     " Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 call plug#end()
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
-  set background=dark
-  colorscheme PaperColor
 
   set guioptions-=L
   set guioptions-=R
@@ -130,6 +130,9 @@ if has('gui')
   set guioptions-=l
   set guioptions-=r
 
+  let g:ctrlp_map = '<leader><leader>'
+  let g:ctrlp_cmd = 'CtrlP'
+  nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 else "Run the following only on terminal
 
   "fzf settings
@@ -378,13 +381,10 @@ set diffopt+=vertical
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-let g:ctrlp_map = '<leader><leader>'
-let g:ctrlp_cmd = 'CtrlP'
-nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 
 hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
 hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
-hi LineNr            ctermfg=255         ctermbg=NONE        cterm=NONE
+" hi LineNr            ctermfg=8         ctermbg=NONE        cterm=NONE
 hi IncSearch         ctermbg=green
 hi Search            ctermfg=grey ctermbg=148 cterm=NONE
 hi clear SignColumn
