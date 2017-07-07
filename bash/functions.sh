@@ -167,8 +167,23 @@ n(){
   while [ ! $# -eq 0 ]
   do
     case "$1" in
+      --version | -v)
+        echo "n v0.0.1"
+        ;;
       --help | -h)
-        echo "this is a help function"
+        echo "n version 0.0.1"
+        echo "n is a note taking application"
+        echo "USAGE: n [OPTIONS] [ARGUMENT]"
+        echo "OPTIONS:
+                      --help | -h        : Display the help menu
+                      --write-note | -w  : Takes 1 or 2 ARGUMENTs. 
+                                           Either only a string or a filename and a string
+                      --read-note | -r   : Takes 0 or 1 ARGUMENT's 
+                                           No argument will display the notes in the defaultnote file. 
+                                           Provided the argument i.e a filename, 
+                                           it will display the notes in that file name
+                      --list-notes | -l  : Lists note files in the default/custom note dir
+        "
         ;;
       --list-notes | -l)
         ls ${NOTES} #/ | grep "$*"
@@ -185,6 +200,13 @@ n(){
           fi
         fi
         ;;
+      --read-note | -r)
+          shift
+          if [[ $# -eq 0 ]];then
+            cat ${NOTES}/todo
+          else
+            cat ${NOTES}/${1}
+          fi
     esac
     shift
   done
