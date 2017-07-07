@@ -130,9 +130,6 @@ if has('gui')
   set guioptions-=l
   set guioptions-=r
 
-  let g:ctrlp_map = '<leader><leader>'
-  let g:ctrlp_cmd = 'CtrlP'
-  nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 else "Run the following only on terminal
 
   "fzf settings
@@ -159,8 +156,8 @@ else "Run the following only on terminal
   xmap <leader><tab> <plug>(fzf-maps-x)
   omap <leader><tab> <plug>(fzf-maps-o)
 
-  nnoremap <leader><leader> :Files<cr>
-  nnoremap <silent> <leader>b :Buffers<cr>
+  " nnoremap <leader><leader> :Files<cr>
+  " nnoremap <silent> <leader>b :Buffers<cr>
   nnoremap <leader>t :Tags  " easy tags
   nnoremap <silent> <Leader>` :Marks<CR>
 
@@ -182,7 +179,7 @@ else "Run the following only on terminal
 
   nnoremap <leader>f :Ag<space>
 
-endif "terminal endif
+endif "TERMINAL endif
 
 
 
@@ -376,6 +373,10 @@ nnoremap <Leader>d :Gdiff<CR>
 
 "for fugitive
 set diffopt+=vertical
+
+let g:ctrlp_map = '<leader><leader>'
+let g:ctrlp_cmd = 'CtrlP'
+nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 
 "file explorer opt
 map <C-n> :NERDTreeToggle<CR>
