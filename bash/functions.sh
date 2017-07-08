@@ -162,56 +162,111 @@ pyc(){
     echo $(python -c $1)
 }
 
-n(){
-  NOTES=${HOME}/Dropbox/Notes
+memo(){
+  MEMO=${HOME}/Dropbox/Notes/MEMO
+  today="$(date "+%d-%m-%Y")"
+  file=${MEMO}/${today}
+  if [ $# -eq 0 ]; then
+    $EDITOR ${MEMO}/${today}
+  else
   while [ ! $# -eq 0 ]
   do
     case "$1" in
       --version | -v)
-        echo "n v0.0.1"
+        echo "memo v0.0.1"
         ;;
       --help | -h)
-        echo "n version 0.0.1"
-        echo "n is a note taking application"
-        echo "USAGE: n [OPTIONS] [ARGUMENT]"
+        echo "memo version 0.0.1"
+        echo "memo is a note taking application"
+        echo "USAGE: memo [OPTIONS] [ARGUMENT]"
         echo "OPTIONS:
               --help | -h        : Display the help menu
-              --write-note | -w  : Takes 1 or 2 ARGUMENTs. 
+              --write-memo | -w  : Takes 1 or 2 ARGUMENTs. 
                                     Either only a string or a filename and a string
-              --read-note | -r   : Takes 0 or 1 ARGUMENT's 
+              --read-memo | -r   : Takes 0 or 1 ARGUMENT's 
                                     No argument will display the notes in the defaultnote file. 
                                     Provided the argument i.e a filename, 
                                     it will display the notes in that file name
-              --list-notes | -l  : Lists note files in the default/custom note dir
+              --list-memos | -l  : Lists note files in the default/custom note dir
         "
         ;;
-      --list-notes | -l)
-        ls ${NOTES} #/ | grep "$*"
+      --create-memo | -c)
+        shift
+        if [ -z "${1}" ];then
+          if [ ! -e $today ];then
+            touch $file
+            echo -e "MEMO : $today \n\
+              \n05\n06\n07\n\
+              \n08\n09\n10\n11\n \
+              \n12\n13\n\
+              \n14\n15\n16\n17\n\
+              \n18\n19\n20\n21\n\
+              \n22\n23\n24\n01\n02\n03\n04\n" >> $file
+            else
+              echo "File already exists"
+            fi
+        else
+          if [[ $# -eq 1 ]];then
+            if [ ! -e $1 ];then
+              touch $1
+              echo -e "MEMO : $1 \n\
+                \n05\n06\n07\n\
+                \n08\n09\n10\n11\n \
+                \n12\n13\n\
+                \n14\n15\n16\n17\n\
+                \n18\n19\n20\n21\n\
+                \n22\n23\n24\n01\n02\n03\n04\n" >> $1
+            else
+              echo "File already exists"
+            fi
+          fi
+        fi
         ;;
-      --write-note | -w)
+      --write-memo |-w)
         shift
         if [ -z "${1}" ];then
           echo "Usage: -w < [file_name] string >, string cant be empty"
         else
           if [[ $# -eq 1 ]];then
-            echo "$(date "+%d-%m-%Y, %A(%r)"):  ${1}" >> ${NOTES}/todo
+            tvar1=$(date "+%r"|awk -F: '{print $1}')
+            tvar2=$(($tvar1+1))
+            string=${1}" ($(date "+%r"))"
+            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
+              '$1==var1{p=1} p && $1==var2{print "\t"var3; p=0} 1' \
+              $file
           else
-            echo "$(date "+%d-%m-%Y, %A(%r)"):  ${2}" >> ${NOTES}/${1}
+            tvar1=$1
+            tvar2=$(($1+1))
+            string=${2}" ($(date "+%r"))"
+            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
+              '$1==var1{p=1} p && $1==var2{print "\t"var3; p=0} 1' \
+              $file
+
           fi
         fi
         ;;
-      --read-note | -r)
+      --read-memo | -r)
           shift
           if [[ $# -eq 0 ]];then
-            cat ${NOTES}/todo
+            vim $file
           else
-            cat ${NOTES}/${1}
+            vim ${MEMO}/${1}
           fi
+          ;;
+      --list-notes | -l)
+        ls ${MEMO} #/ | grep "$*"
+        ;;
+      --todo-list | -t)
+        grep -v ":DONE" ${MEMO}/* | grep TODO
+        ;;
+      --todo-all-list | -ta)
+        grep "TODO" ${MEMO}/*
+        ;;
+      --todo-done-list | -td)
+        grep ":DONE" ${MEMO}/*
     esac
     shift
   done
-}
 
-memo(){
-  echo "$(date "+%d-%m-%Y")"
+  fi
 }
