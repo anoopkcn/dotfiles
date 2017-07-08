@@ -169,12 +169,12 @@ memo(){
   create_template(){
       touch $1
       echo -e "MEMO : $1 \n\
-        \n05\tPROSECUTE THE PRESENT STUDY\n06\n07 \
-        \n08\tWORK\n09\n10\n11 \
-        \n12\tREAD OR OVERLOOK MY ACCOUNTS\n13 \
-        \n14\tWORK\n15\n16\n17 \
-        \n18\tCLEANING TO NEUTRAL,DIVERSION\n19\n20\n21 \
-        \n22\tSLEEP\n23\n24\n01\n02\n03\n04\n" >> $1
+        \n05    PROSECUTE THE PRESENT STUDY\n06\n07\n08 \
+        \n09    WORK\n10\n11\n12 \
+        \n13    READ OR OVERLOOK MY ACCOUNTS \
+        \n14    WORK\n15\n16\n17\n18 \
+        \n19    CLEANING TO NEUTRAL,DIVERSION\n20\n21\n22 \
+        \n23    SLEEP\n24\n01\n02\n03\n04\n" >> $1
 
   }
   if [ $# -eq 0 ]; then
@@ -200,9 +200,12 @@ memo(){
               --write-memo | -w       : Takes 1 or 2 ARGUMENT(s). 
                                         1: Appends the string ARGUMENT-1 after current-hour 
                                         2: Appends the string ARGUMENT-2 after ARGUMENT-1 hour
-              --read-memo | -r        : Takes 0 or 1 ARGUMENT's 
+              --open-memo | -o        : Takes 0 or 1 ARGUMENT's 
                                         0: Opens current-day memo
                                         1: Opens ARGUMENT-1 memo
+              --read-memo | -r        : Takes 0 or 1 ARGUMENT's 
+                                        0: Opens current-day memo in readonly
+                                        1: Opens ARGUMENT-1 memo in readonly
               --list-memos | -l       : Lists MEMO files in the default/custom note dir
               --list-todo | -t        : Lists todo's in memos in the default/custom MEMO dir
               --todo-all-list | -ta   : Same as -t but includes also the done todo's
@@ -238,20 +241,43 @@ memo(){
             tvar2=$(bc -l <<< $tvar1+1)
             string=${1}" ($(date "+%r"))"
             gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
-              '$1==var1{p=1} p && $1==var2{print "\t"var3; p=0} 1' \
+              '$1==var1{p=1} p && $1==var2{print "      "var3; p=0} 1' \
               $file
           else
             tvar1=$1
             tvar2=$(bc -l <<< $1+1)
             string=${2}" ($(date "+%r"))"
             gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
-              '$1==var1{p=1} p && $1==var2{print "\t"var3; p=0} 1' \
+              '$1==var1{p=1} p && $1==var2{print "      "var3; p=0} 1' \
               $file
 
           fi
         fi
         ;;
-      --read-memo | -r)
+      --todo-memo |-t)
+        shift
+        if [ -z "${1}" ];then
+          echo "Usage: -t < [file_name] string >, string cant be empty"
+        else
+          if [[ $# -eq 1 ]];then
+            tvar1=$(date "+%r"|awk -F: '{print $1}')
+            tvar2=$(bc -l <<< $tvar1+1)
+            string=${1}" ($(date "+%r"))"
+            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
+              '$1==var1{p=1} p && $1==var2{print "      TODO:"var3; p=0} 1' \
+              $file
+          else
+            tvar1=$1
+            tvar2=$(bc -l <<< $1+1)
+            string=${2}" ($(date "+%r"))"
+            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
+              '$1==var1{p=1} p && $1==var2{print "      TODO:"var3; p=0} 1' \
+              $file
+
+          fi
+        fi
+        ;;
+      --open-memo | -o)
           shift
           if [[ $# -eq 0 ]];then
             vim $file
@@ -259,10 +285,18 @@ memo(){
             vim ${MEMO}/${1}
           fi
           ;;
+      --read-memo | -r)
+          shift
+          if [[ $# -eq 0 ]];then
+            less $file
+          else
+            less ${MEMO}/${1}
+          fi
+          ;;
       --list-notes | -l)
         ls ${MEMO} #/ | grep "$*"
         ;;
-      --todo-list | -t)
+      --todo-list | -tl)
         grep -v ":DONE" ${MEMO}/* | grep TODO
         ;;
       --todo-all-list | -ta)
