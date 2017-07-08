@@ -169,12 +169,12 @@ memo(){
   create_template(){
       touch $1
       echo -e "MEMO : $1 \n\
-        \n05\n06\n07 \
-        \n08\n09\n10\n11 \
-        \n12\n13 \
-        \n14\n15\n16\n17 \
-        \n18\n19\n20\n21 \
-        \n22\n23\n24\n01\n02\n03\n04\n" >> $1
+        \n05\tPROSECUTE THE PRESENT STUDY\n06\n07 \
+        \n08\tWORK\n09\n10\n11 \
+        \n12\tREAD OR OVERLOOK MY ACCOUNTS\n13 \
+        \n14\tWORK\n15\n16\n17 \
+        \n18\tCLEANING TO NEUTRAL,DIVERSION\n19\n20\n21 \
+        \n22\tSLEEP\n23\n24\n01\n02\n03\n04\n" >> $1
 
   }
   if [ $# -eq 0 ]; then
@@ -235,14 +235,14 @@ memo(){
         else
           if [[ $# -eq 1 ]];then
             tvar1=$(date "+%r"|awk -F: '{print $1}')
-            tvar2=$(($tvar1+1))
+            tvar2=$(bc -l <<< $tvar1+1)
             string=${1}" ($(date "+%r"))"
             gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
               '$1==var1{p=1} p && $1==var2{print "\t"var3; p=0} 1' \
               $file
           else
             tvar1=$1
-            tvar2=$(($1+1))
+            tvar2=$(bc -l <<< $1+1)
             string=${2}" ($(date "+%r"))"
             gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
               '$1==var1{p=1} p && $1==var2{print "\t"var3; p=0} 1' \
