@@ -177,17 +177,26 @@ memo(){
         ;;
       --help | -h)
         echo "memo version 0.0.1"
-        echo "memo is a note taking application"
+        echo "Written by Anoop Chandran - strivetobelazy@gmail.com"
+        echo "memo is a note taking application. Tribute to Benjamin Franklin(1706-1790)"
         echo "USAGE: memo [OPTIONS] [ARGUMENT]"
         echo "OPTIONS:
-              --help | -h        : Display the help menu
-              --write-memo | -w  : Takes 1 or 2 ARGUMENTs. 
-                                    Either only a string or a filename and a string
-              --read-memo | -r   : Takes 0 or 1 ARGUMENT's 
-                                    No argument will display the notes in the defaultnote file. 
-                                    Provided the argument i.e a filename, 
-                                    it will display the notes in that file name
-              --list-memos | -l  : Lists note files in the default/custom note dir
+              --version | -v          : Display the version information
+              --help | -h             : Display the help menu
+              --create-memo | -c      : Takes 0 or 1 ARGUMENT(s)
+                                        0: Creates memo file with name as current-day date
+                                        1: Creates memo file with name as ARGUMENT-1
+              --write-memo | -w       : Takes 1 or 2 ARGUMENT(s). 
+                                        1: Appends the string ARGUMENT-1 after current-hour 
+                                        2: Appends the string ARGUMENT-2 after ARGUMENT-1 hour
+              --read-memo | -r        : Takes 0 or 1 ARGUMENT's 
+                                        0: Opens current-day memo
+                                        1: Opens ARGUMENT-1 memo
+              --list-memos | -l       : Lists MEMO files in the default/custom note dir
+              --list-todo | -t        : Lists todo's in memos in the default/custom MEMO dir
+              --todo-all-list | -ta   : Same as -t but includes also the done todo's
+              --todo-done-list | -td  : Same as -t but only shows the done todo's
+              --change-dir | -cd      : Change to memo directory
         "
         ;;
       --create-memo | -c)
@@ -264,6 +273,10 @@ memo(){
         ;;
       --todo-done-list | -td)
         grep ":DONE" ${MEMO}/*
+        ;;
+      --change-dir | -cd)
+        cd ${MEMO}
+        ;;
     esac
     shift
   done
