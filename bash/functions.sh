@@ -166,6 +166,17 @@ memo(){
   MEMO=${HOME}/Dropbox/Notes/MEMO
   today="$(date "+%d-%m-%Y")"
   file=${MEMO}/${today}
+  create_template(){
+      touch $1
+      echo -e "MEMO : $1 \n\
+        \n05\n06\n07 \
+        \n08\n09\n10\n11 \
+        \n12\n13 \
+        \n14\n15\n16\n17 \
+        \n18\n19\n20\n21 \
+        \n22\n23\n24\n01\n02\n03\n04\n" >> $1
+
+  }
   if [ $# -eq 0 ]; then
     $EDITOR ${MEMO}/${today}
   else
@@ -203,28 +214,14 @@ memo(){
         shift
         if [ -z "${1}" ];then
           if [ ! -e $today ];then
-            touch $file
-            echo -e "MEMO : $today \n\
-              \n05\n06\n07\n\
-              \n08\n09\n10\n11\n \
-              \n12\n13\n\
-              \n14\n15\n16\n17\n\
-              \n18\n19\n20\n21\n\
-              \n22\n23\n24\n01\n02\n03\n04\n" >> $file
+            create_template $today
             else
               echo "File already exists"
             fi
         else
           if [[ $# -eq 1 ]];then
             if [ ! -e $1 ];then
-              touch $1
-              echo -e "MEMO : $1 \n\
-                \n05\n06\n07\n\
-                \n08\n09\n10\n11\n \
-                \n12\n13\n\
-                \n14\n15\n16\n17\n\
-                \n18\n19\n20\n21\n\
-                \n22\n23\n24\n01\n02\n03\n04\n" >> $1
+              create_template $1
             else
               echo "File already exists"
             fi
