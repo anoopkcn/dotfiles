@@ -158,7 +158,7 @@ else "Run the following only on terminal
 
   " nnoremap <leader><leader> :Files<cr>
   " nnoremap <silent> <leader>b :Buffers<cr>
-  nnoremap <leader>t :Tags  " easy tags
+  " nnoremap <leader>t :Tags  " easy tags
   nnoremap <silent> <Leader>` :Marks<CR>
 
 
@@ -348,6 +348,12 @@ function! Spell()
   endif
 endfunction
 
+function! Insert_time()
+  ":put =strftime(\"%d-%m-%Y %H:%M:%S \")
+  let timestamp = strftime('%d-%m-%Y %H:%M:%S')
+  let @"=timestamp
+endfunction
+
 " Toggle relative number "
 nnoremap <silent><localleader>r :call Number_toggle()<cr>
 
@@ -358,6 +364,9 @@ nnoremap <localleader>l :call Spell()<CR>
 nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
 nnoremap <silent> <Leader>h :nohl<CR>
+
+nnoremap <Leader>t :call Insert_time()<cr>""p 
+inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
 
 "turn on spell cheking for filetypes
 autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
@@ -389,3 +398,4 @@ hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
 hi IncSearch         ctermbg=green
 hi Search            ctermfg=grey ctermbg=148 cterm=NONE
 hi clear SignColumn
+
