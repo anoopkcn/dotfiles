@@ -175,14 +175,14 @@ n(){
         echo "n is a note taking application"
         echo "USAGE: n [OPTIONS] [ARGUMENT]"
         echo "OPTIONS:
-                      --help | -h        : Display the help menu
-                      --write-note | -w  : Takes 1 or 2 ARGUMENTs. 
-                                           Either only a string or a filename and a string
-                      --read-note | -r   : Takes 0 or 1 ARGUMENT's 
-                                           No argument will display the notes in the defaultnote file. 
-                                           Provided the argument i.e a filename, 
-                                           it will display the notes in that file name
-                      --list-notes | -l  : Lists note files in the default/custom note dir
+              --help | -h        : Display the help menu
+              --write-note | -w  : Takes 1 or 2 ARGUMENTs. 
+                                    Either only a string or a filename and a string
+              --read-note | -r   : Takes 0 or 1 ARGUMENT's 
+                                    No argument will display the notes in the defaultnote file. 
+                                    Provided the argument i.e a filename, 
+                                    it will display the notes in that file name
+              --list-notes | -l  : Lists note files in the default/custom note dir
         "
         ;;
       --list-notes | -l)
@@ -194,9 +194,9 @@ n(){
           echo "Usage: -w < [file_name] string >, string cant be empty"
         else
           if [[ $# -eq 1 ]];then
-            echo "$(date '+%A %B %d %Y %r') :  ${1}" >> ${NOTES}/todo
+            echo "$(date "+%d-%m-%Y, %A(%r)"):  ${1}" >> ${NOTES}/todo
           else
-            echo "$(date '+%A %B %d %Y %r') :  ${2}" >> ${NOTES}/${1}
+            echo "$(date "+%d-%m-%Y, %A(%r)"):  ${2}" >> ${NOTES}/${1}
           fi
         fi
         ;;
@@ -210,4 +210,8 @@ n(){
     esac
     shift
   done
+}
+
+memo(){
+  echo "$(date "+%d-%m-%Y")"
 }
