@@ -7,12 +7,12 @@ memo(){
   create_template(){
       touch $1
       echo -e "MEMO : $today \n\
-        \n05    PROSECUTE THE PRESENT STUDY\n06\n07\n08 \
-        \n09    WORK\n10\n11\n12 \
-        \n13    READ OR OVERLOOK MY ACCOUNTS \
-        \n14    WORK\n15\n16\n17\n18 \
-        \n19    CLEANING TO NEUTRAL,DIVERSION\n20\n21\n22 \
-        \n23    SLEEP\n24\n01\n02\n03\n04\n" >> $1
+        \n05\n06\n07\n08 \
+        \n09\n10\n11\n12 \
+        \n13\
+        \n14\n15\n16\n17\n18 \
+        \n19\n20\n21\n22 \
+        \n23\n24\n01\n02\n03\n04\n" >> $1
 
   }
   if [ $# -eq 0 ]; then
