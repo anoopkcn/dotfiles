@@ -16,7 +16,7 @@ memo(){
 
   }
   if [ $# -eq 0 ]; then
-    $EDITOR ${MEMO}/${today}
+    vim ${MEMO}/${today}
   else
   while [ ! $# -eq 0 ]
   do
@@ -59,8 +59,8 @@ memo(){
           fi
         else
           if [[ $# -eq 1 ]];then
-            if [ ! -e $1 ];then
-              create_template $1
+            if [ ! -e ${MEMO}/$1 ];then
+              create_template ${MEMO}/$1
             else
               echo "File already exists"
             fi
@@ -129,7 +129,7 @@ memo(){
             less ${MEMO}/${1}
           fi
           ;;
-      --list-notes | -l)
+      --list-memos | -l)
         ls ${MEMO} #/ | grep "$*"
         ;;
       --todo-list | -tl)
@@ -143,6 +143,99 @@ memo(){
         ;;
       --change-dir | -cd)
         cd ${MEMO}
+        ;;
+    esac
+    shift
+  done
+
+  fi
+}
+
+note(){
+  NOTES=${HOME}/Dropbox/Notes
+  today="$(date "+%d-%m-%Y")"
+  create_template(){
+      touch $1
+      echo -e "$(echo $(basename $1) | sed 's/_/ /g' | awk '{print toupper($0)}')\
+        \nAuthor:$(echo $(basename $2) | sed 's/_/ /g')\
+        \nDate Started: ${today}\
+        \nDate Ended: \
+        \nLast Modified: " >> $1
+
+  }
+  if [ $# -eq 0 ]; then
+    echo "Run note -h to get help"
+  else
+  while [ ! $# -eq 0 ]
+  do
+    case "$1" in
+      --version | -v)
+        echo "NOTESv0.0.1"
+        ;;
+      --help | -h)
+        echo "NOTESversion 0.0.1"
+        echo "Written by Anoop Chandran - strivetobelazy@gmail.com"
+        echo "note is a note taking application. "
+        echo "USAGE: note [OPTIONS] [ARGUMENT]"
+        echo "OPTIONS:
+              --version | -v          : Display the version information
+              --help | -h             : Display the help menu
+              --create-note | -c      : Takes 0 or 1 ARGUMENT(s)
+                                        Creates note file with name as ARGUMENT-1
+              --write-note | -w       : Takes 2 ARGUMENT(s). 
+                                        Appends the string ARGUMENT-2 to ARGUMENT-1 note
+              --open-note | -o        : Takes 1 ARGUMENT's 
+                                        Opens ARGUMENT-1 note
+              --read-note | -r        : Takes 1 ARGUMENT's 
+                                        Opens ARGUMENT-1 note in readonly
+              --list-notes | -l       : Lists note files in the default/custom note dir
+              --change-dir | -cd      : Change to note directory
+        "
+        ;;
+      --create-note | -c)
+        shift
+        if [ -z "${1}" ];then
+          echo "Usage: -c [file_name] [author_name]: file_name can't be empty"
+        else
+          if [[ $# -eq 2 ]];then
+            if [ ! -e ${NOTES}/$1 ];then
+              create_template ${NOTES}/$1 $2
+           else
+              echo "File already exists/ One argument missing"
+            fi
+          fi
+        fi
+        ;;
+      --write-note |-w)
+        shift
+        if [ -z "${1}" ] || [ $# -eq 1 ];then
+          echo "Usage: -w [file_name] [string] : file_name and string cant be empty"
+        else
+          string=${2}" ($(date "+%d-%m-%Y %R"))"
+          echo ${string} >> ${NOTES}/${1}
+        fi
+        ;;
+      --open-note | -o)
+        shift
+        if [ -z "${1}" ];then
+          echo "Usage: -o [file_name]  : file_name cant be empty"
+        else
+            vim ${NOTES}/${1}
+        fi
+        ;;
+      --read-note | -r)
+        shift
+        if [ -z "${1}" ];then
+          echo "Usage: -r [file_name]  : file_name cant be empty"
+        else
+            less ${NOTES}/${1}
+        fi
+        ;;
+      --list-notes | -l)
+        ls ${NOTES} #/ | grep "$*"
+        ;;
+      --change-dir | -cd)
+        cd ${NOTES}
         ;;
     esac
     shift

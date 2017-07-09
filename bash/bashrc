@@ -7,7 +7,7 @@ source $HOME/Dropbox/Dotfiles/bash/alias.sh
 source $HOME/Dropbox/Dotfiles/bash/functions.sh
 source $HOME/Dropbox/Dotfiles/bash/tmux_functions.sh
 source $HOME/Dropbox/Dotfiles/bash/fzf_functions.sh
-source $HOME/Dropbox/Dotfiles/bash/memo.sh
+source $HOME/Dropbox/Dotfiles/bash/apps.sh
 
 git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
@@ -55,3 +55,6 @@ export PATH="$GOPATH/bin:$PATH"
 export BLOG="/Users/lazy/Dropbox/Workbench/CODE/web/strivetobelazy/"
 export QE="/Users/lazy/Dropbox/Workbench/ESPRESSO/"
 export MHPC="/Users/lazy/Dropbox/Workbench/MHPC/"
+
+export mybash="/Users/lazy/Dropbox/Dotfiles/bash/bashrc"
+export myvim="/Users/lazy/Dropbox/Dotfiles/vim/init.vim"
