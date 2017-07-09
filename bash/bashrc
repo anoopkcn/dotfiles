@@ -7,6 +7,7 @@ source $HOME/Dropbox/Dotfiles/bash/alias.sh
 source $HOME/Dropbox/Dotfiles/bash/functions.sh
 source $HOME/Dropbox/Dotfiles/bash/tmux_functions.sh
 source $HOME/Dropbox/Dotfiles/bash/fzf_functions.sh
+source $HOME/Dropbox/Dotfiles/bash/memo.sh
 
 git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
@@ -32,7 +33,7 @@ export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS='
 --height 45% --reverse --inline-info
---color bg+:#FDF6E4,fg+:#348614,hl:#D52E87,hl+:#D52E87
+--color bg+:#1C1C1C,fg+:#348614,hl:#D52E87,hl+:#D52E87
 '
 #--color fg:188,bg:#1c1c1c,hl:103,fg+:222,bg+:234,hl+:104
 #--color info:183,prompt:110,spinner:107,pointer:167,marker:215
