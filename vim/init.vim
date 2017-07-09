@@ -119,11 +119,9 @@ call plug#begin('~/.vim/bundle')
     Plug 'scrooloose/nerdtree'
     Plug 'airblade/vim-gitgutter'
     Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-    " Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 call plug#end()
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
-
   set guioptions-=L
   set guioptions-=R
   set guioptions-=b
@@ -182,7 +180,7 @@ else "Run the following only on terminal
 endif "TERMINAL endif
 
 
-
+" FOR ALL PLATFORMS
 "---------------------------------------------------------------------------
 " My functions
 augroup vimrc
@@ -338,6 +336,8 @@ function! Number_toggle()
     set relativenumber
   endif
 endfunction
+" Toggle relative number "
+nnoremap <silent><localleader>r :call Number_toggle()<cr>
 
 "Spelling toggle
 function! Spell()
@@ -347,26 +347,22 @@ function! Spell()
     set nospell
   endif
 endfunction
+" Toggle spell settings
+nnoremap <localleader>l :call Spell()<CR>
 
 function! Insert_time()
   ":put =strftime(\"%d-%m-%Y %H:%M:%S \")
   let timestamp = strftime('%d-%m-%Y %H:%M:%S')
   let @"=timestamp
 endfunction
+nnoremap <Leader>t :call Insert_time()<cr>""p 
+inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
 
-" Toggle relative number "
-nnoremap <silent><localleader>r :call Number_toggle()<cr>
-
-" Toggle spell settings
-nnoremap <localleader>l :call Spell()<CR>
 
 "create and edit file
 nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
 nnoremap <silent> <Leader>h :nohl<CR>
-
-nnoremap <Leader>t :call Insert_time()<cr>""p 
-inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
 
 "turn on spell cheking for filetypes
 autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
