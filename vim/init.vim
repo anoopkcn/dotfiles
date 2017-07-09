@@ -261,8 +261,8 @@ function! LastModified()
   if &modified
     let save_cursor = getpos(".")
     let n = min([20, line("$")])
-    keepjumps exe '1,' . n . 's#^\(.\{,10}Last modified: \).*#\1' .
-          \ strftime('%a %b %d, %Y  %I:%M%p') . '#e'
+    keepjumps exe '1,' . n . 's#^\(.\{,10}Last Modified: \).*#\1' .
+          \ strftime('%d-%m-%Y %H:%M') . '#e'
     call histdel('search', -1)
     call setpos('.', save_cursor)
   endif
@@ -352,7 +352,7 @@ nnoremap <localleader>l :call Spell()<CR>
 
 function! Insert_time()
   ":put =strftime(\"%d-%m-%Y %H:%M:%S \")
-  let timestamp = strftime('%d-%m-%Y %H:%M:%S')
+  let timestamp = strftime('%d-%m-%Y %H:%M')
   let @"=timestamp
 endfunction
 nnoremap <Leader>t :call Insert_time()<cr>""p 
