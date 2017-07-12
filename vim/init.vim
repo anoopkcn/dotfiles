@@ -9,7 +9,7 @@ filetype plugin indent on
 
 set background=dark
 colorscheme PaperColor
-set guifont=Monaco:h16
+set guifont=Monaco:h14
 
 set number
 "set relativenumber
@@ -25,6 +25,10 @@ set shiftwidth=2
 set smartindent
 set softtabstop=2
 set tabstop=2
+
+" Folding setting
+" set fdm=indent
+set nowrap
 
 set scrolloff=3
 set shortmess=filnxtToOI
@@ -119,6 +123,7 @@ call plug#begin('~/.vim/bundle')
     Plug 'scrooloose/nerdtree'
     Plug 'airblade/vim-gitgutter'
     Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+    Plug 'terryma/vim-smooth-scroll'
 call plug#end()
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
@@ -394,4 +399,8 @@ hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
 hi IncSearch         ctermbg=green
 hi Search            ctermfg=grey ctermbg=148 cterm=NONE
 hi clear SignColumn
+noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 30, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 30, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 30, 4)<CR>
 
