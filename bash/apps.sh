@@ -155,12 +155,12 @@ note(){
   NOTES=${HOME}/Dropbox/Notes
   today="$(date "+%d-%m-%Y")"
   create_template(){
-      touch $1
+      touch ${1}.md
       echo -e "$(echo $(basename $1) | sed 's/_/ /g' | awk '{print toupper($0)}')\
         \nAuthor:$(echo $(basename $2) | sed 's/_/ /g')\
         \nDate Started: ${today}\
         \nDate Ended: \
-        \nLast Modified: " >> $1
+        \nLast Modified: " >> ${1}.md
 
   }
   if [ $# -eq 0 ]; then
@@ -199,7 +199,7 @@ note(){
         else
           if [[ $# -eq 2 ]];then
             if [ ! -e ${NOTES}/$1 ];then
-              create_template ${NOTES}/$1 $2
+              create_template ${NOTES}/${1} $2
            else
               echo "File already exists/ One argument missing"
             fi
@@ -212,7 +212,7 @@ note(){
           echo "Usage: -w [file_name] [string] : file_name and string cant be empty"
         else
           string=${2}" ($(date "+%d-%m-%Y %R"))"
-          echo ${string} >> ${NOTES}/${1}
+          echo ${string} >> ${NOTES}/${1}.md
         fi
         ;;
       --open-note | -o)
@@ -220,7 +220,7 @@ note(){
         if [ -z "${1}" ];then
           echo "Usage: -o [file_name]  : file_name cant be empty"
         else
-            vim ${NOTES}/${1}
+            vim ${NOTES}/${1}.md
         fi
         ;;
       --read-note | -r)
@@ -228,7 +228,7 @@ note(){
         if [ -z "${1}" ];then
           echo "Usage: -r [file_name]  : file_name cant be empty"
         else
-            less ${NOTES}/${1}
+            less ${NOTES}/${1}.md
         fi
         ;;
       --list-notes | -l)
