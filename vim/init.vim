@@ -138,31 +138,11 @@ else "Run the following only on terminal
   "fzf settings
   let g:fzf_layout = { 'down': '~35%' }
   let g:fzf_history_dir = '~/.conf/fzf-history'
-  "maps
-  " Mapping selecting mappings
-  nmap <leader><tab> <plug>(fzf-maps-n)
-  xmap <leader><tab> <plug>(fzf-maps-x)
-  omap <leader><tab> <plug>(fzf-maps-o)
-
-  " Insert mode completion
-  imap <c-x><c-k> <plug>(fzf-complete-word)
-  " Advanced customization using autoload functions
-  inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
-
-  "fzf file completion and other functions
-  " imap <c-x><c-k> <plug>(fzf-complete-word)
-  " imap <c-x><c-f> <plug>(fzf-complete-path)
-  " imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-  imap <c-x><c-l> <plug>(fzf-complete-line)
-
-  nmap <leader><tab> <plug>(fzf-maps-n)
-  xmap <leader><tab> <plug>(fzf-maps-x)
-  omap <leader><tab> <plug>(fzf-maps-o)
 
   " nnoremap <leader><leader> :Files<cr>
   " nnoremap <silent> <leader>b :Buffers<cr>
   " nnoremap <leader>t :Tags  " easy tags
-  nnoremap <silent> <Leader>` :Marks<CR>
+  " nnoremap <silent> <Leader>` :Marks<CR>
 
 
   command! -bang -nargs=* Ag
@@ -188,13 +168,13 @@ endif "TERMINAL endif
 " FOR ALL PLATFORMS
 "---------------------------------------------------------------------------
 " My functions
-augroup vimrc
-    " Automatic rename of tmux window
-    if exists('$TMUX') && !exists('$NORENAME')
-        au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
-        au VimLeave * call system('tmux set-window automatic-rename on')
-    endif
-augroup END
+" augroup vimrc
+"     " Automatic rename of tmux window
+"     if exists('$TMUX') && !exists('$NORENAME')
+"         au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
+"         au VimLeave * call system('tmux set-window automatic-rename on')
+"     endif
+" augroup END
 
 ":Root | Change directory to the root of the Git repository
 function! s:root()
@@ -316,7 +296,7 @@ silent! exe "set <S-Left>=\<Esc>b"
 silent! exe "set <S-Right>=\<Esc>f"
 
 "---------------------------------------------------------------------------
-set laststatus=1
+set laststatus=2
 " Status line settings
 set statusline=%<[%n]\ %F\ %m%r%y\ %=%-14.(%l,%c%V%)\ %P\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}
 
@@ -392,13 +372,16 @@ nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-
 hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
 hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
 " hi LineNr            ctermfg=blue        ctermbg=NONE        cterm=NONE
 hi IncSearch         ctermbg=green
 hi Search            ctermfg=grey ctermbg=148 cterm=NONE
 hi clear SignColumn
+hi StatusLine ctermbg=NONE ctermfg=231 cterm=NONE
+hi StatusLineNC ctermbg=NONE cterm=NONE
+
+" Smooth scroll plugin settings
 noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 30, 2)<CR>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 30, 4)<CR>
