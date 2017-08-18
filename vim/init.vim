@@ -343,7 +343,6 @@ endfunction
 nnoremap <Leader>t :call Insert_time()<cr>""p 
 inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
 
-
 "create and edit file
 nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
