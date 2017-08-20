@@ -16,3 +16,4 @@
 *.htm
 .tags*
 tags
+.git/*
