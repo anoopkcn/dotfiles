@@ -4,13 +4,13 @@ fzf-down() {
 }
 
 # fd - cd to selected directory
-fd() {
+fcd() {
   local dir
   dir=$(find ${1:-.} -type d 2> /dev/null | fzf-down +m) && cd "$dir"
 }
 
 # fdf - cd into the directory of the selected file
-fdf() {
+fcdf() {
    local file
    local dir
    file=$(fzf-down +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
@@ -37,10 +37,10 @@ ftags() {
 }
 
 
-# fe [FUZZY PATTERN] - Open the selected file with the default editor
+# fedit [FUZZY PATTERN] - Open the selected file with the default editor
 #   - Bypass fuzzy finder if there's only one match (--select-1)
 #   - Exit if there's no match (--exit-0)
-fe() {
+fedit() {
   local file
   file=$(fzf-down --query="$1" --select-1 --exit-0)
   [ -n "$file" ] && ${EDITOR:-vim} "$file"
@@ -48,7 +48,7 @@ fe() {
 # Modified version where you can press
 #   - CTRL-O to open with `open` command,
 #   - CTRL-E or Enter key to open with the $EDITOR
-fo() {
+fopen() {
   local out file key
   IFS=$'\n' read -d '' -r -a out < <(fzf-down --query="$1" --exit-0 --expect=ctrl-o,ctrl-e)
   key=${out[0]}
@@ -68,21 +68,21 @@ is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
-# gshow - git commit browser
-gshow() {
+# gcommits - git commit browser : git show with preview
+gcommits() {
   is_in_git_repo || return
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
   fzf-down --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
       --header "Press CTRL-S to toggle sort" \
       --preview "echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
-                 xargs -I % sh -c 'git show --color=always % | head -200 '" \
+                 xargs -I % sh -c 'git show --color=always % | head -500 '" \
       --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
               xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
 }
 
 # gco - checkout git branch/tag
-gco() {
+gcheckout() {
   is_in_git_repo || return
   local tags branches target
   tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
@@ -97,7 +97,7 @@ gco() {
 }
 
 # gcoc - checkout git commit
-gcoc() {
+gotocommit() {
   is_in_git_repo || return
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
@@ -146,7 +146,7 @@ gstash() {
 }
 
 
-gf() {
+gdiff() {
   is_in_git_repo || return
   git -c color.status=always status --short |
   fzf-down -m --ansi --nth 2..,.. \
@@ -154,7 +154,7 @@ gf() {
   cut -c4- | sed 's/.* -> //'
 }
 
-gb() {
+gbranchlog() {
   is_in_git_repo || return
   git branch -a --color=always | grep -v '/HEAD\s' | sort |
   fzf-down --ansi --multi --tac --preview-window right:70% \
@@ -163,26 +163,26 @@ gb() {
   sed 's#^remotes/##'
 }
 
-gt() {
+gtag() {
   is_in_git_repo || return
   git tag --sort -version:refname |
   fzf-down --multi --preview-window right:70% \
     --preview 'git show --color=always {} | head -200'
 }
 
-gh() {
-  is_in_git_repo || return
-  git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
-  fzf-down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
-   --header 'Press CTRL-S to toggle sort' \
-    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
-  grep -o "[a-f0-9]\{7,\}"
-}
+# glog() {
+#   is_in_git_repo || return
+#   git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
+#   fzf-down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
+#    --header 'Press CTRL-S to toggle sort' \
+#     --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
+#   grep -o "[a-f0-9]\{7,\}"
+# }
 
-gr() {
-  is_in_git_repo || return
-  git remote -v | awk '{print $1 "\t" $2}' | uniq |
-  fzf-down --tac \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
-  cut -d$'\t' -f1
-}
+# gr() {
+#   is_in_git_repo || return
+#   git remote -v | awk '{print $1 "\t" $2}' | uniq |
+#   fzf-down --tac \
+#     --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
+#   cut -d$'\t' -f1
+# }
