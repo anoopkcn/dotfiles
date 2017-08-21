@@ -105,9 +105,9 @@ function extract() {
 
 function glog(){
 if [ $# -eq 0 ]; then
-    echo "No arguments supplied"
+    git log --oneline --decorate --all --graph
 else
-  git log --oneline --decorate --max-count=$1 --graph
+    git log --oneline --decorate --max-count=$1 --all --graph
 fi
 }
 
