@@ -97,7 +97,7 @@ gcheckout() {
 }
 
 # gcoc - checkout git commit
-gotocommit() {
+gcheckoutcommit() {
   is_in_git_repo || return
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&

@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
-    name = strivetobelazy
-    email = strivetobelazy@gmail.com
+	name = anoop chandran
+	email = strivetobelazy@gmail.com
 [core]
 	editor = vim
 	excludesfile = /Users/lazy/.dotfiles/git/ggitignore

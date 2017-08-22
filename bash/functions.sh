@@ -106,6 +106,8 @@ function extract() {
 function glog(){
 if [ $# -eq 0 ]; then
     git log --oneline --decorate --all --graph
+elif [ $1 = "-b" ]; then
+    gbranchlog
 else
     git log --oneline --decorate --max-count=$1 --all --graph
 fi
@@ -161,4 +163,3 @@ doi2bib(){
 pyc(){
     echo $(python -c $1)
 }
-
