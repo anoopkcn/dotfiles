@@ -8,8 +8,7 @@ syntax on
 filetype plugin indent on
 
 set background=dark
-colorscheme PaperColor
-set guifont=Monaco:h14
+colorscheme onedark
 
 set number
 "set relativenumber
