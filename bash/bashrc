@@ -16,8 +16,18 @@ if [ -e ${git_prompt} ]; then
 fi
 
 # Prompt
-PROMPT_COMMAND='printf "\[\e[38;5;59m\]%$(($COLUMNS - 4))s\r" "$(__git_ps1)"'
-PS1="\w\[\e[1;31m\] >>> \[\e[0m\]"
+RESET="\[\033[0m\]"
+RED="\[\033[0;31m\]"
+GREEN="\[\033[01;32m\]"
+BLUE="\[\033[01;34m\]"
+YELLOW="\[\033[0;33m\]"
+GRAY="\[\e[38;5;59m\]"
+
+export PS1="${GREEN}(\j)${RESET} ${BLUE}\W${RESET}$(__git_ps1)${RED} >${RESET} "
+export GIT_PS1_SHOWCOLORHINTS=1
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWSTASHSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
 
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'
@@ -31,10 +41,7 @@ bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS='
---height 45% --reverse --inline-info
---color bg+:#1C1C1C,fg+:#348614,hl:#D52E87,hl+:#D52E87
-'
+export FZF_DEFAULT_OPTS=' --height 45% --reverse --inline-info --color bg+:#1C1C1C,fg+:#348614,hl:#D52E87,hl+:#D52E87'
 #--color fg:188,bg:#1c1c1c,hl:103,fg+:222,bg+:234,hl+:104
 #--color info:183,prompt:110,spinner:107,pointer:167,marker:215
 #'
@@ -42,11 +49,6 @@ export FZF_DEFAULT_OPTS='
 export GREP_OPTIONS='--color=auto'
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
-
-export GIT_PS1_SHOWCOLORHINTS=1
-export GIT_PS1_SHOWDIRTYSTATE=true
-export GIT_PS1_SHOWSTASHSTATE=true
-export GIT_PS1_SHOWUNTRACKEDFILES=true
 
 # general settings
 export HISTSIZE=10000
