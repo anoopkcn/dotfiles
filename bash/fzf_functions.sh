@@ -69,7 +69,7 @@ is_in_git_repo() {
 }
 
 # gcommits - git commit browser : git show with preview
-gcommits() {
+gc() {
   is_in_git_repo || return
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
@@ -80,9 +80,18 @@ gcommits() {
       --bind "enter:execute:echo {} | grep -o '[a-f0-9]\{7\}' | head -1 |
               xargs -I % sh -c 'vim fugitive://\$(git rev-parse --show-toplevel)/.git//% < /dev/tty'"
 }
+gb(){
+  is_in_git_repo || return
+  git branch -a
+}
+
+gr(){
+  is_in_git_repo || return
+  git remote -v
+}
 
 # gco - checkout git branch/tag
-gcheckout() {
+gch() {
   is_in_git_repo || return
   local tags branches target
   tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
@@ -96,8 +105,8 @@ gcheckout() {
   git checkout $(echo "$target" | awk '{print $2}')
 }
 
-# gcoc - checkout git commit
-gcheckoutcommit() {
+# gchc - checkout git commit
+gchc() {
   is_in_git_repo || return
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
@@ -154,7 +163,7 @@ gdiff() {
   cut -c4- | sed 's/.* -> //'
 }
 
-gbranchlog() {
+gblog() {
   is_in_git_repo || return
   git branch -a --color=always | grep -v '/HEAD\s' | sort |
   fzf-down --ansi --multi --tac --preview-window right:70% \
