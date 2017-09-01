@@ -35,13 +35,13 @@ memo(){
               --create-memo | -c      : Takes 0 or 1 ARGUMENT(s)
                                         0: Creates memo file with name as current-day date
                                         1: Creates memo file with name as ARGUMENT-1
-              --write-memo | -w       : Takes 1 or 2 ARGUMENT(s). 
-                                        1: Appends the string ARGUMENT-1 after current-hour 
+              --write-memo | -w       : Takes 1 or 2 ARGUMENT(s).
+                                        1: Appends the string ARGUMENT-1 after current-hour
                                         2: Appends the string ARGUMENT-2 after ARGUMENT-1 hour
-              --open-memo | -o        : Takes 0 or 1 ARGUMENT's 
+              --open-memo | -o        : Takes 0 or 1 ARGUMENT's
                                         0: Opens current-day memo
                                         1: Opens ARGUMENT-1 memo
-              --read-memo | -r        : Takes 0 or 1 ARGUMENT's 
+              --read-memo | -r        : Takes 0 or 1 ARGUMENT's
                                         0: Opens current-day memo in readonly
                                         1: Opens ARGUMENT-1 memo in readonly
               --list-memos | -l       : Lists MEMO files in the default/custom note dir
@@ -182,11 +182,11 @@ note(){
               --help | -h             : Display the help menu
               --create-note | -c      : Takes 0 or 1 ARGUMENT(s)
                                         Creates note file with name as ARGUMENT-1
-              --write-note | -w       : Takes 2 ARGUMENT(s). 
+              --write-note | -w       : Takes 2 ARGUMENT(s).
                                         Appends the string ARGUMENT-2 to ARGUMENT-1 note
-              --open-note | -o        : Takes 1 ARGUMENT's 
+              --open-note | -o        : Takes 1 ARGUMENT's
                                         Opens ARGUMENT-1 note
-              --read-note | -r        : Takes 1 ARGUMENT's 
+              --read-note | -r        : Takes 1 ARGUMENT's
                                         Opens ARGUMENT-1 note in readonly
               --list-notes | -l       : Lists note files in the default/custom note dir
               --change-dir | -cd      : Change to note directory
@@ -243,3 +243,13 @@ note(){
 
   fi
 }
+
+
+
+#====== Library App =======
+doi2bib(){
+    echo >> bib.bib;
+    curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
+    echo >> bib.bib;
+}
+#library(){}
