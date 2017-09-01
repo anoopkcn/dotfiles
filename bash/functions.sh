@@ -137,7 +137,7 @@ elif [[ "$#" -eq 1 ]]; then
     curr_path=`pwd`
     if [ "$curr_path" != "$HOME" ]; then
     path=`echo $curr_path | cut -d '/' -f 4-`
-    rsync -arzv --exclude='.git/' --prune-empty-dirs ${curr_path}/. -e ssh $1:~/${path}/.
+    rsync -arzv --delete --exclude='.git/' --prune-empty-dirs ${curr_path}/. -e ssh $1:~/${path}/.
     else
       echo "Warning:Global sync on Home folder is not allowed"
     fi
@@ -155,11 +155,6 @@ gittgz() {
   git archive -o $(basename $PWD).tgz HEAD
 }
 
-doi2bib(){
-    echo >> bib.bib;
-    curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
-    echo >> bib.bib;
-}
 pyc(){
     echo $(python -c $1)
 }
