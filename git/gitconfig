@@ -6,15 +6,31 @@
 	editor = vim
 	excludesfile = /Users/lazy/.dotfiles/git/ggitignore
 [alias]
-	next = !git checkout `git rev-list HEAD..demo-end | tail -1`
-	prev = checkout HEAD^
-	d = difftool
-	rebase-last-five = "!b=\"$(git branch --no-color | cut -c3-)\" ; h=\"$(git rev-parse $b)\" ; echo \"Current branch: $b $h\" ; c=\"$(git rev-parse $b~4)\" ; echo \"Recreating $b branch with initial commit $c ...\" ; git checkout --orphan new-start $c ; git commit -C $c ; git rebase --onto new-start $c $b ; git branch -d new-start ; git gc"
+	# next = !git checkout `git rev-list HEAD..demo-end | tail -1`
+	# prev = checkout HEAD^
+	# d = difftool
+	# rebase-last-five = "!b=\"$(git branch --no-color | cut -c3-)\" ; h=\"$(git rev-parse $b)\" ; echo \"Current branch: $b $h\" ; c=\"$(git rev-parse $b~4)\" ; echo \"Recreating $b branch with initial commit $c ...\" ; git checkout --orphan new-start $c ; git commit -C $c ; git rebase --onto new-start $c $b ; git branch -d new-start ; git gc"
 [diff]
-	tool = vimdiff
+	tool = atom
 [difftool]
 	prompt = false
-
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 	keepBackup = false
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
