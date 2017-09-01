@@ -9,6 +9,8 @@ alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
 alias c='clear'
+alias p="pwd"
+
 #application links
 alias vi='nvim -u NONE'
 alias vim='nvim'
@@ -24,9 +26,7 @@ alias ts='tmuxinator start'
 
 #git
 alias gs='git status'
-alias gn='git next'
-alias gp='git prev'
 
 #other
 alias duh="du -h -d 0 [^.]*"
-
+alias js="bundle exec jekyll serve"
