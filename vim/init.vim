@@ -13,7 +13,7 @@ endif
 set background=dark
 colorscheme onedark
 
-set number
+" set number
 "set relativenumber
 set showmatch
 set backspace=indent,eol,start
@@ -126,6 +126,7 @@ call plug#begin('~/.vim/bundle')
     Plug 'airblade/vim-gitgutter'
     Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
     Plug 'terryma/vim-smooth-scroll'
+    Plug 'tpope/vim-rhubarb'
 call plug#end()
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
@@ -382,10 +383,12 @@ hi ErrorMsg           ctermfg=131     ctermbg=NONE  cterm=NONE
 " hi Search           ctermfg=grey    ctermbg=148   cterm=NONE
 " hi StatusLine         ctermbg=NONE    ctermfg=231   cterm=NONE
 " hi StatusLineNC       ctermbg=NONE    cterm=NONE
+"
+" Code styling
+" hi Comment              ctermfg=235         ctermbg=NONE        cterm=NONE
 
 " Smooth scroll plugin settings
 noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 30, 2)<CR>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 30, 4)<CR>
 noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 30, 4)<CR>
-
