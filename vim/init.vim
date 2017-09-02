@@ -7,6 +7,9 @@ unlet! skip_defaults_vim
 syntax on
 filetype plugin indent on
 
+if has('termguicolors')
+  set termguicolors
+endif
 set background=dark
 colorscheme onedark
 
@@ -370,14 +373,15 @@ nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-hi WarningMsg        ctermfg=131    ctermbg=NONE     cterm=bold
-hi ErrorMsg          ctermfg=131    ctermbg=NONE   cterm=NONE
-" hi LineNr            ctermfg=blue        ctermbg=NONE        cterm=NONE
-hi IncSearch         ctermbg=green
-hi Search            ctermfg=grey ctermbg=148 cterm=NONE
+"highlight Normal ctermbg=gray
 hi clear SignColumn
-hi StatusLine ctermbg=NONE ctermfg=231 cterm=NONE
-hi StatusLineNC ctermbg=NONE cterm=NONE
+hi WarningMsg         ctermfg=131     ctermbg=NONE  cterm=bold
+hi ErrorMsg           ctermfg=131     ctermbg=NONE  cterm=NONE
+" hi LineNr           ctermfg=226     ctermbg=NONE  cterm=NONE
+" hi IncSearch        ctermbg=green
+" hi Search           ctermfg=grey    ctermbg=148   cterm=NONE
+" hi StatusLine         ctermbg=NONE    ctermfg=231   cterm=NONE
+" hi StatusLineNC       ctermbg=NONE    cterm=NONE
 
 " Smooth scroll plugin settings
 noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>

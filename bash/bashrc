@@ -55,8 +55,9 @@ export HISTSIZE=10000
 export EDITOR=vim
 export GOPATH="/Users/lazy/go"
 export PATH="$GOPATH/bin:$PATH"
-# black iTerm2 title color
+# black iTerm2 title color #282C34
 printf -- $'\033]6;1;bg;red;brightness;26\a\033]6;1;bg;green;brightness;26\a\033]6;1;bg;blue;brightness;26\a'
+export COLORTERM=truecolor
 
 #paths to directory's
 export WEB="/Users/lazy/Dropbox/Workbench/CODE/web/"
