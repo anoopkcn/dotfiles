@@ -246,10 +246,93 @@ note(){
 
 
 
-#====== Library App =======
-doi2bib(){
-    echo >> bib.bib;
-    curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
-    echo >> bib.bib;
+#====== Remote sync app =======
+function dsync(){
+if [[ $# -eq 0 || "$#" -eq 2 ||"$#" -gt 3 ]]; then
+    echo "Specify a server [server | server <source> <destination>]"
+elif [[ "$#" -eq 1 ]]; then
+    curr_path=`pwd`
+    if [ "$curr_path" != "$HOME" ]; then
+    path=`echo $curr_path | cut -d '/' -f 4-`
+    rsync -arzv --prune-empty-dirs --exclude-from="$HOME/Dropbox/Dotfiles/bash/rsync_exclude.txt" -e ssh $1:~/${path}/. ${curr_path}/.
+    else
+      echo "Warning:Global sync on Home folder is not allowed"
+    fi
+else
+    rsync -arzv -e ssh $1:$2 $3
+fi
 }
-#library(){}
+
+function usync(){
+if [[ $# -eq 0 || "$#" -eq 2 ||"$#" -gt 3 ]]; then
+    echo "Specify a server [server | server <source> <destination>]"
+elif [[ "$#" -eq 1 ]]; then
+    curr_path=`pwd`
+    if [ "$curr_path" != "$HOME" ]; then
+    path=`echo $curr_path | cut -d '/' -f 4-`
+    rsync -arzv --delete --exclude='.git/' --prune-empty-dirs ${curr_path}/. -e ssh $1:~/${path}/.
+    else
+      echo "Warning:Global sync on Home folder is not allowed"
+    fi
+else
+    rsync -arzv $2 -e ssh $1:$3
+fi
+}
+
+
+#==== fswatch + rsync =====
+
+fsync(){
+    red='\033[0;31m'
+    green='\033[0;32m'
+    nocolor='\033[00m'
+
+    if [ $# -eq 0 ]; then
+      echo -e "${red}Error: fsync takes 3 compulsory arguments and 1 optional argument.${nocolor}"
+      echo -n "Usage: fsync /local/path /targetserver/path ssh_user [1 <to exclude dot files>]"
+    else
+      LOCAL_PATH="$1"
+      TARGET_PATH="$2"
+      SSH_USER="$3"
+    fi
+
+    if [[ $4 == 1 ]]; then
+      EXCLUDE=true
+    fi
+
+    echo      ""
+    echo      "Local source path:  $LOCAL_PATH"
+    echo      "Remote target path: $TARGET_PATH"
+    echo      "Via middle server:  $SSH_USER"
+    echo      ""
+    echo -n   "Performing initial synchronization "
+    echo      ""
+    echo -n   "Synchronizing... "
+
+    if $EXCLUDE ;then
+      rsync -avzr -q --delete --force --exclude=".*" -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+    else
+      rsync -avzr -q --delete --force -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+    fi
+
+    echo      "done"
+    echo      ""
+
+    echo    "Watching for changes. Quit anytime with Ctrl-C."
+    if $EXCLUDE ;then
+      fswatch -0 -l 1 -r $LOCAL_PATH --exclude="/\.[^/]*$" |\
+        while read -d "" event;do
+          echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
+          rsync -avzr -q --delete --force -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+          echo "done"
+        done
+    else
+      fswatch -0 -r $LOCAL_PATH |\
+        while read -d "" event; do
+          echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
+          rsync -avzr -q --delete --force -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+          echo "done"
+        done
+    fi
+
+}
