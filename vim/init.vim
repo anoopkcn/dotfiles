@@ -10,8 +10,8 @@ filetype plugin indent on
 if has('termguicolors')
   set termguicolors
 endif
-set background=dark
-colorscheme onedark
+" set background=dark
+colorscheme spacegray
 
 " set number
 "set relativenumber
@@ -299,7 +299,7 @@ silent! exe "set <S-Left>=\<Esc>b"
 silent! exe "set <S-Right>=\<Esc>f"
 
 "---------------------------------------------------------------------------
-set laststatus=2
+set laststatus=1
 " Status line settings
 set statusline=%<[%n]\ %F\ %m%r%y\ %=%-14.(%l,%c%V%)\ %P\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}
 
@@ -374,7 +374,6 @@ nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-"highlight Normal ctermbg=gray
 hi clear SignColumn
 hi WarningMsg         ctermfg=131     ctermbg=NONE  cterm=bold
 hi ErrorMsg           ctermfg=131     ctermbg=NONE  cterm=NONE
@@ -383,9 +382,6 @@ hi ErrorMsg           ctermfg=131     ctermbg=NONE  cterm=NONE
 " hi Search           ctermfg=grey    ctermbg=148   cterm=NONE
 " hi StatusLine         ctermbg=NONE    ctermfg=231   cterm=NONE
 " hi StatusLineNC       ctermbg=NONE    cterm=NONE
-"
-" Code styling
-" hi Comment              ctermfg=235         ctermbg=NONE        cterm=NONE
 
 " Smooth scroll plugin settings
 noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
