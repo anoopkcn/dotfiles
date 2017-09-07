@@ -310,9 +310,9 @@ fsync(){
     echo -n   "Synchronizing... "
 
     if $EXCLUDE ;then
-      rsync -avzr -q --delete --force --exclude=".*" -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+      rsync -avzr --exclude=".*" -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
     else
-      rsync -avzr -q --delete --force -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+      rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
     fi
 
     echo      "done"
@@ -323,14 +323,14 @@ fsync(){
       fswatch -0 -l 1 -r $LOCAL_PATH --exclude="/\.[^/]*$" |\
         while read -d "" event;do
           echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
-          rsync -avzr -q --delete --force -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+          rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
           echo "done"
         done
     else
       fswatch -0 -r $LOCAL_PATH |\
         while read -d "" event; do
           echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
-          rsync -avzr -q --delete --force -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+          rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
           echo "done"
         done
     fi
