@@ -9,25 +9,11 @@ source $HOME/Dropbox/Dotfiles/bash/tmux_functions.sh
 source $HOME/Dropbox/Dotfiles/bash/fzf_functions.sh
 source $HOME/Dropbox/Dotfiles/bash/apps.sh
 
-git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
-source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
-if [ -e ${git_prompt} ]; then
-    source ${git_prompt}
-fi
-
-# Prompt
-RESET="\[\033[0m\]"
-RED="\[\033[0;31m\]"
-GREEN="\[\033[01;32m\]"
-BLUE="\[\033[01;34m\]"
-YELLOW="\[\033[0;33m\]"
-GRAY="\[\e[38;5;59m\]"
-
-export PS1="${GREEN}(\j)${RESET} ${BLUE}\W${RESET}\$(__git_ps1)${RED} >${RESET} "
-export GIT_PS1_SHOWCOLORHINTS=1
-export GIT_PS1_SHOWDIRTYSTATE=true
-export GIT_PS1_SHOWSTASHSTATE=true
-export GIT_PS1_SHOWUNTRACKEDFILES=true
+#git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
+#source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
+#if [ -e ${git_prompt} ]; then
+#    source ${git_prompt}
+#fi
 
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'
@@ -53,14 +39,14 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 # general settings
 export HISTSIZE=10000
 export EDITOR=vim
-export GOPATH="/Users/lazy/go"
-export PATH="$GOPATH/bin:$PATH"
 #iterm2 title to black
-# printf -- $'\033]6;1;bg;red;brightness;30\a\033]6;1;bg;green;brightness;33\a\033]6;1;bg;blue;brightness;39\a'
+printf -- $'\033]6;1;bg;red;brightness;30\a\033]6;1;bg;green;brightness;33\a\033]6;1;bg;blue;brightness;39\a'
 export COLORTERM=truecolor
 
 #paths to directory's
-export WEB="/Users/lazy/Dropbox/Workbench/CODE/web/"
-export QE="/Users/lazy/Dropbox/Workbench/ESPRESSO/"
-export MHPC="/Users/lazy/Dropbox/Workbench/MHPC/"
-export CODE="/Users/lazy/Dropbox/Workbench/CODE/"
+export QE="/Users/lazy/Dropbox/Dotfiles/"
+export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
+export MHPC="/Users/lazy/Dropbox/Workbench/School/MHPC/"
+export CODE="/Users/lazy/Dropbox/Workbench/Code/"
+export GOPATH="/Users/lazy/go"
+export PATH="$GOPATH/bin:$PATH"

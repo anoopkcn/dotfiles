@@ -1,9 +1,0 @@
-# ~/.tmuxinator/write.yml
-
-name: write
-root: <%= @args[0] %>
-
-windows:
-  - write :
-      layout: main-vertical
-      panes:

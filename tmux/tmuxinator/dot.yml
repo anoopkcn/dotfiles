@@ -7,9 +7,3 @@ windows:
       layout: main-vertical
       panes:
         - clear
-  # - memo:
-  #     layout: main-vertical
-  #     panes:
-  #       - memo:
-  #         - memo -c
-  #         - memo -o

@@ -91,7 +91,7 @@ gr(){
 }
 
 # gco - checkout git branch/tag
-gch() {
+gc() {
   is_in_git_repo || return
   local tags branches target
   tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
@@ -106,7 +106,7 @@ gch() {
 }
 
 # gchc - checkout git commit
-gchc() {
+gco() {
   is_in_git_repo || return
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&

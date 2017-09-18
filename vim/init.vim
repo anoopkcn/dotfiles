@@ -10,8 +10,8 @@ filetype plugin indent on
 if has('termguicolors')
   set termguicolors
 endif
-" set background=dark
-colorscheme spacegray
+set background=dark
+colorscheme solarized
 
 " set number
 "set relativenumber
