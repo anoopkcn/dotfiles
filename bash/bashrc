@@ -3,17 +3,33 @@ if [[ $- != *i* ]] ; then
     return
 fi
 
-source $HOME/Dropbox/Dotfiles/bash/alias.sh
-source $HOME/Dropbox/Dotfiles/bash/functions.sh
-source $HOME/Dropbox/Dotfiles/bash/tmux_functions.sh
-source $HOME/Dropbox/Dotfiles/bash/fzf_functions.sh
-source $HOME/Dropbox/Dotfiles/bash/apps.sh
+# Folder for all the bash settings and functions
+bash_settings=$HOME/Dropbox/Dotfiles/bash
+
+source ${bash_settings}/alias.sh
+source ${bash_settings}/functions.sh
+source ${bash_settings}/tmux_functions.sh
+source ${bash_settings}/fzf_functions.sh
+source ${bash_settings}/apps.sh
 
 #git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
-#source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
-#if [ -e ${git_prompt} ]; then
-#    source ${git_prompt}
-#fi
+# if [ -e ${git_prompt} ]; then
+#     source ${git_prompt}
+# fi
+git_completion=/usr/local/opt/git/etc/bash_completion.d/git-completion.bash
+if [ -e ${git_completion} ]; then
+    source ${git_completion}
+fi
+
+# colouring MacOs
+export COLORTERM=truecolor
+export GREP_OPTIONS='--color=auto'
+
+# general settings
+export EDITOR=vim
+
+#iterm2 title to black
+printf -- $'\033]6;1;bg;red;brightness;30\a\033]6;1;bg;green;brightness;33\a\033]6;1;bg;blue;brightness;39\a'
 
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'
@@ -23,30 +39,9 @@ bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
 bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
 bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 
-# fzf settings
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS=' --height 45% --reverse --inline-info --color bg+:#1C1C1C,fg+:#348614,hl:#D52E87,hl+:#D52E87'
-#--color fg:188,bg:#1c1c1c,hl:103,fg+:222,bg+:234,hl+:104
-#--color info:183,prompt:110,spinner:107,pointer:167,marker:215
-#'
-# folder file colouring
-export GREP_OPTIONS='--color=auto'
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
-
-# general settings
-export HISTSIZE=10000
-export EDITOR=vim
-#iterm2 title to black
-printf -- $'\033]6;1;bg;red;brightness;30\a\033]6;1;bg;green;brightness;33\a\033]6;1;bg;blue;brightness;39\a'
-export COLORTERM=truecolor
-
 #paths to directory's
+export PATH="$GOPATH/bin:$PATH"
 export QE="/Users/lazy/Dropbox/Dotfiles/"
 export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
-export MHPC="/Users/lazy/Dropbox/Workbench/School/MHPC/"
 export CODE="/Users/lazy/Dropbox/Workbench/Code/"
 export GOPATH="/Users/lazy/go"
-export PATH="$GOPATH/bin:$PATH"
