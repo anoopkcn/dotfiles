@@ -28,9 +28,6 @@ export GREP_OPTIONS='--color=auto'
 # general settings
 export EDITOR=vim
 
-#iterm2 title to black
-printf -- $'\033]6;1;bg;red;brightness;30\a\033]6;1;bg;green;brightness;33\a\033]6;1;bg;blue;brightness;39\a'
-
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
