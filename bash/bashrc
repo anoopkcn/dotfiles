@@ -38,7 +38,7 @@ bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 
 #paths to directory's
 export PATH="$GOPATH/bin:$PATH"
-export QE="/Users/lazy/Dropbox/Dotfiles/"
+export DOT="/Users/lazy/Dropbox/Dotfiles/"
 export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
 export CODE="/Users/lazy/Dropbox/Workbench/Code/"
 export GOPATH="/Users/lazy/go"
