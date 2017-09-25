@@ -29,7 +29,7 @@ set -g window-status-format "#I:#W[#F]"
 
 # active window title colors
 set-window-option -g window-status-current-fg $tm_color_active
-set-window-option -g window-status-current-bg default
+set-window-option -g window-status-current-bg  default
 set-window-option -g  window-status-current-format "#[bold]#I:#W[#F]"
 
 # pane border
@@ -56,3 +56,6 @@ tm_session_name="#[fg=$tm_color_feature,bold]$tm_separator_left_thin(#S)"
 #settings
 set -g status-right $tm_session_name' '$tm_date #$tm_separator_right_thin
 set -g status-left  ''
+
+# set-option -g status-position top
+set -wg mode-style bg=cyan,fg=black

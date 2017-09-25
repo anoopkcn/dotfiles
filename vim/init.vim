@@ -49,6 +49,7 @@ set listchars+=tab:\ \
 set listchars+=extends:❯
 set listchars+=precedes:❮
 "set listchars+=trail:␣
+" set fillchars+=vert:\|
 
 set nojoinspaces
 set diffopt=filler,vertical
@@ -377,6 +378,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 hi clear SignColumn
 hi WarningMsg         ctermfg=131     ctermbg=NONE  cterm=bold
 hi ErrorMsg           ctermfg=131     ctermbg=NONE  cterm=NONE
+hi VertSplit          ctermfg=NONE    ctermbg=NONE cterm=NONE 
 " hi LineNr           ctermfg=226     ctermbg=NONE  cterm=NONE
 " hi IncSearch        ctermbg=green
 " hi Search           ctermfg=grey    ctermbg=148   cterm=NONE
