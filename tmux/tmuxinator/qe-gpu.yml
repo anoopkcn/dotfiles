@@ -1,0 +1,18 @@
+# ~/.tmuxinator/qe-gpu.yml
+
+name: qe-gpu
+root: ~/Dropbox/Workbench/Projects/ESPRESSO/qe-gpu
+
+windows:
+  - bash:
+      layout: main-vertical
+      panes:
+        - clear
+  - drake:
+      layout: main-vertical
+      panes:
+        - ssh drake
+  - local:
+      layout: main-vertical
+      panes:
+        - tmux send-keys -t 1 'clear && cd devel/qe-gpu' Enter
