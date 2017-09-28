@@ -9,8 +9,8 @@ bash_settings=$HOME/Dropbox/Dotfiles/bash
 source ${bash_settings}/alias.sh
 source ${bash_settings}/functions.sh
 source ${bash_settings}/tmux_functions.sh
-source ${bash_settings}/fzf_functions.sh
-source ${bash_settings}/apps.sh
+#source ${bash_settings}/fzf_functions.sh
+#source ${bash_settings}/apps.sh
 
 #git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 # if [ -e ${git_prompt} ]; then
@@ -38,7 +38,6 @@ bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 
 #paths to directory's
 export PATH="$GOPATH/bin:$PATH"
-export DOT="/Users/lazy/Dropbox/Dotfiles/"
+export DOT="/Users/lazy/Dropbox/dotfiles/"
 export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
 export CODE="/Users/lazy/Dropbox/Workbench/Code/"
-export GOPATH="/Users/lazy/go"

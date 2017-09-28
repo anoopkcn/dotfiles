@@ -1,7 +1,6 @@
-A File icon
 AdvancedNewFile
 All Autocomplete
-Boxy Theme
+Boxy Theme (A file Icon)
 BracketHighlighter
 ColorHighlighter
 Fortran
@@ -16,10 +15,6 @@ SublimeCodeIntel
 
 [
 		{ "keys": ["ctrl+]"], "command": "goto_definition" },
-		// { "keys": ["ctrl+alt+t"], "command": "terminal_view_open" },
-		{ "keys": ["ctrl+alt+t"], "command": "terminal_view_open", "args": {"cmd": "/bin/bash -l -c ipython", "title": "Terminal (IPython)"}},
-		{ "keys": ["super+shift+v"], "command": "paste" },
-		{ "keys": ["super+v"], "command": "paste_and_indent" },
 
 ]
 
