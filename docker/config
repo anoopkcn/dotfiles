@@ -1,0 +1,30 @@
+Host *
+ServerAliveInterval 100
+
+Host c3e
+  HostName hpc.c3e.exact-lab.it
+  user mhpc19
+
+Host uly
+  HostName frontend2.hpc.sissa.it
+  user akaithal
+
+Host galileo
+  HostName login.galileo.cineca.it
+  user achandr2
+
+Host pico
+  HostName login.pico.cineca.it
+  user achandr2
+
+Host marconi
+  HostName login.marconi.cineca.it
+  user achandr2
+
+Host argo
+  HostName argo.ictp.it
+  user akaithal
+
+Host drake
+  HostName drake3.iac.rm.cnr.it
+  user qegpu

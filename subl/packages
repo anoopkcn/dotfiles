@@ -1,0 +1,32 @@
+A File icon
+AdvancedNewFile
+All Autocomplete
+Boxy Theme
+BracketHighlighter
+ColorHighlighter
+Fortran
+Git
+Gitgutter
+LatexTools
+Origami
+Package Control
+PackageResoureViewer
+SublimeCodeIntel
+
+
+[
+		{ "keys": ["ctrl+]"], "command": "goto_definition" },
+		// { "keys": ["ctrl+alt+t"], "command": "terminal_view_open" },
+		{ "keys": ["ctrl+alt+t"], "command": "terminal_view_open", "args": {"cmd": "/bin/bash -l -c ipython", "title": "Terminal (IPython)"}},
+		{ "keys": ["super+shift+v"], "command": "paste" },
+		{ "keys": ["super+v"], "command": "paste_and_indent" },
+
+]
+
+
+//Title bar
+{
+  "class": "title_bar",
+  "fg": [170, 170, 170],
+  "bg": [29,29,29]
+},
