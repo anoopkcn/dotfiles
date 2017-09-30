@@ -6,7 +6,7 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cd.='cd ..'
 alias cd..='cd ..'
-alias l='ls -alF'
+alias l='ls -ltr'
 alias ll='ls -l'
 alias c='clear'
 alias p="pwd"
@@ -14,7 +14,6 @@ alias p="pwd"
 #application links
 alias vi='nvim -u NONE'
 alias vim='nvim'
-alias inkimg='/Applications/Inkscape.app/Contents/Resources/script'
 alias chrome='open -a Google\ Chrome'
 
 # tmux alias
