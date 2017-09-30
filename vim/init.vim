@@ -125,7 +125,6 @@ call plug#begin('~/.vim/bundle')
     Plug 'kien/ctrlp.vim'
     Plug 'scrooloose/nerdtree'
     Plug 'airblade/vim-gitgutter'
-    Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
     Plug 'terryma/vim-smooth-scroll'
     Plug 'tpope/vim-rhubarb'
 call plug#end()
@@ -138,26 +137,6 @@ if has('gui')
   set guioptions-=r
 
 else "Run the following only on terminal
-
-  "fzf settings
-  let g:fzf_layout = { 'down': '~35%' }
-  let g:fzf_history_dir = '~/.conf/fzf-history'
-
-  " nnoremap <leader><leader> :Files<cr>
-  " nnoremap <silent> <leader>b :Buffers<cr>
-  " nnoremap <leader>t :Tags  " easy tags
-  " nnoremap <silent> <Leader>` :Marks<CR>
-
-
-  command! -bang -nargs=* Ag
-    \ call fzf#vim#ag(<q-args>,
-    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-    \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-    \                 <bang>0)
-
-  command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
   " Openup browser to preview markdown
   function! Preview()
       silent execute "!open -a 'Google\ Chrome.app' " . shellescape(expand('%'))

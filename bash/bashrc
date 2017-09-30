@@ -9,7 +9,7 @@ bash_settings=$HOME/Dropbox/dotfiles/bash
 source ${bash_settings}/alias.sh
 source ${bash_settings}/functions.sh
 source ${bash_settings}/tmux_functions.sh
-#source ${bash_settings}/fzf_functions.sh
+source ${bash_settings}/git_functions.sh
 source ${bash_settings}/apps.sh
 
 #git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh

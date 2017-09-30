@@ -49,12 +49,6 @@ function f() {
     find . -name "$1"
 }
 
-# take this repo and copy it to somewhere else minus the .git stuff.
-function gitexport(){
-    mkdir -p "$1"
-    git archive master | tar -x -C "$1"
-}
-
 # get gzipped size
 function gz() {
     echo "orig size    (bytes): "
@@ -81,7 +75,6 @@ function unidecode() {
 }
 
 # Extract archives - use: extract <file>
-# Credits to http://dotfiles.org/~pseup/.bashrc
 function extract() {
     if [ -f $1 ] ; then
         case $1 in
@@ -101,30 +94,6 @@ function extract() {
     else
         echo "'$1' is not a valid file"
     fi
-}
-
-function glog(){
-if [ $# -eq 0 ]; then
-    git log --oneline --decorate --all --graph
-elif [ $1 = "-b" ]; then
-    gbranchlog
-else
-    git log --oneline --decorate --max-count=$1 --all --graph
-fi
-}
-
-# === Remote settings =====#
-#git specific
-gitzip() {
-  git archive -o $(basename $PWD).zip HEAD
-}
-
-gittgz() {
-  git archive -o $(basename $PWD).tgz HEAD
-}
-
-pyc(){
-    echo $(python -c $1)
 }
 
 doi2bib(){

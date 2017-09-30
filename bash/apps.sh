@@ -1,156 +1,4 @@
 #!/bin/bash
-
-memo(){
-  MEMO=${HOME}/Dropbox/Notes/MEMO
-  today="$(date "+%d-%m-%Y")"
-  file=${MEMO}/${today}
-  create_template(){
-      touch $1
-      echo -e "MEMO : $today \n\
-        \n05\n06\n07\n08 \
-        \n09\n10\n11\n12 \
-        \n13\
-        \n14\n15\n16\n17\n18 \
-        \n19\n20\n21\n22 \
-        \n23\n24\n01\n02\n03\n04\n" >> $1
-
-  }
-  if [ $# -eq 0 ]; then
-    vim ${MEMO}/${today}
-  else
-  while [ ! $# -eq 0 ]
-  do
-    case "$1" in
-      --version | -v)
-        echo "memo v0.0.1"
-        ;;
-      --help | -h)
-        echo "memo version 0.0.1"
-        echo "Written by Anoop Chandran - strivetobelazy@gmail.com"
-        echo "memo is a note taking application. Tribute to Benjamin Franklin(1706-1790)"
-        echo "USAGE: memo [OPTIONS] [ARGUMENT]"
-        echo "OPTIONS:
-              --version | -v          : Display the version information
-              --help | -h             : Display the help menu
-              --create-memo | -c      : Takes 0 or 1 ARGUMENT(s)
-                                        0: Creates memo file with name as current-day date
-                                        1: Creates memo file with name as ARGUMENT-1
-              --write-memo | -w       : Takes 1 or 2 ARGUMENT(s).
-                                        1: Appends the string ARGUMENT-1 after current-hour
-                                        2: Appends the string ARGUMENT-2 after ARGUMENT-1 hour
-              --open-memo | -o        : Takes 0 or 1 ARGUMENT's
-                                        0: Opens current-day memo
-                                        1: Opens ARGUMENT-1 memo
-              --read-memo | -r        : Takes 0 or 1 ARGUMENT's
-                                        0: Opens current-day memo in readonly
-                                        1: Opens ARGUMENT-1 memo in readonly
-              --list-memos | -l       : Lists MEMO files in the default/custom note dir
-              --list-todo | -t        : Lists todo's in memos in the default/custom MEMO dir
-              --todo-all-list | -ta   : Same as -t but includes also the done todo's
-              --todo-done-list | -td  : Same as -t but only shows the done todo's
-              --change-dir | -cd      : Change to memo directory
-        "
-        ;;
-      --create-memo | -c)
-        shift
-        if [ -z "${1}" ];then
-          if [ ! -e $file ];then
-            create_template $file
-          fi
-        else
-          if [[ $# -eq 1 ]];then
-            if [ ! -e ${MEMO}/$1 ];then
-              create_template ${MEMO}/$1
-            else
-              echo "File already exists"
-            fi
-          fi
-        fi
-        ;;
-      --write-memo |-w)
-        shift
-        if [ -z "${1}" ];then
-          echo "Usage: -w < [file_name] string >, string cant be empty"
-        else
-          if [[ $# -eq 1 ]];then
-            tvar1=$(date "+%R"|awk -F: '{print $1}')
-            tvar2=$(bc -l <<< ${tvar1}+1)
-            string=${1}" ($(date "+%R"))"
-            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
-              '$1==var1{p=1} p && $1==var2{print "      "var3; p=0} 1' \
-              $file
-          else
-            tvar1=$1
-            tvar2=$(bc -l <<< $1+1)
-            string=${2}" ($(date "+%R"))"
-            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
-              '$1==var1{p=1} p && $1==var2{print "      "var3; p=0} 1' \
-              $file
-
-          fi
-        fi
-        ;;
-      --todo-memo |-t)
-        shift
-        if [ -z "${1}" ];then
-          echo "Usage: -t < [file_name] string >, string cant be empty"
-        else
-          if [[ $# -eq 1 ]];then
-            tvar1=$(date "+%R"|awk -F: '{print $1}')
-            tvar2=$(bc -l <<< $tvar1+1)
-            string=${1}" ($(date "+%R"))"
-            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
-              '$1==var1{p=1} p && $1==var2{print "      TODO:"var3; p=0} 1' \
-              $file
-          else
-            tvar1=$1
-            tvar2=$(bc -l <<< $1+1)
-            string=${2}" ($(date "+%R"))"
-            gawk -i inplace -v var1="$tvar1" -v var2="$tvar2" -v var3="$string" \
-              '$1==var1{p=1} p && $1==var2{print "      TODO:"var3; p=0} 1' \
-              $file
-
-          fi
-        fi
-        ;;
-      --open-memo | -o)
-          shift
-          if [[ $# -eq 0 ]];then
-            vim $file
-          else
-            vim ${MEMO}/${1}
-          fi
-          ;;
-      --read-memo | -r)
-          shift
-          if [[ $# -eq 0 ]];then
-            less $file
-          else
-            less ${MEMO}/${1}
-          fi
-          ;;
-      --list-memos | -l)
-        ls ${MEMO} #/ | grep "$*"
-        ;;
-      --todo-list | -tl)
-        grep -v ":DONE" ${MEMO}/* | grep TODO
-        ;;
-      --todo-all-list | -ta)
-        grep "TODO" ${MEMO}/*
-        ;;
-      --todo-done-list | -td)
-        grep ":DONE" ${MEMO}/*
-        ;;
-      --change-dir | -cd)
-        cd ${MEMO}
-        ;;
-    esac
-    shift
-  done
-
-  fi
-}
-
 note(){
   NOTES=${HOME}/Dropbox/Notes
   today="$(date "+%d-%m-%Y")"
@@ -282,57 +130,57 @@ fi
 
 #==== fswatch + rsync =====
 
-fsync(){
-    red='\033[0;31m'
-    green='\033[0;32m'
-    nocolor='\033[00m'
+# fsync(){
+#     red='\033[0;31m'
+#     green='\033[0;32m'
+#     nocolor='\033[00m'
 
-    if [ $# -eq 0 ]; then
-      echo -e "${red}Error: fsync takes 3 compulsory arguments and 1 optional argument.${nocolor}"
-      echo -n "Usage: fsync /local/path /targetserver/path ssh_user [1 <to exclude dot files>]"
-    else
-      LOCAL_PATH="$1"
-      TARGET_PATH="$2"
-      SSH_USER="$3"
-    fi
+#     if [ $# -eq 0 ]; then
+#       echo -e "${red}Error: fsync takes 3 compulsory arguments and 1 optional argument.${nocolor}"
+#       echo -n "Usage: fsync /local/path /targetserver/path ssh_user [1 <to exclude dot files>]"
+#     else
+#       LOCAL_PATH="$1"
+#       TARGET_PATH="$2"
+#       SSH_USER="$3"
+#     fi
 
-    if [[ $4 == 1 ]]; then
-      EXCLUDE=true
-    fi
+#     if [[ $4 == 1 ]]; then
+#       EXCLUDE=true
+#     fi
 
-    echo      ""
-    echo      "Local source path:  $LOCAL_PATH"
-    echo      "Remote target path: $TARGET_PATH"
-    echo      "Via middle server:  $SSH_USER"
-    echo      ""
-    echo -n   "Performing initial synchronization "
-    echo      ""
-    echo -n   "Synchronizing... "
+#     echo      ""
+#     echo      "Local source path:  $LOCAL_PATH"
+#     echo      "Remote target path: $TARGET_PATH"
+#     echo      "Via middle server:  $SSH_USER"
+#     echo      ""
+#     echo -n   "Performing initial synchronization "
+#     echo      ""
+#     echo -n   "Synchronizing... "
 
-    if $EXCLUDE ;then
-      rsync -avzr --exclude=".*" -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
-    else
-      rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
-    fi
+#     if $EXCLUDE ;then
+#       rsync -avzr --exclude=".*" -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+#     else
+#       rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+#     fi
 
-    echo      "done"
-    echo      ""
+#     echo      "done"
+#     echo      ""
 
-    echo    "Watching for changes. Quit anytime with Ctrl-C."
-    if $EXCLUDE ;then
-      fswatch -0 -l 1 -r $LOCAL_PATH --exclude="/\.[^/]*$" |\
-        while read -d "" event;do
-          echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
-          rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
-          echo "done"
-        done
-    else
-      fswatch -0 -r $LOCAL_PATH |\
-        while read -d "" event; do
-          echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
-          rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
-          echo "done"
-        done
-    fi
+#     echo    "Watching for changes. Quit anytime with Ctrl-C."
+#     if $EXCLUDE ;then
+#       fswatch -0 -l 1 -r $LOCAL_PATH --exclude="/\.[^/]*$" |\
+#         while read -d "" event;do
+#           echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
+#           rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+#           echo "done"
+#         done
+#     else
+#       fswatch -0 -r $LOCAL_PATH |\
+#         while read -d "" event; do
+#           echo -en "${green}" `date` "${nocolor}\"$event\" changed. Synchronizing... "
+#           rsync -avzr -e "ssh" $LOCAL_PATH $SSH_USER:$TARGET_PATH
+#           echo "done"
+#         done
+#     fi
 
-}
+# }
