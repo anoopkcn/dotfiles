@@ -118,12 +118,9 @@ autocmd InsertEnter * :setlocal nohlsearch
 
 " plugins
 call plug#begin('~/.vim/bundle')
-    Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-commentary'
-    Plug 'neomake/neomake'
     Plug 'ervandew/supertab'
     Plug 'kien/ctrlp.vim'
-    Plug 'scrooloose/nerdtree'
     Plug 'airblade/vim-gitgutter'
     Plug 'terryma/vim-smooth-scroll'
     Plug 'tpope/vim-rhubarb'
