@@ -1,6 +1,4 @@
-" -------
 " Vim run command file
-" -------
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
@@ -10,8 +8,6 @@ filetype plugin indent on
 if has('termguicolors')
   set termguicolors
 endif
-set background=dark
-colorscheme solarized
 
 " set number
 "set relativenumber
@@ -116,15 +112,6 @@ endif
 
 autocmd InsertEnter * :setlocal nohlsearch
 
-" plugins
-call plug#begin('~/.vim/bundle')
-    Plug 'tpope/vim-commentary'
-    Plug 'ervandew/supertab'
-    Plug 'kien/ctrlp.vim'
-    Plug 'airblade/vim-gitgutter'
-    Plug 'terryma/vim-smooth-scroll'
-    Plug 'tpope/vim-rhubarb'
-call plug#end()
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
   set guioptions-=L
@@ -330,39 +317,10 @@ nnoremap <silent> <Leader>h :nohl<CR>
 
 "turn on spell cheking for filetypes
 autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
-"---------------------------------------------------------------------------
-" Plugin setttings
 
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
 nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
-nmap     <Leader>g :Gstatus<CR>gg<c-n>
-nnoremap <Leader>d :Gdiff<CR>
-
-"for fugitive
-set diffopt+=vertical
-
-let g:ctrlp_map = '<leader><leader>'
-let g:ctrlp_cmd = 'CtrlP'
-nnoremap <silent> <leader>b :CtrlPBuffer<cr>
-
-"file explorer opt
-map <C-n> :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 hi clear SignColumn
-hi WarningMsg         ctermfg=131     ctermbg=NONE  cterm=bold
-hi ErrorMsg           ctermfg=131     ctermbg=NONE  cterm=NONE
-hi VertSplit          ctermfg=NONE    ctermbg=NONE cterm=NONE 
-" hi LineNr           ctermfg=226     ctermbg=NONE  cterm=NONE
-" hi IncSearch        ctermbg=green
-" hi Search           ctermfg=grey    ctermbg=148   cterm=NONE
-" hi StatusLine         ctermbg=NONE    ctermfg=231   cterm=NONE
-" hi StatusLineNC       ctermbg=NONE    cterm=NONE
-
-" Smooth scroll plugin settings
-noremap <silent> <c-e> :call smooth_scroll#up(&scroll, 30, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 30, 2)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 30, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 30, 4)<CR>
