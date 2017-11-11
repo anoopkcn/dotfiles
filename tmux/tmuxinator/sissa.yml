@@ -1,0 +1,9 @@
+# ~/.tmuxinator/sissa.yml
+name: sissa
+root: ~/Dropbox/Workbench/School/SISSA
+
+windows:
+  - bash:
+      layout: main-vertical
+      panes:
+        - clear

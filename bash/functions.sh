@@ -97,8 +97,13 @@ function extract() {
 }
 
 doi2bib(){
-    echo >> bib.bib;
-    curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
-    echo >> bib.bib;
+     if [[ $# == 1 ]]; then
+      echo >> bib.bib;
+      curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
+      echo >> bib.bib;
+     else
+      echo "DOI = $1"
+      curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" | grep $2 
+     fi
 }
 

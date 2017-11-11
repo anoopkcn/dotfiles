@@ -1,7 +1,13 @@
-" Vim run command file
+"Vim run command file
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
+call plug#begin('~/.vim/plugged')
+  Plug 'morhetz/gruvbox'
+  Plug 'tpope/vim-commentary'
+  Plug 'ervandew/supertab'
+  Plug 'kien/ctrlp.vim'
+call plug#end()
 syntax on
 filetype plugin indent on
 
@@ -9,7 +15,7 @@ if has('termguicolors')
   set termguicolors
 endif
 
-" set number
+set number
 "set relativenumber
 set showmatch
 set backspace=indent,eol,start
@@ -126,22 +132,11 @@ else "Run the following only on terminal
       silent execute "!open -a 'Google\ Chrome.app' " . shellescape(expand('%'))
   endfunction
   command! Preview :call Preview()
-
-  nnoremap <leader>f :Ag<space>
-
 endif "TERMINAL endif
 
 
 " FOR ALL PLATFORMS
 "---------------------------------------------------------------------------
-" My functions
-" augroup vimrc
-"     " Automatic rename of tmux window
-"     if exists('$TMUX') && !exists('$NORENAME')
-"         au BufEnter * if empty(&buftype) | call system('tmux rename-window '.expand('%:t:S')) | endif
-"         au VimLeave * call system('tmux set-window automatic-rename on')
-"     endif
-" augroup END
 
 ":Root | Change directory to the root of the Git repository
 function! s:root()
@@ -177,36 +172,6 @@ nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
 xnoremap <leader>? "gy:call <SID>goog(@g, 0)<cr>gv
 xnoremap <leader>! "gy:call <SID>goog(@g, 1)<cr>gv
 
-" ----------------------------------------------------------------------------
-" ?ii / ?ai | indent-object
-" ?io       | strictly-indent-object
-function! s:indent_len(str)
-  return type(a:str) == 1 ? len(matchstr(a:str, '^\s*')) : 0
-endfunction
-
-" ----------------------------------------------------------------------------
-" #gi / #gpi | go to next/previous indentation level
-function! s:go_indent(times, dir)
-  for _ in range(a:times)
-    let l = line('.')
-    let x = line('$')
-    let i = s:indent_len(getline(l))
-    let e = empty(getline(l))
-
-    while l >= 1 && l <= x
-      let line = getline(l + a:dir)
-      let l += a:dir
-      if s:indent_len(line) != i || empty(line) != e
-        break
-      endif
-    endwhile
-    let l = min([max([1, l]), x])
-    execute 'normal! '. l .'G^'
-  endfor
-endfunction
-nnoremap <silent> gi :<c-u>call <SID>go_indent(v:count1, 1)<cr>
-nnoremap <silent> gpi :<c-u>call <SID>go_indent(v:count1, -1)<cr>
-
 "---------------------------------------------------------------------------
 " If buffer modified, update any 'Last modified: ' in the first 20 lines.
 function! LastModified()
@@ -220,37 +185,7 @@ function! LastModified()
   endif
 endfun
 autocmd BufWritePre * call LastModified()
-
-"---------------------------------------------------------------------------
-"Shows a list of places where TODO/FIXME/XXX is written
-function! s:todo() abort
-  let entries = []
-  for cmd in ['git grep -niI -e TODO -e FIXME -e XXX 2> /dev/null',
-            \ 'grep -rniI -e TODO -e FIXME -e XXX * 2> /dev/null']
-    let lines = split(system(cmd), '\n')
-    if v:shell_error != 0 | continue | endif
-    for line in lines
-      let [fname, lno, text] = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')[1:3]
-      call add(entries, { 'filename': fname, 'lnum': lno, 'text': text })
-    endfor
-    break
-  endfor
-
-  if !empty(entries)
-    call setqflist(entries)
-    copen
-  endif
-endfunction
-command! Todo call s:todo()
-
-" ----------------------------------------------------------------------------
-" Close preview window
-  if exists('##CompleteDone')
-    au CompleteDone * pclose
-  else
-    au InsertLeave * if !pumvisible() && (!exists('*getcmdwintype') || empty(getcmdwintype())) | pclose | endif
-  endif
-
+"
 " ------------------------------------------------------------------
 " commandline settings
 cnoremap        <C-A> <Home>
@@ -299,8 +234,12 @@ function! Spell()
     set nospell
   endif
 endfunction
+
 " Toggle spell settings
 nnoremap <localleader>l :call Spell()<CR>
+
+"turn on spell cheking for filetypes
+autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
 
 function! Insert_time()
   ":put =strftime(\"%d-%m-%Y %H:%M:%S \")
@@ -315,12 +254,13 @@ nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
 
 nnoremap <silent> <Leader>h :nohl<CR>
 
-"turn on spell cheking for filetypes
-autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
-
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
 nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
 
 hi clear SignColumn
+
+set background=dark
+colorscheme gruvbox
+let g:gruvbox_contrast_dark='hard'

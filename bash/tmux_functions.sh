@@ -61,10 +61,21 @@ tls(){
     done
 }
 
-tkillall(){
-    t_sessions=($(tmux ls | cut -d : -f 1));
-    for i in ${!t_sessions[@]};do
-        tmux kill-session -t  ${t_sessions[i]} ;
-    done
+tkill(){
+  if [ $# -eq 1 ] ; then
+    case $1 in 
+      -a)
+        t_sessions=($(tmux ls | cut -d : -f 1));
+        for i in ${!t_sessions[@]};do
+          tmux kill-session -t  ${t_sessions[i]} ;
+        done
+        ;;
+      *) 
+        tmux kill-session -t $1
+        ;;
+    esac
+  else
+    echo "Provide a TMUX session to kill"
+  fi
 }
 

@@ -22,7 +22,7 @@ if [ -e ${git_completion} ]; then
 fi
 
 # colouring MacOs
-export COLORTERM=truecolor
+#export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
 
 # general settings
@@ -37,7 +37,6 @@ bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
 bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 
 #paths to directory's
-export PATH="$GOPATH/bin:$PATH"
 export DOT="/Users/lazy/Dropbox/dotfiles/"
 export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
 export CODE="/Users/lazy/Dropbox/Workbench/Code/"

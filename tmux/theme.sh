@@ -57,5 +57,5 @@ tm_session_name="#[fg=$tm_color_feature,bold]$tm_separator_left_thin(#S)"
 set -g status-right $tm_session_name' '$tm_date #$tm_separator_right_thin
 set -g status-left  ''
 
-# set-option -g status-position top
+set-option -g status-position top
 set -wg mode-style bg=cyan,fg=black

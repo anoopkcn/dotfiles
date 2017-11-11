@@ -6,7 +6,7 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cd.='cd ..'
 alias cd..='cd ..'
-alias l='ls -ltr'
+alias l='ls -al'
 alias ll='ls -l'
 alias c='clear'
 alias p="pwd"
@@ -16,10 +16,10 @@ alias vi='vim -u NONE'
 alias chrome='open -a Google\ Chrome'
 
 # tmux alias
+#alias tmux="TERM=screen-256color-bce tmux"
 alias ta='tmux attach -t'
 alias tnew='tmux new -s'
 alias tsend='tmux send -t'
-alias tkill='tmux kill-session -t'
 alias ts='tmuxinator start'
 
 #git
