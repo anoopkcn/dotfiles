@@ -96,14 +96,17 @@ function extract() {
     fi
 }
 
-doi2bib(){
+doitobib(){
      if [[ $# == 1 ]]; then
       echo >> bib.bib;
       curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" >> bib.bib;
       echo >> bib.bib;
      else
-      echo "DOI = $1"
-      curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" | grep $2 
+      echo -n "DOI = $1,  "
+      curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" | grep $2 | sed "s/^[ \t]*//"
      fi
 }
 
+killport(){
+  lsof -ti:$1 | xargs kill -9
+}

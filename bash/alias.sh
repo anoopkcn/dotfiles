@@ -28,3 +28,6 @@ alias gs='git status'
 #other
 alias duh="du -h -d 0 [^.]*"
 alias js="bundle exec jekyll serve"
+
+#jupyter
+alias jn='jupyter notebook'
