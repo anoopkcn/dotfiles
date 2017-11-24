@@ -106,6 +106,44 @@ doitobib(){
       curl -s "http://api.crossref.org/works/$1/transform/application/x-bibtex" | grep $2 | sed "s/^[ \t]*//"
      fi
 }
+doi2bib(){
+BIB_FILE=""
+while test $# -gt 0; do
+    case "$1" in
+        -h|--help)
+            echo "convert a doi to bibtex friendly file"
+            exit 0
+            ;;
+        -f|--file)
+            shift
+            if test $# -gt 0; then
+                    BIB_FILE=$1
+            fi
+            shift
+            ;;
+        -d|--doi)
+            shift
+            if test $# -gt 0; then
+                    DOI=$1
+            else
+                    echo "no DOI specified"
+                    exit 1
+            fi
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+if [[  -z  $BIB_FILE  ]];then
+    curl -s "http://api.crossref.org/works/${DOI}/transform/application/x-bibtex"
+elif [[  ! -z  $BIB_FILE  ]];then
+    echo >> ${BIB_FILE};
+    curl -s "http://api.crossref.org/works/${DOI}/transform/application/x-bibtex" >> ${BIB_FILE}
+    echo >> ${BIB_FILE};
+fi
+}
 
 killport(){
   lsof -ti:$1 | xargs kill -9

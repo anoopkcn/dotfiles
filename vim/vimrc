@@ -261,6 +261,6 @@ nnoremap <localleader>n <esc>:tabnext<CR>
 
 hi clear SignColumn
 
-set background=dark
+set background=light
 colorscheme gruvbox
 let g:gruvbox_contrast_dark='hard'
