@@ -3,10 +3,10 @@ scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
 call plug#begin('~/.vim/plugged')
-  Plug 'morhetz/gruvbox'
   Plug 'tpope/vim-commentary'
   Plug 'ervandew/supertab'
   Plug 'kien/ctrlp.vim'
+  Plug 'NLKNguyen/papercolor-theme'
 call plug#end()
 syntax on
 filetype plugin indent on
@@ -261,6 +261,11 @@ nnoremap <localleader>n <esc>:tabnext<CR>
 
 hi clear SignColumn
 
-set background=light
-colorscheme gruvbox
-let g:gruvbox_contrast_dark='hard'
+set t_Co=256   " This is may or may not needed.
+
+if $VIMBG == 'light'
+  set background=light
+else
+  set background=dark
+endif
+colorscheme PaperColor

@@ -6,3 +6,4 @@ tmux/dottmux/*
 tmux/resurrect/*
 *.netrwhist
 vim/bundle/
+vim/plugged/
