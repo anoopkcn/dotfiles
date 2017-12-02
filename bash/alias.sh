@@ -1,13 +1,7 @@
 #!/bin/bash
 alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
 alias cd.='cd ..'
 alias cd..='cd ..'
-alias l='ls -al'
-alias ll='ls -l'
 alias c='clear'
 alias p="pwd"
 
@@ -31,3 +25,10 @@ alias js="bundle exec jekyll serve"
 
 #jupyter
 alias jn='jupyter notebook'
+
+#task 
+alias t='task'
+alias calc='task calc'
+alias in='task add +in'
+alias tick='tickle'
+alias think='tickle +1d'

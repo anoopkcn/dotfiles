@@ -35,22 +35,24 @@ modern_scm_prompt() {
 	fi
 }
 
-prompt() {
-	if [ $? -ne 0 ]
-	then
-		# Yes, the indenting on these is weird, but it has to be like
-		# this otherwise it won't display properly.
+is_task_exist(){
+  is_task_todo="$(type -p task)" 
+  if ! [ -z $is_task_todo ]; then
+    num_tasks=$(task +in +PENDING count) 
+    if [ "$num_tasks" != "0" ];then
+      echo "[${num_tasks}]"
+    fi
+  fi
+}
 
-    PS1="${TITLEBAR}${bold_red}┌─${reset_color}${normal}$(modern_scm_prompt)[${cyan}\w${normal}]$(is_vim_shell)
-${bold_red}└─▪${normal} "
+prompt() {
+  if [ $? -ne 0 ];then
+    PS1="${TITLEBAR}${bold_red}▪${reset_color}${normal}$(is_task_exist)$(modern_scm_prompt)[${cyan}\W${normal}]$(is_vim_shell)${normal}"
 	else
-		PS1="${TITLEBAR}┌─$(modern_scm_prompt)[${cyan}\w${normal}]$(is_vim_shell)
-└─▪ "
+    PS1="${TITLEBAR}▪$(is_task_exist)$(modern_scm_prompt)[${cyan}\W${normal}]$(is_vim_shell)"
 	fi
 }
 
-PS2="└─▪ "
-
-
+PS2="▪ "
 
 safe_append_prompt_command prompt

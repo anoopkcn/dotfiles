@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # tmux related functions
 # for updating envirnment variable
-function tmux() {
+
+function _tmux() {
     local tmux=$(type -fp tmux)
     case "$1" in
         update-environment|update-env|env-update)
@@ -21,6 +22,21 @@ function tmux() {
             $tmux "$@"
             ;;
     esac
+}
+
+tmux_env_update()
+{
+#Updating to latest tmux environment
+    export IFS=",";
+    for line in $(tmux showenv -t $(tmux display -p "#S") | tr "\n" ",");
+    do
+        if [[ $line == -* ]]; then
+            unset $(echo $line | cut -c2-);
+        else
+            export $line;
+        fi;
+    done;
+    unset IFS;
 }
 
 function tm(){
