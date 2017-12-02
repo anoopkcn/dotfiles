@@ -6,4 +6,3 @@ windows:
   - bash:
       layout: main-vertical
       panes:
-        - clear

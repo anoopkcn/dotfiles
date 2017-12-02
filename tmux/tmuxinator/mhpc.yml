@@ -8,8 +8,6 @@ windows:
   - local:
       layout: main-vertical
       panes:
-        - clear
   - bash:
       layout: main-vertical
       panes:
-        - clear

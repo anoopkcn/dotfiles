@@ -35,21 +35,21 @@ modern_scm_prompt() {
 	fi
 }
 
-is_task_exist(){
-  is_task_todo="$(type -p task)" 
-  if ! [ -z $is_task_todo ]; then
-    num_tasks=$(task +in +PENDING count) 
-    if [ "$num_tasks" != "0" ];then
-      echo "[${num_tasks}]"
-    fi
-  fi
-}
+# is_task_exist(){
+#   is_task_todo="$(type -p task)" 
+#   if ! [ -z $is_task_todo ]; then
+#     num_tasks=$(task +in +PENDING count) 
+#     if [ "$num_tasks" != "0" ];then
+#       echo "[${num_tasks}]"
+#     fi
+#   fi
+# }
 
 prompt() {
   if [ $? -ne 0 ];then
-    PS1="${TITLEBAR}${bold_red}▪${reset_color}${normal}$(is_task_exist)$(modern_scm_prompt)[${cyan}\W${normal}]$(is_vim_shell)${normal}"
+    PS1="${TITLEBAR}${bold_red}▪${reset_color}${normal}$(modern_scm_prompt)[${cyan}\W${normal}]$(is_vim_shell)${normal}"
 	else
-    PS1="${TITLEBAR}▪$(is_task_exist)$(modern_scm_prompt)[${cyan}\W${normal}]$(is_vim_shell)"
+    PS1="${TITLEBAR}▪$(modern_scm_prompt)[${cyan}\W${normal}]$(is_vim_shell)"
 	fi
 }
 
