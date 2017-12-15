@@ -35,6 +35,16 @@ dark(){
     echo -n -e "\033]50;SetProfile=dark\a"
 }
 
+# Perform 'ls' after successful 'cd'
+cdls() {
+  builtin cd "$*"
+  RESULT=$?
+  if [ "$RESULT" -eq 0 ]
+  then
+    ls
+  fi
+}
+
 # Create a new directory and enter it
 function md() {
     mkdir -p "$@" && cd "$@"

@@ -2,8 +2,9 @@
 alias ..='cd ..'
 alias cd.='cd ..'
 alias cd..='cd ..'
+alias l='ls -lhF'
 alias c='clear'
-alias p="pwd"
+alias p='pwd'
 
 #application links
 alias vi='vim -u NONE'
