@@ -32,7 +32,8 @@ set tabstop=2
 
 " Folding setting
 " set fdm=indent
-set nowrap
+" set nowrap
+set wrap
 
 set scrolloff=3
 set shortmess=filnxtToOI
