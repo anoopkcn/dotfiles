@@ -7,7 +7,8 @@ alias c='clear'
 alias p='pwd'
 
 #application links
-alias vi='vim -u NONE'
+alias vi='nvim -u NONE'
+alias vim='nvim'
 alias chrome='open -a Google\ Chrome'
 
 # tmux alias

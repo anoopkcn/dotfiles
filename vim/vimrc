@@ -6,11 +6,13 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-commentary'
   Plug 'ervandew/supertab'
   Plug 'kien/ctrlp.vim'
-  Plug 'NLKNguyen/papercolor-theme'
+  Plug 'joshdick/onedark.vim'
 call plug#end()
 syntax on
 filetype plugin indent on
-
+if (has("nvim"))
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
 if has('termguicolors')
   set termguicolors
 endif
@@ -261,12 +263,5 @@ nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
 
 hi clear SignColumn
-
-set t_Co=256   " This is may or may not needed.
-
-if $VIMBG == 'light'
-  set background=light
-else
-  set background=dark
-endif
-colorscheme PaperColor
+" colorscheme PaperColor
+colorscheme onedark
