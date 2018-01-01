@@ -19,25 +19,36 @@ PS3=">> "
 
 lazy_git_status() {
   # Get the current git branch name (if available)
-    local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
-    if [[ "$ref" != "" ]];then
-        local git_status_array=$(git status -s 2>/dev/null | awk '{print $1}')
-        if [[ ${#git_status_array[@]} > 0 ]];then
-            git_modified=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "[M|R|D|C]")
-            if [[ $git_modified != 0 ]]; then 
-              git_modified=${git_modified}${yellow}ᴹ${normal}" "
-            else
-              git_modified=""
-            fi
-            git_untracked=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "??")
-            if [[ $git_untracked != 0 ]]; then 
-              git_untracked=${git_untracked}${cyan}ˀ${normal}" "
-            else
-              git_untracked=""
-            fi
-            printf "(${git_modified}${git_untracked}${gray}${ref}${normal})"
-        fi
+  local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
+  if [[ "$ref" != "" ]];then
+    IFS='\n'
+    git_status=$(git status -s 2>/dev/null | cut -c1-2)
+    git_staged=$(echo ${git_status} | grep -c "^[M|A|D|R|C]")
+    if [[ $git_staged != 0 ]]; then 
+      git_staged=${git_staged}${yellow}ᴹ${normal}" "
+    else
+      git_staged=""
     fi
+    git_modified=$(echo ${git_status} | grep -c "^[M|A|D|R|C|[:space:]][M|A|R|C]")
+    if [[ $git_modified != 0 ]]; then 
+      git_modified=${git_modified}${green}ᴹ${normal}" "
+    else
+      git_modified=""
+    fi
+    git_deleted=$(echo ${git_status} | grep -c "^[[:space:]]D")
+    if [[ $git_deleted != 0 ]]; then 
+      git_deleted=${git_deleted}${red}ᴰ${normal}" "
+    else
+      git_deleted=""
+    fi
+    git_untracked=$(echo ${git_status} |grep -c "??")
+    if [[ $git_untracked != 0 ]]; then 
+      git_untracked=${git_untracked}${cyan}ˀ${normal}" "
+    else
+      git_untracked=""
+    fi
+    printf "(${git_staged}${git_modified}${git_deleted}${git_untracked}${gray}${ref}${normal})"
+  fi
 }
 
 # lazy_git_staged() {
