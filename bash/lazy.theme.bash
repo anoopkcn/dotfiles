@@ -25,27 +25,27 @@ lazy_git_status() {
     if [ "$git_staged" -le "0" ]; then 
     git_staged='';
     else
-    git_staged=${git_staged}${green}ᴹ${normal}
+    git_staged=${git_staged}${yellow}ᴹ${normal}" "
     fi
     git_added=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "A")
     if [ "$git_added" -le "0" ]; then 
     git_added='';
     else
-      git_added=${git_added}${yellow}ᴬ${normal}
+      git_added=${git_added}${yellow}ᴬ${normal}" "
     fi
     git_deleted=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "D")
     if [ "$git_deleted" -le "0" ]; then 
       git_deleted='';
     else
-      git_deleted=${git_deleted}${red}ᴰ${normal}
+      git_deleted=${git_deleted}${red}ᴰ${normal}" "
     fi
     git_untracked=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "??")
     if [ "$git_untracked" -le "0" ]; then 
       git_untracked='';
     else
-      git_untracked=${git_untracked}${cyan}ˀ${normal}
+      git_untracked=${git_untracked}${cyan}ˀ${normal}" "
     fi
-    printf "(${git_staged}${git_added}${git_deleted}${git_untracked} ${gray}${ref}${normal})"
+    printf "(${git_staged}${git_added}${git_deleted}${git_untracked}${gray}${ref}${normal})"
   fi
 }
 
