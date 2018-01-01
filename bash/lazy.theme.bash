@@ -24,29 +24,13 @@ lazy_git_status() {
     IFS='\n'
     git_status=$(git status -s 2>/dev/null | cut -c1-2)
     git_staged=$(echo ${git_status} | grep -c "^[M|A|D|R|C]")
-    if [[ $git_staged != 0 ]]; then 
-      git_staged=${git_staged}${yellow}ᴹ${normal}" "
-    else
-      git_staged=""
-    fi
+    [[ $git_staged = 0 ]] && git_staged="" || git_staged=${git_staged}${yellow}ᴹ${normal}" "
     git_modified=$(echo ${git_status} | grep -c "^[M|A|D|R|C|[:space:]][M|A|R|C]")
-    if [[ $git_modified != 0 ]]; then 
-      git_modified=${git_modified}${green}ᴹ${normal}" "
-    else
-      git_modified=""
-    fi
+    [[ $git_modified = 0 ]] && git_modified="" || git_modified=${git_modified}${green}ᴹ${normal}" "
     git_deleted=$(echo ${git_status} | grep -c "^[[:space:]]D")
-    if [[ $git_deleted != 0 ]]; then 
-      git_deleted=${git_deleted}${red}ᴰ${normal}" "
-    else
-      git_deleted=""
-    fi
-    git_untracked=$(echo ${git_status} |grep -c "??")
-    if [[ $git_untracked != 0 ]]; then 
-      git_untracked=${git_untracked}${cyan}ˀ${normal}" "
-    else
-      git_untracked=""
-    fi
+    [[ $git_deleted = 0 ]] && git_deleted="" || git_deleted=${git_deleted}${red}ᴰ${normal}" "
+    git_untracked=$(echo ${git_status} | grep -c "??")
+    [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=${git_untracked}${cyan}ˀ${normal}" "
     printf "(${git_staged}${git_modified}${git_deleted}${git_untracked}${gray}${ref}${normal})"
   fi
 }
