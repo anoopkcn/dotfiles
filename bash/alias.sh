@@ -19,7 +19,7 @@ alias tsend='tmux send -t'
 alias ts='tmuxinator start'
 
 #git
-alias gs='git status'
+alias gs='git status -s'
 
 #other
 alias duh="du -h -d 0 [^.]*"
