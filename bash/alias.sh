@@ -12,7 +12,6 @@ alias vim='nvim'
 alias chrome='open -a Google\ Chrome'
 
 # tmux alias
-#alias tmux="TERM=screen-256color-bce tmux"
 alias ta='tmux attach -t'
 alias tnew='tmux new -s'
 alias tsend='tmux send -t'
