@@ -3,6 +3,16 @@ if [[ $- != *i* ]] ; then
     return
 fi
 
+git_completion=/usr/local/opt/git/etc/bash_completion.d/git-completion.bash
+if [ -e ${git_completion} ]; then
+    source ${git_completion}
+fi
+
+git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
+if [ -e ${git_prompt} ]; then
+    source ${git_prompt}
+fi
+
 # Folder for all the bash settings and functions
 bash_settings=$HOME/Dropbox/dotfiles/bash
 
@@ -11,17 +21,9 @@ source ${bash_settings}/functions.sh
 source ${bash_settings}/tmux_functions.sh
 source ${bash_settings}/git_functions.sh
 source ${bash_settings}/apps.sh
+source ${bash_settings}/lazy.theme.bash
 
-#git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
-# if [ -e ${git_prompt} ]; then
-#     source ${git_prompt}
-# fi
-git_completion=/usr/local/opt/git/etc/bash_completion.d/git-completion.bash
-if [ -e ${git_completion} ]; then
-    source ${git_completion}
-fi
 
-# colouring MacOs
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
 
@@ -40,3 +42,5 @@ bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 export DOT="/Users/lazy/Dropbox/dotfiles/"
 export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
 export CODE="/Users/lazy/Dropbox/Workbench/Code/"
+# added by Anaconda3 installer
+export PATH="/Users/lazy/anaconda3/bin:$PATH"
