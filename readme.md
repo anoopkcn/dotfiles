@@ -4,3 +4,4 @@ Repository contains essential `config` and `rc` files for  terminal driven appli
 
 TODO
 describe folders and apps
+describe features

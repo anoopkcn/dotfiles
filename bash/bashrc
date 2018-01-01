@@ -8,20 +8,20 @@ if [ -e ${git_completion} ]; then
     source ${git_completion}
 fi
 
-git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
-if [ -e ${git_prompt} ]; then
-    source ${git_prompt}
-fi
+# git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
+# if [ -e ${git_prompt} ]; then
+#     source ${git_prompt}
+# fi
 
 # Folder for all the bash settings and functions
-bash_settings=$HOME/Dropbox/dotfiles/bash
+settings=$HOME/Dropbox/dotfiles/shell
 
-source ${bash_settings}/alias.sh
-source ${bash_settings}/functions.sh
-source ${bash_settings}/tmux_functions.sh
-source ${bash_settings}/git_functions.sh
-source ${bash_settings}/apps.sh
-source ${bash_settings}/lazy.theme.bash
+source ${settings}/alias.sh
+source ${settings}/functions.sh
+source ${settings}/tmux_functions.sh
+source ${settings}/git_functions.sh
+source ${settings}/apps.sh
+# source ${settings}/lazy.theme.bash
 
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
