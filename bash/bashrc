@@ -23,7 +23,6 @@ source ${bash_settings}/git_functions.sh
 source ${bash_settings}/apps.sh
 source ${bash_settings}/lazy.theme.bash
 
-
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
 
