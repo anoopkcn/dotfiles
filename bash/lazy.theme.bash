@@ -21,17 +21,19 @@ lazy_git_status() {
   # Get the current git branch name (if available)
   local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
   if [[ "$ref" != "" ]];then
-    IFS='\n'
+  (
+    IFS='\n';
     git_status=$(git status -s 2>/dev/null | cut -c1-2)
     git_staged=$(echo ${git_status} | grep -c "^[M|A|D|R|C]")
-    [[ $git_staged = 0 ]] && git_staged="" || git_staged=${git_staged}${yellow}ᴹ${normal}" "
+    [[ $git_staged = 0 ]] && git_staged="" || git_staged=" "${git_staged}${yellow}ᴹ${normal}
     git_modified=$(echo ${git_status} | grep -c "^[M|A|D|R|C|[:space:]][M|A|R|C]")
-    [[ $git_modified = 0 ]] && git_modified="" || git_modified=${git_modified}${green}ᴹ${normal}" "
+    [[ $git_modified = 0 ]] && git_modified="" || git_modified=" "${git_modified}${green}ᴹ${normal}
     git_deleted=$(echo ${git_status} | grep -c "^[[:space:]]D")
-    [[ $git_deleted = 0 ]] && git_deleted="" || git_deleted=${git_deleted}${red}ᴰ${normal}" "
+    [[ $git_deleted = 0 ]] && git_deleted="" || git_deleted=" "${git_deleted}${red}ᴰ${normal}
     git_untracked=$(echo ${git_status} | grep -c "??")
-    [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=${git_untracked}${cyan}ˀ${normal}" "
-    printf "(${git_staged}${git_modified}${git_deleted}${git_untracked}${gray}${ref}${normal})"
+    [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=" "${git_untracked}${cyan}ˀ${normal}
+    printf "(${gray}${ref}${normal}${git_staged}${git_modified}${git_deleted}${git_untracked})"
+  )
   fi
 }
 
