@@ -1,4 +1,5 @@
 #!/bin/bash
+#git enabled PS1 is in the file ./lazy.theme.bash
 # return 0 if git repo
 is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1

@@ -18,35 +18,26 @@ SCM_HG_CHAR="${bold_red}☿${normal}"
 PS3=">> "
 
 lazy_git_status() {
-  local git_status_array=$(git status -s 2>/dev/null | awk '{print $1}')
-  if [ "${#git_status_array[@]}" -gt "0" ];then
-    ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
-    git_staged=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "[M|R|C]")
-    if [ "$git_staged" -le "0" ]; then 
-    git_staged='';
-    else
-    git_staged=${git_staged}${yellow}ᴹ${normal}" "
+  # Get the current git branch name (if available)
+    local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
+    if [[ "$ref" != "" ]];then
+        local git_status_array=$(git status -s 2>/dev/null | awk '{print $1}')
+        if [[ ${#git_status_array[@]} > 0 ]];then
+            git_modified=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "[M|R|D|C]")
+            if [[ $git_modified != 0 ]]; then 
+              git_modified=${git_modified}${yellow}ᴹ${normal}" "
+            else
+              git_modified=""
+            fi
+            git_untracked=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "??")
+            if [[ $git_untracked != 0 ]]; then 
+              git_untracked=${git_untracked}${cyan}ˀ${normal}" "
+            else
+              git_untracked=""
+            fi
+            printf "(${git_modified}${git_untracked}${gray}${ref}${normal})"
+        fi
     fi
-    git_added=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "A")
-    if [ "$git_added" -le "0" ]; then 
-    git_added='';
-    else
-      git_added=${git_added}${yellow}ᴬ${normal}" "
-    fi
-    git_deleted=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "D")
-    if [ "$git_deleted" -le "0" ]; then 
-      git_deleted='';
-    else
-      git_deleted=${git_deleted}${red}ᴰ${normal}" "
-    fi
-    git_untracked=$(echo ${git_status_array} | tr ' ' '\n'| grep -c "??")
-    if [ "$git_untracked" -le "0" ]; then 
-      git_untracked='';
-    else
-      git_untracked=${git_untracked}${cyan}ˀ${normal}" "
-    fi
-    printf "(${git_staged}${git_added}${git_deleted}${git_untracked}${gray}${ref}${normal})"
-  fi
 }
 
 # lazy_git_staged() {
