@@ -21,7 +21,7 @@ source ${settings}/functions.sh
 source ${settings}/tmux_functions.sh
 source ${settings}/git_functions.sh
 source ${settings}/apps.sh
-# source ${settings}/lazy.theme.bash
+# source ${settings}/lazy.theme.sh
 
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
