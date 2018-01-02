@@ -13,7 +13,6 @@ lazy_git_status() {
   # Get the current git branch name (if available)
   local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
   if [[ "$ref" != "" ]];then
-  (
     IFS='\n';
     git_status=$(git status -s 2>/dev/null | cut -c1-2)
     if [[ -z "$git_status" ]]; then
@@ -29,6 +28,5 @@ lazy_git_status() {
       [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=" ${git_untracked}%{$fg_bold[cyan]%}ˀ%{$reset_color%}"
       echo "(%{$fg[blue]%}${ref}%{$reset_color%}${git_staged}${git_modified}${git_deleted}${git_untracked})"
     fi
-  )
   fi
 }
