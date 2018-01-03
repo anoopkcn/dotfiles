@@ -12,12 +12,11 @@ PROMPT='${ret_status}$(lazy_git_status)[%{$fg[cyan]%}%c%{$reset_color%}]'
 
 function lazy_git_status() {
   # Get the current git branch name (if available)
-  # local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
   local ref
   ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
   ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
-  IFS='\n';
-  git_status=$(git status -s 2>/dev/null | cut -c1-2) #for BASH SHELL
+  # IFS='\n';
+  git_status=$(git status -s 2>/dev/null | cut -c1-2) # NOTE: ${git_status:0:2} cant be used since multi lined
   if [[ -z "$git_status" ]]; then
     echo "(%{$fg[blue]%}${ref#refs/heads/}%{$reset_color%} %{$fg_bold[green]%}✓%{$reset_color%})"
   else
