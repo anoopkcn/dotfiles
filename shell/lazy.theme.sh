@@ -14,7 +14,7 @@ lazy_git_status() {
   # Get the current git branch name (if available)
   # local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
   ref=$(command git symbolic-ref HEAD 2> /dev/null | cut -d'/' -f3) || \
-  ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
+  ref=$(command git rev-parse --short HEAD 2> /dev/null)
   if [[ "$ref" != "" ]];then
     IFS='\n';
     git_status=$(git status -s 2>/dev/null | cut -c1-2)
