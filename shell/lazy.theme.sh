@@ -17,7 +17,7 @@ function lazy_git_status() {
   ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
   ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
   IFS='\n';
-  git_status=$(git status -s 2>/dev/null | cut -c1-2)
+  git_status=$(git status -s 2>/dev/null | cut -c1-2) #for BASH SHELL
   if [[ -z "$git_status" ]]; then
     echo "(%{$fg[blue]%}${ref#refs/heads/}%{$reset_color%} %{$fg_bold[green]%}✓%{$reset_color%})"
   else
