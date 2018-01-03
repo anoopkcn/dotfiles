@@ -16,6 +16,7 @@ alias ta='tmux attach -t'
 alias tnew='tmux new -s'
 alias tsend='tmux send -t'
 alias ts='tmuxinator start'
+# alias tls="tmux ls" #moved to tmux_finctions.sh
 
 #git
 alias gs='git status -s'
