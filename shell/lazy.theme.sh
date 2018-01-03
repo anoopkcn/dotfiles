@@ -33,3 +33,5 @@ lazy_git_status() {
     fi
   fi
 }
+
+# TODO SSH COONECTION FUNCTION
