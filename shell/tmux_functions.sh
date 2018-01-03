@@ -70,7 +70,7 @@ fi
 }
 
 tls(){
-  location=/Users/lazy/Dropbox/dotfiles/tmux/tmuxinator
+  location=${HOME}/Dropbox/dotfiles/tmux/tmuxinator
   if [ $# -eq 1 ] ; then
     case $1 in 
       -a)
@@ -82,10 +82,10 @@ tls(){
         ;;
     esac
   else
-    t_sessions=($(tmux ls | cut -d : -f 1));
-    for i in ${!t_sessions[@]};do
-        printf "\e[96m${t_sessions[i]}\e[0m\n"
-        (tmux lsw -t ${t_sessions[i]} | awk '{print $1,$2}');
+    t_sessions=( $(tmux ls | cut -d : -f 1) );
+    for i in "${t_sessions[@]}";do
+        printf "\e[96m${i}\e[0m\n"
+        (tmux lsw -t ${i} | awk '{print $1,$2}');
     done
   fi
 }
@@ -94,9 +94,9 @@ tkill(){
   if [ $# -eq 1 ] ; then
     case $1 in 
       -a)
-        t_sessions=($(tmux ls | cut -d : -f 1));
-        for i in ${!t_sessions[@]};do
-          tmux kill-session -t  ${t_sessions[i]} ;
+        t_sessions=( $(tmux ls | cut -d : -f 1) );
+        for i in "${t_sessions[@]}";do
+          tmux kill-session -t  $i ;
         done
         ;;
       *) 
