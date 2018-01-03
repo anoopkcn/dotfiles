@@ -1,13 +1,13 @@
-#color definitions
 PS3=">> "
 PS2="▪ "
 # PS1="▪"'$(__git_ps1 "(%s)")'"[${cyan}\W${normal}]"
 # PS1="▪$(lazy_git_prompt)[${cyan}\W${normal}]"
 # export PS1="▪\$(lazy_git_status)[${cyan}\W${normal}]"
-#for oh-my-zsh
+# for oh-my-zsh
 # PROMPT="▪\$(lazy_git_status)[${cyan}\W${normal}]"
 local ret_status="%(?:%{$fg_bold[green]%}▪%{$reset_color%}:%{$fg_bold[red]%}▪%{$reset_color%})"
 PROMPT='${ret_status}$(lazy_git_status)[%{$fg[cyan]%}%c%{$reset_color%}]'
+# Using thedefault git info from OMZ
 # PROMPT='${ret_status}$(git_prompt_info)[%{$fg[cyan]%}%c%{$reset_color%}]'
 
 function lazy_git_status() {
