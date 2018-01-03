@@ -21,13 +21,13 @@ function lazy_git_status() {
     echo "(%{$fg[blue]%}${ref#refs/heads/}%{$reset_color%} %{$fg_bold[green]%}✓%{$reset_color%})"
   else
     git_staged=$(echo ${git_status} | grep -c "^[M|A|D|R|C]")
-    [[ $git_staged = 0 ]] && git_staged="" || git_staged=" ${git_staged}%{$fg_bold[yellow]%}ᴹ%{$reset_color%}"
+    [[ $git_staged = 0 ]] && git_staged="" || git_staged=" %{$fg[yellow]%}${git_staged}%{$fg_bold[yellow]%}ᴹ%{$reset_color%}"
     git_modified=$(echo ${git_status} | grep -c "^[M|A|D|R|C|[:space:]][M|A|R|C]")
-    [[ $git_modified = 0 ]] && git_modified="" || git_modified=" ${git_modified}%{$fg_bold[green]%}ᴹ%{$reset_color%}"
+    [[ $git_modified = 0 ]] && git_modified="" || git_modified=" %{$fg[green]%}${git_modified}%{$fg_bold[green]%}ᴹ%{$reset_color%}"
     git_deleted=$(echo ${git_status} | grep -c "^[[:space:]]D")
-    [[ $git_deleted = 0 ]] && git_deleted="" || git_deleted=" ${git_deleted}%{$fg_bold[red]%}ᴰ%{$reset_color%}"
+    [[ $git_deleted = 0 ]] && git_deleted="" || git_deleted=" %{$fg[red]%}${git_deleted}%{$fg_bold[red]%}ᴰ%{$reset_color%}"
     git_untracked=$(echo ${git_status} | grep -c "??")
-    [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=" ${git_untracked}%{$fg_bold[cyan]%}ˀ%{$reset_color%}"
+    [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=" %{$fg[cyan]%}${git_untracked}%{$fg_bold[cyan]%}ˀ%{$reset_color%}"
     echo "(%{$fg[blue]%}${ref#refs/heads/}%{$reset_color%}${git_staged}${git_modified}${git_deleted}${git_untracked})"
   fi
 }
