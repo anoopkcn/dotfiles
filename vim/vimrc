@@ -8,7 +8,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-repeat'
   Plug 'ervandew/supertab'
   Plug 'kien/ctrlp.vim'
-  Plug 'joshdick/onedark.vim'
+  " Plug 'joshdick/onedark.vim'
+Plug 'meister/vim-snazzyfied'
 call plug#end()
 syntax on
 filetype plugin indent on
@@ -266,4 +267,4 @@ nnoremap <localleader>n <esc>:tabnext<CR>
 
 hi clear SignColumn
 " colorscheme PaperColor
-colorscheme onedark
+colorscheme snazzyfied
