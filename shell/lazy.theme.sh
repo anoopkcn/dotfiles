@@ -8,10 +8,13 @@ PS2="▪ "
 # PROMPT="▪\$(lazy_git_status)[${cyan}\W${normal}]"
 local ret_status="%(?:%{$fg_bold[green]%}▪%{$reset_color%}:%{$fg_bold[red]%}▪%{$reset_color%})"
 PROMPT='${ret_status}$(lazy_git_status)[%{$fg[cyan]%}%c%{$reset_color%}]'
+# PROMPT='${ret_status}$(git_prompt_info)[%{$fg[cyan]%}%c%{$reset_color%}]'
 
 lazy_git_status() {
   # Get the current git branch name (if available)
-  local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
+  # local ref=$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)
+  ref=$(command git symbolic-ref HEAD 2> /dev/null | cut -d'/' -f3) || \
+  ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
   if [[ "$ref" != "" ]];then
     IFS='\n';
     git_status=$(git status -s 2>/dev/null | cut -c1-2)
