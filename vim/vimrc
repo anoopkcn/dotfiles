@@ -8,17 +8,15 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-repeat'
   Plug 'ervandew/supertab'
   Plug 'kien/ctrlp.vim'
-  " Plug 'joshdick/onedark.vim'
-Plug 'meister/vim-snazzyfied'
 call plug#end()
 syntax on
 filetype plugin indent on
-if (has("nvim"))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
-if has('termguicolors')
-  set termguicolors
-endif
+" if (has("nvim"))
+"   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" endif
+" if has('termguicolors')
+"   set termguicolors
+" endif
 
 set number
 "set relativenumber
@@ -266,5 +264,5 @@ nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
 
 hi clear SignColumn
-" colorscheme PaperColor
-colorscheme snazzyfied
+colorscheme pablo 
+highlight LineNr ctermfg=236
