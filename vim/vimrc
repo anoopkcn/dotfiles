@@ -55,7 +55,7 @@ set listchars+=tab:\ \
 set listchars+=extends:❯
 set listchars+=precedes:❮
 "set listchars+=trail:␣
-" set fillchars+=vert:\|
+set fillchars+=vert:\| 
 
 set nojoinspaces
 set diffopt=filler,vertical
@@ -266,3 +266,6 @@ nnoremap <localleader>n <esc>:tabnext<CR>
 hi clear SignColumn
 colorscheme pablo 
 highlight LineNr ctermfg=236
+hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
+hi StatusLine ctermbg=248 ctermfg=232
+hi StatusLineNC ctermbg=236 ctermfg=247 cterm=NONE
