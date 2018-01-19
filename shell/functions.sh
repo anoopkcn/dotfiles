@@ -1,5 +1,6 @@
 #!/bin/bash
-#system information
+#
+# system information
 function system(){
     echo "Hello, $USER"
     echo

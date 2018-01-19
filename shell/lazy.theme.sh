@@ -28,7 +28,7 @@ function lazy_git_status() {
     [[ $git_deleted = 0 ]] && git_deleted="" || git_deleted=" %{$fg[red]%}${git_deleted}%{$fg_bold[red]%}ᴰ%{$reset_color%}"
     git_untracked=$(echo ${git_status} | grep -c "??")
     [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=" %{$fg[cyan]%}${git_untracked}%{$fg_bold[cyan]%}ˀ%{$reset_color%}"
-    echo "(%F{249}${ref#refs/heads/}%f%{$reset_color%}${git_staged}${git_modified}${git_deleted}${git_untracked})"
+    echo "(%F{244}${ref#refs/heads/}%f%{$reset_color%}${git_staged}${git_modified}${git_deleted}${git_untracked})"
   fi
 }
 

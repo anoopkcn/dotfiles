@@ -37,9 +37,9 @@ bind -r L resize-pane -R 10
 # more settings to make copy-mode more vim-like
 unbind [
 bind Space copy-mode
+set-window-option -g mode-keys vi
 
-# MacOS clipboard setting 
-#setw -g mode-keys vi
+## MacOS clipboard setting 
 unbind -T copy-mode-vi MouseDragEnd1Pane
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection
