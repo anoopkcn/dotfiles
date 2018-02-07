@@ -264,8 +264,8 @@ nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
 
 hi clear SignColumn
-colorscheme pablo 
-highlight LineNr ctermfg=236
+" colorscheme pablo 
+highlight LineNr ctermfg=244
 hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
-" hi StatusLine ctermbg=248 ctermfg=232
-" hi StatusLineNC ctermbg=236 ctermfg=247 cterm=NONE
+hi StatusLine ctermbg=255 ctermfg=4 cterm=NONE
+hi StatusLineNC ctermbg=255 ctermfg=247 cterm=NONE
