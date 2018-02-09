@@ -1,7 +1,7 @@
 # ~/.tmuxinator/qe-gpu.yml
 
 name: qe-gpu
-root: ~/Dropbox/Workbench/Projects/ESPRESSO/qe-gpu
+root: ~/Dropbox/Espresso/q-e-gpu
 
 windows:
   - bash:

@@ -1,7 +1,7 @@
 # ~/.tmuxinator/mhpc.yml
 
 name: mhpc
-root: ~/Dropbox/Workbench/MHPC
+root: ~/Dropbox/School/MHPC
 # <%= @args[0] %>
 
 windows:

@@ -1,7 +1,7 @@
 # ~/.tmuxinator/qe.yml
 
 name: qe
-root: ~/Dropbox/Workbench/Projects/ESPRESSO
+root: ~/Dropbox/Espresso
 
 windows:
   - bash:

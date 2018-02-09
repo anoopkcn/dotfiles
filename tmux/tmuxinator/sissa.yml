@@ -1,6 +1,6 @@
 # ~/.tmuxinator/sissa.yml
 name: sissa
-root: ~/Dropbox/Workbench/School/SISSA
+root: ~/Dropbox/School/SISSA
 
 windows:
   - bash:

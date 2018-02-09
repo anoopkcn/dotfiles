@@ -1,7 +1,7 @@
 # ~/.tmuxinator/test.yml
 
 name: test
-root: ~/Dropbox/Workbench/Projects/ESPRESSO
+root: <%= @args[0] %>
 
 windows:
   - bash:

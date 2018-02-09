@@ -14,9 +14,8 @@ source ${settings}/lazy.theme.sh
 export ZSH=$HOME/.oh-my-zsh
 #paths to directory's
 export DOT="/Users/lazy/Dropbox/dotfiles/"
-export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
-export CODE="/Users/lazy/Dropbox/Workbench/Code/"
-export SISSA="/Users/lazy/Dropbox/Workbench/School/SISSA"
+export QE="/Users/lazy/Dropbox/Espresso/"
+export SISSA="/Users/lazy/Dropbox/School/SISSA"
 # added by Anaconda3 installer
 export PATH="/Users/lazy/anaconda3/bin:$PATH"
 
