@@ -1,0 +1,9 @@
+# ~/.tmuxinator/web.yml
+
+name: code
+root: ~/Dropbox/strivetobelazy
+
+windows:
+  - bash:
+      layout: main-vertical
+      panes:

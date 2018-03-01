@@ -28,7 +28,7 @@ elif [[ "$#" -eq 1 ]]; then
       echo "Warning:Global sync on Home folder is not allowed"
     fi
 else
-    curr_path=$(pwd)
+    curr_path=$(pwd) #make this more universal:TODO
     curr_folder=${curr_path##*/} # current folder
     last_name=$(echo $3 | awk -F"/" '{print $(NF)}')
     last_name=${last_name//./} # empty if '.' is the last_name
@@ -36,7 +36,7 @@ else
         last_name=$(echo $3 | awk -F"/" '{print $(NF-1)}')
     fi
     if [ "$curr_folder" != "$last_name" ]; then
-        echo "Target folder is DIFFERENT. You want to continue?\nPress Enter or type [yes|y] to continue."
+        echo "Target file/folder is DIFFERENT(or an alias) then PWD. You want to continue?\nPress Enter or type [yes|y] to continue."
         read yesno
         if [[ "$yesno" == "yes" || "$yesno" == "y" || "$yesno" == "" ]]; then
             rsync -airzv $2 -e ssh $1:$3

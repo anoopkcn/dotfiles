@@ -1,0 +1,8 @@
+# ~/.tmuxinator/scribbles.yml
+name: scribbles
+root: ~/Dropbox/Workbench/Scribbles/
+
+windows:
+  - bash:
+      layout: main-vertical
+      panes:
