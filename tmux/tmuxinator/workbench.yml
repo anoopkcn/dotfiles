@@ -1,6 +1,6 @@
-# ~/.tmuxinator/code.yml
+# ~/.tmuxinator/workbench.yml
 
-name: code
+name: workbench
 root: ~/Dropbox/workbench
 
 windows:

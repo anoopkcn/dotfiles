@@ -1,6 +1,6 @@
-# ~/.tmuxinator/qe.yml
+# ~/.tmuxinator/espresso.yml
 
-name: qe
+name: espresso
 root: ~/Dropbox/Espresso
 
 windows:

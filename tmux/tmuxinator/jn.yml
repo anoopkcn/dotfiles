@@ -1,6 +1,6 @@
-# ~/.tmuxinator/note.yml
+# ~/.tmuxinator/jn.yml
 
-name: note
+name: jn
 root: <%= @args[0] %>
 attach: false
 

@@ -1,6 +1,6 @@
-# ~/.tmuxinator/web.yml
+# ~/.tmuxinator/strivetobelazy.yml
 
-name: code
+name: strivetobelazy
 root: ~/Dropbox/strivetobelazy
 
 windows:
