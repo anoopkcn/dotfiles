@@ -40,3 +40,9 @@ Host drake
 Host davide
   HostName  130.186.16.82
   user achandr2
+
+Host aiidatutorial
+  Hostname 34.245.66.188 
+  User aiida 
+  IdentityFile ~/.ssh/aiida_tutorial_15
+  LocalForward 8888 localhost:8888
