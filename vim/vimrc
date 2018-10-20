@@ -67,7 +67,7 @@ set tags=tags;$HOME
 if has('linebreak')
     set linebreak
     let &showbreak='⤷ '
-    set breakindentopt=shift:2
+    "set breakindentopt=shift:2
 endif
 
 set visualbell t_vb=

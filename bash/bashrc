@@ -14,7 +14,7 @@ fi
 # fi
 
 # Folder for all the bash settings and functions
-settings=$HOME/Dropbox/dotfiles/shell
+settings=$HOME/dotfiles/shell
 
 source ${settings}/alias.sh
 source ${settings}/functions.sh
@@ -38,8 +38,6 @@ bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
 bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 
 #paths to directory's
-export DOT="/Users/lazy/Dropbox/dotfiles/"
-export QE="/Users/lazy/Dropbox/Workbench/Projects/ESPRESSO/"
-export CODE="/Users/lazy/Dropbox/Workbench/Code/"
+#export CODE="$HOME/Dropbox/Workbench/Code/"
 # added by Anaconda3 installer
-export PATH="/Users/lazy/anaconda3/bin:$PATH"
+#export PATH="$HOME/anaconda3/bin:$PATH"
