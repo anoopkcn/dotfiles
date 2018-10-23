@@ -1,6 +1,15 @@
 #!/bin/bash
 #
 # system information
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     MACHINE=Linux;;
+    Darwin*)    MACHINE=Mac;;
+    CYGWIN*)    MACHINE=Cygwin;;
+    MINGW*)     MACHINE=MinGw;;
+    *)          MACHINE="UNKNOWN:${unameOut}"
+esac
+#
 function system(){
     echo "Hello, $USER"
     echo
@@ -14,6 +23,7 @@ function system(){
     echo "Uptime information::"
     uptime
 }
+
 
 # print available colors and their numbers
 function colours() {

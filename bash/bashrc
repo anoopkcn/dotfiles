@@ -21,13 +21,14 @@ source ${settings}/functions.sh
 source ${settings}/tmux_functions.sh
 source ${settings}/git_functions.sh
 source ${settings}/apps.sh
-# source ${settings}/lazy.theme.sh
+source ${settings}/lazy.theme.sh
 
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
 
 # general settings
 export EDITOR=vim
+export TERM="xterm-256color"
 
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'

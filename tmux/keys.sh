@@ -39,9 +39,13 @@ unbind [
 bind Space copy-mode
 set-window-option -g mode-keys vi
 
-## MacOS clipboard setting 
+## clipboard setting 
 unbind -T copy-mode-vi MouseDragEnd1Pane
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection
 bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
-bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+#macOs
+if-shell -b '[ "$(echo "${MACHINE} == Mac" | bc) ]' \
+  "bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'reattach-to-user-namespace pbcopy'"
+#linux
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
