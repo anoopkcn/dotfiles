@@ -4,7 +4,7 @@
 	email = strivetobelazy@gmail.com
 [core]
 	editor = vim
-	excludesfile = /Users/lazy/Dropbox/Dotfiles/git/ggitignore
+	excludesfile = ~/dotfiles/git/ggitignore
 [diff]
 	tool = atom
 [difftool]
@@ -35,5 +35,3 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
-[commit]
-	template = /Users/lazy/.stCommitMsg
