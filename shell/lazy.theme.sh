@@ -12,8 +12,9 @@ gray_light="\[\e[37m\]"
 gray_dark="\[\e[90m\]"
 PS3=">> "
 PS2="▪ "
-export PS1="▪ \u@${green}\h${normal}:"'$(__git_ps1 "(%s)")'"[${cyan}\W${normal}] "
 #export PS1="▪ \u@${green}\h${normal}:\$(lazy_git_status)[${cyan}\W${normal}] "
+# export PS1="▪ \u@${green}\h${normal}:"'$(__git_ps1 "(%s)")'"[${cyan}\W${normal}] "
+export PS1="▪ \u@${green}\h${normal}:[${cyan}\W${normal}] "
 
 function lazy_git_status() {
   # Get the current git branch name (if available)
