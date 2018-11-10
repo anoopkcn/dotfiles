@@ -285,8 +285,8 @@ imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Color settings
+" ---------------------------------------------------
 hi clear SignColumn
-" colorscheme pablo 
 let g:airline_theme='simple'
 " let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
@@ -295,7 +295,3 @@ hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
 highlight Visual cterm=reverse ctermbg=NONE
 " hi StatusLine ctermbg=250 ctermfg=4 cterm=NONE
 " hi StatusLineNC ctermbg=250 ctermfg=247 cterm=NONE
-
-"mutt editing settings
-" setlocal fo+=aw
-"
