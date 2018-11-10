@@ -25,8 +25,8 @@ filetype plugin indent on
 "   set termguicolors
 " endif
 
-" set number
-set relativenumber
+set number
+" set relativenumber
 set showmatch
 set backspace=indent,eol,start
 set clipboard=unnamed
@@ -52,7 +52,7 @@ set cursorline
 hi cursorline cterm=none term=none
 autocmd WinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
-highlight CursorLine guibg=#303000 ctermbg=234
+highlight cursorline guibg=#303000 ctermbg=234
 set formatoptions+=1
 set mouse=a
 
@@ -97,21 +97,16 @@ let maplocalleader = "\,"
 vnoremap < <gv
 vnoremap > >gv
 
-nnoremap j gj
-nnoremap k gk
+" nnoremap j gj
+" nnoremap k gk
 nnoremap ^ g^
 nnoremap 0 g0
 nnoremap $ g$
-nnoremap gj j
-nnoremap gk k
+" nnoremap gj j
+" nnoremap gk k
 nnoremap g^ ^
 nnoremap g$ $
 nnoremap g0 0
-
-" noremap <Up> <NOP>
-" noremap <Down> <NOP>
-" noremap <Left> <NOP>
-" noremap <Right> <NOP>
 
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
@@ -179,7 +174,7 @@ function! s:goog(pat, lucky)
   let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
   let q = substitute(q, '[[:punct:] ]',
       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('open "https://www.google.com/search?%sq=%s"',
+  call system(printf('firefox "https://www.google.com/search?%sq=%s"',
                   \ a:lucky ? 'btnI&' : '', q))
 endfunction
 
@@ -297,6 +292,7 @@ let g:airline_theme='simple'
 let g:airline_powerline_fonts = 1
 highlight LineNr ctermfg=244
 hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
+highlight Visual cterm=reverse ctermbg=NONE
 " hi StatusLine ctermbg=250 ctermfg=4 cterm=NONE
 " hi StatusLineNC ctermbg=250 ctermfg=247 cterm=NONE
 
