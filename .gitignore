@@ -1,4 +1,3 @@
-.vscode/*
 *.swp
 *.un~
 ssh/*
@@ -6,6 +5,7 @@ ssh/config
 tmux/dottmux/*
 tmux/resurrect/*
 *.netrwhist
+.vscode/*
 vim/bundle/*
 vim/plugged/*
 zsh/oh-my-zsh/*
