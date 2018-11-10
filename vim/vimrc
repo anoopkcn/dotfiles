@@ -8,13 +8,14 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-repeat'
   Plug 'ervandew/supertab'
-  " Plug 'kien/ctrlp.vim'
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'airblade/vim-gitgutter'
   Plug 'tpope/vim-fugitive'
+  Plug 'majutsushi/tagbar'
+  Plug 'mhinz/vim-startify'
 call plug#end()
 syntax on
 filetype plugin indent on
@@ -273,6 +274,7 @@ nnoremap <localleader>n <esc>:tabnext<CR>
 "FZF-keybindings
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>f :Files<cr>
+nnoremap <leader>g :Ag<cr>
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
@@ -283,6 +285,10 @@ imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" startify settings
+let g:startify_custom_header =[]
+
 
 " Color settings
 " ---------------------------------------------------

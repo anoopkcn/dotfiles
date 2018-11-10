@@ -3,6 +3,10 @@ name: code
 root: <%= @args[0] %>
 
 windows:
-  - bash:
+  - local:
       layout: main-vertical
       panes:
+  - remote:
+      layout: main-vertical
+      panes:
+        - ssh iff003
