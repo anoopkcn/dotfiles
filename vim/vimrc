@@ -294,6 +294,7 @@ hi clear SignColumn
 " colorscheme pablo 
 let g:airline_theme='simple'
 " let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 highlight LineNr ctermfg=244
 hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
 " hi StatusLine ctermbg=250 ctermfg=4 cterm=NONE
