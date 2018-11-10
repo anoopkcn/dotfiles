@@ -78,7 +78,7 @@ set omnifunc=syntaxcomplete#Complete
 
 if has('linebreak')
     set linebreak
-    let &showbreak='⤷ '
+    let &showbreak='↳ '
     "set breakindentopt=shift:2
 endif
 
@@ -302,3 +302,4 @@ hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
 
 "mutt editing settings
 " setlocal fo+=aw
+"
