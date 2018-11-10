@@ -5,5 +5,5 @@ ssh/config
 tmux/dottmux/*
 tmux/resurrect/*
 *.netrwhist
-vim/bundle/
-vim/plugged/
+vim/bundle/*
+vim/plugged/*
