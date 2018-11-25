@@ -1,11 +1,12 @@
-# ~/.tmuxinator/code.yml
-name: code
+# ~/.tmuxinator/aiida.yml
+name: aiida
 root: <%= @args[0] %>
 
 windows:
-  - local:
+  - aiida:
       layout: main-vertical
       panes:
-  - remote:
+        source ~/aiidapy/bin/activate
+  - bash:
       layout: main-vertical
       panes:

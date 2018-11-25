@@ -12,10 +12,11 @@ call plug#begin('~/.vim/plugged')
   Plug 'junegunn/fzf.vim'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
-  Plug 'airblade/vim-gitgutter'
-  Plug 'tpope/vim-fugitive'
+  " Plug 'airblade/vim-gitgutter'
+  " Plug 'tpope/vim-fugitive'
   Plug 'majutsushi/tagbar'
-  Plug 'mhinz/vim-startify'
+  " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  " Plug 'mhinz/vim-startify'
 call plug#end()
 syntax on
 filetype plugin indent on
@@ -287,7 +288,7 @@ imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " startify settings
-let g:startify_custom_header =[]
+" let g:startify_custom_header =[]
 
 
 " Color settings

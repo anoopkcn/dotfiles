@@ -8,4 +8,4 @@ windows:
   - jupyter-notebook:
       layout: main-vertical
       panes:
-        - jupyter notebook
+        - jupyter-notebook
