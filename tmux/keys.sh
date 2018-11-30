@@ -39,7 +39,7 @@ unbind [
 bind Space copy-mode
 set-window-option -g mode-keys vi
 
-# clipboard setting 
+# clipboard setting
 unbind -T copy-mode-vi MouseDragEnd1Pane
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection
