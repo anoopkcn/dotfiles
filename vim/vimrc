@@ -4,24 +4,26 @@ set encoding=utf-8
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
+"
 call plug#begin('~/.vim/plugged')
   "
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-repeat'
   Plug 'ervandew/supertab'
-  " Plug 'junegunn/fzf'
   Plug 'junegunn/fzf.vim'
   Plug 'Valloric/YouCompleteMe'
   Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
+  " Plug 'vim-airline/vim-airline-themes'
   " Plug 'airblade/vim-gitgutter'
   Plug 'tpope/vim-fugitive'
   Plug 'majutsushi/tagbar'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'morhetz/gruvbox'
+  Plug 'scrooloose/nerdtree'
   "
 call plug#end()
+"
 syntax on
 filetype plugin indent on
 set background=dark
@@ -52,10 +54,6 @@ set wrap
 set scrolloff=3
 set shortmess=filnxtToOI
 set nocursorline
-" hi cursorline cterm=none term=none
-" autocmd WinEnter * setlocal cursorline
-" autocmd WinLeave * setlocal nocursorline
-" highlight cursorline guibg=#303000 ctermbg=234
 set formatoptions+=1
 set mouse=a
 
@@ -271,6 +269,8 @@ nnoremap <leader>p :bp<cr>
 nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
 
+"-------------- PLUGIN Settings ----------------------"
+
 set rtp+=/Users/chand/.linuxbrew/opt/fzf
 "FZF-keybindings
 nnoremap <leader>b :Buffers<cr>
@@ -297,6 +297,10 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 " hi StatusLineNC ctermbg=250 ctermfg=247 cterm=NONE
 "
 " -----------------------------------------------------
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
 let g:airline_theme='gruvbox'
 " let g:airline#extensions#tabline#enabled = 1
