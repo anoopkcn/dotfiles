@@ -6,7 +6,7 @@ windows:
   - aiida:
       layout: main-vertical
       panes:
-        source ~/aiidapy/bin/activate
+        source ~/pyenv/aiidapy/bin/activate
   - bash:
       layout: main-vertical
       panes:

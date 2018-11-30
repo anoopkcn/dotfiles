@@ -1,31 +1,33 @@
 "Vim run command file
 "--------------------
+set encoding=utf-8
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
 call plug#begin('~/.vim/plugged')
+  "
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-repeat'
   Plug 'ervandew/supertab'
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  " Plug 'junegunn/fzf'
   Plug 'junegunn/fzf.vim'
+  Plug 'Valloric/YouCompleteMe'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   " Plug 'airblade/vim-gitgutter'
-  " Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-fugitive'
   Plug 'majutsushi/tagbar'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-  " Plug 'mhinz/vim-startify'
+  Plug 'morhetz/gruvbox'
+  "
 call plug#end()
 syntax on
 filetype plugin indent on
-" if (has("nvim"))
-"   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-" endif
-" if has('termguicolors')
-"   set termguicolors
-" endif
+set background=dark
+colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_italicize_comments = 0
 
 set number
 " set relativenumber
@@ -49,12 +51,11 @@ set wrap
 
 set scrolloff=3
 set shortmess=filnxtToOI
-" set nocursorline
-set cursorline
-hi cursorline cterm=none term=none
-autocmd WinEnter * setlocal cursorline
-autocmd WinLeave * setlocal nocursorline
-highlight cursorline guibg=#303000 ctermbg=234
+set nocursorline
+" hi cursorline cterm=none term=none
+" autocmd WinEnter * setlocal cursorline
+" autocmd WinLeave * setlocal nocursorline
+" highlight cursorline guibg=#303000 ctermbg=234
 set formatoptions+=1
 set mouse=a
 
@@ -63,13 +64,13 @@ set wildmenu
 
 set list
 set listchars=nbsp:⦸
-set listchars+=tab:▸\ 
-set listchars+=tab:\ \ 
+set listchars+=tab:▸\
+set listchars+=tab:\ \
 " set listchars+=eol:¬
 set listchars+=extends:❯
 set listchars+=precedes:❮
 "set listchars+=trail:␣
-set fillchars+=vert:\| 
+set fillchars+=vert:\|
 
 set nojoinspaces
 set diffopt=filler,vertical
@@ -259,23 +260,22 @@ function! Insert_time()
   let timestamp = strftime('%d-%m-%Y %H:%M')
   let @"=timestamp
 endfunction
-nnoremap <Leader>t :call Insert_time()<cr>""p 
+nnoremap <Leader>t :call Insert_time()<cr>""p
 inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
 
 "create and edit file
 nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
-
 nnoremap <silent> <Leader>h :nohl<CR>
-
 nnoremap <leader>n :bn<cr>
 nnoremap <leader>p :bp<cr>
 nnoremap <localleader>p <esc>:tabprevious<CR>
 nnoremap <localleader>n <esc>:tabnext<CR>
 
+set rtp+=/Users/chand/.linuxbrew/opt/fzf
 "FZF-keybindings
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>f :Files<cr>
-nnoremap <leader>g :Ag<cr>
+" nnoremap <leader>gf :GFiles<cr>
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
@@ -287,26 +287,45 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
-" startify settings
-" let g:startify_custom_header =[]
-
-
 " Color settings
 " ---------------------------------------------------
-hi clear SignColumn
-let g:airline_theme='simple'
-" let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-highlight LineNr ctermfg=244
-hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
-highlight Visual cterm=reverse ctermbg=NONE
+" hi clear SignColumn
+" highlight LineNr ctermfg=244
+" hi VertSplit ctermbg=NONE ctermfg=NONE cterm=NONE guibg=NONE
+" highlight Visual cterm=reverse ctermbg=NONE
 " hi StatusLine ctermbg=250 ctermfg=4 cterm=NONE
 " hi StatusLineNC ctermbg=250 ctermfg=247 cterm=NONE
 "
 " -----------------------------------------------------
+
+let g:airline_theme='gruvbox'
+" let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+
 
 " autogroup
 augroup inp_ft
   au!
   autocmd BufNewFile,BufRead *.inp   set ft=sh
 augroup END
+
+""python with virtualenv support
+"py << EOF
+"import os
+"import sys
+"if 'VIRTUAL_ENV' in os.environ:
+"  project_base_dir = os.environ['VIRTUAL_ENV']
+"  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+"  execfile(activate_this, dict(__file__=activate_this))
+"EOF
+
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_python_interpreter_path = '~/pyenvs/anaconda3/bin/python'
+let g:ycm_python_sys_path = ['~/pyenvs/anaconda3/lib/python3.7/site-packages']
+let g:ycm_extra_conf_vim_data = [
+  \  'g:ycm_python_interpreter_path',
+  \  'g:ycm_python_sys_path'
+  \]
+let g:ycm_global_ycm_extra_conf = '~/dotfiles/vim/plugged/global_extra_conf.py'
+
