@@ -1,8 +1,8 @@
 ## COLOR definitions
-## Colors are wraped using \[ and \] ... 
+## Colors are wraped using \[ and \] ...
 ## ... because otherwise in limited width terminal windows ...
 ## ... lines seem to overwrite themselves ( a visual effect : commands will still run).
-bold="\[\e[1m\]" 
+bold="\[\e[1m\]"
 regular="\[\e[21m\]"
 normal="\[\e[39m\]"
 cyan="\[\e[36m\]"
@@ -14,7 +14,13 @@ PS3=">> "
 PS2="▪ "
 #export PS1="▪ \u@${green}\h${normal}:\$(lazy_git_status)[${cyan}\W${normal}] "
 # export PS1="▪ \u@${green}\h${normal}:"'$(__git_ps1 "(%s)")'"[${cyan}\W${normal}] "
-export PS1="▪ \u@${green}\h${normal}:[${cyan}\W${normal}] "
+# export PS1="▪ \u@${green}\h${normal}:[${cyan}\W${normal}] "
+export MYPS='$(echo -n "${PWD/#$HOME/~}" | awk -F "/" '"'"'{
+if (length($0) > 14) { if (NF>4) print $1 "/" $2 "/.../" $(NF-1) "/" $NF;
+else if (NF>3) print $1 "/" $2 "/.../" $NF;
+else print $1 "/.../" $NF; }
+else print $0;}'"'"')'
+export PS1="▪ \u@${green}\h${normal}:[${cyan}$(eval 'echo ${MYPS}')${normal}] "
 
 function lazy_git_status() {
   # Get the current git branch name (if available)

@@ -4,25 +4,44 @@ set encoding=utf-8
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
+source ~/dotfiles/vim/fzf_functions.vim
+source ~/dotfiles/vim/functions.vim
 "
 call plug#begin('~/.vim/plugged')
   "
-  Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-repeat'
   Plug 'ervandew/supertab'
   Plug 'junegunn/fzf.vim'
   Plug 'Valloric/YouCompleteMe'
   Plug 'vim-airline/vim-airline'
   Plug 'tpope/vim-fugitive'
-  Plug 'majutsushi/tagbar'
-  " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'morhetz/gruvbox'
   Plug 'scrooloose/nerdtree'
-  Plug 'mileszs/ack.vim'
+  Plug 'tpope/vim-commentary'
+  " Plug 'tpope/vim-repeat'
+  " Plug 'majutsushi/tagbar'
+  " Plug 'plytophogy/vim-virtualenv'
+  " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   "
 call plug#end()
-source ~/dotfiles/vim/fzf_settings.vim
+" Swap, Undo and Backup files
+if exists('$SUDO_USER')
+    set nobackup
+    set noswapfile
+    set nowritebackup
+    set noundofile
+else
+    let g:netrw_home=$HOME.'/.config/'
+    set directory=$HOME/.config/vimswap//
+    set backupdir=$HOME/.config/vimswap//
+    set viewdir=$HOME/.config/views//
+    set undofile "poor man's version controll
+endif
+
+if has("persistent_undo")
+    set undodir=$HOME/.config/vimswap//
+    set undofile
+endif
 "
 syntax on
 filetype plugin indent on
@@ -30,14 +49,17 @@ set background=dark
 colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_italicize_comments = 0
+let g:gruvbox_invert_selection = 0
+hi Visual       ctermfg=237 ctermbg=251
+" hi VisualNOS    ctermfg=255 ctermbg=60
 
 set number
 " set relativenumber
 set showmatch
 set backspace=indent,eol,start
 set clipboard=unnamed
+" set laststatus=1
 
-" TAB settings "
 set autoindent
 set expandtab
 set shiftround
@@ -109,97 +131,30 @@ nnoremap g^ ^
 nnoremap g$ $
 nnoremap g0 0
 
-" Swap, Undo and Backup files
-if exists('$SUDO_USER')
-    set nobackup
-    set noswapfile
-    set nowritebackup
-    set noundofile
-else
-    let g:netrw_home=$HOME.'/.config/'
-    set directory=$HOME/.config/vimswap//
-    set backupdir=$HOME/.config/vimswap//
-    set viewdir=$HOME/.config/views//
-    set undofile "poor man's version controll
-endif
-
-if has("persistent_undo")
-    set undodir=$HOME/.config/vimswap//
-    set undofile
-endif
-
-autocmd InsertEnter * :setlocal nohlsearch
-
-if has('gui')
-  " Turn off scrollbars. (Default on macOS is "egmrL").
-  set guioptions-=L
-  set guioptions-=R
-  set guioptions-=b
-  set guioptions-=l
-  set guioptions-=r
-
-else "Run the following only on terminal
-  " Openup browser to preview markdown
-  function! Preview()
-      silent execute "!open -a 'Google\ Chrome.app' " . shellescape(expand('%'))
-  endfunction
-  command! Preview :call Preview()
-endif "TERMINAL endif
-
-
-" FOR ALL PLATFORMS
-"---------------------------------------------------------------------------
-
-":Root | Change directory to the root of the Git repository
-function! s:root()
-  let root = systemlist('git rev-parse --show-toplevel')[0]
-  if v:shell_error
-    echo 'Not in git repo'
-  else
-    execute 'lcd' root
-    echo 'Changed directory to: '.root
-  endif
-endfunction
-command! Root call s:root()
-
-" Remove extra whitespace
-function! Trim_trailing()
-    if search('\s\+$', 'cnw')
-        :%s/\s\+$//g
-    endif
-endfunction
 nnoremap <silent><leader>zz :call Trim_trailing()<cr>
-
-"" <Leader>?/! | Google it / Feeling lucky
-function! s:goog(pat, lucky)
-  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
-  let q = substitute(q, '[[:punct:] ]',
-      \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('firefox "https://www.google.com/search?%sq=%s"',
-                  \ a:lucky ? 'btnI&' : '', q))
-endfunction
 
 nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
 nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
 xnoremap <leader>? "gy:call <SID>goog(@g, 0)<cr>gv
 xnoremap <leader>! "gy:call <SID>goog(@g, 1)<cr>gv
 
-"---------------------------------------------------------------------------
-" If buffer modified, update any 'Last modified: ' in the first 20 lines.
-function! LastModified()
-  if &modified
-    let save_cursor = getpos(".")
-    let n = min([20, line("$")])
-    keepjumps exe '1,' . n . 's#^\(.\{,10}Last Modified: \).*#\1' .
-          \ strftime('%d-%m-%Y %H:%M') . '#e'
-    call histdel('search', -1)
-    call setpos('.', save_cursor)
-  endif
-endfun
-autocmd BufWritePre * call LastModified()
-"
-" ------------------------------------------------------------------
-" commandline settings
+" Toggle Status line
+nnoremap <silent> <c-l> :call Toggle_laststatus()<cr>
+" Insert Time
+inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
+" Toggle relative number
+nnoremap <silent><leader>r :call Number_toggle()<cr>
+" Toggle spell settings
+nnoremap <leader>l :call Spell()<CR>
+nnoremap <leader>t :call Insert_time()<cr>""p
+
+" Create and edit file
+nnoremap <silent> <Leader>h :nohl<CR>
+nnoremap <leader>n :bn<cr>
+nnoremap <leader>p :bp<cr>
+nnoremap <leader>d :bd<cr>
+
+" Command line Readline settings
 cnoremap        <C-A> <Home>
 cnoremap        <C-B> <Left>
 cnoremap <expr> <C-D> getcmdpos()>strlen(getcmdline())?"\<Lt>C-D>":"\<Lt>Del>"
@@ -208,74 +163,23 @@ cnoremap        <M-b> <S-Left>
 cnoremap        <M-f> <S-Right>
 silent! exe "set <S-Left>=\<Esc>b"
 silent! exe "set <S-Right>=\<Esc>f"
-
-"---------------------------------------------------------------------------
-" set laststatus=1
-" Status line settings
-" set statusline=%<[%n]\ %F\ %m%r%y\ %=%-14.(%l,%c%V%)\ %P\ %{exists('g:loaded_fugitive')?fugitive#statusline():''}
-
-" Toggle laststatus between 1<->2
-function! Toggle_laststatus()
-  if &laststatus == 2
-    set laststatus=1
-  elseif &laststatus == 1
-    set laststatus=2
-  endif
-  return
-endfunction
-
-" Toggle Status line
-nnoremap <silent> <leader>l :call Toggle_laststatus()<cr>
-
-" Toggle relative numbering
-function! Number_toggle()
-  if(&relativenumber == 1)
-    set norelativenumber
-  else
-    set relativenumber
-  endif
-endfunction
-" Toggle relative number "
-nnoremap <silent><localleader>r :call Number_toggle()<cr>
-
-"Spelling toggle
-function! Spell()
-  if !&spell
-    set spell spelllang=en_gb
-  else
-    set nospell
-  endif
-endfunction
-
-" Toggle spell settings
-nnoremap <localleader>l :call Spell()<CR>
-
-"turn on spell cheking for filetypes
+"
+" Turn on spell cheking for filetypes
 autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
-
-function! Insert_time()
-  ":put =strftime(\"%d-%m-%Y %H:%M:%S \")
-  let timestamp = strftime('%d-%m-%Y %H:%M')
-  let @"=timestamp
-endfunction
-nnoremap <Leader>t :call Insert_time()<cr>""p
-inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
-
-"create and edit file
-nnoremap <localleader>e :edit <C-R>=expand('%:p:h').'/'<CR>
-nnoremap <silent> <Leader>h :nohl<CR>
-nnoremap <leader>n :bn<cr>
-nnoremap <leader>p :bp<cr>
-nnoremap <localleader>p <esc>:tabprevious<CR>
-nnoremap <localleader>n <esc>:tabnext<CR>
-
+command! Root call s:root()
+command! Preview :call Preview()
+" autocmd BufWritePre * call LastModified()
+autocmd InsertEnter * :setlocal nohlsearch
+"
 "-------------- PLUGIN Settings ----------------------"
+"
 set rtp+=/Users/chand/.linuxbrew/opt/fzf
 "FZF-keybindings
 nnoremap <leader>b :Buffers<cr>
 " nnoremap <leader>f :Files<cr>
 " nnoremap <leader>gf :GFiles<cr>
 nnoremap <leader>f :call GFilesFallback()<CR>
+nnoremap <leader>/ :Ag<CR>
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
@@ -286,22 +190,16 @@ imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
-"------------------
+
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let g:NERDTreeWinPos = "right"
 
 let g:airline_theme='gruvbox'
 " let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
-"
-"  Ack to find strings
-if executable('rg')
-    let g:ackprg = 'rg -S --no-heading --vimgrep'
-elseif executable('ag')
-    let g:ackprg = 'ag --vimgrep'
-endif
 
 " autogroup
 augroup inp_ft
