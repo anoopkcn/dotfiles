@@ -1,4 +1,4 @@
-"Vim run command file
+"Vim Run Command File
 "--------------------
 set encoding=utf-8
 scriptencoding utf-8
@@ -6,25 +6,22 @@ set nocompatible
 unlet! skip_defaults_vim
 source ~/dotfiles/vim/fzf_functions.vim
 source ~/dotfiles/vim/functions.vim
-"
 call plug#begin('~/.vim/plugged')
-  "
-  Plug 'tpope/vim-surround'
-  Plug 'ervandew/supertab'
   Plug 'junegunn/fzf.vim'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-repeat'
+  Plug 'ervandew/supertab'
   Plug 'Valloric/YouCompleteMe'
   Plug 'vim-airline/vim-airline'
-  Plug 'tpope/vim-fugitive'
   Plug 'morhetz/gruvbox'
   Plug 'scrooloose/nerdtree'
-  Plug 'tpope/vim-commentary'
-  " Plug 'tpope/vim-repeat'
   " Plug 'majutsushi/tagbar'
   " Plug 'plytophogy/vim-virtualenv'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-  "
 call plug#end()
-"
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
     set nobackup
@@ -43,7 +40,7 @@ if has("persistent_undo")
     set undodir=$HOME/.config/vimswap//
     set undofile
 endif
-"
+
 "" Color Settings
 syntax on
 filetype plugin indent on
@@ -142,15 +139,15 @@ nnoremap <silent> <c-l> :call Toggle_laststatus()<cr>
 " Insert Time
 inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
 " Toggle relative number
-nnoremap <silent><leader>r :call Number_toggle()<cr>
+" nnoremap <silent><leader>r :call Number_toggle()<cr>
 " Toggle spell settings
-nnoremap <leader>l :call Spell()<CR>
-nnoremap <leader>t :call Insert_time()<cr>""p
+" nnoremap <leader>l :call Spell()<CR> "replaced by unimpared as =os
+" nnoremap <leader>t :call Insert_time()<cr>""p
 
 " Create and edit file
-nnoremap <silent> <Leader>h :nohl<CR>
-nnoremap <leader>n :bn<cr>
-nnoremap <leader>p :bp<cr>
+" nnoremap <silent> <Leader>h :nohl<CR>
+" nnoremap <leader>n :bn<cr> "replaced by unimpared as ]b
+" nnoremap <leader>p :bp<cr> "replaced by unimpaired [b
 nnoremap <leader>d :bd<cr>
 
 " Command line Readline settings
@@ -185,11 +182,12 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " FZF
 set rtp+=/Users/chand/.linuxbrew/opt/fzf
 "FZF-keybindings
+nnoremap <leader>f :call GFilesFallback()<CR>
 nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>/ :Rg<CR>
+nnoremap <leader>t :Tags<CR>
 " nnoremap <leader>f :Files<cr>
 " nnoremap <leader>gf :GFiles<cr>
-nnoremap <leader>f :call GFilesFallback()<CR>
-nnoremap <leader>/ :Rg<CR>
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
