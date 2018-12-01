@@ -24,6 +24,7 @@ call plug#begin('~/.vim/plugged')
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   "
 call plug#end()
+"
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
     set nobackup
@@ -43,6 +44,7 @@ if has("persistent_undo")
     set undofile
 endif
 "
+"" Color Settings
 syntax on
 filetype plugin indent on
 set background=dark
@@ -59,7 +61,6 @@ set showmatch
 set backspace=indent,eol,start
 set clipboard=unnamed
 " set laststatus=1
-
 set autoindent
 set expandtab
 set shiftround
@@ -67,21 +68,17 @@ set shiftwidth=2
 set smartindent
 set softtabstop=2
 set tabstop=2
-
 " Folding setting
 " set fdm=indent
 " set nowrap
 set wrap
-
 set scrolloff=3
 set shortmess=filnxtToOI
 set nocursorline
 set formatoptions+=1
 set mouse=a
-
 set path+=**
 set wildmenu
-
 set list
 set listchars=nbsp:⦸
 set listchars+=tab:▸\
@@ -90,8 +87,8 @@ set listchars+=tab:\ \
 set listchars+=extends:❯
 set listchars+=precedes:❮
 "set listchars+=trail:␣
-set fillchars+=vert:\|
-
+" set fillchars+=vert:\|
+set fillchars+=vert:\│ "dont remove the space from here
 set nojoinspaces
 set diffopt=filler,vertical
 set splitright
@@ -117,6 +114,8 @@ set incsearch
 
 let mapleader ="\<Space>"
 let maplocalleader = "\,"
+"window switch
+nnoremap <leader><leader> <c-w>
 vnoremap < <gv
 vnoremap > >gv
 
@@ -171,8 +170,19 @@ command! Preview :call Preview()
 " autocmd BufWritePre * call LastModified()
 autocmd InsertEnter * :setlocal nohlsearch
 "
+" autogroup
+augroup inp_ft
+  au!
+  autocmd BufNewFile,BufRead *.inp   set ft=sh
+augroup END
+
 "-------------- PLUGIN Settings ----------------------"
 "
+" Fugitive
+"delete buffer on leave
+autocmd BufReadPost fugitive://* set bufhidden=delete
+"
+" FZF
 set rtp+=/Users/chand/.linuxbrew/opt/fzf
 "FZF-keybindings
 nnoremap <leader>b :Buffers<cr>
@@ -190,23 +200,20 @@ imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
-
+"
+" NERDTree
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let g:NERDTreeWinPos = "right"
-
+"
+" Airline/PowerLine
 let g:airline_theme='gruvbox'
 " let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
-
-" autogroup
-augroup inp_ft
-  au!
-  autocmd BufNewFile,BufRead *.inp   set ft=sh
-augroup END
-
+"
+" YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_python_interpreter_path = '~/pyenvs/anaconda3/bin/python'
