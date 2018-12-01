@@ -179,7 +179,7 @@ nnoremap <leader>b :Buffers<cr>
 " nnoremap <leader>f :Files<cr>
 " nnoremap <leader>gf :GFiles<cr>
 nnoremap <leader>f :call GFilesFallback()<CR>
-nnoremap <leader>/ :Ag<CR>
+nnoremap <leader>/ :Rg<CR>
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
