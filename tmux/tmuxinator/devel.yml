@@ -1,0 +1,11 @@
+# ~/.tmuxinator/devel.yml
+name: devel
+root: <%= @args[0] %>
+
+windows:
+  - local:
+      layout: main-vertical
+      panes:
+  - remote:
+      layout: main-vertical
+      panes:
