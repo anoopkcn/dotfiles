@@ -18,6 +18,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'morhetz/gruvbox'
   Plug 'scrooloose/nerdtree'
+  Plug 'jiangxincode/mpi.vim'
   " Plug 'majutsushi/tagbar'
   " Plug 'plytophogy/vim-virtualenv'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -40,16 +41,26 @@ if has("persistent_undo")
     set undodir=$HOME/.config/vimswap//
     set undofile
 endif
+" Remember last cursor position (vim & nvim do this differently)
+"" Tell vim to remember certain things when we exit
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='10,\"100,:20,%,n~/.nviminfo
 
-"" Color Settings
+"" Color Settings (compatable to gruvbox)
 syntax on
 filetype plugin indent on
 set background=dark
 colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'hard'
-let g:gruvbox_italicize_comments = 0
-let g:gruvbox_invert_selection = 0
-hi Visual       ctermfg=237 ctermbg=251
+hi String ctermfg=67
+hi CursorLine ctermbg=236
+hi Todo ctermbg=236
+" TODO "ctermfg=231
+hi link fortranOperator fortranKeyword
 " hi VisualNOS    ctermfg=255 ctermbg=60
 
 set number
@@ -71,7 +82,8 @@ set tabstop=2
 set wrap
 set scrolloff=3
 set shortmess=filnxtToOI
-set nocursorline
+set cursorline
+" set nocursorline
 set formatoptions+=1
 set mouse=a
 set path+=**
@@ -127,7 +139,31 @@ nnoremap g^ ^
 nnoremap g$ $
 nnoremap g0 0
 
+" terminal mode Maps
+" tnoremap <> <C-\><C-n> "anything except <esc>!!
+
+" Custome function Maps
 nnoremap <silent><leader>zz :call Trim_trailing()<cr>
+"
+":Root | Change directory to the root of the Git repository
+function! s:root()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    echo 'Not in git repo'
+  else
+    execute 'lcd' root
+    echo 'Changed directory to: '.root
+  endif
+endfunction
+
+"" <Leader>?/! | Google it / Feeling lucky
+function! s:goog(pat, lucky)
+  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
+  let q = substitute(q, '[[:punct:] ]',
+      \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+  call system(printf('firefox "https://www.google.com/search?%sq=%s%s"',
+                  \ a:lucky ? 'btnI&' : '', q, a:lucky ? '+'.&filetype : ''))
+endfunction
 
 nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
 nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
@@ -182,7 +218,7 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " FZF
 set rtp+=/Users/chand/.linuxbrew/opt/fzf
 "FZF-keybindings
-nnoremap <leader>f :call GFilesFallback()<CR>
+nnoremap <silent> <leader>f :call GFilesFallback()<CR>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>/ :Rg<CR>
 nnoremap <leader>t :Tags<CR>
@@ -222,3 +258,23 @@ let g:ycm_extra_conf_vim_data = [
   \]
 let g:ycm_global_ycm_extra_conf = '~/dotfiles/vim/plugged/global_extra_conf.py'
 
+" Additional functions
+nmap <leader>sp :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+ " Remember cursor position
+function! ResCur()
+  if line("'\"") <= line("$")
+    normal! g`"
+    return 1
+  endif
+endfunction
+
+augroup resCur
+  autocmd!
+  autocmd BufWinEnter * call ResCur()
+augroup END
