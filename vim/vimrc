@@ -19,6 +19,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'morhetz/gruvbox'
   Plug 'scrooloose/nerdtree'
   Plug 'jiangxincode/mpi.vim'
+  Plug 'terryma/vim-multiple-cursors'
   " Plug 'majutsushi/tagbar'
   " Plug 'plytophogy/vim-virtualenv'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -236,7 +237,7 @@ imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 "
 " NERDTree
-map <C-n> :NERDTreeToggle<CR>
+map <leader>n :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1

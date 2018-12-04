@@ -7,7 +7,7 @@ require(["codemirror/keymap/sublime", "notebook/js/cell", "base/js/namespace"],
             cells[c].code_mirror.setOption('keyMap', 'sublime');
         }
 
-        // }, 1000)// uncomment  line to fake race condition 
-    } 
+        // }, 1000)// uncomment  line to fake race condition
+    }
 );
 

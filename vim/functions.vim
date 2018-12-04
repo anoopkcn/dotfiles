@@ -1,14 +1,3 @@
-":Root | Change directory to the root of the Git repository
-function! s:root()
-  let root = systemlist('git rev-parse --show-toplevel')[0]
-  if v:shell_error
-    echo 'Not in git repo'
-  else
-    execute 'lcd' root
-    echo 'Changed directory to: '.root
-  endif
-endfunction
-
 " Remove extra whitespace
 function! Trim_trailing()
     if search('\s\+$', 'cnw')
@@ -16,14 +5,6 @@ function! Trim_trailing()
     endif
 endfunction
 
-"" <Leader>?/! | Google it / Feeling lucky
-function! s:goog(pat, lucky)
-  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
-  let q = substitute(q, '[[:punct:] ]',
-      \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('firefox "https://www.google.com/search?%sq=%s"',
-                  \ a:lucky ? 'btnI&' : '', q))
-endfunction
 
 " If buffer modified, update any 'Last modified: ' in the first 20 lines.
 function! LastModified()
