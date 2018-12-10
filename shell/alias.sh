@@ -3,9 +3,10 @@ alias ..='cd ..'
 alias l='ls -lhF'
 alias c='clear'
 alias p='pwd'
+alias hls='h5ls'
 
 #application links
-alias vi='/usr/local/vim -u NONE'
+alias vi='vim -u NONE'
 #alias vim='nvim'
 
 # tmux alias

@@ -3,9 +3,9 @@ name: devel
 root: <%= @args[0] %>
 
 windows:
-  - local:
+  - code:
       layout: main-vertical
       panes:
-  - remote:
+  - term:
       layout: main-vertical
       panes:

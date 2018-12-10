@@ -3,6 +3,7 @@ let fortran_have_tabs=1
 let fortran_more_precise=1
 let fortran_do_enddo=1
 " let fortran_free_source=1
+setlocal textwidth=0
 let s:extfname = expand("%:e")
 if s:extfname ==? "f90"
   let fortran_free_source=1
