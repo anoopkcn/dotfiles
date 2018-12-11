@@ -3,15 +3,14 @@ if [[ $- != *i* ]] ; then
     return
 fi
 
-git_completion=/usr/local/opt/git/etc/bash_completion.d/git-completion.bash
-if [ -e ${git_completion} ]; then
-    source ${git_completion}
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  git_completion=/usr/local/opt/git/etc/bash_completion.d/git-completion.bash
+  if [ -e ${git_completion} ]; then
+      source ${git_completion}
+  fi
+else
+  [ -f ${HOME}/.homebrew/etc/bash_completion ] && . ${HOME}/.homebrew/etc/bash_completion
 fi
-
-# git_prompt=/usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
-# if [ -e ${git_prompt} ]; then
-#     source ${git_prompt}
-# fi
 
 # Folder for all the bash settings and functions
 settings=$HOME/dotfiles/shell

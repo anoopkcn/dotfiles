@@ -72,7 +72,8 @@ hi CursorLine ctermbg=236
 hi Todo ctermbg=236
 " TODO "ctermfg=231
 hi link fortranOperator fortranKeyword
-" hi VisualNOS    ctermfg=255 ctermbg=60
+hi Visual    ctermfg=237 ctermbg=253
+hi VisualNOS    ctermfg=255 ctermbg=60
 "
 " gitgutter signcolumn
 hi GitGutterAdd          ctermbg=235 ctermfg=118
