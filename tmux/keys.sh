@@ -44,11 +44,12 @@ unbind -T copy-mode-vi MouseDragEnd1Pane
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection
 bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
-# macOs
-if-shell -b '[ "$(echo "${MACHINE} == Mac" | bc) ]' \
-  "bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'reattach-to-user-namespace pbcopy'"
+
 # linux
 bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
+# macOs
+if-shell -b '[ "$(echo "${MACHINE} == Mac" | bc) ]' \
+  "bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'"
 
 
 # search for prompt
