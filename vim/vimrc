@@ -23,6 +23,17 @@ call plug#begin('~/.vim/plugged')
   " Plug 'majutsushi/tagbar'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
+"
+let s:darwin = has('mac')
+"
+if s:darwin
+  let g:open_app = 'open'
+  set rtp+=/Users/chand/.homebrew/opt/fzf
+else
+  let g:open_app ='firefox'
+  set rtp+=/Users/chand/.linuxbrew/opt/fzf
+endif
+"
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
     set nobackup
@@ -168,7 +179,7 @@ function! s:goog(pat, lucky)
   let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
   let q = substitute(q, '[[:punct:] ]',
       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('firefox "https://www.google.com/search?%sq=%s"',
+  call system(printf('%s "https://www.google.com/search?%sq=%s"', g:open_app, 
                   \ a:lucky ? 'btnI&' : '', q))
 endfunction
 
@@ -224,8 +235,6 @@ augroup END
 "delete buffer on leave
 autocmd BufReadPost fugitive://* set bufhidden=delete
 "
-" FZF
-set rtp+=/Users/chand/.linuxbrew/opt/fzf
 "FZF-keybindings
 nnoremap <silent> <leader>f :call GFilesFallback()<CR>
 nnoremap <leader>b :Buffers<cr>
