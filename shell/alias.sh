@@ -6,8 +6,8 @@ alias p='pwd'
 alias hls='h5ls'
 
 #application links
-alias vi='vim -u NONE'
-#alias vim='nvim'
+alias vi='nvim -u NONE'
+alias vim='nvim'
 
 # tmux alias
 alias ta='tmux attach -t'

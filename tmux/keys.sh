@@ -46,10 +46,7 @@ bind-key -T copy-mode-vi y send-keys -X copy-selection
 bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
 
 # linux
-bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
-# macOs
-if-shell -b '[ "$(echo "${MACHINE} == Mac" | bc) ]' \
-  "bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'"
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'
 
 
 # search for prompt
