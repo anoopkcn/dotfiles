@@ -4,6 +4,7 @@ set encoding=utf-8
 scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
+let s:darwin = has('mac')
 " move the sourcing (tiny bit slower load time)
 source ~/dotfiles/vim/fzf_functions.vim
 " source ~/dotfiles/vim/functions.vim
@@ -23,8 +24,6 @@ call plug#begin('~/.vim/plugged')
   " Plug 'majutsushi/tagbar'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
-"
-let s:darwin = has('mac')
 "
 if s:darwin
   let g:open_app = 'open'
@@ -279,7 +278,7 @@ endfunction
 " Preview file in browser
 function! Preview()
     "silent execute "!open -a 'firefox' " . shellescape(expand('%'))
-    silent execute "!firefox " . shellescape(expand('%'))
+    silent execute "!".g:open_app." ".shellescape(expand('%'))
 endfunction
 " autogroup
 augroup inp_ft
