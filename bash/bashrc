@@ -17,12 +17,11 @@ fi
 settings=$HOME/dotfiles/shell
 
 source ${settings}/alias.sh
-source ${settings}/functions.sh
+source ${settings}/shell_functions.sh
 source ${settings}/tmux_functions.sh
 source ${settings}/git_functions.sh
 source ${settings}/fzf_functions.sh
-source ${settings}/apps.sh
-source ${settings}/lazy.theme.sh
+source ${settings}/lazy_theme.sh
 
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'

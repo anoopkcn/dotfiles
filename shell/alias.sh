@@ -10,6 +10,11 @@ alias hls='h5ls'
 alias vi='nvim -u NONE'
 alias vim='nvim'
 
+# git alias
+alias gits='git status'
+alias gita='git add'
+alias gitc='git commit'
+
 # tmux alias
 alias ta='tmux attach -t'
 alias tnew='tmux new -s'
