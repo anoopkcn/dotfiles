@@ -15,12 +15,12 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-repeat'
-  " Plug 'ervandew/supertab'
   Plug 'airblade/vim-gitgutter'
   Plug 'Valloric/YouCompleteMe'
   Plug 'vim-airline/vim-airline'
   Plug 'morhetz/gruvbox'
   Plug 'scrooloose/nerdtree'
+  " Plug 'ervandew/supertab'
   " Plug 'majutsushi/tagbar'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
@@ -126,7 +126,7 @@ set omnifunc=syntaxcomplete#Complete
 if has('linebreak')
     set linebreak
     let &showbreak='↳ '
-    "set breakindentopt=shift:2
+    " set breakindentopt=shift:2
 endif
 
 set visualbell t_vb=
@@ -179,7 +179,7 @@ function! s:goog(pat, lucky)
   let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
   let q = substitute(q, '[[:punct:] ]',
       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('%s "https://www.google.com/search?%sq=%s"', g:open_app, 
+  call system(printf('%s "https://www.google.com/search?%sq=%s"', g:open_app,
                   \ a:lucky ? 'btnI&' : '', q))
 endfunction
 
