@@ -6,10 +6,6 @@ alias c='clear'
 alias p='pwd'
 alias hls='h5ls'
 
-#application links
-alias vi='nvim -u NONE'
-alias vim='nvim'
-
 # git alias
 alias gits='git status'
 alias gita='git add'
