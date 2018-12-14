@@ -1,4 +1,3 @@
-## COLOR definitions
 ## Colors are wraped using \[ and \] for linux and mac...
 ## ... because otherwise in limited width terminal windows ...
 ## ... lines seem to overwrite themselves ( a visual effect : commands will still run).
@@ -12,7 +11,7 @@ gray_light="\[\e[37m\]"
 gray_dark="\[\e[90m\]"
 
 # functions for PS1
-#MYPOS strips the directory names, except first and the last...
+# MYPOS strips the directory names, except first and the last...
 #... according to the legth of the term
 export MYPS='$(echo -n "${PWD/#$HOME/~}" | awk -F "/" '"'"'{
 if (length($0) > 14) { if (NF>4) print $1 "/" $2 "/.../" $(NF-1) "/" $NF;
@@ -23,7 +22,7 @@ else print $0;}'"'"')'
 #PS* status
 PS3=">> "
 PS2="▪ "
-#export PS1="▪ \u@${green}\h${normal}:\$(lazy_git_status)[${cyan}\W${normal}] "
+# export PS1="▪ \u@${green}\h${normal}:\$(lazy_git_status)[${cyan}\W${normal}] "
 # export PS1="▪ \u@${green}\h${normal}:"'$(__git_ps1 "(%s)")'"[${cyan}\W${normal}] "
 # export PS1="\u@${green}\h${normal}:[${cyan}$(eval 'echo ${MYPS}')${normal}] "
 export PS1="${green}\h${normal}[${cyan}\W${normal}]${gray_light}"'$(__git_ps1)'"${normal} "
