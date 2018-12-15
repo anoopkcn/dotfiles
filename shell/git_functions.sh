@@ -1,5 +1,5 @@
 #!/bin/bash
-#git enabled PS1 is in the file ./lazy.theme.bash
+#git enabled PS1 is in the file ./lazy_theme.bash
 # return 0 if git repo
 is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1
@@ -40,41 +40,14 @@ gitr(){
   git remote -v
 }
 
-# gco - checkout git branch/tag
-gitco() {
-  is_in_git_repo || return
-  local tags branches target
-  tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}' | awk '{print $2}') || return
-  branches=$(
-    git branch --all | grep -v HEAD             |
-    sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
-    sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}' | awk '{print $2}') || return
-  target=("Quit" "New Branch" $((echo "$tags"; echo "$branches") | sed '/^$/d'))
-  select opt in "${target[@]}"
-  do
-    case $opt in
-      "New Branch")
-        read -p "Enter new branch name: " BRANCH_NAME
-        git checkout -b "$BRANCH_NAME"
-        break
-        ;;
-      "Quit")
-        break;;
-      *)
-        git checkout $(echo "$opt")
-        break
-        ;;
-    esac
-  done
-}
 #chech how ahead or behind the upstream
-gitab() {
-  is_in_git_repo || return
-  curr_branch=$(git rev-parse --abbrev-ref HEAD);
-  curr_remote=$(git config branch.$curr_branch.remote);
-  curr_merge_branch=$(git config branch.$curr_branch.merge | cut -d / -f 3);
-  git rev-list --left-right --count $curr_branch...$curr_remote/$curr_merge_branch | tr -s '\t' '|';
-}
+# gitab() {
+#   is_in_git_repo || return
+#   curr_branch=$(git rev-parse --abbrev-ref HEAD);
+#   curr_remote=$(git config branch.$curr_branch.remote);
+#   curr_merge_branch=$(git config branch.$curr_branch.merge | cut -d / -f 3);
+#   git rev-list --left-right --count $curr_branch...$curr_remote/$curr_merge_branch | tr -s '\t' '|';
+# }
 
 # git lazy statys
 gitls() {
