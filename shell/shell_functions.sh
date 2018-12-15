@@ -201,3 +201,21 @@ else
 fi
 }
 
+function lsync(){
+    source_path=$(pwd) #make this more universal:TODO
+    source_folder=${curr_path##*/} # current folder
+    target_folder=$(echo $2 | awk -F"/" '{print $(NF)}')
+    target_folder=${target_folder//./} # Make it empty if '.' is the target_folder
+    if [ -z "$target_folder" ]; then
+        target_folder=$(echo $2 | awk -F"/" '{print $(NF-1)}')
+    fi
+    if [ "$source_folder" != "$target_folder" ]; then
+        echo "Target file/folder is DIFFERENT(or an alias) then PWD. You want to continue?\nPress Enter or type [yes|y] to continue."
+        read yesno
+        if [[ "$yesno" == "yes" || "$yesno" == "y" || "$yesno" == "" ]]; then
+            rsync -avzh $1 $2
+        else
+            return
+        fi
+    fi
+}
