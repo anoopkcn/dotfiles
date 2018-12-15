@@ -5,6 +5,7 @@
 [core]
 	editor = vim
 	excludesfile = ~/dotfiles/git/ggitignore
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [difftool]
 	prompt = false
 [mergetool "fugitive"]
