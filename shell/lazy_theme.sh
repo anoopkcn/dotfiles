@@ -21,7 +21,7 @@ else print $0;}'"'"')'
 
 #PS* status
 PS3=">> "
-PS2="▪ "
+PS2="${gray_light}↳ ${normal}"
 # export PS1="▪ \u@${green}\h${normal}:\$(lazy_git_status)[${cyan}\W${normal}] "
 # export PS1="▪ \u@${green}\h${normal}:"'$(__git_ps1 "(%s)")'"[${cyan}\W${normal}] "
 # export PS1="\u@${green}\h${normal}:[${cyan}$(eval 'echo ${MYPS}')${normal}] "

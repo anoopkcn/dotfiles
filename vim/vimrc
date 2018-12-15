@@ -282,9 +282,11 @@ augroup END
 "-------------- PLUGIN Settings ----------------------"
 "
 " Fugitive
-"delete buffer on leave
+" Delete buffer on leave
 autocmd BufReadPost fugitive://* set bufhidden=delete
 "
+" GitGutter
+set updatetime=100
 "FZF-keybindings
 nnoremap <silent> <leader>f :call GFilesFallback()<CR>
 nnoremap <leader>b :Buffers<cr>
