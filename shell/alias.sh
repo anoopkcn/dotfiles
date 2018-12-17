@@ -7,6 +7,7 @@ alias p='pwd'
 alias hls='h5ls'
 
 # git alias
+alias gti='git'
 alias gits='git status'
 alias gita='git add'
 alias gitc='git commit'
