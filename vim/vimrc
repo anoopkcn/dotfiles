@@ -20,6 +20,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'morhetz/gruvbox'
   Plug 'scrooloose/nerdtree'
+  Plug 'dhruvasagar/vim-table-mode'
   " Plug 'ervandew/supertab'
   " Plug 'majutsushi/tagbar'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -348,3 +349,6 @@ augroup resCur
   autocmd BufWinEnter * call ResCur()
 augroup END
 "
+" Table mode settings for rst
+let g:table_mode_corner_corner='+'
+" let g:table_mode_header_fillchar='='
