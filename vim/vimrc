@@ -65,8 +65,9 @@ hi CursorLine ctermbg=236
 hi Todo ctermbg=236
 " TODO "ctermfg=231
 hi link fortranOperator fortranKeyword
-hi Visual    ctermfg=237 ctermbg=253
-hi VisualNOS    ctermfg=255 ctermbg=60
+hi Visual ctermfg=237 ctermbg=253
+hi VisualNOS  ctermfg=255 ctermbg=60
+hi ErrorMsg   cterm=NONE ctermfg=196 ctermbg=NONE
 "
 " gitgutter signcolumn
 hi GitGutterAdd          ctermbg=235 ctermfg=118
@@ -327,7 +328,7 @@ let g:ycm_extra_conf_vim_data = [
   \  'g:ycm_python_interpreter_path',
   \  'g:ycm_python_sys_path'
   \]
-let g:ycm_global_ycm_extra_conf = '~/dotfiles/vim/plugged/global_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/dotfiles/vim/global_extra_conf.py'
 " Additional functions
 nmap <leader>sp :call <SID>SynStack()<CR>
 function! <SID>SynStack()
