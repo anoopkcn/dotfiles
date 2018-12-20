@@ -1,7 +1,7 @@
 # COLOUR
-tm_color_active=colour28
+tm_color_active=colour106
 tm_color_inactive=colour241
-tm_color_feature=colour94
+tm_color_feature=colour149
 tm_color_sysinfo=colour110
 
 # separators
@@ -29,7 +29,7 @@ set -g window-status-format "[#I,#F,#W]"
 # active window title colors
 set-window-option -g window-status-current-fg $tm_color_active
 set-window-option -g window-status-current-bg  default
-set-window-option -g  window-status-current-format "[#I,#F,#[bold]#W]"
+set-window-option -g  window-status-current-format "[#I,#F,#W]"
 
 # pane border
 set-option -g pane-border-fg $tm_color_inactive
@@ -47,10 +47,10 @@ set-option -g display-panes-colour $tm_color_inactive
 set-window-option -g clock-mode-colour $tm_color_active
 
 # tm_sysinfo=" #[fg=$tm_color_sysinfo,bright]#(tmux-mem-cpu-load -m 2 -g 0 -a 1)"
-tm_date="#[fg=colour115]%d-%b#[fg=colour95] %l:%M"
-tm_pwd="#[fg=colour115,bold]#{pane_current_path}"
+tm_date="#[fg=colour230]%d-%b#[fg=colour251] %l:%M"
+tm_pwd="#[fg=colour230,bold]#{pane_current_path}"
 tm_host="#[fg=$tm_color_feature,bold]@Anoop"
-tm_session_name="#[fg=$tm_color_feature,bold]$tm_separator_left_thin#S"
+tm_session_name="#[fg=$tm_color_feature]$tm_separator_left_thin#S"
 # tm_separator_right_thin=" ▣ ♟"
 
 
@@ -58,5 +58,5 @@ tm_session_name="#[fg=$tm_color_feature,bold]$tm_separator_left_thin#S"
 set -g status-right $tm_session_name' '$tm_date #$tm_separator_right_thin
 set -g status-left  ''
 
-set-option -g status-position top
+# set-option -g status-position top
 set -wg mode-style bg=cyan,fg=black
