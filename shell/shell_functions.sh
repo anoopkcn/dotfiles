@@ -179,7 +179,7 @@ elif [[ "$#" -eq 1 ]]; then
       echo "Warning:Global sync on Home folder is not allowed"
     fi
 else
-    curr_path=$(pwd) #make this more universal:TODO
+    curr_path=$(pwd) # make this more universal:TODO
     curr_folder=${curr_path##*/} # current folder
     last_name=$(echo $3 | awk -F"/" '{print $(NF)}')
     last_name=${last_name//./} # empty if '.' is the last_name
@@ -188,8 +188,8 @@ else
     fi
     if [ "$curr_folder" != "$last_name" ]; then
         echo "Target file/folder is DIFFERENT(or an alias) then PWD. You want to continue?\nPress Enter or type [yes|y] to continue."
-        read yesno
-        if [[ "$yesno" == "yes" || "$yesno" == "y" || "$yesno" == "" ]]; then
+        read accept
+        if [[ "$accept" == "yes" || "$accept" == "y" || "$accept" == "" ]]; then
             rsync -airzv $2 -e ssh $1:$3
         else
             return
@@ -211,13 +211,17 @@ function lsync(){
     fi
     if [ "$source_folder" != "$target_folder" ]; then
         echo "Target file/folder is DIFFERENT(or an alias) then PWD. You want to continue?\nPress Enter or type [yes|y] to continue."
-        read yesno
-        if [[ "$yesno" == "yes" || "$yesno" == "y" || "$yesno" == "" ]]; then
+        read accept
+        if [[ "$accept" == "yes" || "$accept" == "y" || "$accept" == "" ]]; then
             rsync -avzh $1 $2
         else
             return
         fi
     fi
+}
+
+worksync(){
+  usync $1 /Users/chand/workbench/. /Users/chand/workbench/.
 }
 
 ## Command Line Interface Papers Manager (CLIP-Manager)
