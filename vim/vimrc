@@ -24,7 +24,7 @@ call plug#begin('~/.vim/plugged')
   " Plug 'majutsushi/tagbar'
   " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
-"
+" :
 if s:darwin
   let g:open_app = 'open'
   set rtp+=/Users/chand/.homebrew/opt/fzf
@@ -348,7 +348,6 @@ augroup resCur
   autocmd!
   autocmd BufWinEnter * call ResCur()
 augroup END
-"
 "
 "Ultisnips
 " let g:UltiSnipsExpandTrigger="<c-a>"
