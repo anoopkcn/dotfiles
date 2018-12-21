@@ -22,12 +22,13 @@ call plug#begin('~/.vim/plugged')
   Plug 'scrooloose/nerdtree'
   " Plug 'ervandew/supertab'
   " Plug 'majutsushi/tagbar'
-  " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 " :
 if s:darwin
   let g:open_app = 'open'
   set rtp+=/Users/chand/.homebrew/opt/fzf
+  " set termguicolors
 else
   let g:open_app ='firefox'
   set rtp+=/Users/chand/.linuxbrew/opt/fzf
@@ -56,17 +57,18 @@ endif
 syntax on
 filetype plugin indent on
 set background=dark
+" let g:gruvbox_italic=1
 colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'hard'
-hi SignColumn ctermbg=NONE ctermfg=NONE
-hi String ctermfg=67
-hi CursorLine ctermbg=236
-hi Todo ctermbg=236
+hi SignColumn ctermbg=NONE ctermfg=NONE guibg=NONE
+" hi String ctermfg=67
+" hi CursorLine ctermbg=236
+" hi Todo ctermbg=236
 " TODO "ctermfg=231
 hi link fortranOperator fortranKeyword
-hi Visual ctermfg=237 ctermbg=253
-hi VisualNOS  ctermfg=255 ctermbg=60
-hi ErrorMsg   cterm=NONE ctermfg=196 ctermbg=NONE
+" hi Visual ctermfg=237 ctermbg=253
+" hi VisualNOS  ctermfg=255 ctermbg=60
+" hi ErrorMsg   cterm=NONE ctermfg=196 ctermbg=NONE
 "
 " gitgutter signcolumn
 hi GitGutterAdd          ctermbg=235 ctermfg=118
@@ -289,7 +291,8 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " GitGutter
 set updatetime=100
 "FZF-keybindings
-nnoremap <silent> <leader>f :call GFilesFallback()<CR>
+nnoremap <silent> <leader>f :GFiles<CR>
+nnoremap <silent> <leader>af :Files<CR>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>/ :Rg<CR>
 nnoremap <leader>t :Tags<CR>
