@@ -5,7 +5,6 @@ function! Trim_trailing()
     endif
 endfunction
 
-
 " If buffer modified, update any 'Last modified: ' in the first 20 lines.
 function! LastModified()
   if &modified

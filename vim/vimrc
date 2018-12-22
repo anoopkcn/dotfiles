@@ -5,7 +5,6 @@ scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
 let s:darwin = has('mac')
-" move the sourcing (tiny bit slower load time)
 source ~/dotfiles/vim/fzf_functions.vim
 " source ~/dotfiles/vim/functions.vim
 call plug#begin('~/.vim/plugged')
@@ -28,7 +27,6 @@ call plug#end()
 if s:darwin
   let g:open_app = 'open'
   set rtp+=/Users/chand/.homebrew/opt/fzf
-  " set termguicolors
 else
   let g:open_app ='firefox'
   set rtp+=/Users/chand/.linuxbrew/opt/fzf
@@ -61,15 +59,15 @@ set background=dark
 colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'hard'
 hi SignColumn ctermbg=NONE ctermfg=NONE guibg=NONE
-" hi String ctermfg=67
-" hi CursorLine ctermbg=236
-" hi Todo ctermbg=236
+hi String ctermfg=67
+hi CursorLine ctermbg=236
+hi Todo ctermbg=236
 " TODO "ctermfg=231
 hi link fortranOperator fortranKeyword
-" hi Visual ctermfg=237 ctermbg=253
-" hi VisualNOS  ctermfg=255 ctermbg=60
-" hi ErrorMsg   cterm=NONE ctermfg=196 ctermbg=NONE
-"
+hi Visual ctermfg=237 ctermbg=253
+hi VisualNOS  ctermfg=255 ctermbg=60
+hi ErrorMsg   cterm=NONE ctermfg=196 ctermbg=NONE
+
 " gitgutter signcolumn
 hi GitGutterAdd          ctermbg=235 ctermfg=118
 hi GitGutterChange       ctermbg=235 ctermfg=75
@@ -103,8 +101,8 @@ set path+=**
 set wildmenu
 set list
 set listchars=nbsp:⦸
-set listchars+=tab:▸\
-set listchars+=tab:\ \
+" set listchars+=tab:▸\  "dont remove space
+set listchars+=tab:│\  "dont remove space
 " set listchars+=eol:¬
 set listchars+=extends:❯
 set listchars+=precedes:❮
@@ -183,23 +181,15 @@ nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
 xnoremap <leader>? "gy:call <SID>goog(@g, 0)<cr>gv
 xnoremap <leader>! "gy:call <SID>goog(@g, 1)<cr>gv
 
-" Toggle Status line
-nnoremap <silent> <c-l> :call Toggle_laststatus()<cr>
 " Insert Time
 inoremap <c-s-t> <esc>:call Insert_time()<cr>""pa
 " Toggle relative number
-" nnoremap <silent><leader>r :call Number_toggle()<cr>
-" Toggle spell settings
-" nnoremap <leader>l :call Spell()<CR> "replaced by unimpared as =os
 " nnoremap <leader>t :call Insert_time()<cr>""p
 
 " Create and edit file
 " nnoremap <silent> <Leader>h :nohl<CR>
-" nnoremap <leader>n :bn<cr> "replaced by unimpared as ]b
-" nnoremap <leader>p :bp<cr> "replaced by unimpaired [b
 nnoremap <leader>n :tabnext<cr>
 nnoremap <leader>p :tabprevious<cr>
-nnoremap <leader>d :bd<cr>
 
 " Command line Readline settings
 cnoremap        <C-A> <Home>
@@ -218,7 +208,6 @@ command! Preview :call Preview()
 " autocmd BufWritePre * call LastModified()
 autocmd InsertEnter * :setlocal nohlsearch
 "
-
 " Remove extra whitespace
 function! Trim_trailing()
     if search('\s\+$', 'cnw')
@@ -243,34 +232,6 @@ function! Insert_time()
   let @"=timestamp
 endfunction
 
-" Toggle laststatus between 1<->2
-function! Toggle_laststatus()
-  if &laststatus == 2
-    set laststatus=1
-  elseif &laststatus == 1
-    set laststatus=2
-  endif
-  return
-endfunction
-
-" Toggle relative numbering
-function! Number_toggle()
-  if(&relativenumber == 1)
-    set norelativenumber
-  else
-    set relativenumber
-  endif
-endfunction
-
-"Spelling toggle
-function! Spell()
-  if !&spell
-    set spell spelllang=en_gb
-  else
-    set nospell
-  endif
-endfunction
-
 " Preview file in browser
 function! Preview()
     "silent execute "!open -a 'firefox' " . shellescape(expand('%'))
@@ -292,12 +253,11 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 set updatetime=100
 "FZF-keybindings
 nnoremap <silent> <leader>f :GFiles<CR>
-nnoremap <silent> <leader>af :Files<CR>
+nnoremap <silent> <localleader>f :Files<CR>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>/ :Rg<CR>
+nnoremap <localleader>/ :Ag<CR>
 nnoremap <leader>t :Tags<CR>
-" nnoremap <leader>f :Files<cr>
-" nnoremap <leader>gf :GFiles<cr>
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
@@ -351,8 +311,3 @@ augroup resCur
   autocmd!
   autocmd BufWinEnter * call ResCur()
 augroup END
-"
-"Ultisnips
-" let g:UltiSnipsExpandTrigger="<c-a>"
-" let g:UltiSnipsJumpForwardTrigger="<c-w>"
-" let g:UltiSnipsJumpBackwardTrigger="<c-b>"

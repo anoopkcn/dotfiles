@@ -1,4 +1,4 @@
-
+" FZF functions
 let g:fzf_tags_command = 'ctags --extra=+f -R'
 
 " let g:fzf_layout = { 'window': 'enew' }
