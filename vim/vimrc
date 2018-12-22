@@ -83,17 +83,17 @@ set clipboard=unnamed
 set autoindent
 set expandtab
 set shiftround
-set shiftwidth=2
+set shiftwidth=4
 set smartindent
-set softtabstop=2
-set tabstop=2
+set softtabstop=4
+set tabstop=4
 " Folding setting
 " set fdm=indent
 " set nowrap
-" set wrap
+set wrap
 set scrolloff=3
 set shortmess=filnxtToOI
-set cursorline
+" set cursorline
 " set nocursorline
 set formatoptions+=1
 set mouse=a
@@ -101,25 +101,29 @@ set path+=**
 set wildmenu
 set list
 set listchars=nbsp:⦸
-" set listchars+=tab:▸\  "dont remove space
-set listchars+=tab:│\  "dont remove space
+set listchars+=tab:\ \   "dont remove space
+" set listchars+=tab:│\  "dont remove space
 " set listchars+=eol:¬
 set listchars+=extends:❯
 set listchars+=precedes:❮
 "set listchars+=trail:␣
 " set fillchars+=vert:\|
-set fillchars+=vert:\│ "dont remove the space from here
+set fillchars+=vert:\│ "dont remove space 
 set nojoinspaces
 set diffopt=filler,vertical
 set splitright
 set splitbelow
 set omnifunc=syntaxcomplete#Complete
 " set tags=tags;$HOME
-
+set breakindent
 if has('linebreak')
-    set linebreak
+  set linebreak
+  if s:darwin
+    let &showbreak='⤷ '
+  else
     let &showbreak='↳ '
-    " set breakindentopt=shift:2
+  endif
+  set breakindentopt=shift:2
 endif
 
 set visualbell t_vb=
@@ -138,17 +142,18 @@ let maplocalleader = "\,"
 nnoremap <leader><leader> <c-w>
 vnoremap < <gv
 vnoremap > >gv
-
-" nnoremap j gj
-" nnoremap k gk
-nnoremap ^ g^
-nnoremap 0 g0
-nnoremap $ g$
+" wrapper line up and down
+nnoremap j gj
+nnoremap k gk
 " nnoremap gj j
 " nnoremap gk k
-nnoremap g^ ^
-nnoremap g$ $
-nnoremap g0 0
+"
+nnoremap 0 g0
+nnoremap ^ g^  
+nnoremap $ g$
+" nnoremap g^ ^
+" nnoremap g$ $
+" nnoremap g0 0
 
 " terminal mode Maps
 " tnoremap <> <C-\><C-n> "anything except <esc>!!
