@@ -19,6 +19,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'morhetz/gruvbox'
   Plug 'scrooloose/nerdtree'
+  " Plug 'lervag/vimtex'
   " Plug 'ervandew/supertab'
   " Plug 'majutsushi/tagbar'
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -210,6 +211,7 @@ silent! exe "set <S-Right>=\<Esc>f"
 autocmd FileType latex,tex,md,markdown,gitcommit setlocal spell spelllang=en_gb
 command! Root call s:root()
 command! Preview :call Preview()
+command! Lchange :call Lchange()
 " autocmd BufWritePre * call LastModified()
 autocmd InsertEnter * :setlocal nohlsearch
 "
@@ -220,12 +222,11 @@ function! Trim_trailing()
     endif
 endfunction
 " If buffer modified, update any 'Last modified: ' in the first 20 lines.
-function! LastModified()
+function! Lchange()
   if &modified
     let save_cursor = getpos(".")
     let n = min([20, line("$")])
-    keepjumps exe '1,' . n . 's#^\(.\{,10}Last Modified: \).*#\1' .
-          \ strftime('%d-%m-%Y %H:%M') . '#e'
+    keepjumps exe '1,' . n . 's#^\(.\{,10}Last Modified: \).*#\1' . strftime('%d-%m-%Y %H:%M') . '#e'
     call histdel('search', -1)
     call setpos('.', save_cursor)
   endif
