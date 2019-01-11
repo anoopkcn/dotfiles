@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 alias ..='cd ..'
-alias ls='ls -F'
 alias ll='ls -al'
 alias l='ls -lhF'
 alias c='clear'
