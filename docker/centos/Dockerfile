@@ -1,6 +1,6 @@
 # archlinux test dockerfile
 
-FROM base/archlinux
+FROM base/centos
 LABEL maintainer strivetobelazy@gmail.com
 
 # updating and installing base packages
@@ -9,7 +9,7 @@ RUN pacman -S --noconfirm base-devel
 
 # installing essential developer tools
 RUN pacman -S --noconfirm gcc-fortran
-# RUN pacman -S --noconfirm go
+RUN pacman -S --noconfirm go
 RUN pacman -S --noconfirm openmpi
 RUN pacman -S --noconfirm lapack
 RUN pacman -S --noconfirm gdb

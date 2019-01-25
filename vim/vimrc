@@ -16,7 +16,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-repeat'
   Plug 'airblade/vim-gitgutter'
   Plug 'Valloric/YouCompleteMe'
-  Plug 'vim-airline/vim-airline'
+  " Plug 'vim-airline/vim-airline'
   Plug 'scrooloose/nerdtree'
   Plug 'joshdick/onedark.vim'
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }

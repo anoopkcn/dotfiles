@@ -1,6 +1,6 @@
 # This is Git's per-user configuration file.
 [user]
-	name = anoop chandran
+	name = Anoop Chandran
 	email = strivetobelazy@gmail.com
 [core]
 	editor = nvim

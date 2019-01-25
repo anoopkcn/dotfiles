@@ -1,14 +1,14 @@
 # COLOUR
-tm_color_active=colour106
+tm_color_active=colour21
 tm_color_inactive=colour241
-tm_color_feature=colour149
+tm_color_feature=colour28
 tm_color_sysinfo=colour110
 
 # separators
 tm_separator_left_bold=""
 tm_separator_left_thin=""
 tm_separator_right_bold=""
-# tm_separator_right_thin=" ▣ ♟"
+# tm_separator_right_thin=" ▣"
 
 set -g status-left-length 32
 set -g status-right-length 150
@@ -47,11 +47,11 @@ set-option -g display-panes-colour $tm_color_inactive
 set-window-option -g clock-mode-colour $tm_color_active
 
 # tm_sysinfo=" #[fg=$tm_color_sysinfo,bright]#(tmux-mem-cpu-load -m 2 -g 0 -a 1)"
-tm_date="#[fg=colour230]%d-%b#[fg=colour251] %l:%M"
-tm_pwd="#[fg=colour230,bold]#{pane_current_path}"
+tm_date="#[fg=colour0]%d-%b#[fg=colour0] %l:%M"
+tm_pwd="#[fg=colour0,bold]#{pane_current_path}"
 tm_host="#[fg=$tm_color_feature,bold]@Anoop"
 tm_session_name="#[fg=$tm_color_feature]$tm_separator_left_thin#S"
-# tm_separator_right_thin=" ▣ ♟"
+# tm_separator_right_thin=" ▣"
 
 
 #settings status bar
