@@ -16,9 +16,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-repeat'
   Plug 'airblade/vim-gitgutter'
   Plug 'Valloric/YouCompleteMe'
-  " Plug 'vim-airline/vim-airline'
   Plug 'scrooloose/nerdtree'
-  Plug 'joshdick/onedark.vim'
+  Plug 'NLKNguyen/papercolor-theme'
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 " :
@@ -63,15 +62,19 @@ endif
 if (has("termguicolors"))
 set termguicolors
 endif
-set background=dark
-colorscheme onedark
+"set background=dark
+"colorscheme onedark
+set background=light
+colorscheme PaperColor
+
+hi Error NONE
+hi ErrorMsg NONE
 
 set number
 " set relativenumber
 set showmatch
 set backspace=indent,eol,start
 set clipboard=unnamed
-" set laststatus=1
 set autoindent
 set expandtab
 set shiftround
@@ -273,11 +276,6 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let g:NERDTreeWinPos = "right"
 "
-" Airline/PowerLine
-let g:airline_theme='onedark'
-" let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-"
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -308,3 +306,5 @@ augroup resCur
   autocmd!
   autocmd BufWinEnter * call ResCur()
 augroup END
+
+set laststatus=0

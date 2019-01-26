@@ -45,8 +45,9 @@ bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 export FZF_DEFAULT_OPTS="
 --height 30% --layout=reverse --border --preview-window hidden:wrap --bind='?:toggle-preview'
   --preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'
-  --color bg+:0
+  --color bg+:255,fg+:0
   "
+  # --color bg+:0
 export FZF_COMPLETION_TRIGGER='~~'
 # export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
 export FZF_DEFAULT_COMMAND='ag --ignore .git --ignore *.pyc -g ""'
