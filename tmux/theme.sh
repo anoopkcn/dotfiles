@@ -3,7 +3,7 @@ tm_color_active=colour21
 tm_color_inactive=colour241
 tm_color_feature=colour28
 tm_color_sysinfo=colour110
-
+tm_color_selection=colour75
 # separators
 tm_separator_left_bold=""
 tm_separator_left_thin=""
@@ -59,4 +59,4 @@ set -g status-right $tm_session_name' '$tm_date #$tm_separator_right_thin
 set -g status-left  ''
 
 # set-option -g status-position top
-set -wg mode-style bg=cyan,fg=black
+set -wg mode-style bg=$tm_color_selection #,fg=black
