@@ -64,7 +64,13 @@ set termguicolors
 endif
 "set background=dark
 "colorscheme onedark
-set background=light
+let g:PaperColor_Theme_Options = {
+  \   'theme': {
+  \     'default': {
+  \       'transparent_background': 1
+  \     }
+  \   }
+  \ }
 colorscheme PaperColor
 
 hi Error NONE
