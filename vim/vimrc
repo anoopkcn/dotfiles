@@ -66,9 +66,14 @@ endif
 "colorscheme onedark
 let g:PaperColor_Theme_Options = {
   \   'theme': {
-  \     'default': {
-  \       'transparent_background': 1
-  \     }
+  \     'default': { 
+  \         'transparent_background': 1 , 
+  \         'override' : { 
+  \             'color07' : ['#808080', '243'], 
+  \             'color05': ['#008E00','35'],
+  \             'linenumber_fg' : ['#808080', '243']
+  \         }
+  \     },
   \   }
   \ }
 colorscheme PaperColor
