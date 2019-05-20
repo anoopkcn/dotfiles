@@ -1,9 +1,0 @@
-# ~/.tmuxinator/espresso.yml
-
-name: espresso
-root: ~/Dropbox/Espresso
-
-windows:
-  - bash:
-      layout: main-vertical
-      panes:

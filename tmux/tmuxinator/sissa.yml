@@ -1,8 +1,0 @@
-# ~/.tmuxinator/sissa.yml
-name: sissa
-root: ~/Dropbox/School/SISSA
-
-windows:
-  - bash:
-      layout: main-vertical
-      panes:

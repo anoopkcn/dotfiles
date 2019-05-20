@@ -1,7 +1,7 @@
-# ~/.tmuxinator/strivetobelazy.yml
+# ~/.tmuxinator/web.yml
 
-name: strivetobelazy
-root: ~/Dropbox/strivetobelazy
+name: web
+root: ~/Dropbox/work
 
 windows:
   - bash:
