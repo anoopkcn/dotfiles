@@ -56,3 +56,7 @@ export FZF_CTRL_R_OPTS='--sort --exact'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 
 export PATH=$PATH:$HOME/.go/bin
+
+export WORKON_HOME=$HOME/pyenvs
+VIRTUALENVWRAPPER_PYTHON=$HOME/pyenvs/anaconda3/bin/python
+source ${HOME}/dotfiles/shell/virtualenvwrapper.sh

@@ -1,0 +1,18 @@
+# ~/.tmuxinator/test.yml
+
+name: test
+root: <%= @args[0] %>
+
+windows:
+  - bash:
+      layout: main-vertical
+      panes:
+        - clear
+  - drake:
+      layout: main-vertical
+      panes:
+        - clear && ssh drake
+  - drake2:
+      layout: main-vertical
+      panes:
+        - tmux send-keys -t 1 'qsub -I b22' Enter && tmux send-keys -t 1 'docker start' Enter
