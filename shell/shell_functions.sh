@@ -150,6 +150,19 @@ killport(){
   lsof -ti:$1 | xargs kill -9
 }
 
+
+# Sublime text project open
+function sublp(){
+    if [ -z "$1" ]; then
+      echo "Project is not specified"
+      return 0
+    else
+        project=$1
+    fi
+    extension='.sublime-project'
+    subl --project ${project}${extension}
+}
+
 #====== Remote sync app =======
 function dsync(){
 if [[ $# -eq 0 || "$#" -eq 2 ||"$#" -gt 3 ]]; then
