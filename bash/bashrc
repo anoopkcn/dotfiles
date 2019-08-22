@@ -15,6 +15,7 @@ else
   [ -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh ] && . /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
 fi
 export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
 # export GIT_PS1_SHOWCOLORHINTS=1
 # Folder for all the bash settings and functions
 settings=$HOME/dotfiles/shell
