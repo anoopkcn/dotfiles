@@ -17,6 +17,7 @@ fi
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 # export GIT_PS1_SHOWCOLORHINTS=1
+# 
 # Folder for all the bash settings and functions
 settings=$HOME/dotfiles/shell
 source ${settings}/alias.sh
@@ -33,7 +34,6 @@ export GREP_OPTIONS='--color=auto'
 # general settings
 export EDITOR=vim
 export TERM="xterm-256color"
-export GOPATH=$HOME/.go
 # bind TAB:menu-complete
 bind '"\er": redraw-current-line'
 bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
@@ -57,6 +57,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_R_OPTS='--sort --exact'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 
+export GOPATH=$HOME/.go
 export PATH=$PATH:$HOME/.go/bin
 
 export WORKON_HOME=$HOME/pyenvs
