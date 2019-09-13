@@ -6,33 +6,34 @@ export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
 export LC_ALL=en_GB.UTF-8
 #package manager
-export PATH="$HOME/.node/bin:$PATH"
-export PATH="${HOME}/.homebrew/bin:$PATH"
-export PATH=${HOME}/.homebrew/bin:$PATH
-export PATH="${HOME}/.homebrew/opt/openssl/bin:$PATH"
+export PATH="${HOME}/.homebrew/bin:\
+${HOME}/.homebrew/bin:\
+${HOME}/.homebrew/opt/openssl/bin:\
+${HOME}/.homebrew/opt/ruby/bin:\
+${HOME}/.homebrew/lib/ruby/gems/2.5.0/bin:\
+${HOME}/.homebrew/opt/rabbitmq/sbin:\
+${HOME}/pyenvs/anaconda3/bin:\
+${HOME}/.homebrew/sbin:\
+${HOME}/.homebrew/Cellar/hdf5/1.10.5_1/bin:\
+$HOME/.node/bin:\
+/opt/local/bin:/opt/local/sbin:\
+$PATH"
+
 export LDFLAGS="-L${HOME}/.homebrew/opt/openssl/lib"
 export CPPFLAGS="-I${HOME}/.homebrew/opt/openssl/include"
 export PKG_CONFIG_PATH="${HOME}/.homebrew/opt/openssl/lib/pkgconfig"
 export LDFLAGS="-L${HOME}/.homebrew/opt/openblas/lib"
 export CPPFLAGS="-I${HOME}/.homebrew/opt/openblas/include"
 #ruby settings
-export PATH="${HOME}/.homebrew/opt/ruby/bin:$PATH"
-export PATH="${HOME}/.homebrew/lib/ruby/gems/2.5.0/bin:$PATH"
+
 export LDFLAGS="-L${HOME}/.homebrew/opt/ruby/lib"
 export CPPFLAGS="-I${HOME}/.homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="${HOME}/.homebrew/opt/ruby/lib/pkgconfig"
-
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
-# Development functions
-export PATH="${HOME}/.homebrew/opt/rabbitmq/sbin:$PATH"
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
 # Finished adapting your PATH environment variable for use with MacPorts.
-export PATH="${HOME}/pyenvs/anaconda3/bin:$PATH"
-export PATH="${HOME}/.homebrew/sbin:$PATH"
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${HOME}/.homebrew/Cellar/hdf5/1.10.5_1/lib/lib
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${HOME}/.homebrew/Cellar/hdf5/1.10.5_1/lib/lib
-export PATH="${HOME}/.homebrew/Cellar/hdf5/1.10.5_1/bin:$PATH"
 
 # Variables
 NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
