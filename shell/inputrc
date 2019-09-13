@@ -11,4 +11,9 @@ set visible-stats on
 "\e[B": history-search-forward
 "\C-n": menu-complete
 
+$if Python
+"\M-i": "    "
+"\M-u": "\d\d\d\d"
+$endif
+
 

@@ -1,0 +1,11 @@
+# ~/.tmuxinator/jl.yml
+
+name: jl
+root: <%= @args[0] %>
+attach: false
+
+windows:
+  - jupyter-lab:
+      layout: main-vertical
+      panes:
+        - jupyter-lab

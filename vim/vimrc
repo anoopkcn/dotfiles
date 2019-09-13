@@ -15,10 +15,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-repeat'
   Plug 'airblade/vim-gitgutter'
-  Plug 'Valloric/YouCompleteMe'
-  Plug 'scrooloose/nerdtree'
   Plug 'NLKNguyen/papercolor-theme'
-  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 " :
 if s:darwin

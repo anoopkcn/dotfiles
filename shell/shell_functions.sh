@@ -171,7 +171,7 @@ elif [[ "$#" -eq 1 ]]; then
     curr_path=`pwd`
     if [ "$curr_path" != "$HOME" ]; then
     path=`echo $curr_path | cut -d '/' -f 4-`
-    rsync -arzv --prune-empty-dirs --exclude-from="$HOME/Dropbox/Dotfiles/bash/rsync_exclude.txt" -e ssh $1:~/${path}/. ${curr_path}/.
+    rsync -arzv --prune-empty-dirs --exclude-from="$HOME/dotfiles/shell/rsync_exclude.txt" -e ssh $1:~/${path}/. ${curr_path}/.
     else
       echo "Warning:Global sync on Home folder is not allowed"
     fi
@@ -231,10 +231,6 @@ function lsync(){
             return
         fi
     fi
-}
-
-worksync(){
-  usync $1 /Users/chand/workbench/. /Users/chand/workbench/.
 }
 
 ## Command Line Interface Papers Manager (CLIP-Manager)
