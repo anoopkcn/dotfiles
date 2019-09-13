@@ -36,8 +36,8 @@ source ${settings}/tmux_functions.sh
 source ${settings}/git_functions.sh
 if ! [ $ZSH_VERSION ]; then
   source ${settings}/lazy_theme.sh
-  source ${settings}/completions.sh
 fi
+source ${settings}/completions.sh
 
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
