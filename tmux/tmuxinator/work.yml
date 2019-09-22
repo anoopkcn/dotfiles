@@ -1,6 +1,6 @@
-# ~/.tmuxinator/devel.yml
-name: devel
-root: ~/workbench/devel #<%= @args[0] %>
+# ~/.tmuxinator/work.yml
+name: work
+root: ~/workbench/work #<%= @args[0] %>
 
 windows:
   - code:

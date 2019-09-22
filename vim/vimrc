@@ -277,23 +277,6 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 "
-" NERDTree
-map <c-n> :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let g:NERDTreeWinPos = "right"
-"
-" YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_python_interpreter_path = '~/pyenvs/anaconda3/bin/python'
-let g:ycm_python_sys_path = ['~/pyenvs/anaconda3/lib/python3.7/site-packages']
-let g:ycm_extra_conf_vim_data = [
-  \  'g:ycm_python_interpreter_path',
-  \  'g:ycm_python_sys_path'
-  \]
-let g:ycm_global_ycm_extra_conf = '~/dotfiles/vim/global_extra_conf.py'
 " Additional functions
 nmap <leader>sp :call <SID>SynStack()<CR>
 function! <SID>SynStack()

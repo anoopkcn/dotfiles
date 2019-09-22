@@ -34,6 +34,7 @@ source ${settings}/alias.sh
 source ${settings}/shell_functions.sh
 source ${settings}/tmux_functions.sh
 source ${settings}/git_functions.sh
+source ${settings}/fzf_functions.sh
 if ! [ $ZSH_VERSION ]; then
   source ${settings}/lazy_theme.sh
 fi
