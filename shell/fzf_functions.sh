@@ -1,6 +1,6 @@
 #!/bin/bash
 # Interactive cd
-function icd() {
+function fzfCd() {
     if [[ "$#" != 0 ]]; then
         builtin cd "$@";
         return
@@ -24,7 +24,8 @@ function icd() {
 function __gi() {
   curl -L -s https://www.gitignore.io/api/"$@"
 }
-function gitig(){
+
+function fzfGitIgnore(){
 	if  [ "$#" -eq 0 ]; then
 		IFS+=","
 		for item in $(__gi list); do
@@ -36,7 +37,7 @@ function gitig(){
 	fi
 }
 #
-gitbr() {
+function fzfGitBranch() {
 # checkout git branch
   is_in_git_repo || return
   local branches branch
@@ -47,7 +48,7 @@ gitbr() {
 }
 
 # checkout git commit with previews
-gitco() {
+function fzfGitCommit() {
   is_in_git_repo || return
 	alias glNoGraph='git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr% C(auto)%an" "$@"'
 	_gitLogLineToHash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
@@ -63,7 +64,7 @@ gitco() {
 # enter shows you the contents of the stash
 # ctrl-d shows a diff of the stash against your current HEAD
 # ctrl-b checks the stash out as a branch, for easier merging
-gitstash() {
+function fzfGitStash() {
   is_in_git_repo || return
   local out q k sha
   while out=$(
@@ -94,7 +95,7 @@ gitstash() {
 # `tm` will allow you to select your tmux session via fzf.
 # `tm irc` will attach to the irc session (if it exists), else it will create it.
 
-tm() {
+function tm() {
   [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
   if [ $1 ]; then
     tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
