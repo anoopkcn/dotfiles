@@ -35,8 +35,10 @@ source ${settings}/shell_functions.sh
 source ${settings}/tmux_functions.sh
 source ${settings}/git_functions.sh
 source ${settings}/fzf_functions.sh
+source ${settings}/prompt.sh
+
 if ! [ $ZSH_VERSION ]; then
-  source ${settings}/lazy_theme.sh
+ #  source ${settings}/lazy_theme.sh
 fi
 source ${settings}/completions.sh
 
@@ -57,8 +59,9 @@ if ! [ $ZSH_VERSION ]; then
 fi
 
 
-export GOPATH=$HOME/.go
-export PATH=$PATH:$HOME/.go/bin
+export GOPATH=$HOME/workbench/devel/go
+export PATH=$PATH:$HOME/workbench/devel/go/bin
+export GOWORK=${HOME}/workbench/devel/go/src/github.com/anoopkcn
 
 export WORKON_HOME=$HOME/pyenvs
 VIRTUALENVWRAPPER_PYTHON=$HOME/pyenvs/anaconda3/bin/python

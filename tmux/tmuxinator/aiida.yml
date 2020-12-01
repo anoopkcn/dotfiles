@@ -10,3 +10,4 @@ windows:
   - bash:
       layout: main-vertical
       panes:
+        - workon aiida

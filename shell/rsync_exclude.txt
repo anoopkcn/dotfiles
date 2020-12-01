@@ -11,7 +11,7 @@
 *.hdf5
 *.wfc*
 *.pdf
-*.git
+#*.git
 *.html
 *.htm
 .tags*

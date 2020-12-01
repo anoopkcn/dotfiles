@@ -25,7 +25,7 @@ function __gi() {
   curl -L -s https://www.gitignore.io/api/"$@"
 }
 
-function fzfGitIgnore(){
+function GitIgnore(){
 	if  [ "$#" -eq 0 ]; then
 		IFS+=","
 		for item in $(__gi list); do
@@ -37,7 +37,7 @@ function fzfGitIgnore(){
 	fi
 }
 #
-function fzfGitBranch() {
+function GitBranch() {
 # checkout git branch
   is_in_git_repo || return
   local branches branch
@@ -48,7 +48,7 @@ function fzfGitBranch() {
 }
 
 # checkout git commit with previews
-function fzfGitCommit() {
+function GitCommit() {
   is_in_git_repo || return
 	alias glNoGraph='git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr% C(auto)%an" "$@"'
 	_gitLogLineToHash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
@@ -64,7 +64,7 @@ function fzfGitCommit() {
 # enter shows you the contents of the stash
 # ctrl-d shows a diff of the stash against your current HEAD
 # ctrl-b checks the stash out as a branch, for easier merging
-function fzfGitStash() {
+function GitStash() {
   is_in_git_repo || return
   local out q k sha
   while out=$(

@@ -69,11 +69,11 @@ fi
 }
 
 tls(){
-  location=${HOME}/Dropbox/dotfiles/tmux/tmuxinator
+  # location=${HOME}/dotfiles/tmux/tmuxinator
   if [ $# -eq 1 ] ; then
     case $1 in 
       -a)
-        for f in ${location}/*.yml; do
+        for f in ${HOME}/dotfiles/tmux/tmuxinator/*.yml; do
           filename=$(basename "$f")
           filename="${filename%.*}"
           printf "%s\n" "${filename}"

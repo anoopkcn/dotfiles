@@ -383,3 +383,7 @@ workon ()
     VIRTUALENVWRAPPER_PROJECT_CD=$cd_after_activate virtualenvwrapper_run_hook "post_activate";
     return 0
 }
+
+function diff(){
+    subl --command 'sbs_compare_files {"A":"$1", "B":"$2"}'
+}
