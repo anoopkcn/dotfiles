@@ -1,10 +1,10 @@
 # ZSHRC file
 source ${HOME}/dotfiles/shell/shellrc
 
-
 export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
 export LC_ALL=en_GB.UTF-8
+
 #package manager
 export PATH="${HOME}/.homebrew/bin:\
 ${HOME}/.homebrew/bin:\
@@ -24,13 +24,14 @@ export CPPFLAGS="-I${HOME}/.homebrew/opt/openssl/include"
 export PKG_CONFIG_PATH="${HOME}/.homebrew/opt/openssl/lib/pkgconfig"
 export LDFLAGS="-L${HOME}/.homebrew/opt/openblas/lib"
 export CPPFLAGS="-I${HOME}/.homebrew/opt/openblas/include"
-#ruby settings
 
+#ruby settings
 export LDFLAGS="-L${HOME}/.homebrew/opt/ruby/lib"
 export CPPFLAGS="-I${HOME}/.homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="${HOME}/.homebrew/opt/ruby/lib/pkgconfig"
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
+
 # Finished adapting your PATH environment variable for use with MacPorts.
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${HOME}/.homebrew/Cellar/hdf5/1.10.5_1/lib/lib
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${HOME}/.homebrew/Cellar/hdf5/1.10.5_1/lib/lib
@@ -41,12 +42,11 @@ export FZF_DEFAULT_OPTS="
   --preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'
   --color bg+:0
   "
-# export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
-export FZF_DEFAULT_COMMAND='ag --ignore .git --ignore *.pyc -g ""'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+# export FZF_DEFAULT_COMMAND='ag --ignore .git --ignore *.pyc -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_R_OPTS='--sort --exact'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
-
 
 # Variables
 NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
