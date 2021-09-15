@@ -1,13 +1,10 @@
 # ~/.tmuxinator/aiida.yml
 name: aiida
 root: <%= @args[0] %>
+pre_window: workon aiida
 
 windows:
   - aiida:
       layout: main-vertical
-      panes:
-        - workon aiida
   - bash:
       layout: main-vertical
-      panes:
-        - workon aiida

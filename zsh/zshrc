@@ -1,5 +1,5 @@
 # ZSHRC file
-source ${HOME}/dotfiles/shell/shellrc
+source /Users/chand/dotfiles/shell/shellrc
 
 
 export MANPATH="/usr/local/man:$MANPATH"
@@ -13,7 +13,6 @@ ${HOME}/.homebrew/opt/openssl/bin:\
 ${HOME}/.homebrew/opt/ruby/bin:\
 ${HOME}/.homebrew/lib/ruby/gems/2.5.0/bin:\
 ${HOME}/.homebrew/opt/rabbitmq/sbin:\
-${HOME}/pyenvs/anaconda3/bin:\
 ${HOME}/.homebrew/sbin:\
 ${HOME}/.homebrew/Cellar/hdf5/1.10.5_1/bin:\
 $HOME/.node/bin:\

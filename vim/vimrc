@@ -5,7 +5,9 @@ scriptencoding utf-8
 set nocompatible
 unlet! skip_defaults_vim
 let s:darwin = has('mac')
+
 source ~/dotfiles/vim/fzf_functions.vim
+
 " source ~/dotfiles/vim/functions.vim
 call plug#begin('~/.vim/plugged')
   Plug 'junegunn/fzf.vim'
@@ -50,12 +52,10 @@ set background=dark
 set t_Co=256
 syntax on
 filetype plugin indent on
-"color schem
+
 if (has("nvim"))
-"For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-" < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
 colorscheme nord
 
 hi Error NONE
