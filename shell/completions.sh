@@ -1,8 +1,7 @@
 # BASH/ZSH completions for custom functions
 
 if ! [ $ZSH_VERSION ]; then
-    _sublp_completions()
-    {
+    _sublp_completions() {
         if [ "${#COMP_WORDS[@]}" != "2" ]; then
             return
         fi
@@ -12,7 +11,7 @@ if ! [ $ZSH_VERSION ]; then
 
     complete -F _sublp_completions sublp
 else
-    function _sublp_completions(){
+    function _sublp_completions() {
         project=$(ls *.sublime-project)
         compadd ${project%.*}
     }

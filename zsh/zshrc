@@ -4,10 +4,8 @@ ZSH_THEME="robbyrussell"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
-
 # General ShellRC file
 source ${HOME}/dotfiles/shell/shellrc
-
 
 export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
@@ -48,7 +46,7 @@ MANPATH="$HOME/.node/share/man:$MANPATH"
 EDITOR=nvim
 
 # Functions
-function usync(){
+function usync() {
     rsync -airzv --exclude-from="$HOME/dotfiles/shell/rsync_exclude.txt" $2 -e ssh $1:$3
 }
 bindkey '^[^M' self-insert-unmeta
@@ -57,7 +55,7 @@ arch_name="$(uname -m)"
 if [ "${arch_name}" = "arm64" ]; then
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
@@ -70,4 +68,3 @@ if [ "${arch_name}" = "arm64" ]; then
     unset __conda_setup
     # <<< conda initialize <<<
 fi
-
