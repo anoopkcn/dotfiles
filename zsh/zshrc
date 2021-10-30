@@ -1,16 +1,22 @@
 #OMZSH
 export ZSH="${HOME}/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
-plugins=(git)
+plugins=(
+    git
+    osx
+    python
+    zsh-syntax-highlighting
+    colored-man-pages
+)
 source $ZSH/oh-my-zsh.sh
 
 # General ShellRC file
 source ${HOME}/dotfiles/shell/shellrc
+export BREWPATH='/opt/homebrew'
 
 export MANPATH="/usr/local/man:$MANPATH"
 export LANG=en_US.UTF-8
 export LC_ALL=en_GB.UTF-8
-export BREWPATH='/opt/homebrew'
 #package manager
 export PATH="${BREWPATH}/bin:\
 ${BREWPATH}/bin:\

@@ -1,9 +1,0 @@
-# ~/.tmuxinator/web.yml
-
-name: web
-root: ~/Dropbox/work
-
-windows:
-  - bash:
-      layout: main-vertical
-      panes:
