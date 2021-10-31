@@ -1,8 +1,0 @@
-# ~/.tmuxinator/term.yml
-name: term
-root: <%= @args[0] %>
-
-windows:
-  - term:
-      layout: main-vertical
-      panes:

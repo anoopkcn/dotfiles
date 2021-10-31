@@ -1,9 +1,0 @@
-# ~/.tmuxinator/workbench.yml
-
-name: workbench
-root: ~/Dropbox/workbench
-
-windows:
-  - bash:
-      layout: main-vertical
-      panes:

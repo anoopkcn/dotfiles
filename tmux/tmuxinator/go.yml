@@ -1,8 +1,0 @@
-# ~/.tmuxinator/go.yml
-name: go
-root: ~/.go/src/github.com/strivetobelazy/
-
-windows:
-  - bash:
-      layout: main-vertical
-      panes:

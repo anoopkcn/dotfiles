@@ -1,8 +1,0 @@
-# ~/.tmuxinator/pro.yml
-name: prod
-root: <%= @args[0] %>
-
-windows:
-  - bash:
-      layout: main-vertical
-      panes:

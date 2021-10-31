@@ -34,13 +34,13 @@ source ${settings}/alias.sh
 source ${settings}/shell_functions.sh
 source ${settings}/tmux_functions.sh
 source ${settings}/git_functions.sh
-source ${settings}/fzf_functions.sh
+# source ${settings}/fzf_functions.sh
 #source ${settings}/prompt.sh
+# source ${settings}/completions.sh
 
 if ! [ $ZSH_VERSION ]; then
  #  source ${settings}/lazy_theme.sh
 fi
-source ${settings}/completions.sh
 
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
@@ -59,11 +59,11 @@ if ! [ $ZSH_VERSION ]; then
 fi
 
 
-export GOPATH=$HOME/workbench/devel/go
-export PATH=$PATH:$HOME/workbench/devel/go/bin
-export GOWORK=${HOME}/workbench/devel/go/src/github.com/anoopkcn
+# export GOPATH=$HOME/workbench/devel/go
+# export PATH=$PATH:$HOME/workbench/devel/go/bin
+# export GOWORK=${HOME}/workbench/devel/go/src/github.com/anoopkcn
 
 #set rhe bellow line in the shell entry
-export WORKON_HOME=$HOME/pyenvs
-VIRTUALENVWRAPPER_PYTHON=/Users/chand/.homebrew/bin/python3
-source ${HOME}/dotfiles/shell/virtualenvwrapper.sh
+# export WORKON_HOME=$HOME/pyenvs
+# VIRTUALENVWRAPPER_PYTHON=/Users/chand/.homebrew/bin/python3
+# source ${HOME}/dotfiles/shell/virtualenvwrapper.sh

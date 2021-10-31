@@ -6,10 +6,10 @@ set nocompatible
 unlet! skip_defaults_vim
 let s:darwin = has('mac')
 
-source ~/dotfiles/vim/fzf_functions.vim
+"source ~/dotfiles/vim/fzf_functions.vim
 
 " source ~/dotfiles/vim/functions.vim
-call plug#begin('~/.vim/plugged')
+call plug#begin() "'~/.vim/plugged'
   Plug 'junegunn/fzf.vim'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-fugitive'
@@ -20,13 +20,13 @@ call plug#begin('~/.vim/plugged')
   Plug 'arcticicestudio/nord-vim'
 call plug#end()
 " :
-if s:darwin
-  let g:open_app = 'open'
-  set rtp+=/Users/chand/.homebrew/opt/fzf
-else
-  let g:open_app ='firefox'
-  set rtp+=/Users/chand/.linuxbrew/opt/fzf
-endif
+"if s:darwin
+"  let g:open_app = 'open'
+"  set rtp+=/Users/chand/.homebrew/opt/fzf
+"else
+"  let g:open_app ='firefox'
+"  set rtp+=/Users/chand/.linuxbrew/opt/fzf
+"endif
 "
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')

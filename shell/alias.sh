@@ -8,6 +8,7 @@ alias tsend='tmux send -t'
 alias ts='tmuxinator start'
 
 #other
+alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias js="bundle exec jekyll serve"
 

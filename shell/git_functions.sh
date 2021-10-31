@@ -2,7 +2,7 @@
 #git enabled PS1 is in the file ./lazy_theme.bash
 # return 0 if git repo
 is_in_git_repo() {
-  git rev-parse HEAD > /dev/null 2>&1
+  git rev-parse HEAD >/dev/null 2>&1
 }
 
 # Git DIR functions
@@ -14,28 +14,28 @@ gittgz() {
   git archive -o $(basename $PWD).tgz HEAD
 }
 # take this repo and copy it to somewhere else minus the .git stuff.
-gitexport(){
+gitexport() {
   mkdir -p "$1"
   git archive master | tar -x -C "$1"
 }
 
 # REPO functions
 #----------------
-gitlog(){
+gitlog() {
   is_in_git_repo || return
   if [ $# -eq 0 ]; then
-      git log --oneline --decorate --all --graph
+    git log --oneline --decorate --all --graph
   elif [ $1 = "-b" ]; then
-      git log --oneline
+    git log --oneline
   else
-      git log --oneline --decorate --max-count=$1 --all --graph
+    git log --oneline --decorate --max-count=$1 --all --graph
   fi
 }
-gitb(){
+gitb() {
   is_in_git_repo || return
   git branch -a
 }
-gitr(){
+gitr() {
   is_in_git_repo || return
   git remote -v
 }
@@ -62,8 +62,8 @@ gitls() {
   gray_dark="\e[90m"
   # Get the current git branch name (if available)
   #local ref
-  ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
-  ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
+  ref=$(command git symbolic-ref HEAD 2>/dev/null) ||
+    ref=$(command git rev-parse --short HEAD 2>/dev/null) || return 0
   # IFS='\n';
   git_status=$(git status -s 2>/dev/null | cut -c1-2) # NOTE: ${git_status:0:2} cant be used since multi lined
   if [[ -z "$git_status" ]]; then
