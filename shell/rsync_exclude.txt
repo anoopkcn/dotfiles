@@ -1,5 +1,3 @@
-.git
-.gitignore
 *.save*
 *.x
 *.exe
@@ -10,11 +8,8 @@
 *.h5
 *.hdf5
 *.wfc*
-*.pdf
-#*.git
 *.html
 *.htm
 .tags*
 tags
-.git/*
 node_modules/*
