@@ -9,6 +9,8 @@ alias ts='tmuxinator start'
 
 #other
 alias vim='nvim'
+alias workon='conda activate'
+alias workoff='conda deactivate'
 alias duh="du -h -d 0 [^.]*"
 alias js="bundle exec jekyll serve"
 
