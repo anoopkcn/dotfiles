@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 # system information
 unameOut="$(uname -s)"
 case "${unameOut}" in
@@ -9,24 +9,6 @@ CYGWIN*) MACHINE=Cygwin ;;
 MINGW*) MACHINE=MinGw ;;
 *) MACHINE="UNKNOWN:${unameOut}" ;;
 esac
-#
-# function os-template(){
-#   if [[ "$OSTYPE" == "linux-gnu" ]]; then
-#           # ...
-#   elif [[ "$OSTYPE" == "darwin"* ]]; then
-#           # Mac OSX
-#   elif [[ "$OSTYPE" == "cygwin" ]]; then
-#           # POSIX compatibility layer and Linux environment emulation for Windows
-#   elif [[ "$OSTYPE" == "msys" ]]; then
-#           # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
-#   elif [[ "$OSTYPE" == "win32" ]]; then
-#           # I'm not sure this can happen.
-# elif [[ "$OSTYPE" == "freebsd"* ]]; then
-#         # ...
-# else
-# Unknown.
-# fi
-# }
 
 function system() {
     echo "Hello, $USER"
@@ -63,40 +45,9 @@ dark() {
     echo -n -e "\033]50;SetProfile=dark\a"
 }
 
-# Perform 'ls' after successful 'cd'
-
-function hist() {
-    history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
-}
-
-# find shorthand
-function f() {
-    find . -name "$1"
-}
-
-# get gzipped size
-function gz() {
-    echo "orig size    (bytes): "
-    cat "$1" | wc -c
-    echo "gzipped size (bytes): "
-    gzip -c "$1" | wc -c
-}
-
 # All the dig info
 function digga() {
     dig +nocmd "$1" any +multiline +noall +answer
-}
-
-# Escape UTF-8 characters into their 3-byte format
-function escape() {
-    printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
-    echo # newline
-}
-
-# Decode \x{ABCD}-style Unicode escape sequences
-function unidecode() {
-    perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
-    echo # newline
 }
 
 # Extract archives - use: extract <file>
@@ -187,25 +138,6 @@ function usync() {
     fi
 }
 
-function lsync() {
-    source_path=$(pwd)             #make this more universal:TODO
-    source_folder=${curr_path##*/} # current folder
-    target_folder=$(echo $2 | awk -F"/" '{print $(NF)}')
-    target_folder=${target_folder//./} # Make it empty if '.' is the target_folder
-    if [ -z "$target_folder" ]; then
-        target_folder=$(echo $2 | awk -F"/" '{print $(NF-1)}')
-    fi
-    if [ "$source_folder" != "$target_folder" ]; then
-        echo "Target file/folder is DIFFERENT(or an alias) then PWD. You want to continue?\nPress Enter or type [yes|y] to continue."
-        read accept
-        if [[ "$accept" == "yes" || "$accept" == "y" || "$accept" == "" ]]; then
-            rsync -avzh $1 $2
-        else
-            return
-        fi
-    fi
-}
-
 ## Command Line Interface Papers Manager (CLIP-Manager)
 doitobib() {
     BIB_FILE=""
@@ -262,6 +194,194 @@ doitobib() {
     fi
 }
 
-function diff() {
-    subl --command 'sbs_compare_files {"A":"$1", "B":"$2"}'
+## GIT functions ##
+# return 0 if git repo
+is_in_git_repo() {
+  git rev-parse HEAD >/dev/null 2>&1
+}
+
+# Git DIR functions
+#-------------------
+gitzip() {
+  git archive -o $(basename $PWD).zip HEAD
+}
+gittgz() {
+  git archive -o $(basename $PWD).tgz HEAD
+}
+# take this repo and copy it to somewhere else minus the .git stuff.
+gitexport() {
+  mkdir -p "$1"
+  git archive master | tar -x -C "$1"
+}
+
+# REPO functions
+#----------------
+gitlog() {
+  is_in_git_repo || return
+  if [ $# -eq 0 ]; then
+    git log --oneline --decorate --all --graph
+  elif [ $1 = "-b" ]; then
+    git log --oneline
+  else
+    git log --oneline --decorate --max-count=$1 --all --graph
+  fi
+}
+gitb() {
+  is_in_git_repo || return
+  git branch -a
+}
+gitr() {
+  is_in_git_repo || return
+  git remote -v
+}
+
+#chech how ahead or behind the upstream
+# gitab() {
+#   is_in_git_repo || return
+#   curr_branch=$(git rev-parse --abbrev-ref HEAD);
+#   curr_remote=$(git config branch.$curr_branch.remote);
+#   curr_merge_branch=$(git config branch.$curr_branch.merge | cut -d / -f 3);
+#   git rev-list --left-right --count $curr_branch...$curr_remote/$curr_merge_branch | tr -s '\t' '|';
+# }
+
+# git lazy statys
+gitls() {
+  is_in_git_repo || return
+  bold="\e[1m"
+  regular="\e[21m"
+  normal="\e[39m"
+  cyan="\e[36m"
+  yellow="\e[33m"
+  green="\e[32m"
+  gray_light="\e[37m"
+  gray_dark="\e[90m"
+  # Get the current git branch name (if available)
+  #local ref
+  ref=$(command git symbolic-ref HEAD 2>/dev/null) ||
+    ref=$(command git rev-parse --short HEAD 2>/dev/null) || return 0
+  # IFS='\n';
+  git_status=$(git status -s 2>/dev/null | cut -c1-2) # NOTE: ${git_status:0:2} cant be used since multi lined
+  if [[ -z "$git_status" ]]; then
+    printf "${gray_light}${ref#refs/heads/}${normal} ${green}✓${normal}"
+  else
+    git_staged=$(echo ${git_status} | grep -c "^[M|A|D|R|C]")
+    [[ $git_staged = 0 ]] && git_staged="" || git_staged=" ${yellow}${git_staged}${yellow}ᴹ${normal}"
+    git_modified=$(echo ${git_status} | grep -c "^[M|A|D|R|C|[:space:]][M|A|R|C]")
+    [[ $git_modified = 0 ]] && git_modified="" || git_modified=" ${green}${git_modified}${green}ᴹ${normal}"
+    git_deleted=$(echo ${git_status} | grep -c "^[[:space:]]D")
+    [[ $git_deleted = 0 ]] && git_deleted="" || git_deleted=" ${red}${git_deleted}${red}ᴰ${normal}"
+    git_untracked=$(echo ${git_status} | grep -c "??")
+    [[ $git_untracked = 0 ]] && git_untracked="" || git_untracked=" ${cyan}${git_untracked}${cyan}ˀ${normal}"
+    printf "${gray_light}${ref#refs/heads/}${normal}${git_staged}${git_modified}${git_deleted}${git_untracked}"
+  fi
+}
+
+
+## TMUX functions ##
+
+#!/usr/bin/env bash
+# tmux related functions
+# for updating envirnment variable
+
+function _tmux() {
+  local tmux=$(type -fp tmux)
+  case "$1" in
+  update-environment | update-env | env-update)
+    local v
+    while read v; do
+      if [[ $v == -* ]]; then
+        unset ${v/#-/}
+      else
+        # Add quotes around the argument
+        v=${v/=/=\"}
+        v=${v/%/\"}
+        eval export $v
+      fi
+    done < <(tmux show-environment)
+    ;;
+  *)
+    $tmux "$@"
+    ;;
+  esac
+}
+
+tmux_env_update() {
+  #Updating to latest tmux environment
+  export IFS=","
+  for line in $(tmux showenv -t $(tmux display -p "#S") | tr "\n" ","); do
+    if [[ $line == -* ]]; then
+      unset $(echo $line | cut -c2-)
+    else
+      export $line
+    fi
+  done
+  unset IFS
+}
+
+function tm() {
+  # abort if we're already inside a TMUX session
+  if ([ "$TMUX" == "" ]); then
+    # startup a "default" session if non currently exists
+    # tmux has-session -t _default || tmux new-session -s _default -d
+
+    # present menu for user to choose which workspace to open
+    PS3="Please choose your session: "
+    options=($(tmux list-sessions -F "#S" 2>/dev/null) "New Session" "quit")
+    echo "Available sessions"
+    select opt in "${options[@]}"; do
+      case $opt in
+      "New Session")
+        read -p "Enter new session name: " SESSION_NAME
+        tmux new -s "$SESSION_NAME"
+        break
+        ;;
+      "quit")
+        break
+        ;;
+      *)
+        tmux attach-session -t $opt
+        break
+        ;;
+      esac
+    done
+  fi
+}
+
+tls() {
+  # location=${HOME}/dotfiles/tmux/tmuxinator
+  if [ $# -eq 1 ]; then
+    case $1 in
+    -a)
+      for f in ${HOME}/dotfiles/tmux/tmuxinator/*.yml; do
+        filename=$(basename "$f")
+        filename="${filename%.*}"
+        printf "%s\n" "${filename}"
+      done
+      ;;
+    esac
+  else
+    t_sessions=($(tmux ls | cut -d : -f 1))
+    for i in "${t_sessions[@]}"; do
+      printf "\e[96m${i}\e[0m\n"
+      (tmux lsw -t ${i} | awk '{print $1,$2}')
+    done
+  fi
+}
+
+tkill() {
+  if [ $# -eq 1 ]; then
+    case $1 in
+    -a)
+      t_sessions=($(tmux ls | cut -d : -f 1))
+      for i in "${t_sessions[@]}"; do
+        tmux kill-session -t $i
+      done
+      ;;
+    *)
+      tmux kill-session -t $1
+      ;;
+    esac
+  else
+    echo "Provide a TMUX session to kill"
+  fi
 }

@@ -29,18 +29,8 @@ else
   [ -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh ] && . /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
 fi
 # Folder for all the bash settings and functions
-settings=$HOME/dotfiles/shell
-source ${settings}/alias.sh
-source ${settings}/shell_functions.sh
-source ${settings}/tmux_functions.sh
-source ${settings}/git_functions.sh
-# source ${settings}/fzf_functions.sh
-#source ${settings}/prompt.sh
-# source ${settings}/completions.sh
-
-if ! [ $ZSH_VERSION ]; then
- #  source ${settings}/lazy_theme.sh
-fi
+source $HOME/dotfiles/shell/alias.sh
+source $HOME/dotfiles/shell/functions.sh
 
 #export COLORTERM=truecolor
 export GREP_OPTIONS='--color=auto'
@@ -57,13 +47,3 @@ if ! [ $ZSH_VERSION ]; then
   bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
   bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
 fi
-
-
-# export GOPATH=$HOME/workbench/devel/go
-# export PATH=$PATH:$HOME/workbench/devel/go/bin
-# export GOWORK=${HOME}/workbench/devel/go/src/github.com/anoopkcn
-
-#set rhe bellow line in the shell entry
-# export WORKON_HOME=$HOME/pyenvs
-# VIRTUALENVWRAPPER_PYTHON=/Users/chand/.homebrew/bin/python3
-# source ${HOME}/dotfiles/shell/virtualenvwrapper.sh
