@@ -36,20 +36,6 @@ function colours() {
     done
 }
 
-light() {
-    export VIMBG=light
-    echo -n -e "\033]50;SetProfile=light\a"
-}
-dark() {
-    export VIMBG=dark
-    echo -n -e "\033]50;SetProfile=dark\a"
-}
-
-# All the dig info
-function digga() {
-    dig +nocmd "$1" any +multiline +noall +answer
-}
-
 # Extract archives - use: extract <file>
 function extract() {
     if [ -f $1 ]; then
@@ -87,7 +73,6 @@ function killport() {
     lsof -ti:$1 | xargs kill -9
 }
 
-#====== Remote sync app =======
 function dsync() {
     if [[ $# -eq 0 || "$#" -eq 2 || "$#" -gt 3 ]]; then
         echo "Specify a server [server | server <source> <destination>]"
