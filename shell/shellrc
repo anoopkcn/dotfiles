@@ -5,6 +5,9 @@ fi
 # Folder for all the bash settings and functions
 source $HOME/dotfiles/shell/alias.sh
 source $HOME/dotfiles/shell/functions.sh
+source $HOME/dotfiles/shell/doitobib.sh
+source $HOME/dotfiles/shell/sync.sh
+source $HOME/dotfiles/shell/tmux.sh
 
 export GREP_OPTIONS='--color=auto'
 # General settings
