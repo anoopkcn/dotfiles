@@ -13,7 +13,7 @@
 # }
 
 # Version 0.2.0
-function doitobib(){
+function doitobib() {
     BIB_FILE=""
     BIB_INFO=""
     BIB_API="http://api.crossref.org/works/"

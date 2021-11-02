@@ -39,28 +39,28 @@ function killport() {
 }
 
 ## GIT functions ##
-is_in_git_repo() {
-  git rev-parse HEAD >/dev/null 2>&1
+function is_in_git_repo() {
+    git rev-parse HEAD >/dev/null 2>&1
 }
 
-gitzip() {
-  git archive -o $(basename $PWD).zip HEAD
+function gitzip() {
+    git archive -o $(basename $PWD).zip HEAD
 }
-gittgz() {
-  git archive -o $(basename $PWD).tgz HEAD
+function gittgz() {
+    git archive -o $(basename $PWD).tgz HEAD
 }
-gitexport() {
-  mkdir -p "$1"
-  git archive master | tar -x -C "$1"
+function gitexport() {
+    mkdir -p "$1"
+    git archive master | tar -x -C "$1"
 }
 
-gitlog() {
-  is_in_git_repo || return
-  if [ $# -eq 0 ]; then
-    git log --oneline --decorate --all --graph
-  elif [ $1 = "-b" ]; then
-    git log --oneline
-  else
-    git log --oneline --decorate --max-count=$1 --all --graph
-  fi
+function gitlog() {
+    is_in_git_repo || return
+    if [ $# -eq 0 ]; then
+        git log --oneline --decorate --all --graph
+    elif [ $1 = "-b" ]; then
+        git log --oneline
+    else
+        git log --oneline --decorate --max-count=$1 --all --graph
+    fi
 }

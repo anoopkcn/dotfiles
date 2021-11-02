@@ -1,6 +1,6 @@
 # /etc/skel/.bashrc
-if [[ $- != *i* ]] ; then
-    return
+if [[ $- != *i* ]]; then
+  return
 fi
 # Folder for all the bash settings and functions
 source $HOME/dotfiles/shell/alias.sh
