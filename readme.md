@@ -3,9 +3,13 @@
 Repository contains essential `config` and `rc` files for  terminal driven applications.
 
 ### Description
-Installation file for bash, vim, tmux, etc..
-(Optional)install Ag using `brew install the_silver_searcher`
-(Optional)install oh-my-zsh
+ Installation file for bash, vim, tmux, etc..
+ (optional)install Ag using `brew install the_silver_searcher`
+ (optional)install oh-my-zsh
+ (optional) starship `brew install starship`
+ ... if conda python prompt is activated disable it with `conda config --set changeps1 False`
+ ... otherwise the python env will be shown twice upon activating one 
+ tmux is configured using reattach-usernamespace (install using brew)
  <!-- tmux is configured using reattach-usernamespace (install using brew) -->
 
 ### Installation 
