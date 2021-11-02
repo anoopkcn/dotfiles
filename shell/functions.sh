@@ -39,7 +39,7 @@ function killport() {
 }
 
 ## GIT functions ##
-function is_in_git_repo() {
+function _is_in_git_repo() {
     git rev-parse HEAD >/dev/null 2>&1
 }
 
@@ -55,7 +55,7 @@ function gitexport() {
 }
 
 function gitlog() {
-    is_in_git_repo || return
+    _is_in_git_repo || return
     if [ $# -eq 0 ]; then
         git log --oneline --decorate --all --graph
     elif [ $1 = "-b" ]; then
