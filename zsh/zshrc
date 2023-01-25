@@ -3,42 +3,21 @@ export ZSH="${HOME}/.oh-my-zsh"
 #ZSH_THEME="robbyrussell"
 plugins=(
     git
-    osx
+    macos
     python
     zsh-syntax-highlighting
     colored-man-pages
+    web-search
+    copypath
 )
 source $ZSH/oh-my-zsh.sh
 eval "$(starship init zsh)"
 
 # General shellrc file
 source ${HOME}/dotfiles/shell/shellrc
-export BREWPATH='/opt/homebrew'
-export PATH="${BREWPATH}/bin:$PATH"
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_GB.UTF-8
-#package manager
-# export PATH="${BREWPATH}/bin:${BREWPATH}/opt/openssl/bin:\
-# ${BREWPATH}/opt/ruby/bin:${BREWPATH}/lib/ruby/gems/2.5.0/bin:\
-# ${BREWPATH}/opt/rabbitmq/sbin:${BREWPATH}/sbin:\
-# ${BREWPATH}/Cellar/hdf5/1.10.5_1/bin:$HOME/.node/bin:/opt/local/bin:/opt/local/sbin:$PATH"
-
-# export LDFLAGS="-L${BREWPATH}/opt/openssl/lib"
-# export CPPFLAGS="-I${BREWPATH}/opt/openssl/include"
-# export PKG_CONFIG_PATH="${BREWPATH}/opt/openssl/lib/pkgconfig"
-# export LDFLAGS="-L${BREWPATH}/opt/openblas/lib"
-# export CPPFLAGS="-I${BREWPATH}/opt/openblas/include"
-#ruby settings
-
-# export LDFLAGS="-L${BREWPATH}/opt/ruby/lib"
-# export CPPFLAGS="-I${BREWPATH}/opt/ruby/include"
-# export PKG_CONFIG_PATH="${BREWPATH}/opt/ruby/lib/pkgconfig"
-# export CLICOLOR=1
-# export LSCOLORS=ExFxBxDxCxegedabagacad
-# Finished adapting your PATH environment variable for use with MacPorts.
-# export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BREWPATH}/Cellar/hdf5/1.10.5_1/lib/lib
-# export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${BREWPATH}/Cellar/hdf5/1.10.5_1/lib/lib
 
 # Variables
 bindkey '^[^M' self-insert-unmeta
@@ -46,17 +25,39 @@ NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
 MANPATH="/usr/local/man:$HOME/.node/share/man:$MANPATH"
 EDITOR=nvim
 
+alias blender="/Applications/Blender.app/Contents/MacOS/Blender"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+ --color=fg:#64748b,bg:#f6f8fa,hl:#0e7490
+ --color=fg+:#1e293b,bg+:#f6f8fa,hl+:#be185d
+ --color=info:#be185d,prompt:#d7005f,pointer:#be185d
+ --color=marker:#16a34a,spinner:#be185d,header:#87afaf'
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+__conda_setup="$('/Users/anoop/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+    if [ -f "/Users/anoop/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/anoop/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+        export PATH="/Users/anoop/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+function aiida_start(){
+    conda activate aiida && brew services start postgresql && brew services start rabbitmq && verdi daemon start
+}
+
+
+function aiida_stop()
+{
+    verdi daemon stop && brew services stop postgresql && brew services stop rabbitmq && conda deactivate
+}
+
+export PATH="/Library/TeX/texbin/:$PATH"

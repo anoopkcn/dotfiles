@@ -6,9 +6,9 @@ set nocompatible
 unlet! skip_defaults_vim
 let s:darwin = has('mac')
 
-"source ~/dotfiles/vim/fzf_functions.vim
+source ~/dotfiles/vim/fzf_functions.vim
 
-" source ~/dotfiles/vim/functions.vim
+source ~/dotfiles/vim/functions.vim
 call plug#begin() "'~/.vim/plugged'
   Plug 'junegunn/fzf.vim'
   Plug 'tpope/vim-surround'
@@ -16,8 +16,7 @@ call plug#begin() "'~/.vim/plugged'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-repeat'
-  Plug 'airblade/vim-gitgutter'
-  Plug 'arcticicestudio/nord-vim'
+  Plug 'https://github.com/github/copilot.vim.git'
 call plug#end()
 " :
 "if s:darwin
@@ -48,15 +47,15 @@ if has("persistent_undo")
 endif
 
 "" Color Settings (compatable to gruvbox)
-set background=dark
 set t_Co=256
+"set background=light
+"colorscheme solarized
 syntax on
 filetype plugin indent on
 
 if (has("nvim"))
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
-colorscheme nord
 
 hi Error NONE
 hi ErrorMsg NONE
@@ -284,3 +283,4 @@ augroup resCur
 augroup END
 
 set laststatus=0
+let g:copilot_node_command = '/usr/local/n/versions/node/17.0.0/bin/node'

@@ -1,0 +1,121 @@
+[
+	{
+		"name": "alfred-vscode",
+		"rootPath": "/opt/homebrew/lib/node_modules/alfred-vscode",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "defect_tolerance",
+		"rootPath": "/Users/anoop/workbench/work/defect_tolerance",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "iffaiida",
+		"rootPath": "vscode-remote://ssh-remote+iffaiida/home/chand/Home/JupyterHub",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "dotfiles",
+		"rootPath": "/Users/anoop/dotfiles",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "multiphonon",
+		"rootPath": "/Users/anoop/workbench/devel/multiphonon",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "defect_tolerance_paper",
+		"rootPath": "/Users/anoop/workbench/work/defect_tolerance/doc",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "latex_CV",
+		"rootPath": "/Users/anoop/workbench/devel/latex_CV",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "mplstyle",
+		"rootPath": "/Users/anoop/workbench/devel/mplstyle",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "aiida-spex",
+		"rootPath": "/Users/anoop/workbench/devel/aiida-spex",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "dissertation",
+		"rootPath": "/Users/anoop/workbench/work/Dissertation",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "pvims",
+		"rootPath": "/Users/anoop/workbench/devel/pvims",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "anoopkcn",
+		"rootPath": "/Users/anoop/workbench/devel/anoopkcn",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "cover_letter",
+		"rootPath": "/Users/anoop/workbench/work/Applications/cover_letter",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "pytorch_learning",
+		"rootPath": "/Users/anoop/workbench/work/pytorch_learning",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "nn_from_scratch",
+		"rootPath": "/Users/anoop/workbench/work/nn_from_scratch",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "notes",
+		"rootPath": "/Users/anoop/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	},
+	{
+		"name": "media-extended",
+		"rootPath": "/Users/anoop/workbench/devel/media-extended",
+		"paths": [],
+		"tags": [],
+		"enabled": true
+	}
+]

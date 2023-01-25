@@ -64,3 +64,23 @@ function gitlog() {
         git log --oneline --decorate --max-count=$1 --all --graph
     fi
 }
+
+function fetch_file(){
+    if [ $# -eq 0 ]; then
+        echo "Usage: fetch_file <owner/repo> [<file>]"
+        return 1
+    elif [ $# -eq 1 ]; then
+        file_url="$1"
+        file_arr=($(echo ${file_url//\//\ }))
+        owner=${file_arr[3]}
+        repo=${file_arr[4]}
+        _file=$(echo ${file_arr[@]:6})
+        file_name=$(echo ${_file//\ /\/})
+        # echo "$owner/$repo,  $file_name"
+        curl -H "Accept: application/vnd.github.raw" \
+        "https://api.github.com/repos/${owner}/${repo}/contents/${file_name}"
+    else
+        curl -H "Accept: application/vnd.github.raw" \
+        https://api.github.com/repos/$1/contents/$2
+    fi
+}

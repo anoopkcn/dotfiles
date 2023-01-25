@@ -18,6 +18,7 @@ Installation file for bash, vim, tmux, etc..
 > asuming dotfiles are cloned/downloaded to home folder
 ```sh
 # install.sh
+
 #ln -sf ~/dotfiles/bash/bashrc ~/.bashrc
 ln -sf ~/dotfiles/zsh/zshrc ~/.zshrc
 
@@ -28,3 +29,4 @@ ln -sf ~/dotfiles/tmux/tmuxinator ~/.tmuxinator
 ln -sf ~/dotfiles/vim ~/.config/nvim # for nvim
 # ln -sf ~/dotfiles/init.vim ~/.vimrc # For vim
 ```
+
