@@ -29,4 +29,3 @@ fi
 
 #Aiida
 # alias vl='verdi process list'
-# alias diff="eval subl --command \'sbs_compare_files {\"A\":\"$1\", \"B\":\"$2\"}\'"
