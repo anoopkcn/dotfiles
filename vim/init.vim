@@ -3,30 +3,34 @@
 set encoding=utf-8
 scriptencoding utf-8
 set nocompatible
+if (has("termguicolors"))
+  set termguicolors
+endif
+if !has('gui_running')
+  set t_Co=256
+endif
+if (has("nvim"))
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
 unlet! skip_defaults_vim
 let s:darwin = has('mac')
 
-source ~/dotfiles/vim/fzf_functions.vim
+"source ~/dotfiles/vim/fzf_functions.vim
 
 source ~/dotfiles/vim/functions.vim
-call plug#begin() "'~/.vim/plugged'
-  Plug 'junegunn/fzf.vim'
+call plug#begin() 
+"  Plug 'junegunn/fzf.vim'
   Plug 'tpope/vim-surround'
+  Plug 'nordtheme/vim'
+  Plug 'itchyny/lightline.vim'
+  " Plug 'vim-airline/vim-airline'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-repeat'
   Plug 'https://github.com/github/copilot.vim.git'
 call plug#end()
-" :
-"if s:darwin
-"  let g:open_app = 'open'
-"  set rtp+=/Users/chand/.homebrew/opt/fzf
-"else
-"  let g:open_app ='firefox'
-"  set rtp+=/Users/chand/.linuxbrew/opt/fzf
-"endif
-"
+
 " Swap, Undo and Backup files
 if exists('$SUDO_USER')
     set nobackup
@@ -47,15 +51,13 @@ if has("persistent_undo")
 endif
 
 "" Color Settings (compatable to gruvbox)
-set t_Co=256
-"set background=light
-"colorscheme solarized
+colorscheme nord
+let g:lightline = { 'colorscheme': 'nord' }
 syntax on
 filetype plugin indent on
 
-if (has("nvim"))
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
+set laststatus=2
+set noshowmode
 
 hi Error NONE
 hi ErrorMsg NONE
@@ -282,5 +284,4 @@ augroup resCur
   autocmd BufWinEnter * call ResCur()
 augroup END
 
-set laststatus=0
 let g:copilot_node_command = '/usr/local/n/versions/node/17.0.0/bin/node'

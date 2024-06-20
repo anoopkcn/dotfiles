@@ -1,6 +1,6 @@
 # ~/.tmuxinator/scribbles.yml
 name: scribbles
-root: ~/Dropbox/Workbench/Scribbles/
+root: /Users/akc/Work/test
 
 windows:
   - bash:

@@ -1,6 +1,6 @@
 # ~/.tmuxinator/work.yml
-name: work
-root: /Users/akc/Work #<%= @args[0] %>
+name: project
+root: /Users/akc/OneDrive/Projects #<%= @args[0] %>
 
 windows:
   - code:

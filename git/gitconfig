@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
 	name = Anoop Chandran
-	email = anoopkcn@gmail.com
+	email =<email>@gmail.com
 [core]
 	editor = nvim
 	excludesfile = ~/dotfiles/git/ggitignore

@@ -11,7 +11,8 @@ Installation file for bash, vim, tmux, etc..
 
 (optional) install oh-my-zsh
 
-(optional) [starship](https://starship.rs) `brew install starship`. If conda python prompt is activated disable it with `conda config --set changeps1 False`, otherwise the python env will be shown twice upon activating one
+(optional) [starship](https://starship.rs) `brew install starship`. 
+If conda python prompt is activated disable it with `conda config --set changeps1 False`, otherwise the python env will be shown twice upon activating one
 <!-- tmux is configured using reattach-usernamespace (install using brew) -->
 
 ## Installation 
