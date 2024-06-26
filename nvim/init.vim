@@ -17,7 +17,8 @@ set clipboard=unnamedplus       " using system clipboard
 filetype plugin on              " enable filetype detection
 set cursorline                  " highlight current cursorline
 set ttyfast                     " Speed up scrolling in Vim
-let mapleader="\,"              " Set leader key to be comma rather than the default backslash
+let mapleader=' '               " Set leader key to be space rather than the default backslash
+let maplocalleader=' '          " Set local leader key to be space rather than the default backslash
 " set mouse=a                   " enable mouse click
 " set cc=80                     " set an 80 column border for good coding style
 " set spell                     " enable spell check (may need to download language package)
@@ -41,6 +42,6 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-" Set relative line numbers
-nnoremap <leader>n :set relativenumber!<cr>     
 
+nnoremap <leader>n :set relativenumber!<cr>     
+nnoremap <esc> :nohlsearch<cr>

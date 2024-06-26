@@ -22,11 +22,11 @@ set-option -g status-style fg=$tm_color_active,bg=default,default
 
 # default window title colors
 set-window-option -g window-status-style fg=$tm_color_inactive,bg=default
-set -g window-status-format "[#I,#W]"
+set -g window-status-format "#I.#W"
 
 # active window title colors
 set-window-option -g window-status-current-style fg=$tm_color_active,bg=default
-set-window-option -g  window-status-current-format "#[fg=$tm_color_feature,bold][#I,#W]"  #[#I,#W#F]
+set-window-option -g  window-status-current-format "#[fg=$tm_color_feature,bold]#I.#W"  #[#I,#W#F]
 
 # pane border
 set-option -g pane-border-style fg=$tm_color_inactive
@@ -52,7 +52,7 @@ tm_cpu_info="#[fg=$tm_color_sysinfo]#(tmux-mem-cpu-load --interval 3)#[default]"
 
 
 #settings status bar
-set -g status-right $tm_session_name' '$tm_date #$tm_separator_right_thin
+set -g status-right $tm_session_name #' '$tm_date #$tm_separator_right_thin
 set -g status-left ''
 
 # set-option -g status-position top

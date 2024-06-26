@@ -24,7 +24,7 @@ If conda python prompt is activated disable it with `conda config --set changeps
 ln -sf ~/dotfiles/zsh/zshrc ~/.zshrc
 
 ln -sf ~/dotfiles/bash/inputrc ~/.inputrc
-ln -sf ~/dotfiles/git/gitconfig ~/.gitconfig
+# ln -sf ~/dotfiles/git/gitconfig ~/.gitconfig
 ln -sf ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/tmux/tmuxinator ~/.tmuxinator
 ln -sf ~/dotfiles/vim ~/.config/nvim # for nvim
