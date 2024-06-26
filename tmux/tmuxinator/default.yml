@@ -1,7 +1,7 @@
 
 # ~/.tmuxinator/default.yml
 name: default
-root: /Users/akc #<%= @args[0] %>
+root: <%= @args[0] %>
 
 windows:
   - term:

@@ -31,7 +31,7 @@ bindkey '^[[B' history-search-forward
 # Variables
 bindkey '^[^M' self-insert-unmeta
 
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
