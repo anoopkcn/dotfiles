@@ -23,6 +23,7 @@ local servers = {
 local lang_tools = {
 	"stylua", -- Used to format Lua code
 	"black", -- Used to format Python code
+	"prettier", -- Used to format js, html, markdown, ts, css
 }
 
 return {

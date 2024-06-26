@@ -2,21 +2,21 @@
 
 Philosophy:
 
-- If you can't explain it, *you don't need it.*
-- If it becomes a chore to maintain, *you don't need it.*
-- If you have to lookup how it works more than once, *you don't need it.*
+- If you can't explain it, _you don't need it._
+- If it becomes a chore to maintain, _you don't need it._
+- If you have to lookup how it works more than once, _you don't need it._
 
 ## Requirements
 
 - [NeoVim](https://neovim.io) (>= 0.10)
-  - Editor you need. *One can edit without it but not as contentedly.*
+  - Editor you need. _One can edit without it but not as contentedly._
 
 ## Optional Requirements
 
 - [Nerd Font](https://www.nerdfonts.com/)
-  - Nerdfonts are used for icons. *Everything should work without it but not as pretty.*
+  - Nerdfonts are used for icons. _Everything should work without it but not as pretty._
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
-  - Ripgrep is used for searching in files, it is faster than the default grep. *Everything should work without it but not as fast.*
+  - Ripgrep is used for searching in files, it is faster than the default grep. _Everything should work without it but not as fast._
 
 ## Folder Structure
 
@@ -51,7 +51,6 @@ All plugin specific configurations are stored in the `lua/plugins` directory. Al
   - [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) (auto-complete)
   - [conforms.nvim](https://github.com/stevearc/conform.nvim) (auto-formatting)
   - [copilot.nvim](https://github.com/zbirenbaum/copilot.lua) (auto-ai-completion)
-  - [gitsigns](https://github.com/lewis6991/gitsigns.nvim) (gutter git signs)
 
 - Utility plugins:
 
@@ -59,13 +58,14 @@ All plugin specific configurations are stored in the `lua/plugins` directory. Al
 
     - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) (fuzzy finder)
     - [harpoon](https://github.com/ThePrimeagen/harpoon) (project navigation/ buffer management)
-  
+
   - Utils
 
     - [sleuth](https://github.com/tpope/vim-sleuth)(trating tab respectfuly)
     - [surround](https://github.com/kylechui/nvim-surround) (surround text objects)
     - [unimpaired](https://github.com/tpope/vim-unimpaired) (pairs of mappings with `[` and `]` prepend)
     - [fugitive](https://github.com/tpope/vim-fugitive) (git integration)
+    - [gitsigns](https://github.com/lewis6991/gitsigns.nvim) (gutter git signs)
 
   - Bug navigation
 
