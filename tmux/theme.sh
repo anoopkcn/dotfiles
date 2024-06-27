@@ -1,8 +1,8 @@
 # COLOUR
-tm_color_active=colour24
+tm_color_active=colour2
 tm_color_inactive=colour241
-tm_color_feature=colour24
-tm_color_session=colour94
+tm_color_feature=colour2
+tm_color_session=colour181
 tm_color_sysinfo=colour110
 tm_color_selection=colour32
 tm_color_datetime=color239
@@ -22,11 +22,11 @@ set-option -g status-style fg=$tm_color_active,bg=default,default
 
 # default window title colors
 set-window-option -g window-status-style fg=$tm_color_inactive,bg=default
-set -g window-status-format "#I.#W"
+set -g window-status-format "#I▣ #W"
 
 # active window title colors
 set-window-option -g window-status-current-style fg=$tm_color_active,bg=default
-set-window-option -g  window-status-current-format "#[fg=$tm_color_feature,bold]#I.#W"  #[#I,#W#F]
+set-window-option -g  window-status-current-format "#[fg=$tm_color_feature]#I▣ #W"  #[#I,#W#F]
 
 # pane border
 set-option -g pane-border-style fg=$tm_color_inactive
@@ -46,7 +46,7 @@ set-window-option -g clock-mode-colour $tm_color_active
 tm_date="#[fg=colour239]%d-%b#[fg=colour239] %l:%M"
 tm_pwd="#[fg=colour239,bold]#{pane_current_path}"
 tm_host="#[fg=$tm_color_feature,bold]#H"
-tm_session_name="#[fg=$tm_color_session]$tm_separator_left_thin#S"
+tm_session_name="#[fg=$tm_color_session,bold,italics]$tm_separator_left_thin#S"
 tm_cpu_info="#[fg=$tm_color_sysinfo]#(tmux-mem-cpu-load --interval 3)#[default]"
 # tm_separator_right_thin=" ▣"
 
