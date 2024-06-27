@@ -1,4 +1,5 @@
 -- https://github.com/nvim-lualine/lualine.nvim
+
 return {
 	"nvim-lualine/lualine.nvim",
 	enabled = true,
@@ -8,9 +9,9 @@ return {
 		require("lualine").setup({
 			sections = {
 				lualine_a = {},
-				lualine_b = { "mode", "diagnostics" },
-				lualine_c = { "branch", "diff", "searchcount", "filename" },
-				lualine_x = { "encoding", "fileformat", "filetype", "progress" },
+				lualine_b = { "mode" },
+				lualine_c = { "filename", "searchcount" },
+				lualine_x = { "diagnostics", "encoding", "filetype", "progress" },
 				lualine_y = { "location" },
 				lualine_z = {},
 			},
@@ -18,17 +19,17 @@ return {
 				lualine_a = {
 					{
 						"buffers",
+						symbols = {
+							modified = " +",
+							alternate_file = "",
+							directory = "",
+						},
 					},
 				},
 				lualine_b = {},
 				lualine_c = {},
-				lualine_x = {
-					{
-						"datetime",
-						style = "%H:%M",
-					},
-				},
-				lualine_y = {},
+				lualine_x = {},
+				lualine_y = { "diff", "branch", "fileformat" },
 				lualine_z = {},
 			},
 		})
