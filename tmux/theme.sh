@@ -45,8 +45,8 @@ set-window-option -g clock-mode-colour $tm_color_active
 tm_date="#[fg=colour239]%d/%m/%Y #[fg=colour239]%H:%M"
 tm_pwd="#[fg=colour239,bold]#{pane_current_path}"
 tm_host="#[fg=$tm_color_feature,bold]#H"
-tm_session_name="#[fg=$tm_color_session]$tm_separator_left_thin#S"
-tm_session_symbol="#[fg=$tm_color_session,bold]$tm_symbol"
+tm_session_name="#[fg=$tm_color_session]#S"
+tm_session_symbol="#[fg=$tm_color_session]$tm_symbol"
 
 #settings status bar
 set -g status-right $tm_date #$tm_separator_right_thin
