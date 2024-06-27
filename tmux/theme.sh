@@ -46,7 +46,7 @@ set-window-option -g clock-mode-colour $tm_color_active
 tm_date="#[fg=colour239]%d-%b#[fg=colour239] %l:%M"
 tm_pwd="#[fg=colour239,bold]#{pane_current_path}"
 tm_host="#[fg=$tm_color_feature,bold]#H"
-tm_session_name="#[fg=$tm_color_session,bold,italics]$tm_separator_left_thin#S"
+tm_session_name="#[fg=$tm_color_session,bold]$tm_separator_left_thin#S"
 tm_cpu_info="#[fg=$tm_color_sysinfo]#(tmux-mem-cpu-load --interval 3)#[default]"
 # tm_separator_right_thin=" ▣"
 
