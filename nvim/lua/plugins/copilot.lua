@@ -1,4 +1,4 @@
--- https://github.com/zbirenbaum/copilot.lua
+-- [copilot](https://github.com/zbirenbaum/copilot.lua)(ai auto-completion)
 return {
 	{
 		"zbirenbaum/copilot-cmp",

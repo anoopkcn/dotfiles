@@ -1,4 +1,6 @@
--- Confuration for LSP (Language Server Protocol) and Manager(Mason)
+-- [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
+-- [mason.nvim](https://github.com/williamboman/mason.nvim)(**language server, formatter and dap manager**)
+-- Configuration for LSP (Language Server Protocol) and Manager(Mason)
 
 local servers = {
 	pyright = {},
@@ -10,17 +12,19 @@ local servers = {
 				completion = {
 					callSnippet = "Replace",
 				},
-				diagnostics = {
-					globals = { "vim" },
-					-- disable = { 'missing-fields' }
-				},
+				-- add 'folke/neodev.nvim' for vim,
+				-- diagnostics = {
+				-- 	globals = { "vim" },
+				-- disable = { 'missing-fields' }
+				-- },
 			},
 		},
 	},
-	-- tsserver = {},
+	tsserver = {},
 }
 
 local lang_tools = {
+	-- also update the list in lua/plugins/formatter.lua
 	"stylua", -- Used to format Lua code
 	"black", -- Used to format Python code
 	"prettier", -- Used to format js, html, markdown, ts, css
@@ -30,10 +34,18 @@ return {
 	"neovim/nvim-lspconfig",
 
 	dependencies = {
-		"williamboman/mason.nvim", -- https://github.com/williamboman/mason.nvim
+		{ "williamboman/mason.nvim", config = true }, -- https://github.com/williamboman/mason.nvim
 		"williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
 		"WhoIsSethDaniel/mason-tool-installer.nvim", -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
 		"hrsh7th/cmp-nvim-lsp", -- https://github.com/hrsh7th/cmp-nvim-lsp
+
+		-- Useful status updates for LSP.
+		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+		{ "j-hui/fidget.nvim", opts = {} },
+
+		-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
+		-- used for completion, annotations and signatures of Neovim apis
+		{ "folke/neodev.nvim", opts = {} },
 	},
 
 	config = function()
@@ -77,7 +89,7 @@ return {
 				map("K", vim.lsp.buf.hover, "Hover Documentation")
 				map("<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
 
-				-- When you move your cursor, the highlights will be cleared (the second autocommand).
+				-- When you move your cursor, the highlights will be cleared (the second auto command).
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
 
 				if client and client.server_capabilities.documentHighlightProvider then
@@ -106,7 +118,7 @@ return {
 			end,
 		})
 
-		-- lsp symbol definition window(activated by K) should have border and rounded corner
+		-- LSP symbol definition window(activated by K) should have border and rounded corner
 		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
 			border = "rounded",
 		})

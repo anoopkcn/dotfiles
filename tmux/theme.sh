@@ -21,11 +21,11 @@ set-option -g status-style fg=$tm_color_active,bg=default,default
 
 # default window title colors
 set-window-option -g window-status-style fg=$tm_color_inactive,bg=default
-set -g window-status-format "#I#W"
+set -g window-status-format "#I:#W"
 
 # active window title colors
 set-window-option -g window-status-current-style fg=$tm_color_active,bg=default
-set-window-option -g  window-status-current-format "#[fg=$tm_color_feature]#I#W"  #[#I,#W#F]
+set-window-option -g  window-status-current-format "#[fg=$tm_color_feature]#I:#W"  #[#I,#W#F]
 
 # pane border
 set-option -g pane-border-style fg=$tm_color_inactive
@@ -49,7 +49,7 @@ tm_session_name="#[fg=$tm_color_session]#S"
 tm_session_symbol="#[fg=$tm_color_session]$tm_symbol"
 
 #settings status bar
-set -g status-right $tm_date #$tm_separator_right_thin
-set -g status-left $tm_session_symbol$tm_session_name" "
+set -g status-right $tm_session_name" "$tm_date #$tm_separator_right_thin
+set -g status-left ""
 
 set -wg mode-style bg=$tm_color_selection #,fg=black

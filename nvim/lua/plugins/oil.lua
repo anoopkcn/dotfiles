@@ -1,3 +1,4 @@
+-- [oil.nvim](https://github.com/stevearc/oil.nvim)(file explorer)
 return {
 	"stevearc/oil.nvim",
 	opts = {},

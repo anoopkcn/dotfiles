@@ -1,11 +1,11 @@
-# ~/.tmuxinator/devel.yml
-name: devel
+# ~/.tmuxinator/develop.yml
+name: develop
 root: /Users/akc/Work/develop #<%= @args[0] %>
 
 windows:
   - code:
       layout: main-vertical
       panes:
-  - term:
+  - zsh:
       layout: main-vertical
       panes:

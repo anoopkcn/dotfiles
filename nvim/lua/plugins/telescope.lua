@@ -1,4 +1,4 @@
--- https://github.com/nvim-telescope/telescope.nvim
+-- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
 return {
 	"nvim-telescope/telescope.nvim",
 

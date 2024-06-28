@@ -1,4 +1,4 @@
--- https://github.com/ThePrimeagen/harpoon
+-- [harpoon](https://github.com/ThePrimeagen/harpoon)(buffer navigation)
 return {
 	"ThePrimeagen/harpoon",
 	enabled = false,

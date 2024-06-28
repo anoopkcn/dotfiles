@@ -1,4 +1,4 @@
--- https://github.com/folke/trouble.nvim
+-- [trouble.nvim](https://github.com/folke/trouble.nvim)(better quick fix list)
 return {
 	"folke/trouble.nvim",
 
@@ -23,6 +23,6 @@ return {
 			"<leader>t[",
 			"<cmd>Trouble diagnostics prev jump=true<cr>",
 			desc = "Go to previous diagnostic",
-		}
+		},
 	},
 }

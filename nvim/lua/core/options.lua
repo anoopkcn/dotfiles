@@ -19,6 +19,8 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 
 vim.opt.path:append("**")
+vim.opt.updatetime = 250
+vim.opt.inccommand = "split" -- Preview substitutions live, as you type!
 
 if vim.fn.has("Mac") == 1 then
 	vim.opt.linebreak = true

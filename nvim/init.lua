@@ -33,4 +33,4 @@ require("lazy").setup({
 })
 
 -- status line plugin should detect the colorscheme
-vim.cmd.colorscheme("github_dark_dimmed")
+vim.cmd.colorscheme("catppuccin")

@@ -1,4 +1,4 @@
--- https://github.com/stevearc/conform.nvim
+-- [conform.nvim](https://github.com/stevearc/conform.nvim)(auto-formatting)
 return {
 	"stevearc/conform.nvim",
 	lazy = false,

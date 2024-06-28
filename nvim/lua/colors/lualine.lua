@@ -7,6 +7,7 @@ return {
 
 	config = function()
 		require("lualine").setup({
+			options = { fmt = string.lower },
 			sections = {
 				lualine_a = {},
 				lualine_b = { "mode" },
