@@ -52,9 +52,9 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-
 # ZSH plugins
 source /Users/akc/.config/zsh-plugins/znap/znap.zsh
 znap source zdharma-continuum/fast-syntax-highlighting
 znap source zshzoo/macos
 znap source zsh-users/zsh-autosuggestions
+bindkey '^y' autosuggest-accept

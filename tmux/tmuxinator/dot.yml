@@ -3,6 +3,6 @@ name: dot
 root: ~/dotfiles/
 
 windows:
-  - configuration:
+  - conf:
       layout: main-vertical
       panes:
