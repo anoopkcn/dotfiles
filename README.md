@@ -1,6 +1,8 @@
 # dotfiles
 
-Repository contains essential `config` and `rc` files for terminal driven applications.
+Repository contains essential `config` and `rc` files.
+
+[My NeoVim configuration](https://github.com/anoopkcn/config.nvim)
 
 ## Description
 
@@ -19,5 +21,4 @@ ln -sf ~/dotfiles/zsh/zshrc ~/.zshrc
 ln -sf ~/dotfiles/bash/inputrc ~/.inputrc
 ln -sf ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/tmux/tmuxinator ~/.tmuxinator
-ln -sf ~/dotfiles/nvim ~/.config/nvim
 ```
