@@ -41,7 +41,7 @@ All plugin specific configurations are stored in the `lua/plugins` directory. Al
 
 <!--
 #
-r!rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
+rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
 #
 -->
 

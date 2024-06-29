@@ -1,4 +1,5 @@
 -- [trouble.nvim](https://github.com/folke/trouble.nvim)(better quick fix list)
+
 return {
 	"folke/trouble.nvim",
 
