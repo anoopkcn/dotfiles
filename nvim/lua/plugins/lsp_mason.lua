@@ -12,11 +12,13 @@ local servers = {
 				completion = {
 					callSnippet = "Replace",
 				},
-				-- add 'folke/neodev.nvim' for vim,
-				-- diagnostics = {
-				-- 	globals = { "vim" },
-				-- disable = { 'missing-fields' }
-				-- },
+				-- add 'folke/neodev.nvim' for vim,otherwise uncomment the following
+				--[[ 
+					diagnostics = {
+						globals = { "vim" },
+					 -- disable = { 'missing-fields' }
+					},
+				--]]
 			},
 		},
 	},

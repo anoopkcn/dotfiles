@@ -19,7 +19,7 @@ return {
 		"tpope/vim-fugitive",
 		enabled = true,
 		config = function()
-			vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+			vim.keymap.set("n", "<leader>G", vim.cmd.Git)
 		end,
 	},
 	{
@@ -39,5 +39,10 @@ return {
 		config = function()
 			require("mini.surround").setup()
 		end,
+	},
+	{
+		-- [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
+		"numToStr/Comment.nvim",
+		opts = {},
 	},
 }
