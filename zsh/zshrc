@@ -3,6 +3,7 @@ export LC_ALL=en_GB.UTF-8
 
 # General shellrc file
 source ${HOME}/dotfiles/shell/shellrc
+export EDITOR='vim'
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
