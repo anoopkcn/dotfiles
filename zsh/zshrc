@@ -2,8 +2,37 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_GB.UTF-8
 
 # General shellrc file
-source ${HOME}/dotfiles/shell/shellrc
+source ${HOME}/Dropbox/dotfiles/zsh/functions.sh
+source ${HOME}/Dropbox/dotfiles/zsh/sync.sh
+source ${HOME}/Dropbox/dotfiles/zsh/tmux.sh
+
+export GREP_OPTIONS='--color=auto'
+export TERM="xterm-256color"
 export EDITOR='vim'
+
+if ! [ $ZSH_VERSION ]; then
+  bind TAB:menu-complete
+  bind '"\er": redraw-current-line'
+  bind '"\C-g\C-f": "$(gf)\e\C-e\er"'
+  bind '"\C-g\C-b": "$(gb)\e\C-e\er"'
+  bind '"\C-g\C-t": "$(gt)\e\C-e\er"'
+  bind '"\C-g\C-h": "$(gh)\e\C-e\er"'
+  bind '"\C-g\C-r": "$(gr)\e\C-e\er"'
+fi
+
+alias ta='tmux attach -t'
+alias tnew='tmux new -s'
+alias tsend='tmux send -t'
+alias ts='tmuxinator start'
+
+#other
+alias vim='nvim'
+alias duh="du -h -d 0 [^.]*"
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  alias pbcopy='xclip -selection clipboard'
+  alias pbpaste='xclip -selection clipboard -o'
+fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]

@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 function _tmux() {
     local tmux=$(type -fp tmux)
     case "$1" in

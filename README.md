@@ -17,8 +17,7 @@ Installation file for bash, nvim, tmux, etc..
 ```sh
 #ln -sf ~/dotfiles/bash/bashrc ~/.bashrc
 # ln -sf ~/dotfiles/git/gitconfig ~/.gitconfig
-ln -sf ~/dotfiles/zsh/zshrc ~/.zshrc
-ln -sf ~/dotfiles/bash/inputrc ~/.inputrc
-ln -sf ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
-ln -sf ~/dotfiles/tmux/tmuxinator ~/.tmuxinator
+ln -sf ${PAtH_TO}/dotfiles/zsh/zshrc ~/.zshrc
+ln -sf ${PAtH_TO}/dotfiles/tmux ~/.config/tmux
+ln -sf ${PAtH_TO}/dotfiles/tmuxinator ~/.config/tmuxinator
 ```

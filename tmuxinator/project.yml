@@ -1,11 +1,8 @@
 # ~/.tmuxinator/work.yml
-name: project
-root: /Users/akc/OneDrive/Projects #<%= @args[0] %>
+name: projects
+root: /Users/akc/Dropbox/projects
 
 windows:
-  - code:
-      layout: main-vertical
-      panes:
-  - term:
+  - project:
       layout: main-vertical
       panes:
