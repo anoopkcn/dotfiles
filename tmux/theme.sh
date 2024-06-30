@@ -49,7 +49,7 @@ tm_session_name="#[fg=$tm_color_session]#S"
 tm_session_symbol="#[fg=$tm_color_session]$tm_symbol"
 
 #settings status bar
-set -g status-right $$tm_session_name" "$tm_date #$tm_separator_right_thin
+set -g status-right $tm_session_name" "$tm_date #$tm_separator_right_thin
 set -g status-left ""
 
 set -wg mode-style bg=$tm_color_selection #,fg=black
