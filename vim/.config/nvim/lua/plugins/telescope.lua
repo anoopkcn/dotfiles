@@ -39,7 +39,7 @@ return {
 		vim.keymap.set("n", "<leader>fc", function()
 			builtin.find_files({ cwd = vim.fn.expand("%:p:h") })
 		end)
-		-- vim.keymap.set("n", "<leader>fm", builtin.marks, {})
+		vim.keymap.set("n", "<leader>fm", builtin.marks, {})
 		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, {})
 		vim.keymap.set("n", "<space>/", builtin.current_buffer_fuzzy_find)
 		vim.keymap.set("n", "<leader>gs", builtin.git_status, {})

@@ -15,7 +15,7 @@ local servers = {
 		Lua = {
 			workspace = { checkThirdParty = false },
 			telemetry = { enable = false },
-			diagnostics = { disable = { "missing-fields", "missing-parameters" } },
+			-- diagnostics = { disable = { "missing-fields", "missing-parameters" } },
 		},
 	},
 }
