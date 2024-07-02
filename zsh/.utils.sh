@@ -32,27 +32,28 @@ function extract() {
     fi
 }
 
-function killport() {
+function kill_port() {
     lsof -ti:$1 | xargs kill -9
 }
-
 ## GIT functions ##
 function _is_in_git_repo() {
     git rev-parse HEAD >/dev/null 2>&1
 }
 
-function gitzip() {
+function git_zip() {
     git archive -o $(basename $PWD).zip HEAD
 }
-function gittgz() {
+
+function git_tgz() {
     git archive -o $(basename $PWD).tgz HEAD
 }
-function gitexport() {
+
+function git_export() {
     mkdir -p "$1"
     git archive master | tar -x -C "$1"
 }
 
-function gitlog() {
+function git_log() {
     _is_in_git_repo || return
     if [ $# -eq 0 ]; then
         git log --oneline --decorate --all --graph
@@ -63,7 +64,7 @@ function gitlog() {
     fi
 }
 
-function fetch_file(){
+function github_fetch(){
     if [ $# -eq 0 ]; then
         echo "Usage: fetch_file <owner/repo> [<file>]"
         return 1
@@ -80,5 +81,44 @@ function fetch_file(){
     else
         curl -H "Accept: application/vnd.github.raw" \
         https://api.github.com/repos/$1/contents/$2
+    fi
+}
+
+function tls() {
+    # location=${HOME}/dotfiles/tmux/tmuxinator
+    if [ $# -eq 1 ]; then
+        case $1 in
+        -a)
+            for f in ${HOME}/dotfiles/tmux/tmuxinator/*.yml; do
+                filename=$(basename "$f")
+                filename="${filename%.*}"
+                printf "%s\n" "${filename}"
+            done
+            ;;
+        esac
+    else
+        t_sessions=($(tmux ls | cut -d : -f 1))
+        for i in "${t_sessions[@]}"; do
+            printf "\e[96m${i}\e[0m\n"
+            (tmux lsw -t ${i} | awk '{print $1,$2}')
+        done
+    fi
+}
+
+function tkill() {
+    if [ $# -eq 1 ]; then
+        case $1 in
+        -a)
+            t_sessions=($(tmux ls | cut -d : -f 1))
+            for i in "${t_sessions[@]}"; do
+                tmux kill-session -t $i
+            done
+            ;;
+        *)
+            tmux kill-session -t $1
+            ;;
+        esac
+    else
+        echo "Provide a TMUX session to kill"
     fi
 }

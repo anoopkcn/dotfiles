@@ -2,9 +2,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_GB.UTF-8
 
 # General shellrc file
-source ${HOME}/.config/shell/functions.sh
-source ${HOME}/.config/shell/sync.sh
-source ${HOME}/.config/shell/tmux.sh
+source ${HOME}/.utils.sh
 
 export GREP_OPTIONS='--color=auto'
 export TERM="xterm-256color"
@@ -28,6 +26,8 @@ alias ts='tmuxinator start'
 #other
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
+# usage sync <source> <destination> (source or destination could be -e ssh://user@host:/path)
+alias sync = "rsync -airzvc --exclude-from=${HOME}/.rsync-local-ignore --prune-empty-dirs"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   alias pbcopy='xclip -selection clipboard'
@@ -65,7 +65,6 @@ bindkey '^[^M' self-insert-unmeta
 NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
 MANPATH="/usr/local/man:$HOME/.node/share/man:$MANPATH"
 export PATH="/Library/TeX/texbin/:$PATH"
-
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
