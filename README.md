@@ -6,18 +6,15 @@ Repository contains essential `config` and `rc` files.
 
 ## Description
 
-Installation file for bash, nvim, tmux, etc..
+Installation file for zsh, nvim, tmux, etc..
 
+istall [stow](https://www.gnu.org/software/stow/) using `brew install stow`
 (optional) install [`rg`](https://github.com/BurntSushi/ripgrep) using `brew install ripgrep`
 
 ## Installation
 
-> asuming dotfiles are cloned/downloaded to home folder
+> asuming dotfiles directory is located at the home directory
 
 ```sh
-#ln -sf ~/dotfiles/bash/bashrc ~/.bashrc
-# ln -sf ~/dotfiles/git/gitconfig ~/.gitconfig
-ln -sf ${PAtH_TO}/dotfiles/zsh/zshrc ~/.zshrc
-ln -sf ${PAtH_TO}/dotfiles/tmux ~/.config/tmux
-ln -sf ${PAtH_TO}/dotfiles/tmuxinator ~/.config/tmuxinator
+stow zsh alacritty nvim tmux tmuxinator
 ```
