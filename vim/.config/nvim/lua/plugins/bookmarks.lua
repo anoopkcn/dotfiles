@@ -11,6 +11,6 @@ return {
 		local vim_bookmarks = require("telescope").extensions.vim_bookmarks
 
 		vim.keymap.set("n", "<leader>fm", vim_bookmarks.all, {})
-		vim.keymap.set("n", "<leader>fc", vim_bookmarks.current_file, {})
+		-- vim.keymap.set("n", "<leader>f,", vim_bookmarks.current_file, {})
 	end,
 }

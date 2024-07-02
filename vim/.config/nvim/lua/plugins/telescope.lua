@@ -14,6 +14,16 @@ return {
 		telescope.setup({
 			defaults = {
 				file_ignore_patterns = { "node_modules", "env", "venv", ".env", ".git" },
+				vimgrep_arguments = {
+					"rg",
+					"--color=never",
+					"--no-heading",
+					"--with-filename",
+					"--line-number",
+					"--column",
+					"--smart-case",
+					"--trim",
+				},
 			},
 		})
 
@@ -26,6 +36,9 @@ return {
 		vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 		vim.keymap.set("n", "<leader>fj", builtin.jumplist, {})
 		vim.keymap.set("n", "<leader>fr", builtin.registers, {})
+		vim.keymap.set("n", "<leader>fc", function()
+			builtin.find_files({ cwd = vim.fn.expand("%:p:h") })
+		end)
 		-- vim.keymap.set("n", "<leader>fm", builtin.marks, {})
 		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, {})
 		vim.keymap.set("n", "<space>/", builtin.current_buffer_fuzzy_find)

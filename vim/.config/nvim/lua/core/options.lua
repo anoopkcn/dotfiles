@@ -22,7 +22,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 
-vim.opt.path:append("**")
+-- vim.opt.path:append("**")
 vim.opt.updatetime = 250
 vim.opt.inccommand = "split" -- Preview substitutions live, as you type!
 -- set laststatus=3
