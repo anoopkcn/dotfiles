@@ -9,12 +9,13 @@ Repository contains essential `config` and `rc` files.
 Installation file for zsh, nvim, tmux, etc..
 
 Install [stow](https://www.gnu.org/software/stow/) using `brew install stow`
+
 (optional) Install [`rg`](https://github.com/BurntSushi/ripgrep) using `brew install ripgrep`
 
 ## Installation
 
-> asuming `dotfiles` directory is located at the home directory
+**asuming `dotfiles` directory is located at the home directory**
 
 ```sh
-stow zsh shell alacritty vim tmux tmuxinator
+stow zsh alacritty vim tmux tmuxinator
 ```
