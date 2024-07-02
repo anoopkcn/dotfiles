@@ -27,7 +27,7 @@ alias ts='tmuxinator start'
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 # usage sync <source> <destination> (source or destination could be -e ssh://user@host:/path)
-alias sync = "rsync -airzvc --exclude-from=${HOME}/.rsync-local-ignore --prune-empty-dirs"
+alias sync="rsync -airzvc --exclude-from=${HOME}/.rsync-local-ignore --prune-empty-dirs"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   alias pbcopy='xclip -selection clipboard'

@@ -35,6 +35,7 @@ function extract() {
 function kill_port() {
     lsof -ti:$1 | xargs kill -9
 }
+
 ## GIT functions ##
 function _is_in_git_repo() {
     git rev-parse HEAD >/dev/null 2>&1
