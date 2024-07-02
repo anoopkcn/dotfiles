@@ -8,8 +8,8 @@ Repository contains essential `config` and `rc` files.
 
 Installation file for zsh, nvim, tmux, etc..
 
-istall [stow](https://www.gnu.org/software/stow/) using `brew install stow`
-(optional) install [`rg`](https://github.com/BurntSushi/ripgrep) using `brew install ripgrep`
+Install [stow](https://www.gnu.org/software/stow/) using `brew install stow`
+(optional) Install [`rg`](https://github.com/BurntSushi/ripgrep) using `brew install ripgrep`
 
 ## Installation
 
