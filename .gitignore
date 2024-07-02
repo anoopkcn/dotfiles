@@ -1,6 +1,3 @@
-.DS_Store
-*.swp
-*.*.zwc
-*.un~
-*.netrwhist
-tmux/plugin
+*.zwc
+pyrightconfig.json
+lazy-lock.json

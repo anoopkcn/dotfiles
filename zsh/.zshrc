@@ -2,9 +2,9 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_GB.UTF-8
 
 # General shellrc file
-source ${HOME}/Dropbox/dotfiles/zsh/functions.sh
-source ${HOME}/Dropbox/dotfiles/zsh/sync.sh
-source ${HOME}/Dropbox/dotfiles/zsh/tmux.sh
+source ${HOME}/.config/shell/functions.sh
+source ${HOME}/.config/shell/sync.sh
+source ${HOME}/.config/shell/tmux.sh
 
 export GREP_OPTIONS='--color=auto'
 export TERM="xterm-256color"
