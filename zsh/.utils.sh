@@ -36,22 +36,9 @@ function kill_port() {
     lsof -ti:$1 | xargs kill -9
 }
 
-## GIT functions ##
+# GIT functions
 function _is_in_git_repo() {
     git rev-parse HEAD >/dev/null 2>&1
-}
-
-function git_zip() {
-    git archive -o $(basename $PWD).zip HEAD
-}
-
-function git_tgz() {
-    git archive -o $(basename $PWD).tgz HEAD
-}
-
-function git_export() {
-    mkdir -p "$1"
-    git archive master | tar -x -C "$1"
 }
 
 function git_log() {
@@ -65,7 +52,7 @@ function git_log() {
     fi
 }
 
-function github_fetch(){
+function git_fetch(){
     if [ $# -eq 0 ]; then
         echo "Usage: fetch_file <owner/repo> [<file>]"
         return 1
@@ -85,12 +72,12 @@ function github_fetch(){
     fi
 }
 
+# TMUX functions
 function tls() {
-    # location=${HOME}/dotfiles/tmux/tmuxinator
     if [ $# -eq 1 ]; then
         case $1 in
         -a)
-            for f in ${HOME}/dotfiles/tmux/tmuxinator/*.yml; do
+            for f in ${HOME}/.config/tmuxinator/*.yml; do
                 filename=$(basename "$f")
                 filename="${filename%.*}"
                 printf "%s\n" "${filename}"

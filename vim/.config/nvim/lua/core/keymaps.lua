@@ -37,3 +37,6 @@ vim.keymap.set("n", "<C-a>", "ggVG")
 -- motion keys should also go to word wrap
 vim.keymap.set("n", "j", [[v:count?'j': 'gj']], { noremap = true, expr = true })
 vim.keymap.set("n", "k", [[v:count?'k': 'gk']], { noremap = true, expr = true })
+
+-- remove buffer from currect active buffers
+vim.keymap.set("n", "<Leader>bd", "<Cmd>bd<CR>")

@@ -1,8 +1,0 @@
-# ~/.tmuxinator/scribbles.yml
-name: scribbles
-root: /Users/akc/Work/test
-
-windows:
-  - bash:
-      layout: main-vertical
-      panes:
