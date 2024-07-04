@@ -1,18 +1,3 @@
--- Lazy plugin manager
--- https://github.com/folke/lazy.nvim.git
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
-	})
-end
-vim.opt.rtp:prepend(lazypath)
-
 -- given a table hash print the table
 Print = function(v)
 	print(vim.inspect(v))
