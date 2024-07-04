@@ -11,14 +11,12 @@ dimensions.lines = 38
 padding.x=10
 padding.y=10
 dynamic_padding = true
-
 decorations = "Buttonless"
-
 option_as_alt ="Both"
 
 [font]
 normal.family = "ZedMono Nerd Font Mono"
 normal.style = "Extended"
-size =16
+size =15
 offset.x = 0
 offset.y = 2
