@@ -7,13 +7,8 @@ require("core.options")
 require("core.keymaps")
 require("core.globals")
 require("lazy").setup({
-	spec = {
-		{ import = "plugins" },
-		{ import = "colors" },
-	},
-	change_detection = {
-		notify = false,
-	},
+	spec = { { import = "plugins" }, { import = "colors" } },
+	change_detection = { notify = false },
 })
 
 vim.cmd.colorscheme("catppuccin")
