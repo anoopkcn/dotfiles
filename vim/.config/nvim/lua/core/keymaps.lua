@@ -31,6 +31,10 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
 
+-- resize split windows
+-- vim.keymap.set("n", "M-,", "<C-w>5<")
+-- vim.keymap.set("n", "M-.", "<C-w>5>")
+
 -- select all in a file
 vim.keymap.set("n", "<C-a>", "ggVG")
 

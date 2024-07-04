@@ -7,8 +7,7 @@ require("core.options")
 require("core.keymaps")
 require("core.globals")
 
--- Lazy plugin manager
--- https://github.com/folke/lazy.nvim.git
+-- Lazy plugin manager (https://github.com/folke/lazy.nvim.git)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
@@ -20,6 +19,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 		lazypath,
 	})
 end
+---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
