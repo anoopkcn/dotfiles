@@ -21,11 +21,11 @@ set-option -g status-style fg=$tm_color_active,bg=default,default
 
 # default window title colors
 set-window-option -g window-status-style fg=$tm_color_inactive,bg=default
-set -g window-status-format "#I-#W"
+set -g window-status-format "#W" ##I
 
 # active window title colors
 set-window-option -g window-status-current-style fg=$tm_color_active,bg=default
-set-window-option -g  window-status-current-format "#[fg=$tm_color_feature]#I-#W"  #[#I,#W#F]
+set-window-option -g  window-status-current-format "#[fg=$tm_color_feature]#W"  #[#I,#W#F]
 
 # pane border
 set-option -g pane-border-style fg=$tm_color_inactive
