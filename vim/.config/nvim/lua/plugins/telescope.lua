@@ -27,7 +27,7 @@ return {
 			},
 		})
 
-		-- file related
+		-- FILE related functions
 		vim.keymap.set("n", "<leader>ff", function()
 			builtin.find_files({ hidden = true })
 		end, {})
@@ -42,6 +42,7 @@ return {
 		vim.keymap.set("n", "<leader>fm", builtin.marks, {})
 		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, {})
 		vim.keymap.set("n", "<space>/", builtin.current_buffer_fuzzy_find)
+		-- GIT related functions
 		vim.keymap.set("n", "<leader>gs", builtin.git_status, {})
 		vim.keymap.set("n", "<leader>gc", builtin.git_commits, {})
 		vim.keymap.set("n", "<leader>gb", builtin.git_branches, {})
@@ -50,18 +51,5 @@ return {
 		vim.keymap.set("n", "<leader>ni", function()
 			builtin.find_files({ cwd = vim.fn.stdpath("config") })
 		end, { desc = "[N]eovim [I]nit files" })
-
-		-- Use this to add more results without clearing the trouble list
-		local add_to_trouble = require("trouble.sources.telescope").add
-
-		-- local open_with_trouble = require("trouble.sources.telescope").open
-		telescope.setup({
-			defaults = {
-				mappings = {
-					i = { ["<c-t>"] = add_to_trouble },
-					n = { ["<c-t>"] = add_to_trouble },
-				},
-			},
-		})
 	end,
 }
