@@ -30,7 +30,11 @@ return {
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 		{ "hrsh7th/cmp-nvim-lsp" },
 		{ "j-hui/fidget.nvim", opts = {} },
-		{ "folke/neodev.nvim", opts = {} },
+		{
+			"folke/lazydev.nvim",
+			ft = "lua",
+			opts = {},
+		},
 	},
 
 	config = function()
