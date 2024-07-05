@@ -39,6 +39,7 @@ return {
 				completion = cmp.config.window.bordered(),
 			},
 
+			---@diagnostic disable-next-line: missing-fields
 			formatting = {
 				format = lspkind.cmp_format({
 					mode = "symbol",
