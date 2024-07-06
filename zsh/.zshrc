@@ -87,3 +87,5 @@ znap source zdharma-continuum/fast-syntax-highlighting
 znap source zshzoo/macos
 znap source zsh-users/zsh-autosuggestions
 bindkey '^y' autosuggest-accept
+
+export NOTES="/Users/akc/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/"

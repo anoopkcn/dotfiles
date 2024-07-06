@@ -45,8 +45,8 @@ return {
 		-- GIT related functions
 		vim.keymap.set("n", "<leader>gs", builtin.git_status, {})
 		vim.keymap.set("n", "<leader>gc", builtin.git_commits, {})
+		vim.keymap.set("n", "<leader>gC", builtin.git_bcommits, {})
 		vim.keymap.set("n", "<leader>gb", builtin.git_branches, {})
-		vim.keymap.set("n", "<leader>gl", builtin.git_bcommits, {})
 		-- Shortcut for searching your Neovim configuration files
 		vim.keymap.set("n", "<leader>ni", function()
 			builtin.find_files({ cwd = vim.fn.stdpath("config") })

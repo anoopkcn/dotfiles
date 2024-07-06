@@ -17,5 +17,5 @@ Install [stow](https://www.gnu.org/software/stow/) using `brew install stow`
 **asuming `dotfiles` directory is located at the home directory**
 
 ```sh
-stow zsh alacritty vim tmux tmuxinator
+./setup.sh
 ```

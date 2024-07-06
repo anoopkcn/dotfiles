@@ -20,10 +20,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 		lazypath,
 	})
 end
+
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	spec = { { import = "plugins" }, { import = "colors" } },
+	spec = { { import = "plugins" } },
 	change_detection = { notify = false },
 })
 
