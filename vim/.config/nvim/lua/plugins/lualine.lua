@@ -27,7 +27,7 @@ return {
 						"diff",
 					},
 				},
-				lualine_c = {},
+				lualine_c = { "filename" },
 				lualine_x = {
 					{
 						"diagnostics",
