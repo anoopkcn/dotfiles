@@ -27,8 +27,6 @@ Philosophy:
 └── lua
     ├── core
     │   └── *.lua
-    ├── colors
-    │   └── *.lua
     └── plugins
         └── *.lua
 ```
@@ -63,7 +61,5 @@ rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
 
 ## Plugin configuration dependancy
 
-- Trouble + Telescope
-  - Trouble can recive telescope search results therefore this feature is activated
 - lspconfig + nvim-lsp-cmp
   - autocomplete plugin `nvim-cmp` is using lsp results for it's autocompletion
