@@ -46,7 +46,7 @@ return {
 						mode = 2,
 						symbols = {
 							modified = " +",
-							alternate_file = "",
+							alternate_file = "^",
 							directory = "",
 						},
 					},
