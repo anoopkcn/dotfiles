@@ -2,7 +2,7 @@
 
 Repository contains essential `config` and `rc` files.
 
-[My NeoVim configuration](https://github.com/anoopkcn/config.nvim)
+[My NeoVim configuration](https://github.com/anoopkcn/dotfiles/tree/main/vim/.config/nvim)
 
 ## Description
 
