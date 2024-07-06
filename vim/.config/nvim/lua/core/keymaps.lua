@@ -1,5 +1,6 @@
 -- since Space is the leader key do nothing
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
+vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
 
 -- remove search highlight on escape
 vim.keymap.set("n", "<Esc>", "<Cmd>nohlsearch<CR>")
