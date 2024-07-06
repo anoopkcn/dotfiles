@@ -2,6 +2,8 @@
 -- [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
 -- [mason.nvim](https://github.com/williamboman/mason.nvim)(**language tools manager**)
 
+local lang_tools = { "stylua", "black", "prettier" }
+
 local servers = {
 	-- clangd = {},
 	-- gopls = {},
@@ -15,12 +17,9 @@ local servers = {
 		Lua = {
 			workspace = { checkThirdParty = false },
 			telemetry = { enable = false },
-			-- diagnostics = { disable = { "missing-fields", "missing-parameters" } },
 		},
 	},
 }
-
-local lang_tools = { "stylua", "black", "prettier" }
 
 return {
 	"neovim/nvim-lspconfig",
