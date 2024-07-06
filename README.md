@@ -14,8 +14,6 @@ Install [stow](https://www.gnu.org/software/stow/) using `brew install stow`
 
 ## Installation
 
-**asuming `dotfiles` directory is located at the home directory**
-
 ```sh
 ./setup.sh
 ```
