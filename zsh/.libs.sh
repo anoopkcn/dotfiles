@@ -20,10 +20,19 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 # ZSH plugins
-source /Users/akc/.config/zsh-plugins/znap/znap.zsh
-znap source zdharma-continuum/fast-syntax-highlighting
-znap source zshzoo/macos
-znap source zsh-users/zsh-autosuggestions
-bindkey '^y' autosuggest-accept
-eval "$(zoxide init --cmd cd zsh)"
-eval "$(starship init zsh)"
+if [ -f "/Users/akc/.config/zsh-plugins/znap/znap.zsh" ]; then
+    source /Users/akc/.config/zsh-plugins/znap/znap.zsh
+    znap source zdharma-continuum/fast-syntax-highlighting
+    znap source zshzoo/macos
+    znap source zsh-users/zsh-autosuggestions
+    bindkey '^y' autosuggest-accept
+fi
+
+if [ -x "$(command -v zoxide)" ]; then
+    eval "$(zoxide init --cmd cd zsh)"
+fi
+
+if [ -x "$(command -v starship)" ]; then
+    eval "$(starship init zsh)"
+fi
+
