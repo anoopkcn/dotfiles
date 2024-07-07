@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-stow zsh alacritty vim tmux tmuxinator
+stow zsh alacritty vim tmux tmuxinator starship	
