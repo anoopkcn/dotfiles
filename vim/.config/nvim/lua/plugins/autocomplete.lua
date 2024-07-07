@@ -28,10 +28,10 @@ return {
 
 			-- load sources for autocomplete that is from buffers and lsp servers
 			sources = {
-				{ name = "nvim_lsp", group_index = 2 },
-				{ name = "buffer", group_index = 2, keyword_length = 3 },
-				{ name = "path", group_index = 2 },
-				{ name = "copilot", group_index = 2 },
+				{ name = "copilot", priority = 1, group_index = 2 },
+				{ name = "buffer", priority = 1, group_index = 2, keyword_length = 3 },
+				{ name = "nvim_lsp", priority = 2, group_index = 2 },
+				{ name = "path", priority = 2, group_index = 2 },
 			},
 
 			window = {
@@ -47,9 +47,9 @@ return {
 					show_labelDetails = true,
 					menu = {
 						nvim_lsp = "[LSP]",
-						buffer = "[Buff]",
-						path = "[Path]",
-						copilot = "[Copi]",
+						buffer = "[BUFF]",
+						path = "[PATH]",
+						copilot = "[LLM]",
 					},
 				}),
 			},
