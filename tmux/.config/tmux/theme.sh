@@ -1,55 +1,56 @@
 # COLOUR
-tm_color_active=colour37
-tm_color_inactive=colour241
-tm_color_feature=colour37
-tm_color_session=colour32
-tm_color_selection=colour32
-tm_color_datetime=color239
-# separators
-tm_separator_left_bold=""
-tm_separator_left_thin=""
-tm_separator_right_bold=""
-tm_symbol="▣ "
+thm_bg="#24273a"
+tm_fg="#cad3f5"
+tm_cyan="#91d7e3"
+tm_black="#1e2030"
+tm_gray="#626262"
+tm_magenta="#c6a0f6"
+tm_pink="#f5bde6"
+tm_red="#ed8796"
+tm_green="#a6da95"
+tm_yellow="#eed49f"
+tm_blue="#8aadf4"
+tm_orange="#f5a97f"
+tm_black4="#5b6078"
+tm_selection="#387EA2"
 
-set -g status-left-length 32
-set -g status-right-length 150
+# set -g status 1
+set -g status-left-length "100"
+set -g status-right-length "100"
 set -g status-interval 2
-
+set -wg mode-style bg=$tm_selection
 
 # default statusbar colors
-set-option -g status-style fg=$tm_color_active,bg=default,default
+set-option -g status-style fg=$tm_blue,bg=default,default
 
 # default window title colors
-set-window-option -g window-status-style fg=$tm_color_inactive,bg=default
-set -g window-status-format "#W" ##I
+set-window-option -g window-status-style fg=$tm_gray,bg=default
+set -g window-status-format "#I #W" ##I
 
 # active window title colors
-set-window-option -g window-status-current-style fg=$tm_color_active,bg=default
-set-window-option -g  window-status-current-format "#[fg=$tm_color_feature]#W"  #[#I,#W#F]
+set-window-option -g window-status-current-style fg=$tm_blue,bg=default
+set-window-option -g  window-status-current-format "#[fg=$tm_green]#I #W"  #[#I,#W#F]
 
 # pane border
-set-option -g pane-border-style fg=$tm_color_inactive
-set-option -g pane-active-border-style fg=$tm_color_active
+set-option -g pane-border-style fg=$tm_gray
+set-option -g pane-active-border-style fg=$tm_green
 
 # message text
-set-option -g message-style fg=$tm_color_active,bg=default
+set-option -g message-style fg=$tm_green,bg=default
 #set-option -g message-fg $tm_color_active
 
 # pane number display
-set-option -g display-panes-active-colour $tm_color_active
-set-option -g display-panes-colour $tm_color_inactive
+set-option -g display-panes-active-colour $tm_green
+set-option -g display-panes-colour $tm_gray
 
 # clock
-set-window-option -g clock-mode-colour $tm_color_active
+set-window-option -g clock-mode-colour $tm_green
 
-tm_date="#[fg=colour239]%d/%m/%Y #[fg=colour239]%H:%M"
-tm_pwd="#[fg=colour239,bold]#{pane_current_path}"
-tm_host="#[fg=$tm_color_feature,bold]#H"
-tm_session_name="#[fg=$tm_color_session]#S"
-tm_session_symbol="#[fg=$tm_color_session]$tm_symbol"
+tm_date="#[fg=$tm_gray]%d/%m/%Y #[fg=$tm_gray]%H:%M"
+# tm_pwd="#[fg=$tm_gray,bold]#{pane_current_path}"
+tm_host="#[fg=$tm_green,bold]#H"
+tm_session_name="#[fg=$tm_blue]#S"
 
 #settings status bar
-set -g status-right $tm_session_name" "$tm_date #$tm_separator_right_thin
+set -g status-right  $tm_session_name" "$tm_date 
 set -g status-left ""
-
-set -wg mode-style bg=$tm_color_selection #,fg=black

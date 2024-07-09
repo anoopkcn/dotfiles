@@ -7,9 +7,8 @@ bind Space send-prefix
 
 bind-key a send-prefix # for nested tmux sessions
 
-bind R source-file ~/.tmux.conf \; display "Reloaded" # reload config file
+bind R source-file ~/.config/tmux/tmux.conf \; display "TMUX Reloaded" 
 
-# split window and fix path for tmux 1.9
 bind | split-window -h -c "#{pane_current_path}"
 bind - split-window -v -c "#{pane_current_path}"
 

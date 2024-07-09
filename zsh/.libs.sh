@@ -28,11 +28,22 @@ if [ -f "/Users/akc/.config/zsh-plugins/znap/znap.zsh" ]; then
     bindkey '^y' autosuggest-accept
 fi
 
-if [ -x "$(command -v zoxide)" ]; then
-    eval "$(zoxide init --cmd cd zsh)"
-fi
+eval "$(zoxide init --cmd cd zsh)"
+eval "$(starship init zsh)"
 
-if [ -x "$(command -v starship)" ]; then
-    eval "$(starship init zsh)"
-fi
-
+# source <(fzf --zsh)
+# export FZF_DEFAULT_COMMAND='fd --type f'
+# export FZF_DEFAULT_OPTS=" \
+# --height 40% --layout reverse --info inline --border \
+# --preview 'bat --color=always {}' --preview-window '~3' \
+# --color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796 \
+# --color=fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6 \
+# --color=marker:#f4dbd6,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796"
+#
+# _fzf_compgen_path() {
+#   fd --hidden --follow --exclude ".git" . "$1"
+# }
+#
+# _fzf_compgen_dir() {
+#   fd --type d --hidden --follow --exclude ".git" . "$1"
+# }

@@ -52,7 +52,7 @@ function git_log() {
     fi
 }
 
-function git_fetch(){
+function git_fetch_file(){
     if [ $# -eq 0 ]; then
         echo "Usage: fetch_file <owner/repo> [<file>]"
         return 1
@@ -65,7 +65,7 @@ function git_fetch(){
         file_name=$(echo ${_file//\ /\/})
         # echo "$owner/$repo,  $file_name"
         curl -H "Accept: application/vnd.github.raw" \
-        "https://api.github.com/repos/${owner}/${repo}/contents/${file_name}"
+        "https://api.github.com/repos/${owner}/${repo}/contents/${file_name}" >> ${file_name}
     else
         curl -H "Accept: application/vnd.github.raw" \
         https://api.github.com/repos/$1/contents/$2

@@ -17,6 +17,7 @@ if ! [ $ZSH_VERSION ]; then
 fi
 bindkey '^[^M' self-insert-unmeta
 
+alias ls='exa'
 alias ta='tmux attach -t'
 alias tnew='tmux new -s'
 alias tsend='tmux send -t'
