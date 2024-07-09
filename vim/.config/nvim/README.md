@@ -38,21 +38,23 @@ All plugin specific configurations are stored in the `lua/plugins` directory. Al
 ## NeoVim Plugins
 
 <!--
-#
-rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
-#
+copy the following line yy
+r!rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}' | sort
+execute copied command in the command mode :@"  OR :<ctrl-r>"
 -->
 
+- [autopairs](https://github.com/windwp/nvim-autopairs)
 - [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
 - [conform.nvim](https://github.com/stevearc/conform.nvim)(auto-formatting)
 - [copilot](https://github.com/zbirenbaum/copilot.lua)(ai auto-completion)
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)(gutter signs for git)
 - [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
-- [mason.nvim](https://github.com/williamboman/mason.nvim)(**language server, formatter and dap manager**)
+- [mason.nvim](https://github.com/williamboman/mason.nvim)(**language tools manager**)
 - [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) (auto-completion)
 - [nvm-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)(code highlighting)
-- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
+- [oil.nvim](https://github.com/stevearc/oil.nvim)(file explorer)
 - [surround](https://github.com/tpope/vim-surround)(surround motion for pairs)
+- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
 - [trouble.nvim](https://github.com/folke/trouble.nvim)(better quick fix list)
 - [vim-fugitive](https://github.com/tpope/vim-fugitive)(best git plugin)
 - [vim-repeat](https://github.com/tpope/vim-repeat)(repeat motions with dot)

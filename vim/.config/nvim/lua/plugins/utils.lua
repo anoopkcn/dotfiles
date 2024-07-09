@@ -17,7 +17,6 @@ return {
 	{
 		-- [vim-fugitive](https://github.com/tpope/vim-fugitive)(best git plugin)
 		"tpope/vim-fugitive",
-		enabled = true,
 		config = function()
 			vim.keymap.set("n", "<leader>G", vim.cmd.Git)
 			vim.keymap.set("n", "gh", "<cmd>diffget //2<CR>")
@@ -37,7 +36,6 @@ return {
 	},
 	{
 		"christoomey/vim-tmux-navigator",
-		enabled = true,
 		cmd = {
 			"TmuxNavigateLeft",
 			"TmuxNavigateDown",

@@ -1,9 +1,15 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 -- since Space is the leader key do nothing
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
 
--- remove search highlight on escape
+-- search highlight on escape
 vim.keymap.set("n", "<Esc>", "<Cmd>nohlsearch<CR>")
+
+-- ctrl+c as escape
+vim.keymap.set("i", "<C-c>", "<Esc>")
 
 -- vrertical scroll half a page up and center it
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -45,3 +51,6 @@ vim.keymap.set("n", "k", [[v:count?'k': 'gk']], { noremap = true, expr = true })
 
 -- remove buffer from currect active buffers
 vim.keymap.set("n", "<Leader>bd", "<Cmd>bd<CR>")
+
+-- keep cursor at the bottom of visual once yanked
+vim.keymap.set("v", "y", "ygv")
