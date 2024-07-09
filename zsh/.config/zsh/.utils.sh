@@ -51,24 +51,24 @@ function git_log() {
         git log --oneline --decorate --max-count=$1 --all --graph
     fi
 }
+function join_by { local IFS="$1"; shift; echo "$*"; }
 
-function git_fetch_file(){
+function git_get(){
     if [ $# -eq 0 ]; then
-        echo "Usage: fetch_file <owner/repo> [<file>]"
+        echo "Usage: git_get_file <owner/repo> [<folder/file>]"
         return 1
     elif [ $# -eq 1 ]; then
         file_url="$1"
         file_arr=($(echo ${file_url//\//\ }))
         owner=${file_arr[3]}
         repo=${file_arr[4]}
-        _file=$(echo ${file_arr[@]:6})
-        file_name=$(echo ${_file//\ /\/})
-        # echo "$owner/$repo,  $file_name"
+        filename=$(join_by "/" ${file_arr[@]:6})
+        echo "${owner} ${repo} ${filename}"
         curl -H "Accept: application/vnd.github.raw" \
-        "https://api.github.com/repos/${owner}/${repo}/contents/${file_name}" >> ${file_name}
+            "https://api.github.com/repos/${owner}/${repo}/contents/${filename}" >> ${file_arr[-1]}
     else
         curl -H "Accept: application/vnd.github.raw" \
-        https://api.github.com/repos/$1/contents/$2
+        https://api.github.com/repos/$1/contents/$2 >> $2
     fi
 }
 
