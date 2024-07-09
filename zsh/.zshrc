@@ -3,8 +3,8 @@ export LC_ALL=en_GB.UTF-8
 export TERM="xterm-256color"
 export EDITOR='vim'
 
-source ${HOME}/.utils.sh
-source ${HOME}/.libs.sh
+source ${HOME}/.config/zsh/.utils.sh
+source ${HOME}/.config/zsh/.libs.sh
 
 if ! [ $ZSH_VERSION ]; then
   bind TAB:menu-complete
@@ -24,7 +24,8 @@ alias tsend='tmux send -t'
 alias ts='tmuxinator start'
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
-alias sync="rsync -airzvc --exclude-from=${HOME}/.rsync-local-ignore --prune-empty-dirs"
+alias sync="rsync -airzvc --exclude-from=${HOME}/.config/zsh/.rsync-local-ignore --prune-empty-dirs"
+alias explain="gh copilot explain"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   alias pbcopy='xclip -selection clipboard'
