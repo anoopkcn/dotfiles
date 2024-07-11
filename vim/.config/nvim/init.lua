@@ -1,4 +1,4 @@
--- Neovim configuration file
+-- Neovim configuration
 -- Author: @anoopkcn
 -- License: MIT
 -- Refer to README.md for more information
