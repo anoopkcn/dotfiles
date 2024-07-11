@@ -11,6 +11,15 @@ return {
 			views = {
 				mini = {
 					timeout = 2500,
+					reverse = false,
+					align = "message-left",
+					border = {
+						style = "rounded",
+					},
+					position = {
+						row = 3,
+						col = "100%",
+					},
 				},
 			},
 			lsp = {
