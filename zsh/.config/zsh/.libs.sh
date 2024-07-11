@@ -31,19 +31,40 @@ fi
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
 
-# source <(fzf --zsh)
-# export FZF_DEFAULT_COMMAND='fd --type f'
-# export FZF_DEFAULT_OPTS=" \
-# --height 40% --layout reverse --info inline --border \
-# --preview 'bat --color=always {}' --preview-window '~3' \
-# --color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796 \
-# --color=fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6 \
-# --color=marker:#f4dbd6,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796"
-#
-# _fzf_compgen_path() {
-#   fd --hidden --follow --exclude ".git" . "$1"
-# }
-#
-# _fzf_compgen_dir() {
-#   fd --type d --hidden --follow --exclude ".git" . "$1"
-# }
+source <(fzf --zsh)
+export FZF_DEFAULT_COMMAND='fd --type f'
+
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
+
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf --preview 'tree -C {} | head -200'   "$@" ;;
+    export|unset) fzf --preview "eval 'echo \$'{}"         "$@" ;;
+    ssh)          fzf --preview 'dig {}'                   "$@" ;;
+    *)            fzf --preview 'bat -n --color=always {}' "$@" ;;
+  esac
+}
+
+export FZF_CTRL_T_OPTS="
+  --walker-skip .git,node_modules,target
+  --preview 'bat -n --color=always {}'
+  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+  --color=fg:#cad3f5,fg+:#d0d0d0,bg:#24273a,bg+:#393c55
+  --color=hl:#ed8796,hl+:#5fd7ff,info:#c6a0f6,marker:#EAD5A5
+  --color=prompt:#c6a0f6,spinner:#f4dbd6,pointer:#f4dbd6,header:#ed8796
+  --color=gutter:#252739,border:#3A405A,preview-border:#3A405A,label:#aeaeae
+  --color=query:#d9d9d9
+  --border="rounded" --border-label="" --preview-window="border-rounded" --prompt="❯"
+  --marker="+" --pointer="❯" --separator="─" --scrollbar=""
+  --layout="reverse" --info="right"'
