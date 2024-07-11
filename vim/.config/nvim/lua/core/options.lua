@@ -33,4 +33,5 @@ if vim.fn.has("Mac") == 1 then
 	vim.opt.showbreak = "⤷ "
 end
 
-vim.opt.statusline = [[%{exists('g:loaded_fugitive')?fugitive#statusline():''} %f %m %= %y %l:%c %p%%]]
+-- configure status line
+vim.opt.statusline = [[%f %m %= %{get(b:,'gitsigns_status','')} %{fugitive#statusline()} %y %l:%c %p%%]]
