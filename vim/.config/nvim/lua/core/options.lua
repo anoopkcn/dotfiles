@@ -1,4 +1,4 @@
--- netrw Explore options
+-- netrw Explore options (This is replaced by Oil.nvim now)
 -- vim.g.netrw_browse_split = 0
 -- vim.g.netrw_banner = 0
 -- vim.g.netrw_winsize = 25
@@ -33,4 +33,4 @@ if vim.fn.has("Mac") == 1 then
 	vim.opt.showbreak = "⤷ "
 end
 
-vim.opt.statusline = [[%f %y %m%{exists('g:loaded_fugitive')?fugitive#statusline():''} %= %l:%c %p%%]]
+vim.opt.statusline = [[%{exists('g:loaded_fugitive')?fugitive#statusline():''} %f %m %= %y %l:%c %p%%]]
