@@ -24,7 +24,7 @@ alias tsend='tmux send -t'
 alias ts='tmuxinator start'
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
-alias sync="rsync -airzvc --exclude-from=${HOME}/.config/zsh/.rsync-local-ignore --prune-empty-dirs"
+alias sync="rsync --archive --itemize-changes --recursive --compress --verbose --checksum --exclude-from=${HOME}/.config/zsh/.rsync-local-ignore --prune-empty-dirs"
 alias explain="gh copilot explain"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
