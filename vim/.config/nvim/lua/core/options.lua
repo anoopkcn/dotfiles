@@ -32,3 +32,5 @@ if vim.fn.has("Mac") == 1 then
 	vim.opt.linebreak = true
 	vim.opt.showbreak = "⤷ "
 end
+
+vim.opt.statusline = [[%f %y %m%{exists('g:loaded_fugitive')?fugitive#statusline():''} %= %l:%c %p%%]]
