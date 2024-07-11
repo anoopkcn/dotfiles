@@ -34,4 +34,4 @@ if vim.fn.has("Mac") == 1 then
 end
 
 -- configure status line
-vim.opt.statusline = [[%f %m %= %{get(b:,'gitsigns_status','')} %{fugitive#statusline()} %y %l:%c %p%%]]
+vim.opt.statusline = [[%f %m %{fugitive#statusline()} %{get(b:,'gitsigns_status','')} %= %y %l:%c %p%%]]

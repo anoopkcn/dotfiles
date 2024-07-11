@@ -15,18 +15,19 @@ return {
 		enabled = true,
 	},
 	{
-		-- [vim-fugitive](https://github.com/tpope/vim-fugitive)(best git plugin)
-		"tpope/vim-fugitive",
-		config = function()
-			vim.keymap.set("n", "<leader>G", vim.cmd.Git)
-			vim.keymap.set("n", "gh", "<cmd>diffget //2<CR>")
-			vim.keymap.set("n", "gl", "<cmd>diffget //3<CR>")
-		end,
-	},
-	{
 		-- [surround](https://github.com/tpope/vim-surround)(surround motion for pairs)
 		"tpope/vim-surround",
 		enabled = true,
+	},
+	{
+		"mbbill/undotree",
+		config = function()
+			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
+		end,
+	},
+	{
+		"j-hui/fidget.nvim",
+		opts = {},
 	},
 	{
 		-- [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
@@ -50,5 +51,14 @@ return {
 			{ "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
 			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 		},
+	},
+	{
+		"echasnovski/mini.tabline",
+		version = "*",
+		config = function()
+			require("mini.tabline").setup({
+				show_icons = false,
+			})
+		end,
 	},
 }
