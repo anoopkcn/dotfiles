@@ -52,13 +52,4 @@ return {
 			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 		},
 	},
-	{
-		"echasnovski/mini.tabline",
-		version = "*",
-		config = function()
-			require("mini.tabline").setup({
-				show_icons = false,
-			})
-		end,
-	},
 }

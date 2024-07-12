@@ -2,13 +2,11 @@
 
 return {
 	"folke/trouble.nvim",
-
 	opts = {
+		icons = false,
 		auto_close = true,
 	},
-
 	cmd = "Trouble",
-
 	keys = {
 		{
 			"<leader>tt",
@@ -26,18 +24,4 @@ return {
 			desc = "Go to previous diagnostic",
 		},
 	},
-	--[[ config = function()
-		-- Use this to add more results without clearing the trouble list
-		local add_to_trouble = require("trouble.sources.telescope").add
-
-		-- local open_with_trouble = require("trouble.sources.telescope").open
-		require("telescope").setup({
-			defaults = {
-				mappings = {
-					i = { ["<c-t>"] = add_to_trouble },
-					n = { ["<c-t>"] = add_to_trouble },
-				},
-			},
-		})
-	end, ]]
 }

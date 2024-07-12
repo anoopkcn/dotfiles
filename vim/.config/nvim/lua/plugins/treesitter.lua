@@ -1,38 +1,28 @@
 -- [nvm-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)(code highlighting)
-
 return {
 	"nvim-treesitter/nvim-treesitter",
-	build = ":TSUpdateSync",
-	event = { "BufReadPre", "BufNewFile" },
-	dependencies = {
-		"nvim-treesitter/nvim-treesitter-textobjects",
-	},
+	build = ":TSUpdate",
 	opts = {
 		ensure_installed = {
-			"bash",
-			"c",
-			"diff",
-			"html",
-			"lua",
-			"luadoc",
-			"markdown",
-			"vim",
 			"vimdoc",
-			"python",
 			"javascript",
 			"typescript",
+			"c",
+			"lua",
+			"rust",
+			"jsdoc",
+			"bash",
+			"python",
 		},
-
+		sync_install = false,
 		auto_install = true,
+		indent = { enable = true },
 
 		highlight = {
 			enable = true,
-			additional_vim_regex_highlighting = { "ruby" },
+			additional_vim_regex_highlighting = { "markdown" },
 		},
-
-		indent = { enable = true, disable = { "ruby" } },
 	},
-
 	config = function(_, opts)
 		require("nvim-treesitter.configs").setup(opts)
 	end,

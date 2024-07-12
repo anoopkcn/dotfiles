@@ -5,28 +5,12 @@ return {
 
 	dependencies = {
 		"nvim-lua/plenary.nvim",
-		"folke/trouble.nvim",
 	},
 
 	config = function()
 		local telescope = require("telescope")
 		local builtin = require("telescope.builtin")
-
-		telescope.setup({
-			defaults = {
-				file_ignore_patterns = { "node_modules", "env", "venv", ".env", ".git" },
-				vimgrep_arguments = {
-					"rg",
-					"--color=never",
-					"--no-heading",
-					"--with-filename",
-					"--line-number",
-					"--column",
-					"--smart-case",
-					"--trim",
-				},
-			},
-		})
+		telescope.setup({})
 
 		-- FILE related functions
 		vim.keymap.set("n", "<leader>ff", function()

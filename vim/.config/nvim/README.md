@@ -1,6 +1,6 @@
 # NeoVim setup
 
-Philosophy:
+**Philosophy:**
 
 - If you can't explain it, _you don't need it._
 - If it becomes a chore to maintain, _you don't need it._
