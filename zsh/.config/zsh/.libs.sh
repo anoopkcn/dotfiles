@@ -30,6 +30,7 @@ fi
 
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
+ eval "$(thefuck --alias)"
 
 source <(fzf --zsh)
 export FZF_DEFAULT_COMMAND='fd --type f'
@@ -65,6 +66,6 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
   --color=prompt:#c6a0f6,spinner:#f4dbd6,pointer:#f4dbd6,header:#ed8796
   --color=gutter:#252739,border:#3A405A,preview-border:#3A405A,label:#aeaeae
   --color=query:#d9d9d9
-  --border="rounded" --border-label="" --preview-window="border-rounded" --prompt="❯"
+  --height 40% --border="rounded" --border-label="" --preview-window="border-rounded" --prompt="❯"
   --marker="+" --pointer="❯" --separator="─" --scrollbar=""
   --layout="reverse" --info="right"'
