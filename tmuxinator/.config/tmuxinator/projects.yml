@@ -1,8 +1,0 @@
-# ~/.tmuxinator/work.yml
-name: projects
-root: /Users/akc/Dropbox/projects
-
-windows:
-  - project:
-      layout: main-vertical
-      panes:

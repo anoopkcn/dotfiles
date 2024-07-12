@@ -1,9 +1,0 @@
-
-# ~/.tmuxinator/default.yml
-name: default
-root: <%= @args[0] %>
-
-windows:
-  - term:
-      layout: main-vertical
-      panes:
