@@ -73,26 +73,6 @@ function git_get(){
 }
 
 # TMUX functions
-function tls() {
-    if [ $# -eq 1 ]; then
-        case $1 in
-        -a)
-            for f in ${HOME}/.config/tmuxinator/*.yml; do
-                filename=$(basename "$f")
-                filename="${filename%.*}"
-                printf "%s\n" "${filename}"
-            done
-            ;;
-        esac
-    else
-        t_sessions=($(tmux ls | cut -d : -f 1))
-        for i in "${t_sessions[@]}"; do
-            printf "\e[96m${i}\e[0m\n"
-            (tmux lsw -t ${i} | awk '{print $1,$2}')
-        done
-    fi
-}
-
 function tkill() {
     if [ $# -eq 1 ]; then
         case $1 in
