@@ -1,6 +1,6 @@
 # ~/.tmuxinator/dot.yml
 name: config
-root: ~/.config
+root: ~/Dropbox/dotfiles
 
 windows:
   - conf:

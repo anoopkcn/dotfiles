@@ -46,6 +46,7 @@ bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
 
 bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'
 
+bind-key -r i run-shell "tmux neww ~/.config/zsh/cht.sh"
 
 # search for prompt
 # bind-key @ copy-mode\;\
