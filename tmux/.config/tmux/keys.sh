@@ -43,10 +43,10 @@ unbind -T copy-mode-vi MouseDragEnd1Pane
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection
 bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
-
 bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'
 
 bind-key -r i run-shell "tmux neww ~/.config/zsh/cht.sh"
+bind-key -r f run-shell "tmux neww ~/.config/zsh/tmux_sessionizer.sh"
 
 # search for prompt
 # bind-key @ copy-mode\;\
