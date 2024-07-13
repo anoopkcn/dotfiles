@@ -43,10 +43,11 @@ r!rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
 execute copied command in the command mode :@"  OR :<ctrl-r>"
 -->
 
-- [autopairs](https://github.com/windwp/nvim-autopairs)
+- [autopairs](https://github.com/windwp/nvim-autopairs) (add pairs automatically)
 - [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
 - [conform.nvim](https://github.com/stevearc/conform.nvim)(auto-formatting)
 - [copilot](https://github.com/zbirenbaum/copilot.lua)(ai auto-completion)
+- [fidget.nvim](https://github.com/j-hui/fidget.nvim) (nvim notifications)
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)(gutter signs for git)
 - [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
 - [mason.nvim](https://github.com/williamboman/mason.nvim)(**language tools manager**)
