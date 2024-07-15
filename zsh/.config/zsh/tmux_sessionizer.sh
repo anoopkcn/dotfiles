@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# I got this from theprimagen (the streamer)
 
 if [[ $# -eq 1 ]]; then
     selected=$1

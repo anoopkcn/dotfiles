@@ -30,7 +30,7 @@ fi
 
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
- eval "$(thefuck --alias)"
+eval "$(thefuck --alias)"
 
 source <(fzf --zsh)
 export FZF_DEFAULT_COMMAND='fd --type f'

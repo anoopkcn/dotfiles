@@ -1,3 +1,4 @@
+-- [fidget.nvim](https://github.com/j-hui/fidget.nvim?tab=readme-ov-file#options) (nvim notifications)
 return {
 	"j-hui/fidget.nvim",
 	opts = {},
@@ -7,7 +8,7 @@ return {
 				poll_rate = 10, -- How frequently to update and render notifications
 				filter = vim.log.levels.INFO, -- Minimum notifications level
 				history_size = 128, -- Number of removed messages to retain in history
-				override_vim_notify = true, -- Automatically override vim.notify() with Fidget
+				override_vim_notify = false, -- Automatically override vim.notify() with Fidget
 				-- How to configure notification groups when instantiated
 				configs = { default = require("fidget.notification").default_config },
 				-- Conditionally redirect notifications to another backend
@@ -19,7 +20,7 @@ return {
 
 				-- Options related to how notifications are rendered as text
 				view = {
-					stack_upwards = true, -- Display notification items from bottom to top
+					stack_upwards = false, -- Display notification items from bottom to top
 					icon_separator = " ", -- Separator between group name and icon
 					group_separator = "---", -- Separator between notification groups
 					-- Highlight group used for group separator
@@ -40,7 +41,7 @@ return {
 					max_height = 0, -- Maximum height of the notification window
 					x_padding = 1, -- Padding from right edge of window boundary
 					y_padding = 0, -- Padding from bottom edge of window boundary
-					align = "bottom", -- How to align the notification window
+					align = "top", -- How to align the notification window
 					relative = "editor", -- What the notification window position is relative to
 				},
 			},

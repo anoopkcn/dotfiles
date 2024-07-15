@@ -26,10 +26,6 @@ return {
 		end,
 	},
 	{
-		"j-hui/fidget.nvim",
-		opts = {},
-	},
-	{
 		-- [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
 		"numToStr/Comment.nvim",
 		enabled = true,

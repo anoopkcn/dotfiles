@@ -1,4 +1,4 @@
--- [autopairs](https://github.com/windwp/nvim-autopairs)
+-- [autopairs](https://github.com/windwp/nvim-autopairs) (add closing pair automatically)
 
 return {
 	"windwp/nvim-autopairs",
