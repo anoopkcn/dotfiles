@@ -43,18 +43,17 @@ r!rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
 execute copied command in the command mode :@"  OR :<ctrl-r>"
 -->
 
-- [autopairs](https://github.com/windwp/nvim-autopairs) (add pairs automatically)
+- [autopairs](https://github.com/windwp/nvim-autopairs) (add closing pair automatically)
 - [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
 - [conform.nvim](https://github.com/stevearc/conform.nvim)(auto-formatting)
 - [copilot](https://github.com/zbirenbaum/copilot.lua)(ai auto-completion)
-- [fidget.nvim](https://github.com/j-hui/fidget.nvim) (nvim notifications)
+- [fidget.nvim](https://github.com/j-hui/fidget.nvim?tab=readme-ov-file#options) (nvim notifications)
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)(gutter signs for git)
 - [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
 - [mason.nvim](https://github.com/williamboman/mason.nvim)(**language tools manager**)
 - [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) (auto-completion)
 - [nvm-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)(code highlighting)
 - [oil.nvim](https://github.com/stevearc/oil.nvim)(file explorer)
-- [surround](https://github.com/tpope/vim-surround)(surround motion for pairs)
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
 - [trouble.nvim](https://github.com/folke/trouble.nvim)(better quick fix list)
 - [vim-fugitive](https://github.com/tpope/vim-fugitive)(best git plugin)
