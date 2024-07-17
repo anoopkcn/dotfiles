@@ -5,7 +5,7 @@ return {
 		enabled = true,
 	},
 	{
-		-- [vim-surround](https://github.com/tpope/vim-surround)(surround text with pairs)
+		--[vim-sleuth](https://github.com/tpope/vim-sleuth)(automatic adjustment of tabs)
 		"tpope/vim-sleuth",
 		enabled = true,
 	},
@@ -15,11 +15,12 @@ return {
 		enabled = true,
 	},
 	{
-		-- [surround](https://github.com/tpope/vim-surround)(surround motion for pairs)
+		-- [vim-surround](https://github.com/tpope/vim-surround)(surround text with pairs)
 		"tpope/vim-surround",
 		enabled = true,
 	},
 	{
+		--[undo tree](https://github.com/mbbill/undotree)(poor-man's git)
 		"mbbill/undotree",
 		config = function()
 			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
