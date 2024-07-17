@@ -10,7 +10,14 @@ return {
 	config = function()
 		local telescope = require("telescope")
 		local builtin = require("telescope.builtin")
-		telescope.setup({})
+		telescope.setup({
+			defaults = {
+				file_ignore_patterns = {
+					"node_modules",
+					".git",
+				},
+			},
+		})
 
 		-- FILE related functions
 		vim.keymap.set("n", "<leader>ff", function()

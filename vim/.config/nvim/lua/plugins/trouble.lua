@@ -3,7 +3,7 @@
 return {
 	"folke/trouble.nvim",
 	opts = {
-		icons = false,
+		-- icons = false,
 		auto_close = true,
 	},
 	cmd = "Trouble",
