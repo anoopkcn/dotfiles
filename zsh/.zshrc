@@ -5,6 +5,7 @@ export EDITOR='vim'
 
 source ${HOME}/.config/zsh/utils.sh
 source ${HOME}/.config/zsh/libs.sh
+export NOTES="/Users/akc/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes"
 
 if ! [ $ZSH_VERSION ]; then
   bind TAB:menu-complete
@@ -32,3 +33,12 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   alias pbcopy='xclip -selection clipboard'
   alias pbpaste='xclip -selection clipboard -o'
 fi
+
+fpath+=~/.zfunc
+# autoload -Uz compinit && compinit
+# Created by `pipx` on 2024-07-26 00:10:46
+export PATH="$PATH:/Users/akc/.local/bin"
+
+#This makes Tab and ShiftTab, when pressed on the command line, cycle through listed completions, without changing what's listed in the menu:
+bindkey              '^I'         menu-complete
+bindkey "$terminfo[kcbt]" reverse-menu-complete
