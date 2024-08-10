@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-stow zsh alacritty vim tmux starship	
+stow zsh wezterm vim tmux starship	

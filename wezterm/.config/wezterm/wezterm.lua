@@ -13,5 +13,7 @@ config.window_padding = {
   top = 10,
   bottom = 10,
 }
+config.initial_cols = 120
+config.initial_rows = 38
 
 return config
