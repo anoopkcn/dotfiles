@@ -5,6 +5,7 @@ export EDITOR='vim'
 
 source ${HOME}/.config/zsh/utils.sh
 source ${HOME}/.config/zsh/libs.sh
+source ${HOME}/.env.zsh
 export NOTES="/Users/akc/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes"
 
 if ! [ $ZSH_VERSION ]; then

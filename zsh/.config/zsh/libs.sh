@@ -25,7 +25,6 @@ if [ -f "/Users/akc/.config/zsh-plugins/znap/znap.zsh" ]; then
     znap source zdharma-continuum/fast-syntax-highlighting
     znap source zshzoo/macos
     znap source zsh-users/zsh-autosuggestions
-    znap source marlonrichert/zsh-autocomplete
     bindkey '^y' autosuggest-accept
 fi
 
