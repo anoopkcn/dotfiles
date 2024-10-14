@@ -1,0 +1,13 @@
+# alacritty settings
+
+import = [
+    "~/.config/alacritty/themes/onedark.toml"
+]
+
+[window]
+padding ={x=5,y=5}
+
+[font]
+normal = { family = "Zed Plex Mono", style = "Regular" }
+bold = { family = "Zed Plex Mono", style = "Regular" }
+size = 14.0
