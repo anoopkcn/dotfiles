@@ -1,0 +1,32 @@
+export LANG=en_US.UTF-8
+export LC_ALL=en_GB.UTF-8
+
+source ${HOME}/.config/zsh/utils.sh
+
+alias ls='exa'
+alias vim='nvim'
+alias duh="du -h -d 0 [^.]*"
+alias sync="rsync --archive --itemize-changes --recursive --compress --verbose --checksum --exclude-from=${HOME}/.config/zsh/rsync-local-ignore --prune-empty-dirs"
+alias tls="tmux list-sessions"
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  alias pbcopy='xclip -selection clipboard'
+  alias pbpaste='xclip -selection clipboard -o'
+fi
+
+
+#Library Settings
+# NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
+export PATH="/Library/TeX/texbin/:$PATH"
+
+# ZSH plugins
+if [ -f "/Users/akc/.config/zsh-plugins/znap/znap.zsh" ]; then
+    source /Users/akc/.config/zsh-plugins/znap/znap.zsh
+    znap source zdharma-continuum/fast-syntax-highlighting
+    znap source zshzoo/macos
+    znap source zsh-users/zsh-autosuggestions
+    bindkey '^y' autosuggest-accept
+fi
+
+eval "$(zoxide init --cmd cd zsh)"
+eval "$(starship init zsh)"
