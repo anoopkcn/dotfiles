@@ -1,0 +1,65 @@
+[
+  {
+    "context": "EmptyPane || SharedScreen || VimControl && !menu",
+    "bindings": {
+      "space f o": "projects::OpenRecent",
+      "space f b": "tab_switcher::Toggle",
+      "space f f": "file_finder::Toggle",
+      "space f s": "project_symbols::Toggle",
+      "space f t": "task::Spawn",
+      // "space t": [ "task::Rerun", {"reevaluate_context": true} ]
+      "space t": "task::Rerun"
+    }
+  },
+  {
+    "context": "TabSwitcher",
+    "bindings": {
+      // since tabswitcher doesn't have a search use navigation
+      "k": "menu::SelectPrev",
+      "j": "menu::SelectNext",
+      "x": "tab_switcher::CloseSelectedItem"
+    }
+  },
+  {
+    "context": "vim_mode == normal",
+    "bindings": {
+      "] h": "editor::GoToHunk",
+      "[ h": "editor::GoToPrevHunk",
+      "[ e": "editor::MoveLineUp",
+      "] e": "editor::MoveLineDown",
+      // Following j  & k bindings are needed for softwrap lines
+      "j": ["vim::Down", { "displayLines": true }],
+      "k": ["vim::Up", { "displayLines": true }]
+    }
+  },
+  {
+    "context": "Editor && VimControl && !menu",
+    "bindings": {
+      "space s": "outline::Toggle",
+      "space a": "editor::FindAllReferences",
+      "space v": "editor::GoToDefinitionSplit",
+      "space r": "editor::Rename",
+      "space h": "editor::ToggleHunkDiff",
+      "space |": "pane::SplitRight",
+      "space -": "pane::SplitDown",
+      "space p": "pane::AlternateFile",
+      "ctrl-6": ["pane::ActivateItem", 5], // since ctrl-6 conflics with vim's default alternate binding
+      // "space g b": "editor::ToggleGitBlame"
+      // pane navigation
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"]
+    }
+  },
+  {
+    "context": "Dock",
+    "bindings": {
+      // dock navigation(same as the pane navigation but for docks)
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"]
+    }
+  }
+]
