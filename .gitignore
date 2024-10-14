@@ -1,7 +1,7 @@
-*.zwc
+zsh/*.zwc
 lazy-lock.json
 .DS_Store
-tmux/.config/tmux/plugins
+tmux/plugins
 zed/embeddings/*
 zed/prompts/*
 zed/conversations/*
