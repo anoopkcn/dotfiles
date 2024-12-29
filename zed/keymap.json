@@ -7,6 +7,7 @@
       "space f f": "file_finder::Toggle",
       "space f s": "project_symbols::Toggle",
       "space f t": "task::Spawn",
+      "space f d": "diagnostics::Deploy",
       // "space t": [ "task::Rerun", {"reevaluate_context": true} ]
       "space t": "task::Rerun"
     }
@@ -23,6 +24,7 @@
   {
     "context": "vim_mode == normal",
     "bindings": {
+      "space =": "editor::ToggleHunkDiff",
       "] h": "editor::GoToHunk",
       "[ h": "editor::GoToPrevHunk",
       "[ e": "editor::MoveLineUp",
@@ -37,14 +39,16 @@
     "bindings": {
       "space s": "outline::Toggle",
       "space a": "editor::FindAllReferences",
-      "space v": "editor::GoToDefinitionSplit",
+      "space d": "editor::GoToDefinitionSplit",
       "space r": "editor::Rename",
-      "space h": "editor::ToggleHunkDiff",
-      "space |": "pane::SplitRight",
-      "space -": "pane::SplitDown",
       "space p": "pane::AlternateFile",
       "ctrl-6": ["pane::ActivateItem", 5], // since ctrl-6 conflics with vim's default alternate binding
       // "space g b": "editor::ToggleGitBlame"
+      // split directions
+      "space l": "pane::SplitRight",
+      "space h": "pane::SplitLeft",
+      "space j": "pane::SplitDown",
+      "space k": "pane::SplitUp",
       // pane navigation
       "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
       "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],

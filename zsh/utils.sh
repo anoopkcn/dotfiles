@@ -90,3 +90,13 @@ function tkill() {
         echo "Provide a TMUX session to kill"
     fi
 }
+
+# Python virtualenv functions
+function activate(){
+    # check for .venv/bin/activate file and if exist source it
+    if [ -f .venv/bin/activate ]; then
+        source .venv/bin/activate
+    else
+        echo "No virtualenv found in this directory"
+    fi
+}
