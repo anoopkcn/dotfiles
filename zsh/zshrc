@@ -19,7 +19,6 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 fi
 
 export PATH="/Library/TeX/texbin/:$PATH"
-# NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
 
 if [ -f "/Users/akc/.config/zsh-plugins/znap/znap.zsh" ]; then
     source /Users/akc/.config/zsh-plugins/znap/znap.zsh
@@ -31,6 +30,4 @@ fi
 
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
-eval "$(uv generate-shell-completion zsh)"
-eval "$(uvx --generate-shell-completion zsh)"
 source $HOME/.env.zsh
