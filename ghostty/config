@@ -1,0 +1,3 @@
+font-size = 14
+keybind = cmd+s>r=reload_config
+window-padding-balance = true
