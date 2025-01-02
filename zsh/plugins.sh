@@ -29,7 +29,9 @@ function plugin() {
                 source_file "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
                 source_file "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
             else
-                git clone "https://github.com/$PLUGIN_PATH.git" "$PLUGINS_DIR/$PLUGIN_NAME"
+                git clone "https://github.com/$PLUGIN_PATH.git" "$PLUGINS_DIR/$PLUGIN_NAME" && \
+                source_file "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
+                source_file "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
             fi
             ;;
         "update")
