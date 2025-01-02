@@ -41,7 +41,6 @@ r!rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
 execute copied command in the command mode :@"  OR :<ctrl-r>"
 -->
 
-- [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
 - [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
 - [nvm-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)(code highlighting)
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
@@ -49,3 +48,4 @@ execute copied command in the command mode :@"  OR :<ctrl-r>"
 - [vim-repeat](https://github.com/tpope/vim-repeat)(repeat motions with dot)
 - [vim-surround](https://github.com/tpope/vim-surround)(surround text with pairs)
 - [vim-unimpaired](https://github.com/tpope/vim-unimpaired)(sensible `[` and `]` commands)
+- [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
