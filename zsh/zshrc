@@ -9,11 +9,18 @@ typeset -U path
 path=($^path(N-/))
 export PATH
 
+# PROMPT
+precmd(){
+    print ""
+    print -P "%F{cyan}%~%f"
+}
+PROMPT='%F{green}❯%f '
+
 # INPUTRC
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
 bindkey '^y' autosuggest-accept
-# bindkey -v
+# bindkey -v # vi mode
 
 # FUNCTIONS
 function source_file() {
@@ -57,13 +64,6 @@ export FZF_DEFAULT_OPTS='
 --color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#282c34,pointer:#3c8494,prompt:#afaf87
 '
 
-# PROMPT
-precmd(){
-    print ""
-    print -P "%F{cyan}%~%f"
-}
-PROMPT='%F{green}❯%f '
-
 # HISTORY OPTIONS
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -74,7 +74,6 @@ setopt SHARE_HISTORY
 
 # ALIAS
 alias ls="ls --color=auto"
-# alias cat='bat -p'
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync \
