@@ -10,14 +10,21 @@ path=($^path(N-/))
 export PATH
 
 # INPUTRC
-# bindkey -v
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
 bindkey '^y' autosuggest-accept
+# bindkey -v
+
+# FUNCTIONS
+function source_file() {
+    [ -f "$1" ] && source "$1"
+}
+
+function path(){
+    echo -e ${PATH//:/\\n}
+}
 
 # SOURCE
-source_file() { [ -f "$1" ] && source "$1" }
-source_file ${HOME}/.config/zsh/utils.sh
 source_file ${HOME}/.config/zsh/plugins.sh
 source_file ${HOME}/.privaterc
 (( $+commands[brew] )) && source <(brew shellenv)
@@ -35,7 +42,7 @@ plugin add "Aloxaf/fzf-tab"
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no # requires fzf-tab plugin
+zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
@@ -51,9 +58,18 @@ export FZF_DEFAULT_OPTS='
 '
 
 # PROMPT
-PURE_GIT_PULL=0
-autoload -U promptinit; promptinit
-prompt pure
+autoload -Uz vcs_info
+setopt PROMPT_SUBST # variable expansion in prompt
+precmd() {
+    vcs_info
+    print -P "%F{cyan}%~%f %F{red}${vcs_info_msg_0_}%f"
+}
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' formats '%b%f%m%u%c%a'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' unstagedstr '%F{yellow}*%f'
+zstyle ':vcs_info:*' stagedstr '%F{green}+%f'
+PROMPT='%F{green}❯%f '
 
 # HISTORY OPTIONS
 HISTFILE=~/.zsh_history
@@ -65,7 +81,7 @@ setopt SHARE_HISTORY
 
 # ALIAS
 alias ls="ls --color=auto"
-alias cat='bat -p'
+# alias cat='bat -p'
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync \
@@ -75,5 +91,5 @@ alias sync="rsync \
   --compress \
   --verbose \
   --checksum \
-  --exclude-from=${HOME}/.config/zsh/rsync-local-ignore \
+  --exclude-from=${HOME}/.config/zsh/rsync-ignore \
   --prune-empty-dirs"

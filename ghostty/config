@@ -6,17 +6,13 @@ font-feature = -calt
 window-title-font-family = "TX-02"
 window-padding-balance = true
 window-colorspace = "display-p3"
+quick-terminal-position = bottom
 
 keybind = super+s>r=reload_config
 keybind = super+s>x=close_surface
 
 keybind = super+s>n=new_window
 keybind = super+s>t=new_tab
-
-keybind = super+s>right=new_split:right
-keybind = super+s>left=new_split:left
-keybind = super+s>up=new_split:up
-keybind = super+s>down=new_split:down
 
 keybind = super+s>l=goto_split:right
 keybind = super+s>h=goto_split:left
