@@ -5,7 +5,7 @@
 
 vim.g.have_nerd_font = true -- set to true if you have a nerd font installed
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true

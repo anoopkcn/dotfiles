@@ -1,24 +1,29 @@
+font-family = "TX-02"
 font-size = 14
+font-feature = -calt
+# font-feature = -liga
+# font-feature = -dlig
+window-title-font-family = "TX-02"
 window-padding-balance = true
 window-colorspace = "display-p3"
 
-keybind = cmd+s>r=reload_config
-keybind = cmd+s>x=close_surface
+keybind = super+s>r=reload_config
+keybind = super+s>x=close_surface
 
-keybind = cmd+s>n=new_window
-keybind = cmd+s>t=new_tab
+keybind = super+s>n=new_window
+keybind = super+s>t=new_tab
 
-keybind = cmd+s>l=new_split:right
-keybind = cmd+s>h=new_split:left
-keybind = cmd+s>k=new_split:up
-keybind = cmd+s>j=new_split:down
+keybind = super+s>right=new_split:right
+keybind = super+s>left=new_split:left
+keybind = super+s>up=new_split:up
+keybind = super+s>down=new_split:down
 
-keybind = alt+l=goto_split:right
-keybind = alt+h=goto_split:left
-keybind = alt+k=goto_split:top
-keybind = alt+j=goto_split:bottom
+keybind = super+s>l=goto_split:right
+keybind = super+s>h=goto_split:left
+keybind = super+s>k=goto_split:top
+keybind = super+s>j=goto_split:bottom
 
-keybind = cmd+s>z=toggle_split_zoom
-keybind = cmd+s>e=equalize_splits
+keybind = super+s>z=toggle_split_zoom
+keybind = super+s>e=equalize_splits
 
-keybind = global:cmd+grave_accent=toggle_quick_terminal
+keybind = global:super+grave_accent=toggle_quick_terminal
