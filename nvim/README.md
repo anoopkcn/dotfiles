@@ -13,8 +13,6 @@
 
 ## Optional Requirements
 
-- [Nerd Font](https://www.nerdfonts.com/)
-  - Nerdfonts are used for icons. _Everything should work without it but not as pretty._
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
   - Ripgrep is used for searching in files, it is faster than the default grep. _Everything should work without it but not as fast._
 
@@ -43,25 +41,11 @@ r!rg "\[.*\]\(.*\)" | grep "\-\- \[.*\]\(.*\)" | awk -F'\-\-' ' {print "-" $NF}'
 execute copied command in the command mode :@"  OR :<ctrl-r>"
 -->
 
-- [autopairs](https://github.com/windwp/nvim-autopairs) (add closing pair automatically)
 - [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
-- [conform.nvim](https://github.com/stevearc/conform.nvim)(auto-formatting)
-- [copilot](https://github.com/zbirenbaum/copilot.lua)(ai auto-completion)
-- [fidget.nvim](https://github.com/j-hui/fidget.nvim?tab=readme-ov-file#options) (nvim notifications)
-- [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)(gutter signs for git)
 - [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
-- [mason.nvim](https://github.com/williamboman/mason.nvim)(**language tools manager**)
-- [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) (auto-completion)
 - [nvm-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)(code highlighting)
-- [oil.nvim](https://github.com/stevearc/oil.nvim)(file explorer)
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
-- [trouble.nvim](https://github.com/folke/trouble.nvim)(better quick fix list)
 - [vim-fugitive](https://github.com/tpope/vim-fugitive)(best git plugin)
 - [vim-repeat](https://github.com/tpope/vim-repeat)(repeat motions with dot)
 - [vim-surround](https://github.com/tpope/vim-surround)(surround text with pairs)
 - [vim-unimpaired](https://github.com/tpope/vim-unimpaired)(sensible `[` and `]` commands)
-
-## Plugin configuration dependancy
-
-- lspconfig + nvim-lsp-cmp
-  - autocomplete plugin `nvim-cmp` is using lsp results for it's autocompletion

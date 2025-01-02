@@ -10,7 +10,7 @@ path=($^path(N-/))
 export PATH
 
 # INPUTRC
-bindkey -v # enables prompt vi emulation, -e for emacs
+# bindkey -v
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
 bindkey '^y' autosuggest-accept
@@ -20,16 +20,11 @@ source_file() { [ -f "$1" ] && source "$1" }
 source_file ${HOME}/.config/zsh/utils.sh
 source_file ${HOME}/.config/zsh/plugins.sh
 source_file ${HOME}/.privaterc
+(( $+commands[brew] )) && source <(brew shellenv)
+(( $+commands[fzf] )) && source <(fzf --zsh)
+(( $+commands[zoxide] )) && source <(zoxide init --cmd cd zsh)
 
 # PLUGINS
-if [[ -f "/opt/homebrew/bin/brew" ]] then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
-# requires `brew install fzf zoxide`
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
-
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
 plugin add "zsh-users/zsh-autosuggestions"
@@ -43,6 +38,17 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no # requires fzf-tab plugin
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+export FZF_DEFAULT_OPTS='
+--scrollbar=""
+--info="right"
+--height 50%
+--layout reverse
+--border rounded
+--prompt="❯ "
+--marker="+"
+--color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#282c34,pointer:#3c8494,prompt:#afaf87
+'
 
 # PROMPT
 PURE_GIT_PULL=0
