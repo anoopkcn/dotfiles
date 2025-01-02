@@ -15,5 +15,5 @@ Repository contains essential `config` and `rc` files.
 Set the PATH_TO_DOTFILES to the path inside the `setup.sh` file
 
 ```sh
-./setup.sh
+sh setup.sh
 ```

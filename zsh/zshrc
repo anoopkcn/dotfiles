@@ -58,17 +58,10 @@ export FZF_DEFAULT_OPTS='
 '
 
 # PROMPT
-autoload -Uz vcs_info
-setopt PROMPT_SUBST # variable expansion in prompt
-precmd() {
-    vcs_info
-    print -P "%F{cyan}%~%f %F{red}${vcs_info_msg_0_}%f"
+precmd(){
+    print ""
+    print -P "%F{cyan}%~%f"
 }
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' formats '%b%f%m%u%c%a'
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' unstagedstr '%F{yellow}*%f'
-zstyle ':vcs_info:*' stagedstr '%F{green}+%f'
 PROMPT='%F{green}❯%f '
 
 # HISTORY OPTIONS
@@ -93,3 +86,9 @@ alias sync="rsync \
   --checksum \
   --exclude-from=${HOME}/.config/zsh/rsync-ignore \
   --prune-empty-dirs"
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gb="git branch"
+alias gco="git checkout"
