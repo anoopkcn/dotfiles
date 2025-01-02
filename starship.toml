@@ -1,6 +1,0 @@
-# Inserts a blank line between shell prompts
-add_newline = true # defualt true
-format = "$directory$git_branch$git_commit$git_state$git_metrics$git_status$character"
-
-[line_break]
-disabled = true
