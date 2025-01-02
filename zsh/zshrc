@@ -10,22 +10,39 @@ path=($^path(N-/))
 export PATH
 
 # INPUTRC
-bindkey -v # enables prompt vi emulation
+bindkey -v # enables prompt vi emulation, -e for emacs
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
+bindkey '^y' autosuggest-accept
 
 # SOURCE
-function source_file() {
-    [ -f "$1" ] && source "$1"
-}
+source_file() { [ -f "$1" ] && source "$1" }
 source_file ${HOME}/.config/zsh/utils.sh
 source_file ${HOME}/.config/zsh/plugins.sh
 source_file ${HOME}/.privaterc
 
 # PLUGINS
+if [[ -f "/opt/homebrew/bin/brew" ]] then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# requires `brew install fzf zoxide`
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
+
 plugin add "zshzoo/macos"
-plugin add "zdharma-continuum/fast-syntax-highlighting"
+plugin add "zsh-users/zsh-syntax-highlighting"
 plugin add "zsh-users/zsh-autosuggestions"
+plugin add "zsh-users/zsh-completions"
+plugin add "Aloxaf/fzf-tab"
+
+# plugin settings
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no # requires fzf-tab plugin
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # PROMPT
 PURE_GIT_PULL=0
@@ -34,6 +51,8 @@ prompt pure
 
 # HISTORY OPTIONS
 HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=$HISTSIZE
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt SHARE_HISTORY
@@ -43,4 +62,12 @@ alias ls="ls --color=auto"
 alias cat='bat -p'
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
-alias sync="rsync --archive --itemize-changes --recursive --compress --verbose --checksum --exclude-from=${HOME}/.config/zsh/rsync-local-ignore --prune-empty-dirs"
+alias sync="rsync \
+  --archive \
+  --itemize-changes \
+  --recursive \
+  --compress \
+  --verbose \
+  --checksum \
+  --exclude-from=${HOME}/.config/zsh/rsync-local-ignore \
+  --prune-empty-dirs"

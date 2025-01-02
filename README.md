@@ -2,14 +2,14 @@
 
 Repository contains essential `config` and `rc` files.
 
-[My `neovim` configuration](https://github.com/anoopkcn/dotfiles/tree/main/vim/.config/nvim)
-
 ## Dependencies
 
-- (optional) [`rg`](https://github.com/BurntSushi/ripgrep) using `brew install ripgrep`
+- (optional) [`rg`](https://github.com/BurntSushi/ripgrep)  Ex: `brew install ripgrep`
   - for faster parallel grep
-- (optional) [`starship`](https://starship.rs/) using `brew install starship`
-  - to customize prompt
+- (optional) [`fzf`](https://github.com/junegunn/fzf)  Ex: `brew install fzf`
+  - for fuzzy search
+- (optional) [`Zoxide`](https://github.com/ajeetdsouza/zoxide)  Ex: `brew install zoxide`
+  - for directory navigation
 
 ## Installation
 Set the PATH_TO_DOTFILES to the path inside the `setup.sh` file
