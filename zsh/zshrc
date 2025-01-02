@@ -1,34 +1,46 @@
-export LANG=en_US.UTF-8
-export LC_ALL=en_GB.UTF-8
-bindkey -v
-source ${HOME}/.config/zsh/utils.sh
+# PATH
+setopt extended_glob null_glob
+path=(
+    $path
+    $HOME/.local/bin
+    /Library/TeX/texbin
+)
+typeset -U path
+path=($^path(N-/))
+export PATH
 
+# INPUTRC
+bindkey -v # enables prompt vi emulation
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
 
-alias ls='exa'
+# SOURCE
+function source_file() {
+    [ -f "$1" ] && source "$1"
+}
+source_file ${HOME}/.config/zsh/utils.sh
+source_file ${HOME}/.config/zsh/plugins.sh
+source_file ${HOME}/.privaterc
+
+# PLUGINS
+plugin add "zshzoo/macos"
+plugin add "zdharma-continuum/fast-syntax-highlighting"
+plugin add "zsh-users/zsh-autosuggestions"
+
+# PROMPT
+PURE_GIT_PULL=0
+autoload -U promptinit; promptinit
+prompt pure
+
+# HISTORY OPTIONS
+HISTFILE=~/.zsh_history
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+
+# ALIAS
+alias ls="ls --color=auto"
 alias cat='bat -p'
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync --archive --itemize-changes --recursive --compress --verbose --checksum --exclude-from=${HOME}/.config/zsh/rsync-local-ignore --prune-empty-dirs"
-alias tls="tmux list-sessions"
-
-# same command for linux and macos
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  alias pbcopy='xclip -selection clipboard'
-  alias pbpaste='xclip -selection clipboard -o'
-fi
-
-export PATH="/Library/TeX/texbin/:$PATH"
-
-if [ -f "/Users/akc/.config/zsh-plugins/znap/znap.zsh" ]; then
-    source /Users/akc/.config/zsh-plugins/znap/znap.zsh
-    znap source zdharma-continuum/fast-syntax-highlighting
-    znap source zshzoo/macos
-    znap source zsh-users/zsh-autosuggestions
-    bindkey '^y' autosuggest-accept
-fi
-
-eval "$(zoxide init --cmd cd zsh)"
-eval "$(starship init zsh)"
-source $HOME/.env.zsh
