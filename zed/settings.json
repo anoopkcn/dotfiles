@@ -1,4 +1,11 @@
 {
+  "assistant": {
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "claude-3-5-sonnet-latest"
+    },
+    "version": "2"
+  },
   "vim_mode": true,
   "buffer_font_family": "TX-02",
   "buffer_font_size": 14,

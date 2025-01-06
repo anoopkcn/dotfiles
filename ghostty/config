@@ -1,7 +1,6 @@
 font-family = TX-02
 font-size = 14
 font-feature = -calt
-window-title-font-family = TX-02
 macos-option-as-alt = true
 window-padding-balance = true
 quick-terminal-position = bottom

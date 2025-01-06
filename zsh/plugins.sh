@@ -1,19 +1,54 @@
 #!/bin/sh
 # PLUGIN MANAGER FOR ZSH
 
-_check_and_source(){
-    [ -f "$1" ] && source "$1"
+_source_plugin() {
+    local plugins_dir=$1
+    local plugin_name=$2
+    local plugin_path="$1/$2"
+    local files=(
+        "$plugin_path/$plugin_name.plugin.zsh"
+        "$plugin_path/$plugin_name.zsh"
+    )
+
+    for file in "${files[@]}"; do
+        if [ -f "$file" ]; then
+            source "$file"
+            return 0
+        fi
+    done
+    echo "Warning: No source file found for $plugin_path"
+    return 1
 }
 
 plugin() {
     local PLUGINS_DIR=${HOME}/.config/zsh-plugins
+    # Create plugins directory if it doesn't exist
+    mkdir -p "$PLUGINS_DIR"
 
     if [ "$#" -lt 1 ]; then
-        echo "Usage: plugin [add|update] [gitrepo/plugin_name]"
+        cat << 'EOF'
+Usage: plugin <action> [args]
+
+Actions:
+    add <gitrepo/plugin_name>  Install a new plugin
+    update                     Update all plugins
+    list                       Show installed plugins
+
+Examples:
+    plugin add zsh-users/zsh-syntax-highlighting
+    plugin update
+    plugin list
+EOF
         return 1
     fi
 
     local ACTION=$1
+
+    # Validate plugin path format
+    if [ "$#" -eq 2 ] && ! echo "$2" | grep -q "^[^/]*/[^/]*$"; then
+        echo "Error: Plugin path must be in format 'owner/repo'"
+        return 1
+    fi
 
     case "$ACTION" in
         "add")
@@ -21,47 +56,48 @@ plugin() {
                 echo "Usage: plugin add [gitrepo/plugin_name]"
                 return 1
             fi
-            local PLUGIN_PATH=$2
-            local PLUGIN_NAME=$(echo $PLUGIN_PATH | cut -d "/" -f 2)
+            local PLUGIN_REPO=$2
+            local PLUGIN_NAME=$(echo $PLUGIN_REPO | cut -d "/" -f 2)
 
             if [ -d "$PLUGINS_DIR/$PLUGIN_NAME" ]; then
-                _check_and_source "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
-                _check_and_source "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+                _source_plugin $PLUGINS_DIR $PLUGIN_NAME
             else
-                git clone "https://github.com/$PLUGIN_PATH.git" "$PLUGINS_DIR/$PLUGIN_NAME" && \
-                _check_and_source "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
-                _check_and_source "$PLUGINS_DIR/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+                git clone "https://github.com/$PLUGIN_REPO.git" "$PLUGINS_DIR/$PLUGIN_NAME" && \
+                _source_plugin $PLUGINS_DIR $PLUGIN_NAME
             fi
             ;;
         "update")
             if [ "$#" -eq 1 ]; then
-                # Update all plugins
                 echo "Updating all ZSH plugins..."
                 for plugin_dir in "$PLUGINS_DIR"/*; do
                     if [ -d "$plugin_dir" ]; then
+                        (
+                            cd "$plugin_dir"
+                            local plugin_name=$(basename "$plugin_dir")
+                            echo "Updating $plugin_name..."
+                            git pull --quiet
+                        ) &
+                    fi
+                done
+                wait
+                echo "All plugins updated"
+            fi
+            ;;
+        "list")
+            echo "Installed ZSH plugins:"
+            if [ -d "$PLUGINS_DIR" ]; then
+                for plugin_dir in "$PLUGINS_DIR"/*; do
+                    if [ -d "$plugin_dir" ]; then
                         local plugin_name=$(basename "$plugin_dir")
-                        echo "Updating plugin $plugin_name..."
-                        cd "$plugin_dir"
-                        git pull
-                        cd - > /dev/null
+                        echo "- $plugin_name"
                     fi
                 done
             else
-                # Update specific plugin
-                local PLUGIN_PATH=$2
-                local PLUGIN_NAME=$(echo $PLUGIN_PATH | cut -d "/" -f 2)
-                if [ -d "$PLUGINS_DIR/$PLUGIN_NAME" ]; then
-                    echo "Updating plugin $PLUGIN_NAME..."
-                    cd "$PLUGINS_DIR/$PLUGIN_NAME"
-                    git pull
-                    cd - > /dev/null
-                else
-                    echo "Plugin $PLUGIN_NAME doesn't exist. Use 'add' to install it first."
-                fi
+                echo "No plugins installed"
             fi
             ;;
         *)
-            echo "Invalid action. Use 'add' or 'update'"
+            echo "Invalid action. Use 'add', 'list' or 'update'"
             return 1
             ;;
     esac
