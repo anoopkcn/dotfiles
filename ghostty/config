@@ -1,13 +1,11 @@
 font-family = TX-02
 font-size = 14
 font-feature = -calt
-# font-feature = -liga
-# font-feature = -dlig
 window-title-font-family = TX-02
 macos-option-as-alt = true
 window-padding-balance = true
-# window-colorspace = "display-p3"
 quick-terminal-position = bottom
+keybind = global:super+grave_accent=toggle_quick_terminal
 
 keybind = super+s>r=reload_config
 keybind = super+s>x=close_surface
@@ -22,5 +20,3 @@ keybind = super+s>j=goto_split:bottom
 
 keybind = super+s>z=toggle_split_zoom
 keybind = super+s>e=equalize_splits
-
-keybind = global:super+grave_accent=toggle_quick_terminal
