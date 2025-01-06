@@ -8,8 +8,14 @@ Repository contains essential `config` and `rc` files.
   - for faster parallel grep
 - (optional) [`fzf`](https://github.com/junegunn/fzf)  Ex: `brew install fzf`
   - for fuzzy search
-- (optional) [`Zoxide`](https://github.com/ajeetdsouza/zoxide)  Ex: `brew install zoxide`
+- (optional) [`zoxide`](https://github.com/ajeetdsouza/zoxide)  Ex: `brew install zoxide`
   - for directory navigation
+- (optional) [`bat`](https://github.com/sharkdp/bat) Ex: `brew install bat`
+  - cat with syntax highlighting
+- (optional) [`fd`](https://github.com/sharkdp/fd) Ex: `brew install fd`
+  - simpler, faster find
+- (optional) [`eza`](https://github.com/eza-community/eza) Ex: `brew install eza`
+  - better `ls` with icons
 
 ## Installation
 Set the PATH_TO_DOTFILES to the path inside the `setup.sh` file

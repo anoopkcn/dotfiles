@@ -49,3 +49,27 @@ execute copied command in the command mode :@"  OR :<ctrl-r>"
 - [vim-surround](https://github.com/tpope/vim-surround)(surround text with pairs)
 - [vim-unimpaired](https://github.com/tpope/vim-unimpaired)(sensible `[` and `]` commands)
 - [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
+
+
+## Extra
+For LSP
+```lua
+return {
+	"neovim/nvim-lspconfig",
+	dependencies = {
+		{
+			"folke/lazydev.nvim",
+			ft = "lua",
+			opts = {
+				library = {
+					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				},
+			},
+		}
+	},
+	config = function()
+		require("lspconfig").lua_ls.setup {}
+		vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format() end)
+	end
+}
+```

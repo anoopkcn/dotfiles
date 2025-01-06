@@ -14,7 +14,7 @@ precmd(){
     print ""
     print -P "%F{cyan}%~%f"
 }
-PROMPT='%F{green}❯%f '
+PROMPT='%(?.%F{green}❯%f.%F{red}❯%f) '
 
 # INPUTRC
 bindkey '\e[A' history-search-backward
@@ -23,49 +23,15 @@ bindkey '^y' autosuggest-accept
 # bindkey -v # vi mode
 
 # FUNCTIONS
-function source_file() {
-    [ -f "$1" ] && source "$1"
-}
-
-function path(){
-    echo -e ${PATH//:/\\n}
-}
+source_file() {  [ -f "$1" ] && source "$1"  }
+path() { echo -e ${PATH//:/\\n} }
 
 # SOURCE
-source_file ${HOME}/.config/zsh/plugins.sh
-source_file ${HOME}/.privaterc
-(( $+commands[brew] )) && source <(brew shellenv)
-(( $+commands[fzf] )) && source <(fzf --zsh)
-(( $+commands[zoxide] )) && source <(zoxide init --cmd cd zsh)
-
-# PLUGINS
-plugin add "zshzoo/macos"
-plugin add "zsh-users/zsh-syntax-highlighting"
-plugin add "zsh-users/zsh-autosuggestions"
-plugin add "zsh-users/zsh-completions"
-plugin add "Aloxaf/fzf-tab"
-
-# plugin settings
-autoload -Uz compinit && compinit
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
-export FZF_DEFAULT_OPTS='
---scrollbar=""
---info="right"
---height 50%
---layout reverse
---border rounded
---prompt="❯ "
---marker="+"
---color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#282c34,pointer:#3c8494,prompt:#afaf87
-'
+source_file $HOME/.config/zsh/plugins.sh
+source_file $HOME/.privaterc
 
 # HISTORY OPTIONS
-HISTFILE=~/.zsh_history
+HISTFILE=$HOME/.zsh_history
 HISTSIZE=10000
 SAVEHIST=$HISTSIZE
 setopt HIST_IGNORE_DUPS
@@ -73,6 +39,7 @@ setopt HIST_IGNORE_SPACE
 setopt SHARE_HISTORY
 
 # ALIAS
+# requires: nvim, rsync, git
 alias ls="ls --color=auto"
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
@@ -83,7 +50,7 @@ alias sync="rsync \
   --compress \
   --verbose \
   --checksum \
-  --exclude-from=${HOME}/.config/zsh/rsync-ignore \
+  --exclude-from=${HOME}/.config/zsh/rsyncignore \
   --prune-empty-dirs"
 alias gs="git status"
 alias ga="git add"
@@ -91,3 +58,4 @@ alias gc="git commit"
 alias gp="git push"
 alias gb="git branch"
 alias gco="git checkout"
+alias tree="eza --color=always --tree"

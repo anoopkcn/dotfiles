@@ -1,11 +1,12 @@
-font-family = "TX-02"
+font-family = TX-02
 font-size = 14
 font-feature = -calt
 # font-feature = -liga
 # font-feature = -dlig
-window-title-font-family = "TX-02"
+window-title-font-family = TX-02
+macos-option-as-alt = true
 window-padding-balance = true
-window-colorspace = "display-p3"
+# window-colorspace = "display-p3"
 quick-terminal-position = bottom
 
 keybind = super+s>r=reload_config

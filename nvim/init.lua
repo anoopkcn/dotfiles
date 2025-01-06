@@ -3,29 +3,31 @@
 -- License: MIT
 -- Refer to README.md for more information
 
-require("core.options")
-require("core.keymaps")
-require("core.globals")
+require("custom.options")
+require("custom.keymaps")
+require("custom.lazy")
+require("custom.quickterm")
 
--- Lazy plugin manager (https://github.com/folke/lazy.nvim.git)
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
----@diagnostic disable-next-line: undefined-field
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
-	})
+vim.cmd[[colorscheme onedark]]
+
+Print = function(v)
+	print(vim.inspect(v))
+	return v
 end
 
-vim.opt.rtp:prepend(lazypath)
-
-require("lazy").setup({
-	spec = { { import = "plugins" } },
-	change_detection = { notify = false },
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Temporary highlight indicator when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("custom-highlight-yank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
+	end,
 })
 
-vim.cmd.colorscheme("onedark")
+vim.api.nvim_create_autocmd("TermOpen", {
+	desc = "Vim terminal configurations",
+	group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
+	callback = function()
+		vim.opt.number = false
+		vim.opt.relativenumber = false
+	end,
+})

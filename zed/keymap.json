@@ -1,5 +1,12 @@
 [
   {
+    "context": "Editor",
+    "use_key_equivalents": true,
+    "bindings": {
+      "shift-j": "editor::JoinLines"
+    }
+  },
+  {
     "context": "EmptyPane || SharedScreen || VimControl && !menu",
     "bindings": {
       "space f o": "projects::OpenRecent",

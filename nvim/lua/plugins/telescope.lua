@@ -1,23 +1,22 @@
--- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
-
 return {
 	"nvim-telescope/telescope.nvim",
 
 	dependencies = {
 		"nvim-lua/plenary.nvim",
+		{ 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
 	},
 
 	config = function()
 		local telescope = require("telescope")
 		local builtin = require("telescope.builtin")
-		telescope.setup({
+		telescope.setup {
 			defaults = {
 				file_ignore_patterns = {
 					"node_modules",
 					".git",
 				},
 			},
-		})
+		}
 
 		-- FILE related functions
 		vim.keymap.set("n", "<leader>ff", function()

@@ -52,5 +52,15 @@ vim.keymap.set("n", "N", "Nzz")
 -- remove buffer from currect active buffers
 vim.keymap.set("n", "<Leader>bd", "<Cmd>bd<CR>")
 
+-- jump to previous and next buffer
+vim.keymap.set("n", "<leader>bn", "<Cmd>bn<CR>")
+vim.keymap.set("n", "<leader>bp", "<Cmd>bp<CR>")
+
 -- keep cursor at the bottom of visual once yanked
 vim.keymap.set("v", "y", "ygv")
+
+-- escape terminal mode in term
+vim.keymap.set("t",'<Esc>', [[<C-\><C-n>]])
+
+-- open netrw in a horizontal split bellow
+vim.keymap.set("n", "<D-p>", "<Cmd>Ex<CR>")
