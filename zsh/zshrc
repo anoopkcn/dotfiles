@@ -52,10 +52,4 @@ alias sync="rsync \
   --checksum \
   --exclude-from=${HOME}/.config/zsh/rsyncignore \
   --prune-empty-dirs"
-alias gs="git status"
-alias ga="git add"
-alias gc="git commit"
-alias gp="git push"
-alias gb="git branch"
-alias gco="git checkout"
 alias tree="eza --color=always --tree"

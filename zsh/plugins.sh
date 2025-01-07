@@ -111,6 +111,7 @@ source <(zoxide init --cmd cd zsh)
 export BAT_THEME="one_dark"
 
 export FZF_DEFAULT_OPTS='
+--bind up:preview-up,down:preview-down
 --scrollbar=""
 --info="right"
 --height 50%
