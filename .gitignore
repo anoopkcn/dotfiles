@@ -6,3 +6,4 @@ zed/embeddings/*
 zed/prompts/*
 zed/conversations/*
 zed/themes/*
+nvim/spell
