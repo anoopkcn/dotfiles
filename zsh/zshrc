@@ -1,3 +1,8 @@
+# ZSH configuration
+# Author: @anoopkcn
+# License: MIT
+# Refer to README.md for more information
+
 # PATH
 setopt extended_glob null_glob
 path=(
@@ -20,7 +25,7 @@ PROMPT='%(?.%F{green}❯%f.%F{red}❯%f) '
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
 bindkey '^y' autosuggest-accept
-# bindkey -v # vi mode
+# bindkey -v 
 
 # FUNCTIONS
 source_file() {  [ -f "$1" ] && source "$1"  }
