@@ -1,5 +1,4 @@
 # NeoVim setup
-
 **Philosophy:**
 
 - If you can't explain it, _you don't need it._
@@ -43,7 +42,6 @@ execute copied command in the command mode :@"  OR :<ctrl-r>"
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim.git) (**plugin manager**)
 - [nvm-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)(code highlighting)
-- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)(multi purpose navigation)
 - [vim-fugitive](https://github.com/tpope/vim-fugitive)(best git plugin)
 - [vim-repeat](https://github.com/tpope/vim-repeat)(repeat motions with dot)
 - [vim-surround](https://github.com/tpope/vim-surround)(surround text with pairs)
@@ -54,22 +52,4 @@ execute copied command in the command mode :@"  OR :<ctrl-r>"
 ## Extra
 For LSP
 ```lua
-return {
-	"neovim/nvim-lspconfig",
-	dependencies = {
-		{
-			"folke/lazydev.nvim",
-			ft = "lua",
-			opts = {
-				library = {
-					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-				},
-			},
-		}
-	},
-	config = function()
-		require("lspconfig").lua_ls.setup {}
-		vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format() end)
-	end
-}
 ```

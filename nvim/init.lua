@@ -5,29 +5,31 @@
 
 require("custom.options")
 require("custom.keymaps")
-require("custom.lazy")
-require("custom.quickterm")
+require("custom.functions")
 
-vim.cmd[[colorscheme onedark]]
-
-Print = function(v)
-	print(vim.inspect(v))
-	return v
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable",
+        lazypath,
+    })
 end
 
-vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Temporary highlight indicator when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("custom-highlight-yank", { clear = true }),
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-})
+vim.opt.runtimepath:prepend(lazypath)
 
-vim.api.nvim_create_autocmd("TermOpen", {
-	desc = "Vim terminal configurations",
-	group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
-	callback = function()
-		vim.opt.number = false
-		vim.opt.relativenumber = false
-	end,
-})
+require("lazy").setup {
+    spec = {
+        { import = "plugins" },
+        { "navarasu/onedark.nvim", lazy = false, priority = 1000, config=function() require('onedark').load() end },
+		{ "lewis6991/gitsigns.nvim", config=function() require("gitsigns").setup() end },
+        { "tpope/vim-fugitive" },
+        { "tpope/vim-unimpaired" },
+        { "tpope/vim-repeat" },
+        { "tpope/vim-surround" },
+        { "numToStr/Comment.nvim" },
+    },
+}
