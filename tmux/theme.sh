@@ -21,8 +21,8 @@ set-option -g pane-active-border-style fg=$color_green
 set-option -g message-style fg=$color_blue,bg=$color_default
 set-option -g display-panes-active-colour $color_blue
 set-option -g display-panes-colour $color_gray
-set-option -g status-left-length "100"
-set-option -g status-right-length "100"
+# set-option -g status-left-length "100"
+# set-option -g status-right-length "100"
 set-option -g status-interval 2
 set-option -g mode-style bg=$color_selection
 set-option -g status-right $date_time
