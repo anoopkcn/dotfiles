@@ -23,6 +23,7 @@ return {
 		vim.keymap.set("n", "<leader>ff", function() fzflua.files({ ["winopts.preview.hidden"] = "hidden" }) end)
 		vim.keymap.set("n", "<leader>fb", function() fzflua.buffers({ ["winopts.preview.hidden"] = "hidden" }) end)
 		vim.keymap.set("n", "<leader>fg", fzflua.live_grep)
+		vim.keymap.set("n", "<leader>/", fzflua.grep)
 		vim.keymap.set("n", "<leader>ft", fzflua.helptags)
 		vim.keymap.set("n", "<leader>fm", fzflua.marks)
 		vim.keymap.set("n", "<leader>fr", fzflua.registers)

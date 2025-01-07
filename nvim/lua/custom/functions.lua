@@ -1,3 +1,4 @@
+-- CUSTOM FUNCTIONS
 Print = function(v)
 	print(vim.inspect(v))
 	return v

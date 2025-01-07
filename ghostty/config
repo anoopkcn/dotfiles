@@ -2,6 +2,8 @@ font-family = Berkeley Mono Variable
 font-size = 14
 font-feature = -calt
 macos-option-as-alt = true
+window-height = 42
+window-width = 106
 window-padding-balance = true
 quick-terminal-position = bottom
 keybind = global:super+grave_accent=toggle_quick_terminal
