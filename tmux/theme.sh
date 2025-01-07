@@ -6,8 +6,8 @@ color_selection="#387EA2"
 color_default=default
 date_time="#[fg=$color_gray]%d/%m/%Y #[fg=$color_gray]%H:%M"
 session_name="#[fg=$color_blue]@#S "
-active_pane="#[fg=$color_green]#I:#W" #F
-inactive_pane="#I:#W"
+active_pane="#[fg=$color_green]#I:#W#{?window_zoomed_flag,#[fg=blue][Z],}" #F
+inactive_pane="#I:#W#{?window_zoomed_flag,[Z],}"
 
 set-window-option -g window-status-style fg=$color_gray,bg=$color_default
 set-window-option -g window-status-current-style fg=$color_blue,bg=$color_default
