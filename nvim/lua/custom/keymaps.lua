@@ -61,6 +61,3 @@ vim.keymap.set("v", "y", "ygv")
 
 -- escape terminal mode in term
 vim.keymap.set("t",'<Esc>', [[<C-\><C-n>]])
-
--- open netrw in a horizontal split bellow
-vim.keymap.set("n", "<D-p>", "<Cmd>Ex<CR>")
