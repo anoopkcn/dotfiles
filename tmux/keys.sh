@@ -2,15 +2,15 @@ unbind C-b
 set -g prefix C-Space
 bind Space send-prefix
 
-bind-key a send-prefix 
+bind-key a send-prefix
 
-bind R source-file ~/.config/tmux/tmux.conf \; display "TMUX Reloaded" 
+bind R source-file ~/.config/tmux/tmux.conf \; display "TMUX Reloaded"
 
 bind | split-window -h -c "#{pane_current_path}"
 bind - split-window -v -c "#{pane_current_path}"
 
 # synchronize all panes in a window
-bind y setw synchronize-panes 
+bind y setw synchronize-panes
 
 # pane movement shortcuts
 bind h select-pane -L
@@ -33,3 +33,7 @@ bind Space copy-mode
 set-window-option -g mode-keys vi
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+
+# CUSTOM BINDINGS
+# bind-key -r f run-shell "tmux new-window 'source ~/.config/tmux/tmuxtools.sh && fzf_sessionizer'"
+bind-key -r f display-popup -E -w 80% -h 80% "source ~/.config/tmux/tmuxtools.sh && fzf_create_session"
