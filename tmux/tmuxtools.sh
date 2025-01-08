@@ -98,13 +98,8 @@ core_rename_session() {
 
 core_kill_session() {
     local session_name="$1"
-    if [ "$session_name" = "KILL-ALL-SESSIONS" ]; then
-        tmux kill-server
-        echo "${BLUE}Killed all tmux sessions${NC}"
-    else
-        tmux kill-session -t "$session_name"
-        echo "${BLUE}Killed session: $session_name${NC}"
-    fi
+    tmux kill-session -t "$session_name"
+    echo "${BLUE}Killed session: $session_name${NC}"
 }
 
 core_attach_session() {
@@ -229,14 +224,14 @@ fzf_select_session() {
     local header="$1"
     shift
     tmux list-sessions -F "#{session_name}" | \
-        fzf "$@" --header="$header" \
+        fzf "$@" --border-label="( $(tput bold)${GREEN}${header}${NC} )" \
         --preview "${FZF_PREVIEW_FORMAT}"
 }
 
 fzf_create_session() {
     local selected
     selected=$(fd --type d --max-depth 1 . ~/work/develop ~/Dropbox/projects ~/ ~/work ~/Dropbox | \
-        fzf "$@" --header="Select directory for new session")
+        fzf "$@" --border-label="( $(tput bold)${GREEN}NEW SESSION${NC} )")
 
     if [ -z "$selected" ]; then
         return 0
@@ -258,27 +253,38 @@ fzf_create_session() {
 fzf_kill_session() {
     check_active_sessions || return 1
     local selected
-    selected=$(printf "$(tmux list-sessions -F '#{session_name}')\n${RED}kill-all${NC}" | \
-        fzf --ansi --header="$(printf "Select session to kill (or 'kill-all' sessions)")" "$@")
+    local current_session=$(tmux display-message -p '#S')
+
+    selected=$(printf "$(tmux list-sessions -F '#{session_name}')" | \
+        fzf --ansi \
+            --multi \
+            --border-label="( $(tput bold)${RED}Kill/Kill-All${NC} )"  \
+            --header="Use TAB to select multiple sessions" "$@")
 
     if [ -n "$selected" ]; then
-        if [ "$selected" = "kill-all" ]; then
-            core_kill_session "KILL-ALL-SESSIONS"
-        else
-            core_kill_session "$selected"
+        # Sort sessions so current session is killed last
+        echo "$selected" | while read -r session; do
+            if [ -n "$session" ] && [ "$session" != "$current_session" ]; then
+                core_kill_session "$session"
+            fi
+        done
+
+        # Kill current session last if it was selected
+        if echo "$selected" | grep -q "^$current_session$"; then
+            core_kill_session "$current_session"
         fi
     fi
 }
 
 fzf_list_sessions() {
     check_active_sessions || return 1
-    fzf_select_session "All available sessions" "$@"
+    fzf_select_session "LIST" "$@"
 }
 
 fzf_attach_session() {
     check_active_sessions || return 1
     local selected
-    selected=$(fzf_select_session "Select session to attach" "$@")
+    selected=$(fzf_select_session "ATTACH" "$@")
 
     if [ -n "$selected" ]; then
         core_attach_session "$selected"
@@ -288,7 +294,7 @@ fzf_attach_session() {
 fzf_rename_session() {
     check_active_sessions || return 1
     local old_name
-    old_name=$(fzf_select_session "Select session to rename" "$@")
+    old_name=$(fzf_select_session "RENAME" "$@")
 
     if [ -n "$old_name" ]; then
         echo -n "Enter new name: "
