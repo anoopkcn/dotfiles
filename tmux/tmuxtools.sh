@@ -88,7 +88,7 @@ core_rename_session() {
 
 core_kill_session() {
     local session_name="$1"
-    if [ "$session_name" = "-a" ]; then
+    if [ "$session_name" = "KILL-ALL-SESSIONS" ]; then
         tmux kill-server
         echo "${BLUE}Killed all tmux sessions${NC}"
     else
@@ -142,12 +142,6 @@ cmd_kill_session() {
         if tmux list-sessions >/dev/null 2>&1; then
             tmux kill-session
             echo "${BLUE}Killed active session${NC}"
-        else
-            echo "${YELLOW}No active tmux sessions to kill${NC}"
-        fi
-    elif [ "$1" = "-a" ]; then
-        if tmux list-sessions >/dev/null 2>&1; then
-            core_kill_session "-a"
         else
             echo "${YELLOW}No active tmux sessions to kill${NC}"
         fi
@@ -209,13 +203,27 @@ cmd_list_sessions() {
 
 # FZF FUNCTIONS
 
+fzf_generate_session_tree() {
+    echo 'echo "Session: {1}"; \
+          tmux list-windows -t {1} -F "Window #{window_index}: #{window_name}" | while read -r window; do \
+              echo "├─ $window"; \
+              window_num=$(echo "$window" | cut -d: -f1 | cut -d" " -f2); \
+              tmux list-panes -t {1}:$window_num -F "│  ├─ Pane #{pane_index}: #{pane_current_command} (#{pane_width}x#{pane_height}) #{?pane_active,(active),}"; \
+          done;'
+}
+
+fzf_select_session() {
+    local header="$1"
+    shift
+    tmux list-sessions -F "#{session_name}" | \
+        fzf "$@" --header="$header" \
+        --preview "$(fzf_generate_session_tree)"
+}
+
 fzf_create_session() {
     local selected
-    if [ -n "$1" ]; then
-        selected=$1
-    else
-        selected=$(fd --type d --max-depth 1 . ~/work/develop ~/Dropbox/projects ~/ ~/work ~/Dropbox | fzf --reverse)
-    fi
+    selected=$(fd --type d --max-depth 1 . ~/work/develop ~/Dropbox/projects ~/ ~/work ~/Dropbox | \
+        fzf "$@" --header="Select directory for new session")
 
     if [ -z "$selected" ]; then
         return 0
@@ -234,43 +242,33 @@ fzf_create_session() {
     fi
 }
 
-generate_session_tree() {
-    echo 'echo "Session: {1}"; \
-          tmux list-windows -t {1} -F "Window #{window_index}: #{window_name}" | while read -r window; do \
-              echo "├─ $window"; \
-              window_num=$(echo "$window" | cut -d: -f1 | cut -d" " -f2); \
-              tmux list-panes -t {1}:$window_num -F "│  ├─ Pane #{pane_index}: #{pane_current_command} (#{pane_width}x#{pane_height}) #{?pane_active,(active),}"; \
-          done;'
-}
-
-fzf_select_session() {
-    local header="$1"
-    tmux list-sessions -F "#{session_name}" | \
-        fzf --reverse --header="$header" \
-        --preview "$(generate_session_tree)"
-}
-
 fzf_kill_session() {
     check_active_sessions || return 1
     local selected
     local RED='\033[0;31m'
     local NC='\033[0m'
-    selected=$(fzf_select_session "$(printf "Select session to ${RED}kill${NC}")")
+    # Add option to kill all sessions
+    selected=$(printf "$(tmux list-sessions -F '#{session_name}')\n${RED}kill-all${NC}" | \
+        fzf --ansi --header="$(printf "Select session to kill (or 'kill-all' sessions)")" "$@")
 
     if [ -n "$selected" ]; then
-        core_kill_session "$selected"
+        if [ "$selected" = "kill-all" ]; then
+            core_kill_session "KILL-ALL-SESSIONS"
+        else
+            core_kill_session "$selected"
+        fi
     fi
 }
 
 fzf_list_sessions() {
     check_active_sessions || return 1
-    fzf_select_session "All available sessions"
+    fzf_select_session "All available sessions" "$@"
 }
 
 fzf_attach_session() {
     check_active_sessions || return 1
     local selected
-    selected=$(fzf_select_session "Select session to attach")
+    selected=$(fzf_select_session "Select session to attach" "$@")
 
     if [ -n "$selected" ]; then
         core_attach_session "$selected"
@@ -280,7 +278,7 @@ fzf_attach_session() {
 fzf_rename_session() {
     check_active_sessions || return 1
     local old_name
-    old_name=$(fzf_select_session "Select session to rename")
+    old_name=$(fzf_select_session "Select session to rename" "$@")
 
     if [ -n "$old_name" ]; then
         echo -n "Enter new name: "
@@ -306,7 +304,7 @@ Operation Options:
   -a, --attach [name]  Attach to an existing session
   -d, --detach [name]  Detach from current session or specified session
   -l, --list          List all tmux sessions
-  -k, --kill [name]   Kill a specific session or all sessions with -a
+  -k, --kill [name]   Kill a specific session
   -r, --rename <old> <new>  Rename a session
 
 Other Options:
@@ -320,7 +318,7 @@ Examples:
   ts -n              Create new session with default name
   ts -n mysession    Create new session named 'mysession'
   ts -l              List all sessions
-  ts -k -a           Kill all sessions
+  ts -k mysession    Kill session "mysession"
   ts -r old new      Rename session 'old' to 'new'
 EOF
 }
@@ -346,6 +344,7 @@ EOF
 # Main function to parse arguments and call appropriate functions
 ts() {
     local mode=""
+    local operation=""
 
     # Show help if no arguments provided
     if [ $# -eq 0 ]; then
@@ -359,9 +358,69 @@ ts() {
         return 1
     fi
 
+    # Function to handle operation conflicts
+    check_operation() {
+        if [ -n "$operation" ]; then
+            echo "${YELLOW}Error: Cannot combine operation flags. Use only one of: -n, -a, -d, -l, -k, -r${NC}"
+            return 1
+        fi
+        return 0
+    }
+
+    # Function to execute operation
+    execute_operation() {
+        local op=$1
+        local arg1=$2
+        local arg2=$3
+
+        case "$op" in
+            "new")
+                if use_fzf "$mode"; then
+                    fzf_create_session
+                else
+                    cmd_create_session "$arg1"
+                fi
+                ;;
+            "attach")
+                if use_fzf "$mode"; then
+                    fzf_attach_session
+                else
+                    cmd_attach_session "$arg1"
+                fi
+                ;;
+            "detach")
+                cmd_detach_session "$arg1"
+                ;;
+            "list")
+                if use_fzf "$mode"; then
+                    fzf_list_sessions
+                else
+                    cmd_list_sessions
+                fi
+                ;;
+            "kill")
+                if use_fzf "$mode"; then
+                    fzf_kill_session
+                else
+                    cmd_kill_session "$arg1"
+                fi
+                ;;
+            "rename")
+                if use_fzf "$mode"; then
+                    fzf_rename_session
+                else
+                    if [ -z "$arg1" ] || [ -z "$arg2" ]; then
+                        echo "${YELLOW}Error: Both old and new session names required${NC}"
+                        return 1
+                    fi
+                    cmd_rename_session "$arg1" "$arg2"
+                fi
+                ;;
+        esac
+    }
+
     # Parse flags
-    while [ $# -gt 0 ]
-    do
+    while [ $# -gt 0 ]; do
         case "$1" in
             # Mode flags
             -i|--interactive)
@@ -374,57 +433,46 @@ ts() {
                 ;;
             # Operation flags
             -n|--new)
-                if use_fzf "$mode"; then
-                    fzf_create_session "${2:-}"
-                else
-                    cmd_create_session "${2:-}"
-                fi
+                check_operation || return 1
+                operation="new"
+                execute_operation "new" "${2:-}"
                 shift
                 if [ -n "$2" ]; then shift; fi
                 ;;
             -a|--attach)
-                if use_fzf "$mode"; then
-                    fzf_attach_session
-                else
-                    cmd_attach_session "${2:-}"
-                fi
+                check_operation || return 1
+                operation="attach"
+                execute_operation "attach" "${2:-}"
                 shift
                 if [ -n "$2" ]; then shift; fi
                 ;;
             -d|--detach)
-                cmd_detach_session "${2:-}"
+                check_operation || return 1
+                operation="detach"
+                execute_operation "detach" "${2:-}"
                 shift
                 if [ -n "$2" ]; then shift; fi
                 ;;
             -l|--list)
-                if use_fzf "$mode"; then
-                    fzf_list_sessions
-                else
-                    cmd_list_sessions
-                fi
+                check_operation || return 1
+                operation="list"
+                execute_operation "list"
                 shift
                 ;;
             -k|--kill)
-                if use_fzf "$mode"; then
-                    fzf_kill_session
-                else
-                    cmd_kill_session "${2:-}"
-                fi
+                check_operation || return 1
+                operation="kill"
+                execute_operation "kill" "${2:-}"
                 shift
                 if [ -n "$2" ]; then shift; fi
                 ;;
             -r|--rename)
-                if use_fzf "$mode"; then
-                    fzf_rename_session
-                else
-                    if [ -z "$2" ] || [ -z "$3" ]; then
-                        echo "${YELLOW}Error: Both old and new session names required${NC}"
-                        return 1
-                    fi
-                    cmd_rename_session "$2" "$3"
-                    shift 2
-                fi
+                check_operation || return 1
+                operation="rename"
+                execute_operation "rename" "$2" "$3"
                 shift
+                if [ -n "$2" ]; then shift; fi
+                if [ -n "$2" ]; then shift; fi
                 ;;
             # Other flags
             -v|--version)
