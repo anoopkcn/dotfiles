@@ -30,5 +30,5 @@ set-option -g status-left $session_name
 
 # Popup styling
 set-option -g popup-border-style fg=$color_gray
-set-option -g popup-border-lines none  # for no border lines
+set-option -g popup-border-lines none
 set-option -g popup-style bg=$color_default

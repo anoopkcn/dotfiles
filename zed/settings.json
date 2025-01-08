@@ -6,6 +6,11 @@
     },
     "version": "2"
   },
+  "scrollbar": {
+    "axes": {
+      "horizontal": false
+    }
+  },
   // "vim_mode": true,
   "soft_wrap": "editor_width",
   "buffer_font_family": "Berkeley Mono Variable",

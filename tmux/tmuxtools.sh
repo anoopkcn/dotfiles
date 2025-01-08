@@ -17,6 +17,7 @@ if [ -t 1 ]; then
     BLUE=$(tput setaf 4)
     RED=$(tput setaf 1)
     GRAY=$(tput setaf 7)
+    BOLD=$(tput bold)
     NC=$(tput sgr0)
 else
     GREEN=""
@@ -213,7 +214,7 @@ cmd_list_sessions() {
 # Rest of code remains unchanged...
 read -r -d '' FZF_PREVIEW_FORMAT << EOF
 echo "Session: ${BLUE}\$(echo {1} | tr -d "'")${NC}"
-tmux list-windows -t {1} -F "Window #{window_index}: #{?window_active,${GREEN}#{window_name}${NC},${GRAY}#{window_name}${NC}}" | while read -r window; do
+tmux list-windows -t {1} -F "Window #{window_index}: #{?window_active,${GREEN}#{window_name}${NC},#{window_name}}" | while read -r window; do
     echo "├── \$window"
     window_num=\$(echo "\$window" | cut -d: -f1 | cut -d" " -f2)
     tmux list-panes -t {1}:\$window_num -F "│   ├── Pane #{pane_index}: #{?pane_active,#{pane_current_command}*,#{pane_current_command}} [#{pane_width}x#{pane_height}]"
@@ -221,17 +222,17 @@ done
 EOF
 
 fzf_select_session() {
-    local header="$1"
+    local label="$1"
     shift
     tmux list-sessions -F "#{session_name}" | \
-        fzf "$@" --border-label="( $(tput bold)${GREEN}${header}${NC} )" \
+        fzf "$@" --border-label="( ${BOLD}${GREEN}${label}${NC} )" \
         --preview "${FZF_PREVIEW_FORMAT}"
 }
 
 fzf_create_session() {
     local selected
     selected=$(fd --type d --max-depth 1 . ~/work/develop ~/Dropbox/projects ~/ ~/work ~/Dropbox | \
-        fzf "$@" --border-label="( $(tput bold)${GREEN}NEW SESSION${NC} )")
+        fzf "$@" --border-label="( ${BOLD}${GREEN}ADD SESSION${NC} )")
 
     if [ -z "$selected" ]; then
         return 0
@@ -258,7 +259,7 @@ fzf_kill_session() {
     selected=$(printf "$(tmux list-sessions -F '#{session_name}')" | \
         fzf --ansi \
             --multi \
-            --border-label="( $(tput bold)${RED}Kill/Kill-All${NC} )"  \
+            --border-label="( ${BOLD}${RED}KILL${NC} )"  \
             --header="Use TAB to select multiple sessions" "$@")
 
     if [ -n "$selected" ]; then
@@ -283,11 +284,18 @@ fzf_list_sessions() {
 
 fzf_attach_session() {
     check_active_sessions || return 1
-    local selected
-    selected=$(fzf_select_session "ATTACH" "$@")
 
+    local output
+    output=$(fzf_select_session "ATTACH or ADD" --print-query "$@")
+    local query=$(echo "$output" | sed -n '1p')
+    local selected=$(echo "$output" | sed -n '2p')
+
+    # If there's a selection, use it;
+    # otherwise check if we should create new session
     if [ -n "$selected" ]; then
         core_attach_session "$selected"
+    elif [ -n "$query" ]; then
+        core_create_session "$query"
     fi
 }
 
