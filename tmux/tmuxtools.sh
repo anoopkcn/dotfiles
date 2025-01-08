@@ -11,11 +11,21 @@ AUTHOR="@anoopkcn"
 LICENSE="MIT"
 
 # Color definitions with central error handling
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
+if [ -t 1 ]; then
+    GREEN=$(tput setaf 2)
+    YELLOW=$(tput setaf 3)
+    BLUE=$(tput setaf 4)
+    RED=$(tput setaf 1)
+    GRAY=$(tput setaf 7)
+    NC=$(tput sgr0)
+else
+    GREEN=""
+    YELLOW=""
+    BLUE=""
+    RED=""
+    GRAY=""
+    NC=""
+fi
 
 error_msg() {
     echo "${YELLOW}Error: $1${NC}" >&2
@@ -206,12 +216,14 @@ cmd_list_sessions() {
 }
 
 # Rest of code remains unchanged...
-FZF_PREVIEW_FORMAT='echo "Session: {1}"; \
-          tmux list-windows -t {1} -F "Window #{window_index}: #{window_name}" | while read -r window; do \
-              echo "├─ $window"; \
-              window_num=$(echo "$window" | cut -d: -f1 | cut -d" " -f2); \
-              tmux list-panes -t {1}:$window_num -F "│  ├─ Pane #{pane_index}: #{pane_current_command} (#{pane_width}x#{pane_height}) #{?pane_active,(active),}"; \
-          done;'
+read -r -d '' FZF_PREVIEW_FORMAT << EOF
+echo "Session: ${BLUE}\$(echo {1} | tr -d "'")${NC}"
+tmux list-windows -t {1} -F "Window #{window_index}: #{?window_active,${GREEN}#{window_name}${NC},${GRAY}#{window_name}${NC}}" | while read -r window; do
+    echo "├── \$window"
+    window_num=\$(echo "\$window" | cut -d: -f1 | cut -d" " -f2)
+    tmux list-panes -t {1}:\$window_num -F "│   ├── Pane #{pane_index}: #{?pane_active,#{pane_current_command}*,#{pane_current_command}} [#{pane_width}x#{pane_height}]"
+done
+EOF
 
 fzf_select_session() {
     local header="$1"

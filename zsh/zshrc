@@ -60,3 +60,4 @@ alias sync="rsync \
   --prune-empty-dirs"
 alias tree="eza --color=always --tree"
 alias tkill="cmd_kill_all_session"
+alias tsi="ts -i -n"
