@@ -9,20 +9,26 @@ NAME="TS"
 VERSION="1.0.0"
 AUTHOR="@anoopkcn"
 LICENSE="MIT"
-# Color definitions
+
+# Color definitions with central error handling
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-# Colors for FZF preview
-FZF_SESSION_COLOR='\033[1;36m'    # Bright Cyan
-FZF_SEPARATOR_COLOR='\033[1;34m'   # Bright Blue
-FZF_WINDOW_COLOR='\033[0;32m'      # Green
-FZF_TREE_COLOR='\033[0;34m'        # Blue
-FZF_PANE_COLOR='\033[0;33m'        # Yellow
-FZF_ACTIVE_COLOR='\033[1;32m'      # Bright Green
+error_msg() {
+    echo "${YELLOW}Error: $1${NC}" >&2
+    return 1
+}
+
+session_exists() {
+    tmux has-session -t "$1" 2>/dev/null
+}
+
+validate_session_name() {
+    [[ "$1" =~ ^[a-zA-Z0-9_-]+$ ]] || error_msg "Invalid session name. Use alphanumeric characters, underscore or hyphen"
+}
 
 # To set interactive mode(FZF) as default `export TM_USE_FZF=1`
 # Default to direct commands unless TM_USE_FZF is set
@@ -30,16 +36,7 @@ FZF_ACTIVE_COLOR='\033[1;32m'      # Bright Green
 
 # Function to handle the interaction mode selection
 use_fzf() {
-    local direct_mode="$1"
-
-    if [ "$direct_mode" = "interactive" ]; then
-        return 0
-    elif [ "$direct_mode" = "direct" ]; then
-        return 1
-    elif [ "$TM_USE_FZF" = "1" ]; then
-        return 0
-    fi
-    return 1
+    [ "$1" = "interactive" ] || [ "$TM_USE_FZF" = "1" -a "$1" != "direct" ]
 }
 
 check_active_sessions() {
@@ -58,9 +55,9 @@ core_create_session() {
     if [ -z "$session_name" ]; then
         new_session_name=$(basename "$(pwd)" | tr '.' '-')
 
-        if tmux has-session -t "$new_session_name" 2>/dev/null; then
+        if session_exists "$new_session_name"; then
             local i=1
-            while tmux has-session -t "$new_session_name-$i" 2>/dev/null; do
+            while session_exists "$new_session_name-$i"; do
                 i=$((i + 1))
             done
             new_session_name="$new_session_name-$i"
@@ -69,6 +66,7 @@ core_create_session() {
         echo "${GREEN}Using default session name: $new_session_name${NC}"
     else
         new_session_name="$session_name"
+        validate_session_name "$new_session_name"
     fi
 
     if [ -n "$TMUX" ]; then
@@ -77,11 +75,13 @@ core_create_session() {
     else
         tmux new-session -A -s "$new_session_name"
     fi
+    return 0
 }
 
 core_rename_session() {
     local old_name="$1"
     local new_name="$2"
+    validate_session_name "$new_name"
     tmux rename-session -t "$old_name" "$new_name"
     echo "${BLUE}Renamed session '$old_name' to '$new_name'${NC}"
 }
@@ -124,15 +124,23 @@ cmd_create_session() {
 }
 
 cmd_rename_session() {
-    if [ -z "$1" ] || [ -z "$2" ]; then
-        echo "${YELLOW}Error: Both old and new session names required${NC}"
-        return 1
-    fi
+    [ -z "$1" ] && error_msg "Old session name required" && return 1
+    [ -z "$2" ] && error_msg "New session name required" && return 1
 
-    if tmux has-session -t "$1" 2>/dev/null; then
+    if session_exists "$1"; then
         core_rename_session "$1" "$2"
     else
-        echo "${YELLOW}Session '$1' does not exist${NC}"
+        error_msg "Session '$1' does not exist"
+        return 1
+    fi
+}
+
+cmd_kill_all_session() {
+    if tmux list-sessions >/dev/null 2>&1; then
+        tmux kill-server
+        echo "${BLUE}Killed all tmux sessions${NC}"
+    else
+        error_msg "No active tmux sessions to kill"
         return 1
     fi
 }
@@ -143,28 +151,25 @@ cmd_kill_session() {
             tmux kill-session
             echo "${BLUE}Killed active session${NC}"
         else
-            echo "${YELLOW}No active tmux sessions to kill${NC}"
+            error_msg "No active tmux sessions to kill"
         fi
     else
-        if tmux has-session -t "$1" 2>/dev/null; then
+        if session_exists "$1"; then
             core_kill_session "$1"
         else
-            echo "${YELLOW}Session '$1' does not exist${NC}"
+            error_msg "Session '$1' does not exist"
             return 1
         fi
     fi
 }
 
 cmd_attach_session() {
-    if [ -z "$1" ]; then
-        echo "${YELLOW}Error: Session name required${NC}"
-        return 1
-    fi
+    [ -z "$1" ] && error_msg "Session name required" && return 1
 
-    if tmux has-session -t "$1" 2>/dev/null; then
+    if session_exists "$1"; then
         core_attach_session "$1"
     else
-        echo "${YELLOW}Session '$1' does not exist${NC}"
+        error_msg "Session '$1' does not exist"
         return 1
     fi
 }
@@ -174,11 +179,11 @@ cmd_detach_session() {
         if [ -n "$TMUX" ]; then
             core_detach_session
         else
-            echo "${YELLOW}Error: Not currently in a tmux session${NC}"
+            error_msg "Not currently in a tmux session"
             return 1
         fi
     else
-        if tmux has-session -t "$1" 2>/dev/null; then
+        if session_exists "$1"; then
             local clients=$(tmux list-clients -t "$1" 2>/dev/null)
             if [ -n "$clients" ]; then
                 core_detach_session "$1"
@@ -186,7 +191,7 @@ cmd_detach_session() {
                 echo "${GREEN}No clients attached to session: $1${NC}"
             fi
         else
-            echo "${YELLOW}Session '$1' does not exist${NC}"
+            error_msg "Session '$1' does not exist"
             return 1
         fi
     fi
@@ -200,24 +205,20 @@ cmd_list_sessions() {
     fi
 }
 
-
-# FZF FUNCTIONS
-
-fzf_generate_session_tree() {
-    echo 'echo "Session: {1}"; \
+# Rest of code remains unchanged...
+FZF_PREVIEW_FORMAT='echo "Session: {1}"; \
           tmux list-windows -t {1} -F "Window #{window_index}: #{window_name}" | while read -r window; do \
               echo "├─ $window"; \
               window_num=$(echo "$window" | cut -d: -f1 | cut -d" " -f2); \
               tmux list-panes -t {1}:$window_num -F "│  ├─ Pane #{pane_index}: #{pane_current_command} (#{pane_width}x#{pane_height}) #{?pane_active,(active),}"; \
           done;'
-}
 
 fzf_select_session() {
     local header="$1"
     shift
     tmux list-sessions -F "#{session_name}" | \
         fzf "$@" --header="$header" \
-        --preview "$(fzf_generate_session_tree)"
+        --preview "${FZF_PREVIEW_FORMAT}"
 }
 
 fzf_create_session() {
@@ -245,9 +246,6 @@ fzf_create_session() {
 fzf_kill_session() {
     check_active_sessions || return 1
     local selected
-    local RED='\033[0;31m'
-    local NC='\033[0m'
-    # Add option to kill all sessions
     selected=$(printf "$(tmux list-sessions -F '#{session_name}')\n${RED}kill-all${NC}" | \
         fzf --ansi --header="$(printf "Select session to kill (or 'kill-all' sessions)")" "$@")
 
@@ -354,14 +352,15 @@ ts() {
 
     # Check if tmux is installed
     if ! command -v tmux >/dev/null 2>&1; then
-        echo "${YELLOW}Error: tmux is not installed${NC}"
+        error_msg "tmux is not installed"
         return 1
     fi
 
     # Function to handle operation conflicts
     check_operation() {
         if [ -n "$operation" ]; then
-            echo "${YELLOW}Error: Cannot combine operation flags. Use only one of: -n, -a, -d, -l, -k, -r${NC}"
+            error_msg "Cannot combine operation flags. \
+            Use only one of: -n, -a, -d, -l, -k, -r"
             return 1
         fi
         return 0
@@ -410,7 +409,7 @@ ts() {
                     fzf_rename_session
                 else
                     if [ -z "$arg1" ] || [ -z "$arg2" ]; then
-                        echo "${YELLOW}Error: Both old and new session names required${NC}"
+                        error_msg "Both old and new session names required"
                         return 1
                     fi
                     cmd_rename_session "$arg1" "$arg2"
@@ -484,8 +483,7 @@ ts() {
                 return 0
                 ;;
             *)
-                echo "Unknown option: $1"
-                show_help
+                error_msg "Unknown option: $1"
                 return 1
                 ;;
         esac
