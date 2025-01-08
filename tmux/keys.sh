@@ -35,8 +35,8 @@ bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
 
 # CUSTOM BINDINGS
-bind-key -r f display-popup -E -w 80% "source ~/.config/tmux/tmuxtools.sh && fzf_create_session --height=100%"
-bind-key -r l display-popup -E -w 80% "source ~/.config/tmux/tmuxtools.sh && fzf_attach_session --height=100%"
-bind-key -r r display-popup -E -w 80% "source ~/.config/tmux/tmuxtools.sh && fzf_rename_session --height=100%"
-# bind-key -r l display-popup -E -w 80% "source ~/.config/tmux/tmuxtools.sh && fzf_list_sessions --height=100%"
-bind-key -r k display-popup -E -w 80% "source ~/.config/tmux/tmuxtools.sh && fzf_kill_session --height=100%"
+bind-key -r f display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_create_session --height=100%"
+bind-key -r l display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_attach_session --height=100%"
+bind-key -r r display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_rename_session --height=100%"
+# bind-key -r l display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_list_sessions --height=100%"
+bind-key -r k display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_kill_session --height=100%"

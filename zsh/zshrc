@@ -33,7 +33,7 @@ path() { echo -e ${PATH//:/\\n} }
 
 # SOURCE
 source_file $HOME/.config/zsh/plugins.sh
-source_file $HOME/.config/tmux/tmuxtools.sh
+source_file $HOME/.config/tmux/tools.sh
 source_file $HOME/.privaterc
 
 # HISTORY OPTIONS
