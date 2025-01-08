@@ -1,6 +1,6 @@
 # dotfiles
 
-Repository contains essential `config` and `rc` files.
+Repository contains essential `config` and `rc` files for `zsh`, `tmux`, `nvim`, `ghostty`and `zed`
 
 ## Dependencies
 

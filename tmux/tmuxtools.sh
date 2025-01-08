@@ -326,6 +326,7 @@ Environment Variables:
 
 Examples:
   ts -n              Create new session with default name
+  ts -i -n           Create new session by choosing directory in fzf
   ts -n mysession    Create new session named 'mysession'
   ts -l              List all sessions
   ts -k mysession    Kill session "mysession"
