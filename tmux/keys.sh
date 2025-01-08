@@ -37,3 +37,4 @@ bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
 # CUSTOM BINDINGS
 # bind-key -r f run-shell "tmux new-window 'source ~/.config/tmux/tmuxtools.sh && fzf_sessionizer'"
 bind-key -r f display-popup -E -w 80% -h 80% "source ~/.config/tmux/tmuxtools.sh && fzf_create_session"
+bind-key -r g display-popup -E -w 80% -h 80% "source ~/.config/tmux/tmuxtools.sh && fzf_attach_session"

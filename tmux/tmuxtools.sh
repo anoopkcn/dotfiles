@@ -1,10 +1,11 @@
 #!/bin/sh
-# TMUX SESSION MANAGEMENT TOOL (TM)
+# TMUX SESSION MANAGEMENT TOOL (TS)
 # Author: @anoopkcn
 # License: MIT
 # Requires fd, fzf, tmux
 
 # Version
+NAME="ts"
 VERSION="1.0.0"
 AUTHOR="@anoopkcn"
 LICENSE="MIT"
@@ -243,8 +244,7 @@ fzf_kill_session() {
 fzf_attach_session() {
     local selected
     selected=$(tmux list-sessions -F "#{session_name}" | \
-        fzf --reverse --header="Select session to attach" \
-            --preview 'tmux list-windows -t {}')
+        fzf --reverse --header="Select session to attach")
 
     if [ -n "$selected" ]; then
         core_attach_session "$selected"
@@ -257,7 +257,7 @@ fzf_list_sessions() {
 
 show_help() {
     cat << EOF
-Tmux Session Management Tool
+Tmux Session Management Tool (TS)
 
 Usage: tm [-i|-f] <command> [options]
 
@@ -285,18 +285,18 @@ show_version() {
     local verbose="$1"
     if [ "$verbose" = "full" ]; then
         cat << EOF
-tmuxtools ${VERSION}
+${NAME} ${VERSION}
 Author: ${AUTHOR}
 License: ${LICENSE}
 Dependencies: tmux, fzf, fd
 Repository: https://github.com/anoopkcn/dotfiles/blob/main/tmux/tmuxtools.sh
 EOF
     else
-        echo "tmuxtools ${VERSION}"
+        echo "${VERSION}"
     fi
 }
 
-tm() {
+ts() {
     local mode=""  # Initialize empty mode
     local OPTIND=1
 
@@ -367,7 +367,7 @@ tm() {
             fi
             ;;
         "version")
-            echo "tm version = ${VERSION}"
+            show_version full
             ;;
         *)
             show_help
