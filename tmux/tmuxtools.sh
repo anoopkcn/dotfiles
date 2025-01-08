@@ -5,7 +5,7 @@
 # Requires fd, fzf, tmux
 
 # Version
-NAME="ts"
+NAME="TS"
 VERSION="1.0.0"
 AUTHOR="@anoopkcn"
 LICENSE="MIT"
@@ -13,7 +13,16 @@ LICENSE="MIT"
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+RED='\033[0;31m'
 NC='\033[0m'
+
+# Colors for FZF preview
+FZF_SESSION_COLOR='\033[1;36m'    # Bright Cyan
+FZF_SEPARATOR_COLOR='\033[1;34m'   # Bright Blue
+FZF_WINDOW_COLOR='\033[0;32m'      # Green
+FZF_TREE_COLOR='\033[0;34m'        # Blue
+FZF_PANE_COLOR='\033[0;33m'        # Yellow
+FZF_ACTIVE_COLOR='\033[1;32m'      # Bright Green
 
 # To set interactive mode(FZF) as default `export TM_USE_FZF=1`
 # Default to direct commands unless TM_USE_FZF is set
@@ -21,16 +30,24 @@ NC='\033[0m'
 
 # Function to handle the interaction mode selection
 use_fzf() {
-    local force_mode="$1"
+    local direct_mode="$1"
 
-    if [ "$force_mode" = "interactive" ]; then
+    if [ "$direct_mode" = "interactive" ]; then
         return 0
-    elif [ "$force_mode" = "direct" ]; then
+    elif [ "$direct_mode" = "direct" ]; then
         return 1
     elif [ "$TM_USE_FZF" = "1" ]; then
         return 0
     fi
     return 1
+}
+
+check_active_sessions() {
+    if ! tmux list-sessions >/dev/null 2>&1; then
+        echo "${GREEN}No active tmux sessions${NC}"
+        return 1
+    fi
+    return 0
 }
 
 # Core functions that contain the main logic
@@ -189,7 +206,9 @@ cmd_list_sessions() {
     fi
 }
 
-# FZF interface functions
+
+# FZF FUNCTIONS
+
 fzf_create_session() {
     local selected
     if [ -n "$1" ]; then
@@ -215,11 +234,53 @@ fzf_create_session() {
     fi
 }
 
+generate_session_tree() {
+    echo 'echo "Session: {1}"; \
+          tmux list-windows -t {1} -F "Window #{window_index}: #{window_name}" | while read -r window; do \
+              echo "├─ $window"; \
+              window_num=$(echo "$window" | cut -d: -f1 | cut -d" " -f2); \
+              tmux list-panes -t {1}:$window_num -F "│  ├─ Pane #{pane_index}: #{pane_current_command} (#{pane_width}x#{pane_height}) #{?pane_active,(active),}"; \
+          done;'
+}
+
+fzf_select_session() {
+    local header="$1"
+    tmux list-sessions -F "#{session_name}" | \
+        fzf --reverse --header="$header" \
+        --preview "$(generate_session_tree)"
+}
+
+fzf_kill_session() {
+    check_active_sessions || return 1
+    local selected
+    local RED='\033[0;31m'
+    local NC='\033[0m'
+    selected=$(fzf_select_session "$(printf "Select session to ${RED}kill${NC}")")
+
+    if [ -n "$selected" ]; then
+        core_kill_session "$selected"
+    fi
+}
+
+fzf_list_sessions() {
+    check_active_sessions || return 1
+    fzf_select_session "All available sessions"
+}
+
+fzf_attach_session() {
+    check_active_sessions || return 1
+    local selected
+    selected=$(fzf_select_session "Select session to attach")
+
+    if [ -n "$selected" ]; then
+        core_attach_session "$selected"
+    fi
+}
+
 fzf_rename_session() {
+    check_active_sessions || return 1
     local old_name
-    old_name=$(tmux list-sessions -F "#{session_name}" | \
-        fzf --reverse --header="Select session to rename" \
-            --preview 'tmux list-windows -t {}')
+    old_name=$(fzf_select_session "Select session to rename")
 
     if [ -n "$old_name" ]; then
         echo -n "Enter new name: "
@@ -230,54 +291,37 @@ fzf_rename_session() {
     fi
 }
 
-fzf_kill_session() {
-    local selected
-    selected=$(tmux list-sessions -F "#{session_name}" | \
-        fzf --reverse --header="Select session to kill" \
-            --preview 'tmux list-windows -t {}')
-
-    if [ -n "$selected" ]; then
-        core_kill_session "$selected"
-    fi
-}
-
-fzf_attach_session() {
-    local selected
-    selected=$(tmux list-sessions -F "#{session_name}" | \
-        fzf --reverse --header="Select session to attach")
-
-    if [ -n "$selected" ]; then
-        core_attach_session "$selected"
-    fi
-}
-
-fzf_list_sessions() {
-    tmux list-sessions | fzf --reverse --header="Sessions" --preview 'tmux list-windows -t {1}'
-}
-
 show_help() {
     cat << EOF
 Tmux Session Management Tool (TS)
 
-Usage: tm [-i|-f] <command> [options]
+Usage: ts [options]
 
-Global Flags:
-  -i    Use interactive (FZF) mode
-  -f    Use direct command mode (default)
-  -v    Show version
-  -V    Show detailed version information
+Mode Options:
+  -i, --interactive     Use interactive (FZF) mode
+  -f, --direct          Use direct command mode (default)
 
-Commands:
-  new [session-name]     Create a new tmux session
-  attach [name]          Attach to an existing session
-  detach [session-name]  Detach from current session or specified session
-  list                   List all tmux sessions
-  kill [session-name|-a] Kill a specific session or all sessions
-  rename <old> <new>     Rename a session
-  help                   Show this help message
+Operation Options:
+  -n, --new [name]     Create a new tmux session
+  -a, --attach [name]  Attach to an existing session
+  -d, --detach [name]  Detach from current session or specified session
+  -l, --list          List all tmux sessions
+  -k, --kill [name]   Kill a specific session or all sessions with -a
+  -r, --rename <old> <new>  Rename a session
+
+Other Options:
+  -h, --help          Show this help message
+  -v, --version       Show version information
 
 Environment Variables:
-  TM_USE_FZF            Set to 1 to always use FZF mode (can be overridden by flags)
+  TM_USE_FZF         Set to 1 to always use FZF mode (can be overridden by flags)
+
+Examples:
+  ts -n              Create new session with default name
+  ts -n mysession    Create new session named 'mysession'
+  ts -l              List all sessions
+  ts -k -a           Kill all sessions
+  ts -r old new      Rename session 'old' to 'new'
 EOF
 }
 
@@ -286,37 +330,22 @@ show_version() {
     if [ "$verbose" = "full" ]; then
         cat << EOF
 ${NAME} ${VERSION}
-Author: ${AUTHOR}
-License: ${LICENSE}
-Dependencies: tmux, fzf, fd
-Repository: https://github.com/anoopkcn/dotfiles/blob/main/tmux/tmuxtools.sh
+
+Version
+  - version: ${VERSION}
+  - license: ${LICENSE}
+Configuration
+  - Dependencies: tmux, fzf(optional), fd(optional)
+  - Repository: https://github.com/anoopkcn/dotfiles/blob/main/tmux/tmuxtools.sh
 EOF
     else
         echo "${VERSION}"
     fi
 }
 
+# Main function to parse arguments and call appropriate functions
 ts() {
-    local mode=""  # Initialize empty mode
-    local OPTIND=1
-
-    # Parse global flags
-    while getopts "ifvV" opt; do
-        case $opt in
-            i) mode="interactive" ;;
-            f) mode="direct" ;;
-            v) show_version; return 0 ;;
-            V) show_version "full"; return 0 ;;
-            ?) echo "Invalid option: -$OPTARG" >&2; return 1 ;;
-        esac
-    done
-    shift $((OPTIND-1))
-
-    # Check if tmux is installed
-    if ! command -v tmux >/dev/null 2>&1; then
-        echo "${YELLOW}Error: tmux is not installed${NC}"
-        return 1
-    fi
+    local mode=""
 
     # Show help if no arguments provided
     if [ $# -eq 0 ]; then
@@ -324,53 +353,93 @@ ts() {
         return 1
     fi
 
-    local command="$1"
-    shift
+    # Check if tmux is installed
+    if ! command -v tmux >/dev/null 2>&1; then
+        echo "${YELLOW}Error: tmux is not installed${NC}"
+        return 1
+    fi
 
-    case "$command" in
-        "new")
-            if use_fzf "$mode"; then
-                fzf_create_session "$@"
-            else
-                cmd_create_session "$@"
-            fi
-            ;;
-        "attach")
-            if use_fzf "$mode"; then
-                fzf_attach_session
-            else
-                cmd_attach_session "$@"
-            fi
-            ;;
-        "detach")
-            cmd_detach_session "$@"
-            ;;
-        "list")
-            if use_fzf "$mode"; then
-                fzf_list_sessions
-            else
-                cmd_list_sessions
-            fi
-            ;;
-        "kill")
-            if use_fzf "$mode"; then
-                fzf_kill_session
-            else
-                cmd_kill_session "$@"
-            fi
-            ;;
-        "rename")
-            if use_fzf "$mode"; then
-                fzf_rename_session
-            else
-                cmd_rename_session "$@"
-            fi
-            ;;
-        "version")
-            show_version full
-            ;;
-        *)
-            show_help
-            ;;
-    esac
+    # Parse flags
+    while [ $# -gt 0 ]
+    do
+        case "$1" in
+            # Mode flags
+            -i|--interactive)
+                mode="interactive"
+                shift
+                ;;
+            -f|--direct)
+                mode="direct"
+                shift
+                ;;
+            # Operation flags
+            -n|--new)
+                if use_fzf "$mode"; then
+                    fzf_create_session "${2:-}"
+                else
+                    cmd_create_session "${2:-}"
+                fi
+                shift
+                if [ -n "$2" ]; then shift; fi
+                ;;
+            -a|--attach)
+                if use_fzf "$mode"; then
+                    fzf_attach_session
+                else
+                    cmd_attach_session "${2:-}"
+                fi
+                shift
+                if [ -n "$2" ]; then shift; fi
+                ;;
+            -d|--detach)
+                cmd_detach_session "${2:-}"
+                shift
+                if [ -n "$2" ]; then shift; fi
+                ;;
+            -l|--list)
+                if use_fzf "$mode"; then
+                    fzf_list_sessions
+                else
+                    cmd_list_sessions
+                fi
+                shift
+                ;;
+            -k|--kill)
+                if use_fzf "$mode"; then
+                    fzf_kill_session
+                else
+                    cmd_kill_session "${2:-}"
+                fi
+                shift
+                if [ -n "$2" ]; then shift; fi
+                ;;
+            -r|--rename)
+                if use_fzf "$mode"; then
+                    fzf_rename_session
+                else
+                    if [ -z "$2" ] || [ -z "$3" ]; then
+                        echo "${YELLOW}Error: Both old and new session names required${NC}"
+                        return 1
+                    fi
+                    cmd_rename_session "$2" "$3"
+                    shift 2
+                fi
+                shift
+                ;;
+            # Other flags
+            -v|--version)
+                show_version "full"
+                return 0
+                ;;
+            -h|--help)
+                show_help
+                return 0
+                ;;
+            *)
+                echo "Unknown option: $1"
+                show_help
+                return 1
+                ;;
+        esac
+    done
 }
