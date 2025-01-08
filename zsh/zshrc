@@ -59,4 +59,4 @@ alias sync="rsync \
   --exclude-from=${HOME}/.config/zsh/rsyncignore \
   --prune-empty-dirs"
 alias tree="eza --color=always --tree"
-alias tsi="ts -i"
+alias tkill="cmd_kill_all_session"
