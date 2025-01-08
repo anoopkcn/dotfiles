@@ -14,6 +14,14 @@ typeset -U path
 path=($^path(N-/))
 export PATH
 
+export TS_SEARCH_DIRS=(
+    "$HOME"
+    "$HOME/work"
+    "$HOME/work/develop"
+    "$HOME/Dropbox"
+    "$HOME/Dropbox/projects"
+)
+
 # PROMPT
 precmd(){
     print ""

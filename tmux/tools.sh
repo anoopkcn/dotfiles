@@ -10,6 +10,11 @@ VERSION="1.0.0"
 AUTHOR="@anoopkcn"
 LICENSE="MIT"
 
+# To set interactive mode(FZF) as default `export TM_USE_FZF=1`
+# Default to direct commands unless TM_USE_FZF is set
+# export TS_SEARCH_DIRS=(...) as an array of directories
+: "${TM_USE_FZF:=0}"
+
 # Color definitions with central error handling
 if [ -t 1 ]; then
     GREEN=$(tput setaf 2)
@@ -40,10 +45,6 @@ session_exists() {
 validate_session_name() {
     [[ "$1" =~ ^[a-zA-Z0-9_-]+$ ]] || error_msg "Invalid session name. Use alphanumeric characters, underscore or hyphen"
 }
-
-# To set interactive mode(FZF) as default `export TM_USE_FZF=1`
-# Default to direct commands unless TM_USE_FZF is set
-: "${TM_USE_FZF:=0}"
 
 # Function to handle the interaction mode selection
 use_fzf() {
@@ -231,7 +232,7 @@ fzf_select_session() {
 
 fzf_create_session() {
     local selected
-    selected=$(fd --type d --max-depth 1 . ~/work/develop ~/Dropbox/projects ~/ ~/work ~/Dropbox | \
+    selected=$(fd --type d --max-depth 1 . "${TS_SEARCH_DIRS[@]}" | \
         fzf "$@" --border-label="( ${BOLD}${GREEN}ADD SESSION${NC} )")
 
     if [ -z "$selected" ]; then
