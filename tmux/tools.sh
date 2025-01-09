@@ -6,14 +6,14 @@
 
 # Version
 NAME="TS"
-VERSION="1.0.0"
+VERSION="1.0.1"
 AUTHOR="@anoopkcn"
 LICENSE="MIT"
 
-# To set interactive mode(FZF) as default `export TM_USE_FZF=1`
-# Default to direct commands unless TM_USE_FZF is set
+# To set interactive mode(FZF) as default `export TS_USE_FZF=1`
+# Default to direct commands unless TS_USE_FZF is set
 # export TS_SEARCH_DIRS=(...) as an array of directories
-: "${TM_USE_FZF:=0}"
+: "${TS_USE_FZF:=0}"
 
 # Color definitions with central error handling
 if [ -t 1 ]; then
@@ -49,7 +49,7 @@ validate_session_name() {
 
 # Function to handle the interaction mode selection
 use_fzf() {
-    [ "$1" = "interactive" ] || [ "$TM_USE_FZF" = "1" -a "$1" != "direct" ]
+    [ "$1" = "interactive" ] || [ "$TS_USE_FZF" = "1" -a "$1" != "direct" ]
 }
 
 check_active_sessions() {
@@ -339,7 +339,7 @@ Other Options:
   -v, --version       Show version information
 
 Environment Variables:
-  TM_USE_FZF         Set to 1 to always use FZF mode (can be overridden by flags)
+  TS_USE_FZF         Set to 0(normal) or 1(use FZF) this can be overridden by flags(-i or -f)
 
 Examples:
   ts -n              Create new session with default name

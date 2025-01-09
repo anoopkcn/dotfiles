@@ -14,14 +14,6 @@ typeset -U path
 path=($^path(N-/))
 export PATH
 
-export TS_SEARCH_DIRS=(
-    "$HOME"
-    "$HOME/work"
-    "$HOME/work/develop"
-    "$HOME/Dropbox"
-    "$HOME/Dropbox/projects"
-)
-
 # PROMPT
 precmd(){
     print ""
@@ -68,4 +60,14 @@ alias sync="rsync \
   --prune-empty-dirs"
 alias tree="eza --color=always --tree"
 alias tkill="cmd_kill_all_session"
-alias tsi="ts -i -n"
+alias icat="chafa -f kitty"
+
+# CUSTOM
+export TS_USE_FZF=1
+export TS_SEARCH_DIRS=(
+    "$HOME"
+    "$HOME/work"
+    "$HOME/work/develop"
+    "$HOME/Dropbox"
+    "$HOME/Dropbox/projects"
+)

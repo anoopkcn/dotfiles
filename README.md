@@ -23,3 +23,6 @@ Set the `PATH_TO_DOTFILES` to the path inside the `setup.sh` file
 ```sh
 sh setup.sh
 ```
+
+## Extra
+Set variables `TS_USE_FZF`, `TS_SEARCH_DIRS` to make use of `tmux`+`fzf` functionalities. Use `ts -h` or check `tmux/tools.sh` for details
