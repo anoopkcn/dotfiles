@@ -33,31 +33,26 @@ vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
 
 -- navigate to splits using i,j,h,l
--- vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
--- vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
--- vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
--- vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
-
--- resize split windows
--- vim.keymap.set("n", "M-,", "<C-w>5<")
--- vim.keymap.set("n", "M-.", "<C-w>5>")
-
--- select all in a file
--- vim.keymap.set("n", "<C-a>", "ggVG")
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
 
 -- motion keys should also go to word wrap
--- vim.keymap.set("n", "j", [[v:count?'j': 'gj']], { noremap = true, expr = true })
--- vim.keymap.set("n", "k", [[v:count?'k': 'gk']], { noremap = true, expr = true })
+vim.keymap.set("n", "j", [[v:count?'j': 'gj']], { noremap = true, expr = true })
+vim.keymap.set("n", "k", [[v:count?'k': 'gk']], { noremap = true, expr = true })
 
 -- remove buffer from currect active buffers
-vim.keymap.set("n", "<Leader>bd", "<Cmd>bd<CR>")
-
+vim.keymap.set("n", "<Leader>bd", vim.cmd.bd)
 -- jump to previous and next buffer
-vim.keymap.set("n", "<leader>bn", "<Cmd>bn<CR>")
-vim.keymap.set("n", "<leader>bp", "<Cmd>bp<CR>")
+vim.keymap.set("n", "<leader>bn", vim.cmd.bn)
+vim.keymap.set("n", "<leader>bp", vim.cmd.bp)
 
 -- keep cursor at the bottom of visual once yanked
 vim.keymap.set("v", "y", "ygv")
 
 -- escape terminal mode in term
 vim.keymap.set("t",'<Esc>', [[<C-\><C-n>]])
+
+-- netrw keybindings
+vim.keymap.set("n", "<leader>p", vim.cmd.Hex)
