@@ -32,3 +32,6 @@ set-option -g status-left $session_name
 set-option -g popup-border-style fg=$color_gray
 set-option -g popup-border-lines none
 set-option -g popup-style bg=$color_default
+
+# Split pane styleing
+set-option -g pane-active-border-style fg=$color_gray

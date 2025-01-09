@@ -59,15 +59,5 @@ alias sync="rsync \
   --exclude-from=${HOME}/.config/zsh/rsyncignore \
   --prune-empty-dirs"
 alias tree="eza --color=always --tree"
-alias tkill="cmd_kill_all_session"
+alias tkill="tmux kill-server"
 alias icat="chafa -f kitty"
-
-# CUSTOM
-export TS_USE_FZF=1
-export TS_SEARCH_DIRS=(
-    "$HOME"
-    "$HOME/work"
-    "$HOME/work/develop"
-    "$HOME/Dropbox"
-    "$HOME/Dropbox/projects"
-)

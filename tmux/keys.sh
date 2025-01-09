@@ -12,20 +12,15 @@ bind - split-window -v -c "#{pane_current_path}"
 # synchronize all panes in a window
 bind y setw synchronize-panes
 
-# more settings to make copy-mode more vim-like
-unbind [
-bind Space copy-mode
-set-window-option -g mode-keys vi
-bind-key -T copy-mode-vi v send-keys -X begin-selection
-bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
-bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+# CUSTOM BINDING
+bind-key -n C-S-Left swap-window -t -1\; select-window -t -1
+bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
 
-# CUSTOM BINDINGS
-bind-key -r f display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_create_session --height=100%"
-bind-key -r l display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_attach_session --height=100%"
-bind-key -r r display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_rename_session --height=100%"
+bind-key -r f display-popup -E -w 65% "source ~/.config/tmux/tools.sh && fzf_create_session --height=100%"
+bind-key -r l display-popup -E -w 65% "source ~/.config/tmux/tools.sh && fzf_attach_session --height=100%"
+bind-key -r r display-popup -E -w 65% "source ~/.config/tmux/tools.sh && fzf_rename_session --height=100%"
+bind-key -r k display-popup -E -w 65% "source ~/.config/tmux/tools.sh && fzf_kill_session --height=100%"
 # bind-key -r l display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_list_sessions --height=100%"
-bind-key -r k display-popup -E -w 80% "source ~/.config/tmux/tools.sh && fzf_kill_session --height=100%"
 
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
@@ -46,3 +41,11 @@ bind-key -T copy-mode-vi 'C-j' select-pane -D
 bind-key -T copy-mode-vi 'C-k' select-pane -U
 bind-key -T copy-mode-vi 'C-l' select-pane -R
 bind-key -T copy-mode-vi 'C-\' select-pane -l
+
+# more settings to make copy-mode more vim-like
+unbind [
+bind Space copy-mode
+set-window-option -g mode-keys vi
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
