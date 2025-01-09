@@ -30,6 +30,7 @@ else
     BLUE=""
     RED=""
     GRAY=""
+    BOLD=""
     NC=""
 fi
 
