@@ -2,6 +2,7 @@
 -- Author: @anoopkcn
 -- License: MIT
 -- Refer to README.md for more information
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
@@ -34,7 +35,11 @@ require("lazy").setup {
 				require("gitsigns").setup()
 			end
 		},
-		{ "tpope/vim-fugitive" },
+		{ "tpope/vim-fugitive",
+			config = function()
+				vim.keymap.set("n", "<leader>G", "<Cmd>Git<CR>")
+			end
+		},
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
