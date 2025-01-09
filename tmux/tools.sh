@@ -4,7 +4,7 @@
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.1.0"
+VERSION="1.2.0"
 LICENSE="MIT"
 
 TS_SEARCH_DIRS=(
@@ -107,16 +107,12 @@ window_selector() {
 }
 
 fzf_session_selector() {
-    local label="$1"
-    shift
-    session_selector | \
-        fzf "$@" --border-label="( ${BOLD}${GREEN}${label}${NC} )" \
-        --preview "${FZF_PREVIEW_FORMAT}"
+    session_selector |  fzf --preview "${FZF_PREVIEW_FORMAT}" "$@"
 }
 
 fzf_directory_selector() {
     directory_selector | \
-        fzf --preview "ls --color=always {}" \
+        fzf "$@" --preview "ls --color=always {}" \
         --border-label="( ${BOLD}${GREEN}SELECT DIRECTORY${NC} )"
 }
 
@@ -240,7 +236,7 @@ list_sessions() {
 # FZF variants
 fzf_create_session() {
     local selected
-    selected=$(fzf_directory_selector)
+    selected=$(fzf_directory_selector "$@")
 
     [ -z "$selected" ] && return 0
 
@@ -250,9 +246,8 @@ fzf_create_session() {
 
 fzf_attach_session() {
     check_active_sessions || return 1
-
     local output
-    output=$(fzf_session_selector "ATTACH" --print-query)
+    output=$(fzf_session_selector --print-query --border-label="( ${BOLD}${GREEN}ATTACH${NC} )"  "$@" )
     local query=$(echo "$output" | sed -n '1p')
     local selected=$(echo "$output" | sed -n '2p')
 
@@ -267,11 +262,9 @@ fzf_kill_session() {
     check_active_sessions || return 1
     local selected
     local current_session=$(tmux display-message -p '#S')
-
-    selected=$(session_selector | \
-        fzf --multi \
+    selected=$(fzf_session_selector --multi \
             --border-label="( ${BOLD}${RED}KILL${NC} )"  \
-            --header="Use TAB to select multiple sessions")
+            --header="Use TAB to select multiple sessions" "$@")
 
     if [ -n "$selected" ]; then
         echo "$selected" | while read -r session; do
@@ -283,7 +276,7 @@ fzf_kill_session() {
 fzf_rename_session() {
     check_active_sessions || return 1
     local old_name
-    old_name=$(fzf_session_selector "RENAME")
+    old_name=$(fzf_session_selector --border-label="( ${BOLD}${GREEN}RENAME${NC} )" "$@")
 
     if [ -n "$old_name" ]; then
         echo -n "Enter new name: "
@@ -296,7 +289,7 @@ fzf_rename_session() {
 
 fzf_list_sessions() {
     check_active_sessions || return 1
-    fzf_session_selector "LIST"
+    fzf_session_selector --border-label="( ${BOLD}${GREEN}LIST${NC} )" "$@"
 }
 
 # MAIN COMMAND FUNCTION
@@ -315,12 +308,17 @@ ts() {
         # Interactive mode
         -i|--interactive)
             shift
+            if [ $# -eq 0 ]; then
+                echo "${YELLOW}No command specified for interactive mode${NC}" >&2
+                show_help
+                return 1
+            fi
             case "$1" in
-                new|n) fzf_create_session ;;
-                attach|a) fzf_attach_session ;;
-                kill|k) fzf_kill_session ;;
-                list|l) fzf_list_sessions ;;
-                rename|r) fzf_rename_session ;;
+                new|n) shift; fzf_create_session "$@" ;;
+                attach|a) shift; fzf_attach_session "$@" ;;
+                kill|k) shift; fzf_kill_session "$@" ;;
+                list|l) shift; fzf_list_sessions "$@" ;;
+                rename|r) shift; fzf_rename_session "$@" ;;
                 detach|d) detach_session "${2:-}" ;;
                 *) error_msg "Unknown command: $1" ;;
             esac

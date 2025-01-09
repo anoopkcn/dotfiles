@@ -25,4 +25,5 @@ sh setup.sh
 ```
 
 ## Extra
-Set variables `TS_USE_FZF`, `TS_SEARCH_DIRS` to make use of `tmux`+`fzf` functionalities. Use `ts -h` or check `tmux/tools.sh` for details
+### TMUX SESSION MANAGEMENT TOOL (TS)
+Set variables `TS_SEARCH_DIRS` to make use of `ts` tool functionalities. Use `ts -h` or check `tmux/tools.sh` for details

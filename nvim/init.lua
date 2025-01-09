@@ -20,7 +20,9 @@ vim.opt.runtimepath:prepend(lazypath)
 require("custom.options")
 require("custom.keymaps")
 require("custom.functions")
+require("custom.splitjump").setup()
 require("lazy").setup {
+	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
 		{ "navarasu/onedark.nvim",
