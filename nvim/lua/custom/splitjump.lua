@@ -51,33 +51,33 @@ local pane_position_from_direction = {
 local function tmux_aware_navigate(direction)
   local nr = vim.fn.winnr()
   local tmux_last_pane = (direction == 'p' and tmux_is_last_pane)
-  
+
   if not tmux_last_pane then
     vim_navigate(direction)
   end
-  
+
   local at_tab_page_edge = (nr == vim.fn.winnr())
-  
+
   if should_forward_navigation(tmux_last_pane, at_tab_page_edge) then
     if M.config.save_on_switch == 1 then
       pcall(vim.cmd, 'update')
     elseif M.config.save_on_switch == 2 then
       pcall(vim.cmd, 'wall')
     end
-    
+
     local dir_tr = {p = 'l', h = 'L', j = 'D', k = 'U', l = 'R'}
     local args = string.format('select-pane -t %s -%s', vim.fn.shellescape(vim.env.TMUX_PANE), dir_tr[direction])
-    
+
     if M.config.preserve_zoom then
       args = args .. ' -Z'
     end
-    
+
     if M.config.no_wrap then
-      args = string.format('if -F "#{pane_at_%s}" "" "%s"', 
-        pane_position_from_direction[direction], 
+      args = string.format('if -F "#{pane_at_%s}" "" "%s"',
+        pane_position_from_direction[direction],
         args)
     end
-    
+
     tmux_command(args)
     tmux_is_last_pane = true
   else
@@ -88,46 +88,46 @@ end
 function M.setup(user_config)
   -- Merge user config with defaults
   M.config = vim.tbl_extend('force', M.config, user_config or {})
-  
+
   -- Only set up if not in tmux
   if not vim.env.TMUX then
-    vim.api.nvim_create_user_command('TmuxNavigateLeft', function() vim_navigate('h') end, {})
-    vim.api.nvim_create_user_command('TmuxNavigateDown', function() vim_navigate('j') end, {})
-    vim.api.nvim_create_user_command('TmuxNavigateUp', function() vim_navigate('k') end, {})
-    vim.api.nvim_create_user_command('TmuxNavigateRight', function() vim_navigate('l') end, {})
-    vim.api.nvim_create_user_command('TmuxNavigatePrevious', function() vim_navigate('p') end, {})
+    vim.api.nvim_create_user_command('SplitJumpLeft', function() vim_navigate('h') end, {})
+    vim.api.nvim_create_user_command('SplitJumpDown', function() vim_navigate('j') end, {})
+    vim.api.nvim_create_user_command('SplitJumpUp', function() vim_navigate('k') end, {})
+    vim.api.nvim_create_user_command('SplitJumpRight', function() vim_navigate('l') end, {})
+    vim.api.nvim_create_user_command('SplitJumpPrevious', function() vim_navigate('p') end, {})
     return
   end
-  
+
   -- Create commands
-  vim.api.nvim_create_user_command('TmuxNavigateLeft', function() tmux_aware_navigate('h') end, {})
-  vim.api.nvim_create_user_command('TmuxNavigateDown', function() tmux_aware_navigate('j') end, {})
-  vim.api.nvim_create_user_command('TmuxNavigateUp', function() tmux_aware_navigate('k') end, {})
-  vim.api.nvim_create_user_command('TmuxNavigateRight', function() tmux_aware_navigate('l') end, {})
-  vim.api.nvim_create_user_command('TmuxNavigatePrevious', function() tmux_aware_navigate('p') end, {})
-  
+  vim.api.nvim_create_user_command('SplitJumpLeft', function() tmux_aware_navigate('h') end, {})
+  vim.api.nvim_create_user_command('SplitJumpDown', function() tmux_aware_navigate('j') end, {})
+  vim.api.nvim_create_user_command('SplitJumpUp', function() tmux_aware_navigate('k') end, {})
+  vim.api.nvim_create_user_command('SplitJumpRight', function() tmux_aware_navigate('l') end, {})
+  vim.api.nvim_create_user_command('SplitJumpPrevious', function() tmux_aware_navigate('p') end, {})
+
   -- Set up autocommand to reset tmux_is_last_pane
   vim.api.nvim_create_autocmd('WinEnter', {
-    group = vim.api.nvim_create_augroup('tmux_navigator', { clear = true }),
+    group = vim.api.nvim_create_augroup('split_jump', { clear = true }),
     callback = function() tmux_is_last_pane = false end
   })
-  
+
   -- Set up default mappings unless disabled
   if not M.config.no_mappings then
     local opts = { noremap = true, silent = true }
-    vim.keymap.set('n', '<C-h>', ':TmuxNavigateLeft<CR>', opts)
-    vim.keymap.set('n', '<C-j>', ':TmuxNavigateDown<CR>', opts)
-    vim.keymap.set('n', '<C-k>', ':TmuxNavigateUp<CR>', opts)
-    vim.keymap.set('n', '<C-l>', ':TmuxNavigateRight<CR>', opts)
-    vim.keymap.set('n', '<C-\\>', ':TmuxNavigatePrevious<CR>', opts)
-    
+    vim.keymap.set('n', '<C-h>', ':SplitJumpLeft<CR>', opts)
+    vim.keymap.set('n', '<C-j>', ':SplitJumpDown<CR>', opts)
+    vim.keymap.set('n', '<C-k>', ':SplitJumpUp<CR>', opts)
+    vim.keymap.set('n', '<C-l>', ':SplitJumpRight<CR>', opts)
+    vim.keymap.set('n', '<C-\\>', ':SplitJumpPrevious<CR>', opts)
+
     -- Handle netrw mapping conflict
     if not M.config.disable_netrw_workaround then
       if not vim.g.Netrw_UserMaps then
-        vim.g.Netrw_UserMaps = {{'<C-l>', '<C-U>TmuxNavigateRight<cr>'}}
+        vim.g.Netrw_UserMaps = {{'<C-l>', '<C-U>SplitJumpRight<cr>'}}
       else
         vim.api.nvim_err_writeln(
-          'vim-tmux-navigator conflicts with netrw <C-l> mapping. ' ..
+          'splitjump conflicts with netrw <C-l> mapping. ' ..
           'See https://github.com/christoomey/vim-tmux-navigator#netrw or ' ..
           'set disable_netrw_workaround = true in setup() to suppress this warning.'
         )
