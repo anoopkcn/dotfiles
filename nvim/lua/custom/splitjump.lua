@@ -1,3 +1,4 @@
+-- Requires: TMUX version 3.0 or higher
 local M = {}
 
 -- Plugin state
