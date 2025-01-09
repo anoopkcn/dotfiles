@@ -4,7 +4,7 @@
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.2.0"
+VERSION="1.2.1"
 LICENSE="MIT"
 
 TS_SEARCH_DIRS=(
@@ -260,16 +260,36 @@ fzf_attach_session() {
 
 fzf_kill_session() {
     check_active_sessions || return 1
-    local selected
-    local current_session=$(tmux display-message -p '#S')
-    selected=$(fzf_session_selector --multi \
-            --border-label="( ${BOLD}${RED}KILL${NC} )"  \
-            --header="Use TAB to select multiple sessions" "$@")
+    local current_session selected_sessions
 
-    if [ -n "$selected" ]; then
-        echo "$selected" | while read -r session; do
-            kill_session "$session"
-        done
+    current_session=$(tmux display-message -p '#S')
+    selected_sessions=$(fzf_session_selector --multi \
+        --border-label="( ${BOLD}${RED}KILL${NC} )" \
+        --header="Use TAB to select multiple" "$@")
+
+    # Exit if no sessions were selected
+    [ -z "$selected_sessions" ] && return 0
+
+    local -a regular_sessions=()
+    local kill_current=false
+
+    while IFS= read -r session; do
+        if [ "$session" = "$current_session" ]; then
+            kill_current=true
+        else
+            regular_sessions+=("$session")
+        fi
+    done <<< "$selected_sessions"
+
+    # Kill regular sessions first
+    for session in "${regular_sessions[@]}"; do
+        kill_session "$session"
+    done
+
+    # Kill current session last if selected
+    if [ "$kill_current" = true ]; then
+        echo "${YELLOW}Killing current session...${NC}"
+        kill_session "$current_session"
     fi
 }
 
