@@ -4,7 +4,7 @@
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.2.1"
+VERSION="1.2.2"
 LICENSE="MIT"
 
 TS_SEARCH_DIRS=(
@@ -128,7 +128,7 @@ EOF
 # BASE FUNCTIONS
 create_session() {
     local session_name="$1"
-    local directory="${2:-.}"
+    local directory="${2:-$(pwd)}"
     local new_session_name
 
     if [ -z "$session_name" ]; then
@@ -344,7 +344,7 @@ ts() {
             esac
             ;;
         # Direct mode
-        new|n) create_session "${2:-}" "${3:-}" ;;
+        new|n) create_session "${2:-}" ;;
         attach|a) attach_session "${2:-}" ;;
         kill|k) kill_session "${2:-}" ;;
         list|l) list_sessions ;;
