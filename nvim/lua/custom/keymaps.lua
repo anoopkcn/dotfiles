@@ -33,11 +33,11 @@ vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
 
 -- navigate to splits using i,j,h,l
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
-
+-- vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
+-- vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
+-- vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
+-- vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
+--
 -- motion keys should also go to word wrap
 vim.keymap.set("n", "j", [[v:count?'j': 'gj']], { noremap = true, expr = true })
 vim.keymap.set("n", "k", [[v:count?'k': 'gk']], { noremap = true, expr = true })
