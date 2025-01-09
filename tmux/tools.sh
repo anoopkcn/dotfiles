@@ -212,7 +212,7 @@ cmd_list_sessions() {
     fi
 }
 
-# Rest of code remains unchanged...
+# FZF functions
 read -r -d '' FZF_PREVIEW_FORMAT << EOF
 echo "Session: ${BLUE}\$(echo {1} | tr -d "'")${NC}"
 tmux list-windows -t {1} -F "Window #{window_index}: #{?window_active,${GREEN}#{window_name}${NC},#{window_name}}" | while read -r window; do
@@ -314,6 +314,7 @@ fzf_rename_session() {
     fi
 }
 
+# Help and version functions
 show_help() {
     cat << EOF
 Tmux Session Management Tool (TS)
