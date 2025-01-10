@@ -16,7 +16,6 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "config.plugins" },
-		-- { "folke/tokyonight.nvim",  config = function() vim.cmd.colorscheme "tokyonight-storm" end },
 		{ "navarasu/onedark.nvim",
 			lazy = false,
 			priority = 1000,

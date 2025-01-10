@@ -23,7 +23,7 @@ return {
         end)
         vim.keymap.set('n', '<leader>/', function()
             local search_term = vim.fn.input("Grep > ")
-            if search_term ~= "" then -- Only proceed if search term is not empty
+            if search_term ~= "" then 
                 builtin.grep_string({ search = search_term })
             end
         end)
