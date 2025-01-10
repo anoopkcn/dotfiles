@@ -3,10 +3,6 @@
 -- License: MIT
 -- Refer to README.md for more information
 
--- PLUGINS
-require("custom.splitjump").setup()
-require("custom.lazy")
-
 -- OPTIONS
 vim.g.netrw_banner = 0
 -- vim.g.netrw_browse_split = 0
@@ -139,3 +135,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
 		vim.opt.relativenumber = false
 	end,
 })
+
+-- PLUGINS
+require("custom.splitjump").setup()
+require("config.lazy")
+
