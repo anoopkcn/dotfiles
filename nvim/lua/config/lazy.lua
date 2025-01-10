@@ -16,18 +16,7 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "config.plugins" },
-		{ "navarasu/onedark.nvim",
-			lazy = false,
-			priority = 1000,
-			config = function()
-				require('onedark').load()
-			end
-		},
-		{ "lewis6991/gitsigns.nvim",
-			config = function()
-				require("gitsigns").setup()
-			end
-		},
+		{ "navarasu/onedark.nvim",  config = function() require('onedark').load() end },
 		{ "tpope/vim-fugitive",
 			config = function()
 				vim.keymap.set("n", "<leader>G", "<Cmd>Git<CR>")

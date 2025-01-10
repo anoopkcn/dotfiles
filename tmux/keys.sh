@@ -6,7 +6,7 @@ bind-key a send-prefix
 
 bind R source-file ~/.config/tmux/tmux.conf \; display "TMUX Reloaded"
 
-bind | split-window -h -c "#{pane_current_path}"
+bind \\ split-window -h -c "#{pane_current_path}"
 bind - split-window -v -c "#{pane_current_path}"
 
 # synchronize all panes in a window

@@ -1,38 +1,18 @@
 # NeoVim setup
 **Philosophy:**
 
-- If you can't explain it, _you don't need it._
-- If it becomes a chore to maintain, _you don't need it._
-- If you have to lookup how it works more than once, _you don't need it._
+- If it can't be explained, it needn't be used.
+- If it can't be wielded, it needn't be wielded.
 
 ## Requirements
 
 - [NeoVim](https://neovim.io) (>= 0.10)
   - Editor you need. _One can edit without it but not as contentedly._
 
-## Optional Requirements
-
-- [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
-  - Ripgrep is used for searching in files, it is faster than the default grep. _Everything should work without it but not as fast._
-
-## Folder Structure
-
-```bash
-.
-├── README.md
-├── init.lua
-└── lua
-    ├── core
-    │   └── *.lua
-    └── plugins
-        └── *.lua
-```
-
+## NeoVim Plugins
 [lazy.nvim](https://github.com/folke/lazy.nvim.git) plugin is used as the package manager and it is initialised with the following in the `init.lua` file.
 
 All plugin specific configurations are stored in the `lua/plugins` directory. All color/theme related configurations are stored in the `lua/colors` directory.
-
-## NeoVim Plugins
 
 <!--
 copy the following line yy
@@ -48,8 +28,3 @@ execute copied command in the command mode :@"  OR :<ctrl-r>"
 - [vim-unimpaired](https://github.com/tpope/vim-unimpaired)(sensible `[` and `]` commands)
 - [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
 
-
-## Extra
-For LSP
-```lua
-```
