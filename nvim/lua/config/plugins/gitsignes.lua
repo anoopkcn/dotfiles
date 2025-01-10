@@ -37,8 +37,6 @@ return {
 				map('n', '<leader>hp', gitsigns.preview_hunk)
 				map('n', '<leader>hb', gitsigns.toggle_current_line_blame)
 				map('n', '<leader>hd', gitsigns.diffthis)
-				-- Text object
-				map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
 			end
 		})
 	end

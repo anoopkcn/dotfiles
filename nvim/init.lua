@@ -4,6 +4,8 @@
 -- Refer to README.md for more information
 
 -- OPTIONS
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 vim.g.netrw_banner = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -21,20 +23,10 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
--- vim.opt_local.conceallevel = 2
--- vim.opt.conceallevel = 1
-vim.opt.updatetime = 250
 vim.opt.inccommand = "split"
-if vim.fn.has("Mac") == 1 then
-	vim.opt.linebreak = true
-	vim.opt.showbreak = "⤷ "
-end
--- vim.opt.statusline = [[%f %m %{fugitive#statusline()} %= %y %l:%c %p%%]]
+vim.opt.linebreak = true
 
 -- KEYBINDINGS
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
 -- since Space is the leader key do nothing
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
@@ -81,4 +73,4 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- PLUGINS
 require("custom.splitjump").setup()
 require("config.lazy")
-vim.hl = vim.highlight
+
