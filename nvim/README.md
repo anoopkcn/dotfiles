@@ -28,3 +28,5 @@ execute copied command in the command mode :@"  OR :<ctrl-r>"
 - [vim-unimpaired](https://github.com/tpope/vim-unimpaired)(sensible `[` and `]` commands)
 - [comment.nvim](https://github.com/numToStr/Comment.nvim) (add line/block comments easily)
 
+## Custom Plugins
+- split_jump.lua

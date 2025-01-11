@@ -23,8 +23,9 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
-vim.opt.inccommand = "split"
+-- vim.opt.inccommand = "split"
 vim.opt.linebreak = true
+vim.diagnostic.config({virtual_text = false})
 
 -- KEYBINDINGS
 -- since Space is the leader key do nothing
@@ -39,13 +40,16 @@ vim.keymap.set("n", "<C-f>", "<C-f>zz")
 vim.keymap.set("n", "<C-b>", "<C-b>zz")
 vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
+-- helper windows
 vim.keymap.set("n", "<leader>F", "<cmd>Ex<CR>")
 vim.keymap.set("n", "<Leader>bd", vim.cmd.bd)
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
+vim.keymap.set("n", "<leader>Q", "<cmd>cclose<CR>")
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist)
 -- Window splits
-vim.keymap.set('n', '<leader>\\', ':rightbelow vsplit<CR>', { noremap = true, silent = true }) -- Split right
-vim.keymap.set('n', '<leader>-', ':rightbelow split<CR>', { noremap = true, silent = true })  -- Split down
+vim.keymap.set('n', '<leader>\\', ':rightbelow vsplit<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>-', ':rightbelow split<CR>', { noremap = true, silent = true })
 
 -- CUSTOM FUNCTIONS
 Print = function(v)
@@ -70,7 +74,23 @@ vim.api.nvim_create_autocmd("TermOpen", {
 	end,
 })
 
+-- Command to toggle inline diagnostics
+vim.api.nvim_create_user_command(
+  'DiagnosticsToggleVirtualText',
+  function()
+    local current_value = vim.diagnostic.config().virtual_text
+    if current_value then
+      vim.diagnostic.config({virtual_text = false})
+    else
+      vim.diagnostic.config({virtual_text = true})
+    end
+  end,
+  {}
+)
+
+vim.api.nvim_set_keymap('n', '<Leader>ii', '<cmd>DiagnosticsToggleVirtualText<CR>', { noremap = true, silent = true })
+
 -- PLUGINS
-require("custom.splitjump").setup()
+require("custom.split_jump").setup()
 require("config.lazy")
 
