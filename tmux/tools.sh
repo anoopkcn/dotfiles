@@ -1,21 +1,16 @@
 #!/bin/sh
-# TMUX SESSION MANAGEMENT TOOL (tmuxctl)
+# TMUX SESSION MANAGEMENT TOOL (tm)
 # Author: @anoopkcn
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.2.5"
+VERSION="1.3.1"
 LICENSE="MIT"
 
-TS_SEARCH_DIRS=(
-    "$HOME"
-    "$HOME/work"
-    "$HOME/work/develop"
-    "$HOME/Dropbox"
-    "$HOME/Dropbox/projects"
-)
+# Extend search directories by setting TM_SEARCH_DIRS variable in .zshrc/.bashrc
+# Example: export TM_SEARCH_DIRS="$HOME $HOME/projects $HOME/work"
+TM_SEARCH_DIRS="$HOME"
 
-# Color definitions
 if [ -t 1 ]; then
     GREEN=$(tput setaf 2)
     YELLOW=$(tput setaf 3)
@@ -35,10 +30,10 @@ fi
 # UTILITY FUNCTIONS
 show_help() {
     cat << EOF
-${BOLD}Tmux Session Management Tool (tmuxctl) ${VERSION}${NC}
+${BOLD}Tmux Session Management Tool (tm) ${VERSION}${NC}
 
 ${BOLD}USAGE:${NC}
-    tmuxctl [options] <command> [arguments]
+    tm [options] <command> [arguments]
 
 ${BOLD}OPTIONS:${NC}
     -i, --interactive           Use interactive mode with fuzzy finder
@@ -54,17 +49,17 @@ ${BOLD}COMMANDS:${NC}
     rename, r <old> <new>       Rename a session
 
 ${BOLD}EXAMPLES:${NC}
-    tmuxctl new mysession       Create new session named 'mysession'
-    tmuxctl new                 Create session with pwd name
-    tmuxctl attach mysession    Attach to session 'mysession'
-    tmuxctl kill mysession      Kill session 'mysession'
-    tmuxctl rename old new      Rename session 'old' to 'new'
+    tm new mysession       Create new session named 'mysession'
+    tm new                 Create session with pwd name
+    tm attach mysession    Attach to session 'mysession'
+    tm kill mysession      Kill session 'mysession'
+    tm rename old new      Rename session 'old' to 'new'
 
     # Interactive
-    tmuxctl -i new              Create session by selecting directory
-    tmuxctl -i attach           Select session to attach
-    tmuxctl -i kill             Select session(s) to kill
-    tmuxctl -i rename           Select session to rename
+    tm -i new              Create session by selecting directory
+    tm -i attach           Select session to attach
+    tm -i kill             Select session(s) to kill
+    tm -i rename           Select session to rename
 
 ${BOLD}NOTES:${NC}
     - Interactive mode (-i) requires fzf to be installed
@@ -82,7 +77,10 @@ session_exists() {
 }
 
 validate_session_name() {
-    [[ "$1" =~ ^[a-zA-Z0-9_-]+$ ]] || error_msg "Invalid session name. Use alphanumeric characters, underscore or hyphen"
+    case "$1" in
+        *[!a-zA-Z0-9_-]*) error_msg "Invalid session name. Use alphanumeric characters, underscore or hyphen" ;;
+        *) return 0 ;;
+    esac
 }
 
 check_active_sessions() {
@@ -92,23 +90,28 @@ check_active_sessions() {
     fi
     return 0
 }
-session_selector() {
-    local sort_by_last_used=${1:-true}
 
-    if [ "$sort_by_last_used" = "true" ]; then
-        local current_session=$(tmux display-message -p '#S')
-        tmux list-sessions -F "#{session_last_attached} #{session_name}" | \
-            sort -nr | \
-            awk '{print $2}' | \
-            grep -v "^${current_session}$" | \
-            cat - <(echo "${current_session}")
+session_selector() {
+    local sort_by_last_used="${1:-true}"
+
+    if [ "$sort_by_last_used" = "true" ] && [ -n "$TMUX" ]; then
+        local current="$(tmux display-message -p '#S')"
+        {
+            tmux list-sessions -F "#{session_last_attached} #{session_name}" | \
+                grep -v " $current" | sort -nr | cut -d' ' -f2-
+            echo "$current"
+        }
     else
         tmux list-sessions -F "#{session_name}"
     fi
 }
 
 directory_selector() {
-    find . "${TS_SEARCH_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d
+    # It HAS to loop over for compatibility with different shells
+    for dir in "${=TM_SEARCH_DIRS}"; do
+        find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+    done
+    find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
 }
 
 window_selector() {
@@ -126,14 +129,12 @@ fzf_directory_selector() {
         --border-label="( ${BOLD}${GREEN}SELECT DIRECTORY${NC} )" "$@"
 }
 
-read -r -d '' FZF_PREVIEW_FORMAT << EOF
-echo "Session: ${BLUE}\$(echo {1} | tr -d "'")${NC}"
-tmux list-windows -t {1} -F "Window #{window_index}: #{?window_active,${GREEN}#{window_name}${NC},#{window_name}}" | while read -r window; do
-    echo "├── \$window"
-    window_num=\$(echo "\$window" | cut -d: -f1 | cut -d" " -f2)
-    tmux list-panes -t {1}:\$window_num -F "│   ├── Pane #{pane_index}: #{?pane_active,#{pane_current_command}*,#{pane_current_command}} [#{pane_width}x#{pane_height}]"
-done
-EOF
+FZF_PREVIEW_FORMAT="echo \"Session: ${BLUE}\$(echo {1} | tr -d '\"')${NC}\"
+tmux list-windows -t {1} -F \"Window #{window_index}: #{?window_active,${GREEN}#{window_name}${NC},#{window_name}}\" | while read -r window; do
+    echo \"├── \$window\"
+    window_num=\$(echo \"\$window\" | cut -d: -f1 | cut -d\" \" -f2)
+    tmux list-panes -t {1}:\$window_num -F \"│   ├── Pane #{pane_index}: #{?pane_active,#{pane_current_command}*,#{pane_current_command}} [#{pane_width}x#{pane_height}]\"
+done"
 
 # BASE FUNCTIONS
 create_session() {
@@ -256,7 +257,7 @@ list_sessions() {
     fi
 }
 
-# FZF variants
+# FZF VARIANTS
 fzf_create_session() {
     local selected
     if [ $# -gt 0 ] && [ -d "$1" ]; then
@@ -293,26 +294,24 @@ fzf_kill_session() {
         --border-label="( ${BOLD}${RED}KILL${NC} )" \
         --header="Use TAB to select multiple" "$@")
 
-    # Exit if no sessions were selected
     [ -z "$selected_sessions" ] && return 0
 
-    local -a regular_sessions=()
-    local kill_current=false
+    regular_sessions=""
+    kill_current=false
 
-    while IFS= read -r session; do
+    echo "$selected_sessions" | while IFS= read -r session; do
         if [ "$session" = "$current_session" ]; then
             kill_current=true
         else
-            regular_sessions+=("$session")
+            regular_sessions="$regular_sessions $session"
         fi
-    done <<< "$selected_sessions"
-
-    # Kill regular sessions first
-    for session in "${regular_sessions[@]}"; do
-        kill_session "$session"
     done
 
-    # Kill current session last if selected
+    # Kill regular sessions first
+    for session in $regular_sessions; do
+        [ -n "$session" ] && kill_session "$session"
+    done
+
     if [ "$kill_current" = true ]; then
         echo "${YELLOW}Killing current session...${NC}"
         kill_session "$current_session"
@@ -339,7 +338,7 @@ fzf_list_sessions() {
 }
 
 # MAIN COMMAND FUNCTION
-tmuxctl() {
+tm() {
     if [ $# -eq 0 ]; then
         show_help
         return 1
