@@ -1,6 +1,8 @@
-# dotfiles
+# DOTFILES
 
-Repository contains essential `config` and `rc` files for `zsh`, `tmux`, `nvim` and `ghostty`
+This repository contains my personal configuration files for development environment. It is **NOT** meant to be a turnkey solution but only meant as a matter of record and reference for people who are interested in my configuration.
+
+Repository includes `config` and `rc` files for `zsh`, `tmux`, `nvim` and `ghostty`
 
 ## Dependencies
 
@@ -18,6 +20,7 @@ Repository contains essential `config` and `rc` files for `zsh`, `tmux`, `nvim` 
   - better `ls`
 
 ## Installation
+
 Set the `PATH_TO_DOTFILES` to the path inside the `setup.sh` file
 
 ```sh
@@ -25,5 +28,7 @@ sh setup.sh
 ```
 
 ## Extra
-### TMUX SESSION MANAGEMENT TOOL (TS)
+
+### `TMUX` SESSION MANAGEMENT TOOL (TS)
+
 Set variables `TS_SEARCH_DIRS` to make use of `tmuxctl` tool functionalities. Use `tmuxctl -h` or check `tmux/tools.sh` for details
