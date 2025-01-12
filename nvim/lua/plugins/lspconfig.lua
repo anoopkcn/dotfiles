@@ -13,6 +13,15 @@ return {
 	config = function()
 		local lspconfig = require('lspconfig')
 		lspconfig.lua_ls.setup({})
+		lspconfig.pyright.setup({
+			settings = {
+				python = {
+					analysis = {
+						diagnosticMode = "workspace"
+					}
+				}
+			}
+		})
 		vim.keymap.set("n", "<leader>,", vim.lsp.buf.format)
 	end
 }
