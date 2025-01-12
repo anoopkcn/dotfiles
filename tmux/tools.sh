@@ -4,7 +4,7 @@
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.2.4"
+VERSION="1.2.5"
 LICENSE="MIT"
 
 TS_SEARCH_DIRS=(
