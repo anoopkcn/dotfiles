@@ -23,6 +23,6 @@ sh setup.sh
 
 ## Extra
 
-### `TMUX` SESSION MANAGEMENT TOOL (TS)
+### `TMUX` SESSION MANAGEMENT TOOL (TM)
 
-Set variables `TS_SEARCH_DIRS` to make use of `tmuxctl` tool functionalities. Use `tmuxctl -h` or check `tmux/tools.sh` for details
+Set variables `TM_SEARCH_DIRS` to make use of `tm` tool functionalities. Use `tm -h` or check `tmux/tools.sh` for details
