@@ -81,6 +81,7 @@ require("lazy").setup {
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
 		{ "numToStr/Comment.nvim" },
+		{ "github/copilot.vim" },
 	},
 }
 
