@@ -31,7 +31,7 @@ vim.diagnostic.config({virtual_text = false})
 -- since Space is the leader key do nothing
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
-vim.keymap.set("n", "<Esc>", "<Cmd>nohlsearch<CR>")
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Center some stuff zz
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
@@ -109,16 +109,16 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
+		{ dir = "~/Dropbox/projects/split-jump.nvim"},
 		{ "navarasu/onedark.nvim",  config = function() require('onedark').load() end },
 		{ "tpope/vim-fugitive",
 			config = function()
-				vim.keymap.set("n", "<leader>G", "<Cmd>Git<CR>")
+				vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")
 			end
 		},
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
 		{ "numToStr/Comment.nvim" },
-		{ dir = "~/Dropbox/projects/split-jump.nvim"}
 	},
 }
