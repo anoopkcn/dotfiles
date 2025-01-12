@@ -15,7 +15,7 @@ Repository contains essential `config` and `rc` files for `zsh`, `tmux`, `nvim` 
 - (optional) [`fd`](https://github.com/sharkdp/fd) Ex: `brew install fd`
   - simpler, faster find
 - (optional) [`eza`](https://github.com/eza-community/eza) Ex: `brew install eza`
-  - better `ls` 
+  - better `ls`
 
 ## Installation
 Set the `PATH_TO_DOTFILES` to the path inside the `setup.sh` file
@@ -26,4 +26,4 @@ sh setup.sh
 
 ## Extra
 ### TMUX SESSION MANAGEMENT TOOL (TS)
-Set variables `TS_SEARCH_DIRS` to make use of `ts` tool functionalities. Use `ts -h` or check `tmux/tools.sh` for details
+Set variables `TS_SEARCH_DIRS` to make use of `tmuxctl` tool functionalities. Use `tmuxctl -h` or check `tmux/tools.sh` for details
