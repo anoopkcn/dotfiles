@@ -107,11 +107,19 @@ session_selector() {
 }
 
 directory_selector() {
-    # It HAS to loop over for compatibility with different shells
-    for dir in "${=TM_SEARCH_DIRS}"; do
-        find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
-    done
-    find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+    if command -v fd >/dev/null 2>&1; then
+        # Using fd - need to loop to handle paths separated by spaces
+        for dir in "${=TM_SEARCH_DIRS}"; do
+            fd . "$dir" --max-depth 1 --min-depth 1 --type d 2>/dev/null
+        done
+        fd . --max-depth 1 --min-depth 1 --type d 2>/dev/null
+    else
+        # Fallback to find
+        for dir in "${=TM_SEARCH_DIRS}"; do
+            find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+        done
+        find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+    fi
 }
 
 window_selector() {
