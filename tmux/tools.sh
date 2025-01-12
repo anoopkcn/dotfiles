@@ -1,10 +1,10 @@
 #!/bin/sh
-# TMUX SESSION MANAGEMENT TOOL (TS)
+# TMUX SESSION MANAGEMENT TOOL (tmuxctl)
 # Author: @anoopkcn
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.2.3"
+VERSION="1.2.4"
 LICENSE="MIT"
 
 TS_SEARCH_DIRS=(
@@ -32,40 +32,39 @@ else
     NC=""
 fi
 
-
 # UTILITY FUNCTIONS
 show_help() {
     cat << EOF
-${BOLD}Tmux Session Management Tool (TS) ${VERSION}${NC}
+${BOLD}Tmux Session Management Tool (tmuxctl) ${VERSION}${NC}
 
 ${BOLD}USAGE:${NC}
-    ts [options] <command> [arguments]
+    tmuxctl [options] <command> [arguments]
 
 ${BOLD}OPTIONS:${NC}
-    -i, --interactive      Use interactive mode with fuzzy finder
-    -h, --help             Show this help message
-    -v, --version          Show version information
+    -i, --interactive           Use interactive mode with fuzzy finder
+    -h, --help                  Show this help message
+    -v, --version               Show version information
 
 ${BOLD}COMMANDS:${NC}
-    new, n [name] [dir]    Create a new session
-    attach, a [name]       Attach to an existing session
-    detach, d [name]       Detach from current or specified session
-    kill, k [name]         Kill specified session
-    list, l                List all sessions
-    rename, r <old> <new>  Rename a session
+    new, n [name|dir]           Create a new session
+    attach, a [name]            Attach to an existing session
+    detach, d [name]            Detach from current or specified session
+    kill, k [name]              Kill specified session
+    list, l                     List all sessions
+    rename, r <old> <new>       Rename a session
 
 ${BOLD}EXAMPLES:${NC}
-    ts create mysession    Create new session named 'mysession'
-    ts create              Create session with directory name
-    ts attach mysession    Attach to session 'mysession'
-    ts kill mysession      Kill session 'mysession'
-    ts rename old new      Rename session 'old' to 'new'
+    tmuxctl new mysession       Create new session named 'mysession'
+    tmuxctl new                 Create session with pwd name
+    tmuxctl attach mysession    Attach to session 'mysession'
+    tmuxctl kill mysession      Kill session 'mysession'
+    tmuxctl rename old new      Rename session 'old' to 'new'
 
     # Interactive
-    ts -i create           Create session by selecting directory
-    ts -i attach           Select session to attach
-    ts -i kill             Select session(s) to kill
-    ts -i rename           Select session to rename
+    tmuxctl -i new              Create session by selecting directory
+    tmuxctl -i attach           Select session to attach
+    tmuxctl -i kill             Select session(s) to kill
+    tmuxctl -i rename           Select session to rename
 
 ${BOLD}NOTES:${NC}
     - Interactive mode (-i) requires fzf to be installed
@@ -107,13 +106,13 @@ window_selector() {
 }
 
 fzf_session_selector() {
-    session_selector |  fzf --preview "${FZF_PREVIEW_FORMAT}" "$@"
+    session_selector |  fzf --exit-0 --preview "${FZF_PREVIEW_FORMAT}" "$@"
 }
 
 fzf_directory_selector() {
     directory_selector | \
-        fzf "$@" --preview "ls --color=always {}" \
-        --border-label="( ${BOLD}${GREEN}SELECT DIRECTORY${NC} )"
+        fzf --exit-0 --preview "ls --color=always {}" \
+        --border-label="( ${BOLD}${GREEN}SELECT DIRECTORY${NC} )" "$@"
 }
 
 read -r -d '' FZF_PREVIEW_FORMAT << EOF
@@ -128,7 +127,20 @@ EOF
 # BASE FUNCTIONS
 create_session() {
     local session_name="$1"
-    local directory="${2:-$(pwd)}"
+    local directory
+
+    if [ -d "$session_name" ]; then
+        directory="$session_name"
+        session_name=$(basename "$directory" | tr '.' '-')
+    else
+        directory="${2:-$(pwd)}"
+    fi
+
+    if [ ! -d "$directory" ]; then
+        error_msg "Directory does not exist: $directory"
+        return 1
+    fi
+
     local new_session_name
 
     if [ -z "$session_name" ]; then
@@ -236,12 +248,15 @@ list_sessions() {
 # FZF variants
 fzf_create_session() {
     local selected
-    selected=$(fzf_directory_selector "$@")
+    if [ $# -gt 0 ] && [ -d "$1" ]; then
+        selected="$1"
+    else
+        selected=$(fzf_directory_selector "$@")
+    fi
 
     [ -z "$selected" ] && return 0
 
-    local selected_name=$(basename "$selected" | tr . _)
-    create_session "$selected_name" "$selected"
+    create_session "$selected"
 }
 
 fzf_attach_session() {
@@ -313,7 +328,7 @@ fzf_list_sessions() {
 }
 
 # MAIN COMMAND FUNCTION
-ts() {
+tmuxctl() {
     if [ $# -eq 0 ]; then
         show_help
         return 1
