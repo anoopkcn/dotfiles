@@ -93,7 +93,18 @@ check_active_sessions() {
     return 0
 }
 session_selector() {
-    tmux list-sessions -F "#{session_name}"
+    local sort_by_last_used=${1:-true}
+
+    if [ "$sort_by_last_used" = "true" ]; then
+        local current_session=$(tmux display-message -p '#S')
+        tmux list-sessions -F "#{session_last_attached} #{session_name}" | \
+            sort -nr | \
+            awk '{print $2}' | \
+            grep -v "^${current_session}$" | \
+            cat - <(echo "${current_session}")
+    else
+        tmux list-sessions -F "#{session_name}"
+    fi
 }
 
 directory_selector() {
