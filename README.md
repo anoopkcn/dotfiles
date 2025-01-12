@@ -6,18 +6,12 @@ Repository includes `config` and `rc` files for `zsh`, `tmux`, `nvim` and `ghost
 
 ## Dependencies
 
-- (optional) [`rg`](https://github.com/BurntSushi/ripgrep)  Ex: `brew install ripgrep`
-  - for faster parallel grep
-- (optional) [`fzf`](https://github.com/junegunn/fzf)  Ex: `brew install fzf`
-  - for fuzzy search
-- (optional) [`zoxide`](https://github.com/ajeetdsouza/zoxide)  Ex: `brew install zoxide`
-  - for directory navigation
-- (optional) [`bat`](https://github.com/sharkdp/bat) Ex: `brew install bat`
-  - `cat` with syntax highlighting
-- (optional) [`fd`](https://github.com/sharkdp/fd) Ex: `brew install fd`
-  - simpler, faster find
-- (optional) [`eza`](https://github.com/eza-community/eza) Ex: `brew install eza`
-  - better `ls`
+- (optional) [`rg`](https://github.com/BurntSushi/ripgrep) for faster parallel grep  Ex: `brew install ripgrep`
+- (optional) [`fzf`](https://github.com/junegunn/fzf) for fuzzy search  Ex: `brew install fzf`
+- (optional) [`zoxide`](https://github.com/ajeetdsouza/zoxide) for directory navigation  Ex: `brew install zoxide`
+- (optional) [`bat`](https://github.com/sharkdp/bat) `cat` with syntax highlighting Ex: `brew install bat`
+- (optional) [`fd`](https://github.com/sharkdp/fd) simpler, faster find Ex: `brew install fd`
+- (optional) [`eza`](https://github.com/eza-community/eza) alternative `ls` Ex: `brew install eza`
 
 ## Installation
 
