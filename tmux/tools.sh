@@ -292,38 +292,20 @@ fzf_attach_session() {
         create_session "$query"
     fi
 }
-
 fzf_kill_session() {
     check_active_sessions || return 1
-    local current_session selected_sessions
 
-    current_session=$(tmux display-message -p '#S')
-    selected_sessions=$(fzf_session_selector --multi \
+    local selected_sessions
+    # sort_by_last_used must be set to true. Otherwise, the current session will prematurely exit if it is selected for termination.
+    selected_sessions=$(session_selector "true" | fzf --multi \
         --border-label="( ${BOLD}${RED}KILL${NC} )" \
         --header="Use TAB to select multiple" "$@")
 
     [ -z "$selected_sessions" ] && return 0
 
-    regular_sessions=""
-    kill_current=false
-
     echo "$selected_sessions" | while IFS= read -r session; do
-        if [ "$session" = "$current_session" ]; then
-            kill_current=true
-        else
-            regular_sessions="$regular_sessions $session"
-        fi
+        kill_session "$session"
     done
-
-    # Kill regular sessions first
-    for session in $regular_sessions; do
-        [ -n "$session" ] && kill_session "$session"
-    done
-
-    if [ "$kill_current" = true ]; then
-        echo "${YELLOW}Killing current session...${NC}"
-        kill_session "$current_session"
-    fi
 }
 
 fzf_rename_session() {
