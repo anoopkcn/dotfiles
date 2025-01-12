@@ -7,10 +7,10 @@ Repository includes `config` and `rc` files for `zsh`, `tmux`, `nvim` and `ghost
 ## Dependencies
 
 - (optional) [`rg`](https://github.com/BurntSushi/ripgrep) for faster parallel grep  Ex: `brew install ripgrep`
+- (optional) [`fd`](https://github.com/sharkdp/fd) simpler, faster find Ex: `brew install fd`
 - (optional) [`fzf`](https://github.com/junegunn/fzf) for fuzzy search  Ex: `brew install fzf`
 - (optional) [`zoxide`](https://github.com/ajeetdsouza/zoxide) for directory navigation  Ex: `brew install zoxide`
 - (optional) [`bat`](https://github.com/sharkdp/bat) `cat` with syntax highlighting Ex: `brew install bat`
-- (optional) [`fd`](https://github.com/sharkdp/fd) simpler, faster find Ex: `brew install fd`
 - (optional) [`eza`](https://github.com/eza-community/eza) alternative `ls` Ex: `brew install eza`
 
 ## Installation
