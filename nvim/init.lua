@@ -6,7 +6,6 @@
 -- OPTIONS
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.netrw_banner = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.undofile = true
@@ -25,7 +24,9 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 -- vim.opt.inccommand = "split"
 vim.opt.linebreak = true
-vim.diagnostic.config({virtual_text = false})
+vim.opt.showmode = false
+vim.opt.termguicolors = true
+vim.diagnostic.config({ virtual_text = false })
 
 -- KEYBINDINGS
 -- since Space is the leader key do nothing
@@ -41,14 +42,15 @@ vim.keymap.set("n", "<C-b>", "<C-b>zz")
 vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
 -- helper windows
-vim.keymap.set("n", "<leader>F", "<cmd>Ex<CR>")
+vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
+vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
 vim.keymap.set("n", "<Leader>bd", vim.cmd.bd)
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>Q", "<cmd>cclose<CR>")
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist)
 -- Window splits
-vim.keymap.set('n', '<leader>\\', ':rightbelow vsplit<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>\\', ':rightbelow vsplit<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>-', ':rightbelow split<CR>', { noremap = true, silent = true })
 
 -- PLUGINS
@@ -70,8 +72,20 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
-		{ dir = "~/Dropbox/projects/split-jump.nvim"},
-		{ "navarasu/onedark.nvim",  config = function() require('onedark').load() end },
+		{ dir = "~/Dropbox/projects/split-jump.nvim" },
+		{ "navarasu/onedark.nvim",
+			lazy = false,
+			priority = 1000,
+			config = function()
+				require('onedark').setup {
+					colors = {
+						green = "#8fbc8f",
+						red = "#cd5c5c",
+					},
+				}
+				require('onedark').load()
+			end
+		},
 		{ "tpope/vim-fugitive",
 			config = function()
 				vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")
