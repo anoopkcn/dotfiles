@@ -9,7 +9,7 @@ LICENSE="MIT"
 
 # Extend search directories by setting TM_SEARCH_DIRS variable in .zshrc/.bashrc
 # Example: export TM_SEARCH_DIRS="$HOME $HOME/projects $HOME/work"
-TM_SEARCH_DIRS="$HOME"
+TM_SEARCH_DIRS=${TM_SEARCH_DIRS:-"$HOME"}
 
 if [ -t 1 ]; then
     GREEN=$(tput setaf 2)
@@ -107,19 +107,11 @@ session_selector() {
 }
 
 directory_selector() {
-    if command -v fd >/dev/null 2>&1; then
-        # Using fd - need to loop to handle paths separated by spaces
-        for dir in "${=TM_SEARCH_DIRS}"; do
-            fd . "$dir" --max-depth 1 --min-depth 1 --type d 2>/dev/null
-        done
-        fd . --max-depth 1 --min-depth 1 --type d 2>/dev/null
-    else
-        # Fallback to find
-        for dir in "${=TM_SEARCH_DIRS}"; do
-            find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
-        done
-        find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
-    fi
+    # loop is necessary for shell compatibility
+    for dir in "${=TM_SEARCH_DIRS}"; do
+        find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+    done
+    find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
 }
 
 window_selector() {
@@ -146,43 +138,51 @@ done"
 
 # BASE FUNCTIONS
 create_session() {
-    local session_name="$1"
-    local directory
+    local session_names_or_dir=("$@")
+    local last_session=""
 
-    if [ -d "$session_name" ]; then
-        directory="$session_name"
-        session_name=$(basename "$directory" | tr '.' '-')
-    else
-        directory="${2:-$(pwd)}"
+    if [ ${#session_names_or_dir[@]} -eq 0 ]; then
+        session_names_or_dir=($(pwd))
     fi
 
-    if [ ! -d "$directory" ]; then
-        error_msg "Directory does not exist: $directory"
-        return 1
-    fi
+    for item in "${session_names_or_dir[@]}"; do
+        local directory
+        local session_name
 
-    local new_session_name
-
-    if [ -z "$session_name" ]; then
-        new_session_name=$(basename "$directory" | tr '.' '-')
-        if session_exists "$new_session_name"; then
-            local i=1
-            while session_exists "$new_session_name-$i"; do
-                i=$((i + 1))
-            done
-            new_session_name="$new_session_name-$i"
+        # If argument is a directory, use its basename as session name
+        if [ -d "$item" ]; then
+            directory="$item"
+            session_name=$(basename "$item" | tr '.' '-' 2>/dev/null)
+        else
+            # Not a directory - use as session name
+            directory=$(pwd)
+            session_name="$item"
         fi
-        echo "${GREEN}Using default session name: $new_session_name${NC}"
-    else
-        new_session_name="$session_name"
-        validate_session_name "$new_session_name"
-    fi
 
-    if [ -n "$TMUX" ]; then
-        tmux new-session -d -s "$new_session_name" -c "$directory"
-        tmux switch-client -t "$new_session_name"
-    else
-        tmux new-session -A -s "$new_session_name" -c "$directory"
+        if ! validate_session_name "$session_name"; then
+            continue
+        fi
+
+        if session_exists "$session_name"; then
+            echo "${YELLOW}Session '$session_name' already exists${NC}"
+            continue
+        fi
+
+        if [ -n "$TMUX" ]; then
+            tmux new-session -d -s "$session_name" -c "$directory"
+        else
+            tmux new-session -d -s "$session_name" -c "$directory"
+        fi
+        echo "${GREEN}Created session: $session_name at $directory${NC}"
+        last_session="$session_name"
+    done
+
+    if [ -n "$last_session" ]; then
+        if [ -n "$TMUX" ]; then
+            tmux switch-client -t "$last_session"
+        else
+            tmux attach-session -t "$last_session"
+        fi
     fi
 }
 
@@ -271,12 +271,17 @@ fzf_create_session() {
     if [ $# -gt 0 ] && [ -d "$1" ]; then
         selected="$1"
     else
-        selected=$(fzf_directory_selector "$@")
+        selected=$(fzf_directory_selector --multi --header="Use TAB to select multiple directories" "$@")
     fi
 
     [ -z "$selected" ] && return 0
 
-    create_session "$selected"
+    local selected_dirs=()
+    while IFS= read -r dir; do
+        selected_dirs+=("$dir")
+    done <<< "$selected"
+
+    create_session "${selected_dirs[@]}"
 }
 
 fzf_attach_session() {
@@ -359,7 +364,7 @@ tm() {
             esac
             ;;
         # Direct mode
-        new|n) create_session "${2:-}" ;;
+        new|n) shift; create_session "$@" ;;
         attach|a) attach_session "${2:-}" ;;
         kill|k) kill_session "${2:-}" ;;
         list|l) list_sessions ;;
