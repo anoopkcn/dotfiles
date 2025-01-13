@@ -8,8 +8,8 @@ VERSION="1.3.1"
 LICENSE="MIT"
 
 # Extend search directories by setting TM_SEARCH_DIRS variable in .zshrc/.bashrc
-# Example: export TM_SEARCH_DIRS="$HOME $HOME/projects $HOME/work"
-TM_SEARCH_DIRS=${TM_SEARCH_DIRS:-"$HOME"}
+# Example: export TM_SEARCH_DIRS=($HOME $HOME/projects $HOME/work)
+TM_SEARCH_DIRS=(${TM_SEARCH_DIRS[@]:-"$HOME"})
 
 if [ -t 1 ]; then
     GREEN=$(tput setaf 2)
@@ -107,11 +107,11 @@ session_selector() {
 }
 
 directory_selector() {
-    # loop is necessary for shell compatibility
-    for dir in "${=TM_SEARCH_DIRS}"; do
-        find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
-    done
-    find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+    if command -v fd >/dev/null 2>&1; then
+        fd . "${TM_SEARCH_DIRS[@]}" --max-depth 1 --min-depth 1 --type d 2>/dev/null
+    else
+        find "${TM_SEARCH_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+    fi
 }
 
 window_selector() {
