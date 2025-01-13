@@ -65,4 +65,4 @@ function Get_mode()
     return string.format("%s", modes[current_mode] or current_mode)
 end
 
-vim.opt.statusline = [[ %{%v:lua.Get_mode()%} %f %m %r %=%l,%c %P ]]
+vim.opt.statusline = [[%{%v:lua.Get_mode()%} %f %m %r %=%l,%c %P]]
