@@ -4,12 +4,13 @@
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.3.1"
+VERSION="1.3.2"
 LICENSE="MIT"
 
+# NOTE: This script is only tested on zsh ans bash shells
 # Extend search directories by setting TM_SEARCH_DIRS variable in .zshrc/.bashrc
 # Example: export TM_SEARCH_DIRS=($HOME $HOME/projects $HOME/work)
-TM_SEARCH_DIRS=(${TM_SEARCH_DIRS[@]:-"$HOME"})
+TM_SEARCH_DIRS=${TM_SEARCH_DIRS:-"$HOME"}
 
 if [ -t 1 ]; then
     GREEN=$(tput setaf 2)
@@ -107,10 +108,20 @@ session_selector() {
 }
 
 directory_selector() {
-    if command -v fd >/dev/null 2>&1; then
-        fd . "${TM_SEARCH_DIRS[@]}" --max-depth 1 --min-depth 1 --type d 2>/dev/null
+    if [ -n "$ZSH_VERSION" ]; then
+        find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+        for dir in ${=TM_SEARCH_DIRS}; do
+            if [ -d "$dir" ]; then
+                find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+            fi
+        done
     else
-        find "${TM_SEARCH_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+        find . -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+        for dir in $TM_SEARCH_DIRS; do
+            if [ -d "$dir" ]; then
+                find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+            fi
+        done
     fi
 }
 

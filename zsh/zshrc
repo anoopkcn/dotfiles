@@ -13,6 +13,7 @@ path=(
 typeset -U path
 path=($^path(N-/))
 export PATH
+export TM_SEARCH_DIRS="$HOME $HOME/work $HOME/work/develop $HOME/Dropbox $HOME/Dropbox/projects"
 
 # PROMPT
 precmd(){
@@ -62,11 +63,3 @@ alias tree="eza --color=always --tree"
 alias tkill="tmux kill-server"
 alias tmi="tm -i new"
 alias icat="chafa -f kitty"
-
-export TM_SEARCH_DIRS=(
-    $HOME
-    $HOME/work
-    $HOME/work/develop
-    $HOME/Dropbox
-    $HOME/Dropbox/projects
-)
