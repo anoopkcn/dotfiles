@@ -142,9 +142,9 @@ fzf_directory_selector() {
 
 FZF_PREVIEW_FORMAT="echo \"Session: ${BLUE}\$(echo {1} | tr -d '\"')${NC}\"
 tmux list-windows -t {1} -F \"Window #{window_index}: #{?window_active,${GREEN}#{window_name}${NC},#{window_name}}\" | while read -r window; do
-    echo \"├── \$window\"
+    echo \"  \$window\"
     window_num=\$(echo \"\$window\" | cut -d: -f1 | cut -d\" \" -f2)
-    tmux list-panes -t {1}:\$window_num -F \"│   ├── Pane #{pane_index}: #{?pane_active,#{pane_current_command}*,#{pane_current_command}} [#{pane_width}x#{pane_height}]\"
+    tmux list-panes -t {1}:\$window_num -F \"    Pane #{pane_index}: #{?pane_active,#{pane_current_command}*,#{pane_current_command}} [#{pane_width}x#{pane_height}]\"
 done"
 
 # BASE FUNCTIONS
