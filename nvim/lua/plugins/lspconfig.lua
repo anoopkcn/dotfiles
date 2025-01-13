@@ -12,6 +12,7 @@ return {
 	},
 	config = function()
 		local lspconfig = require('lspconfig')
+		lspconfig.zls.setup({})
 		lspconfig.lua_ls.setup({})
 		lspconfig.pyright.setup({
 			settings = {
