@@ -3,22 +3,36 @@ return {
 	tag = '0.1.8',
 	dependencies = {
 		'nvim-lua/plenary.nvim',
-		{ 'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
+		{
+			'nvim-telescope/telescope-fzf-native.nvim',
+			build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
+		}
 	},
 
 	config = function()
 		require('telescope').setup({
+			defaults = {
+				border = true,
+				highlights = {
+					border = "TelescopeBorder",
+				},
+			},
 			pickers = {
-				git_files = {theme = "ivy", preview_title = false, results_title=false},
-				git_branches = {theme = "ivy", preview_title = false, results_title=false},
-				git_status = {theme = "ivy", preview_title = false, results_title=false},
-				find_files = {theme = "ivy", preview_title = false, results_title=false},
-				live_grep = {theme = "ivy", preview_title = false, results_title=false},
-				buffers = {theme = "ivy", preview_title = false, results_title=false},
-				grep_string= {theme = "ivy", preview_title = false, results_title=false},
+				git_files = { theme = "ivy", preview_title = false, results_title = false },
+				git_branches = { theme = "ivy", preview_title = false, results_title = false },
+				git_status = { theme = "ivy", preview_title = false, results_title = false },
+				find_files = { theme = "ivy", preview_title = false, results_title = false },
+				live_grep = { theme = "ivy", preview_title = false, results_title = false },
+				buffers = { theme = "ivy", preview_title = false, results_title = false },
+				grep_string = { theme = "ivy", preview_title = false, results_title = false },
 			},
 			extensions = { fzf = {} }
 		})
+
+		vim.cmd([[highlight TelescopeBorder guifg=#A8AEBA]])
+		vim.cmd([[highlight TelescopePromptBorder guifg=#3C3F4B]])
+		vim.cmd([[highlight TelescopePreviewBorder guifg=#3C3F4B]])
+
 		require('telescope').load_extension('fzf')
 		local builtin = require('telescope.builtin')
 		vim.keymap.set('n', '<leader>gf', builtin.git_files)
@@ -30,14 +44,17 @@ return {
 		vim.keymap.set('n', '<leader>fg', builtin.live_grep)
 		vim.keymap.set('n', '<leader>fb', builtin.buffers)
 		vim.keymap.set('n', '<leader>fh', builtin.help_tags)
+
 		vim.keymap.set('n', '<leader>fw', function()
 			local word = vim.fn.expand("<cword>")
 			builtin.grep_string({ search = word })
 		end)
+
 		vim.keymap.set('n', '<leader>fW', function()
 			local word = vim.fn.expand("<cWORD>")
 			builtin.grep_string({ search = word })
 		end)
+
 		vim.keymap.set('n', '<leader>/', function()
 			local search_term = vim.fn.input("Grep > ")
 			if search_term ~= "" then
