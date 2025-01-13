@@ -7,7 +7,7 @@
 VERSION="1.3.2"
 LICENSE="MIT"
 
-# NOTE: This script is only tested on zsh ans bash shells
+# NOTE: This script is only tested on zsh and bash shells
 # Extend search directories by setting TM_SEARCH_DIRS variable in .zshrc/.bashrc
 # Example: export TM_SEARCH_DIRS=($HOME $HOME/projects $HOME/work)
 TM_SEARCH_DIRS=${TM_SEARCH_DIRS:-"$HOME"}
