@@ -22,6 +22,8 @@ return {
 		require('telescope').load_extension('fzf')
 		local builtin = require('telescope.builtin')
 		vim.keymap.set('n', '<leader>gf', builtin.git_files)
+		vim.keymap.set('n', '<leader>gc', builtin.git_bcommits)
+		vim.keymap.set('n', '<leader>gC', builtin.git_commits)
 		vim.keymap.set('n', '<leader>gb', builtin.git_branches)
 		vim.keymap.set('n', '<leader>gs', builtin.git_status)
 		vim.keymap.set('n', '<leader>ff', builtin.find_files)
