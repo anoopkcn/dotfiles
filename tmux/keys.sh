@@ -19,10 +19,10 @@ bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
 tm_source="source ~/.config/tmux/tools.sh"
 tm_new="TM_SEARCH_DIRS='$TM_SEARCH_DIRS' $tm_source"
 
-bind-key -r f display-popup -E -w 65% "$tm_new && fzf_create_session --height=100%"
-bind-key -r l display-popup -E -w 65% "$tm_source && fzf_attach_session --height=100%"
-bind-key -r r display-popup -E -w 65% "$tm_source && fzf_rename_session --height=100%"
-bind-key -r k display-popup -E -w 65% "$tm_source && fzf_kill_session --height=100%"
+bind-key -r f display-popup -E -w 70% "$tm_new && fzf_create_session --height=100%"
+bind-key -r l display-popup -E -w 70% "$tm_source && fzf_attach_session --height=100%"
+bind-key -r r display-popup -E -w 70% "$tm_source && fzf_rename_session --height=100%"
+bind-key -r k display-popup -E -w 70% "$tm_source && fzf_kill_session --height=100%"
 # bind-key -r l display-popup -E -w 80% "$tmctl && fzf_list_sessions --height=100%"
 
 # Smart pane switching with awareness of Vim splits.
