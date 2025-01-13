@@ -2,7 +2,5 @@ font-family = Berkeley Mono Variable
 font-size = 14
 font-feature = -calt
 macos-option-as-alt = true
-window-height = 42
-window-width = 106
 window-padding-balance = true
 keybind = super+r=reload_config
