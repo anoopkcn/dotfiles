@@ -279,6 +279,8 @@ list_sessions() {
 # FZF VARIANTS
 fzf_create_session() {
     local selected
+    local selected_dirs
+
     if [ $# -gt 0 ] && [ -d "$1" ]; then
         selected="$1"
     else
@@ -287,10 +289,11 @@ fzf_create_session() {
 
     [ -z "$selected" ] && return 0
 
-    local selected_dirs=()
-    while IFS= read -r dir; do
-        selected_dirs+=("$dir")
-    done <<< "$selected"
+    if [ -n "$ZSH_VERSION" ]; then
+        selected_dirs=("${(f)selected}")
+    else
+        IFS=$'\n' read -r -d '' -a selected_dirs < <(echo "$selected")
+    fi
 
     create_session "${selected_dirs[@]}"
 }
@@ -308,6 +311,7 @@ fzf_attach_session() {
         create_session "$query"
     fi
 }
+
 fzf_kill_session() {
     check_active_sessions || return 1
 
