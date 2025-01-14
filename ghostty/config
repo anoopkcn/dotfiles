@@ -3,4 +3,7 @@ font-size = 14
 font-feature = -calt
 macos-option-as-alt = true
 window-padding-balance = true
+macos-non-native-fullscreen = true
+macos-titlebar-style = tabs
+
 keybind = super+r=reload_config
