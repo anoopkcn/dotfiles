@@ -6,13 +6,15 @@
 -- OPTIONS
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.g.netrw_banner = 0
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 5
@@ -26,6 +28,7 @@ vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showmode = false
 vim.opt.termguicolors = true
+
 vim.diagnostic.config({ virtual_text = false })
 
 -- KEYBINDINGS
@@ -42,8 +45,12 @@ vim.keymap.set("n", "<C-b>", "<C-b>zz")
 vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
 -- helper windows
+vim.keymap.set("i", "<C-c>", "<Esc>")
+vim.keymap.set("n", "<leader>p", [["_dP]])
+vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
 vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
+vim.keymap.set("n", "<leader>F", "<cmd>Ex<CR>")
 vim.keymap.set("n", "<Leader>bd", vim.cmd.bd)
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
@@ -100,3 +107,5 @@ require("lazy").setup {
 }
 
 require("custom.functions")
+
+
