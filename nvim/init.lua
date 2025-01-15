@@ -8,13 +8,14 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.netrw_banner = 0
 
+vim.opt.swapfile = false
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
--- vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 5
@@ -28,6 +29,11 @@ vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showmode = false
 vim.opt.termguicolors = true
+
+if vim.fn.executable("rg") == 1 then
+	vim.opt.grepprg = "rg --vimgrep --smart-case"
+	vim.opt.grepformat = "%f:%l:%c:%m"
+end
 
 vim.diagnostic.config({ virtual_text = false })
 
@@ -52,8 +58,8 @@ vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
 vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
 vim.keymap.set("n", "<leader>F", "<cmd>Ex<CR>")
 vim.keymap.set("n", "<Leader>bd", vim.cmd.bd)
-vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
-vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
+-- vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
+-- vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>Q", "<cmd>cclose<CR>")
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist)
 -- Window splits
@@ -79,33 +85,47 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
-		{ dir = "~/Dropbox/projects/split-jump.nvim" },
-		{ "navarasu/onedark.nvim",
+
+		-- { "navarasu/onedark.nvim",
+		-- 	lazy = false,
+		-- 	priority = 1000,
+		-- 	config = function()
+		-- 		require('onedark').setup {
+		-- 			colors = {
+		-- 				green = "#8fbc8f",
+		-- 				red = "#cd5c5c",
+		-- 			},
+		-- 		}
+		-- 		require('onedark').load()
+		-- 	end
+		-- },
+
+		{
+			'projekt0n/github-nvim-theme',
+			name = 'github-theme',
 			lazy = false,
 			priority = 1000,
 			config = function()
-				require('onedark').setup {
-					colors = {
-						green = "#8fbc8f",
-						red = "#cd5c5c",
-					},
-				}
-				require('onedark').load()
-			end
+				require('github-theme').setup({})
+
+				vim.cmd('colorscheme github_dark')
+				vim.api.nvim_set_hl(0, "StatusLine", { fg = "NONE", bg = "#484f58" })
+			end,
 		},
+
 		{ "tpope/vim-fugitive",
 			config = function()
 				vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")
 			end
 		},
+
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
 		{ "numToStr/Comment.nvim" },
 		{ "github/copilot.vim" },
+		{ dir = "~/Dropbox/projects/split-jump.nvim" },
 	},
 }
 
 require("custom.functions")
-
-
