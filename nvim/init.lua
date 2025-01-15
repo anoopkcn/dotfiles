@@ -86,20 +86,6 @@ require("lazy").setup {
 	spec = {
 		{ import = "plugins" },
 
-		-- { "navarasu/onedark.nvim",
-		-- 	lazy = false,
-		-- 	priority = 1000,
-		-- 	config = function()
-		-- 		require('onedark').setup {
-		-- 			colors = {
-		-- 				green = "#8fbc8f",
-		-- 				red = "#cd5c5c",
-		-- 			},
-		-- 		}
-		-- 		require('onedark').load()
-		-- 	end
-		-- },
-
 		{
 			'projekt0n/github-nvim-theme',
 			name = 'github-theme',
