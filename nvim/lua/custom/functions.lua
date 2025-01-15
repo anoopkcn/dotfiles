@@ -62,7 +62,7 @@ function Get_mode()
         ['t']    = 'TERMINAL'
     }
     local current_mode = vim.api.nvim_get_mode().mode
-    return string.format("%s", modes[current_mode] or current_mode)
+    return string.format("%%#Bold#%s%%*", modes[current_mode] or current_mode)
 end
 
 vim.opt.statusline = [[%{%v:lua.Get_mode()%} %f %m %r %=%l,%c %P]]
