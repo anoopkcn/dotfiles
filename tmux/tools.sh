@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # TMUX SESSION MANAGEMENT TOOL (tm)
 # Author: @anoopkcn
 # License: MIT
 # Requires fzf, tmux
 
-VERSION="1.3.2"
+VERSION="1.3.4"
 LICENSE="MIT"
 
 # NOTE: This script is only tested on zsh and bash shells
@@ -63,6 +63,7 @@ ${BOLD}EXAMPLES:${NC}
     tm -i rename           Select session to rename
 
 ${BOLD}NOTES:${NC}
+    - Licensed under the ${LICENSE} License
     - Interactive mode (-i) requires fzf to be installed
     - For more visit: https://github.com/anoopkcn/dotfiles
 EOF
@@ -94,9 +95,10 @@ check_active_sessions() {
 
 session_selector() {
     local sort_by_last_used="${1:-true}"
+    local current
 
     if [ "$sort_by_last_used" = "true" ] && [ -n "$TMUX" ]; then
-        local current="$(tmux display-message -p '#S')"
+        current="$(tmux display-message -p '#S')"
         {
             tmux list-sessions -F "#{session_last_attached} #{session_name}" | \
                 grep -v " $current" | sort -nr | cut -d' ' -f2-
@@ -149,52 +151,40 @@ done"
 
 # BASE FUNCTIONS
 create_session() {
-    local session_names_or_dir=("$@")
-    local last_session=""
+    local session_name="$1"
+    shift  # Remove first argument (session name)
+    local working_dir
+    local directory
 
-    if [ ${#session_names_or_dir[@]} -eq 0 ]; then
-        session_names_or_dir=($(pwd))
+    if [ -z "$session_name" ]; then
+        working_dir=$(pwd)
+        session_name=$(basename "$working_dir" | tr '.' '-' 2>/dev/null)
     fi
 
-    for item in "${session_names_or_dir[@]}"; do
-        local directory
-        local session_name
-
-        # If argument is a directory, use its basename as session name
-        if [ -d "$item" ]; then
-            directory="$item"
-            session_name=$(basename "$item" | tr '.' '-' 2>/dev/null)
-        else
-            # Not a directory - use as session name
-            directory=$(pwd)
-            session_name="$item"
-        fi
-
-        if ! validate_session_name "$session_name"; then
-            continue
-        fi
-
-        if session_exists "$session_name"; then
-            echo "${YELLOW}Session '$session_name' already exists${NC}"
-            continue
-        fi
-
-        if [ -n "$TMUX" ]; then
-            tmux new-session -d -s "$session_name" -c "$directory"
-        else
-            tmux new-session -d -s "$session_name" -c "$directory"
-        fi
-        echo "${GREEN}Created session: $session_name at $directory${NC}"
-        last_session="$session_name"
-    done
-
-    if [ -n "$last_session" ]; then
-        if [ -n "$TMUX" ]; then
-            tmux switch-client -t "$last_session"
-        else
-            tmux attach-session -t "$last_session"
-        fi
+    if [ -d "$session_name" ]; then
+        directory="$session_name"
+        session_name=$(basename "$session_name" | tr '.' '-' 2>/dev/null)
+    else
+        directory=$(pwd)
     fi
+
+    if ! validate_session_name "$session_name"; then
+        return 1
+    fi
+
+    if session_exists "$session_name"; then
+        echo "${YELLOW}Session '$session_name' already exists${NC}"
+        return 1
+    fi
+
+    if [ -n "$TMUX" ]; then
+        tmux new-session -d -s "$session_name" -c "$directory" "$@"
+        tmux switch-client -t "$session_name"
+    else
+        tmux new-session -s "$session_name" -c "$directory" "$@"
+    fi
+
+    echo "${GREEN}Created session: $session_name at $directory${NC}"
 }
 
 attach_session() {
@@ -281,29 +271,41 @@ fzf_create_session() {
     local selected
     local selected_dirs
 
+    # If first argument is a directory, use it directly
     if [ $# -gt 0 ] && [ -d "$1" ]; then
         selected="$1"
     else
-        selected=$(fzf_directory_selector --multi --header="Use TAB to select multiple directories" "$@")
+        # Use fzf with multi-select enabled
+        selected=$(fzf_directory_selector --multi \
+            --header=":: TAB to select multiple directories" "$@")
     fi
 
     [ -z "$selected" ] && return 0
 
-    if [ -n "$ZSH_VERSION" ]; then
-        selected_dirs=("${(f)selected}")
-    else
-        IFS=$'\n' read -r -d '' -a selected_dirs < <(echo "$selected")
-    fi
+    echo "$selected" | while IFS= read -r dir; do
+        tmux new-session -d -s "$(basename "$dir" | tr '.' '-')" -c "$dir" >/dev/null 2>&1
+        echo "${GREEN}Created session: $(basename "$dir") at $dir${NC}"
+    done
 
-    create_session "${selected_dirs[@]}"
+    local last_session
+    last_session=$(echo "$selected" | tail -n1 | xargs basename | tr '.' '-')
+    if [ -n "$last_session" ]; then
+        if [ -n "$TMUX" ]; then
+            tmux switch-client -t "$last_session"
+        else
+            tmux attach-session -t "$last_session"
+        fi
+    fi
 }
 
 fzf_attach_session() {
     check_active_sessions || return 1
     local output
+    local query
+    local selected
     output=$(fzf_session_selector --print-query --border-label="( ${BOLD}${GREEN}ATTACH${NC} )"  "$@" )
-    local query=$(echo "$output" | sed -n '1p')
-    local selected=$(echo "$output" | sed -n '2p')
+    query=$(echo "$output" | sed -n '1p')
+    selected=$(echo "$output" | sed -n '2p')
 
     if [ -n "$selected" ]; then
         attach_session "$selected"
@@ -319,7 +321,7 @@ fzf_kill_session() {
     # sort_by_last_used must be set to true. Otherwise, the current session will prematurely exit if it is selected for termination.
     selected_sessions=$(session_selector "true" | fzf --multi \
         --border-label="( ${BOLD}${RED}KILL${NC} )" \
-        --header="Use TAB to select multiple" "$@")
+        --header=":: Use TAB to select multiple" "$@")
 
     [ -z "$selected_sessions" ] && return 0
 
