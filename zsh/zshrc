@@ -61,5 +61,5 @@ alias sync="rsync \
   --prune-empty-dirs"
 alias tree="eza --color=always --tree"
 alias tkill="tmux kill-server"
-alias tmi="tm -i new"
+alias tmi="tm -i"
 alias icat="chafa -f kitty"
