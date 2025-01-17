@@ -4,9 +4,10 @@ color_green="#a6da95"
 color_blue="#8aadf4"
 color_selection="#387EA2"
 color_default=default
+git_branch="#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD)"
 date_time="#[fg=$color_gray]%d/%m/%Y #[fg=$color_gray]%H:%M"
 session_name="#[fg=$color_blue]@#S "
-active_pane="#[fg=$color_green]#I:#W#{?window_zoomed_flag,#[fg=blue][Z],}" #F
+active_pane="#[fg=$color_green]#I:#W#{?window_zoomed_flag,#[fg=blue][Z],}($git_branch)" #F
 inactive_pane="#I:#W#{?window_zoomed_flag,[Z],}"
 
 set-window-option -g window-status-style fg=$color_gray,bg=$color_default
