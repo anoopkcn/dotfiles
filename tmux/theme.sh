@@ -5,7 +5,7 @@ color_blue="#8aadf4"
 color_selection="#387EA2"
 color_default=default
 git_branch="#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD)"
-date_time="#[fg=$color_gray]%d/%m/%Y #[fg=$color_gray]%H:%M"
+date_time="#[fg=$color_gray]%d/%m/%Y #[fg=$color_blue]%H:%M"
 session_name="#[fg=$color_blue]@#S "
 active_pane="#[fg=$color_green]#I:#W#{?window_zoomed_flag,#[fg=blue][Z],}" #F
 inactive_pane="#I:#W#{?window_zoomed_flag,[Z],}"
@@ -29,10 +29,10 @@ set-option -g mode-style bg=$color_selection
 set-option -g status-right "#{?$git_branch,#[fg=$color_green]$git_branch,} $date_time"
 set-option -g status-left $session_name
 
-# Popup styling
+# Pop-up styling
 set-option -g popup-border-style fg=$color_gray
 set-option -g popup-border-lines none
 set-option -g popup-style bg=$color_default
 
-# Split pane styleing
+# Split pane styling
 set-option -g pane-active-border-style fg=$color_gray
