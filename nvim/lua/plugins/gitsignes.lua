@@ -34,9 +34,11 @@ return {
 				map('v', '<leader>hs', function() gitsigns.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
 				map('v', '<leader>hr', function() gitsigns.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
 				map('n', '<leader>hu', gitsigns.undo_stage_hunk)
-				map('n', '<leader>hp', gitsigns.preview_hunk)
-				map('n', '<leader>hb', gitsigns.toggle_current_line_blame)
+				map('n', '<leader>hv', gitsigns.preview_hunk)
+				map('n', '<leader>hb', gitsigns.blame_line)
 				map('n', '<leader>hd', gitsigns.diffthis)
+				map('n', '<leader>hn', function() gitsigns.nav_hunk("next") end)
+				map('n', '<leader>hp', function() gitsigns.nav_hunk("prev") end)
 			end
 		})
 	end

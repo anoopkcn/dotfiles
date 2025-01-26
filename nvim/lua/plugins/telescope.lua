@@ -35,10 +35,10 @@ return {
 			extensions = { fzf = {} }
 		})
 
-		vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = "#A8AEBA" })
-		vim.api.nvim_set_hl(0, "TelescopePromptBorder", { fg = "#3C3F4B" })
-		vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { fg = "#3C3F4B" })
-		vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { fg = "#3C3F4B" })
+		vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = "#A8AEBA", bg = "NONE" })
+		vim.api.nvim_set_hl(0, "TelescopePromptBorder", { fg = "#3C3F4B", bg = "NONE" })
+		vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { fg = "#3C3F4B", bg = "NONE" })
+		vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { fg = "#3C3F4B", bg = "NONE" })
 
 		require('telescope').load_extension('fzf')
 		local builtin = require('telescope.builtin')

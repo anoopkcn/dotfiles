@@ -6,5 +6,6 @@ macos-option-as-alt = true
 window-padding-balance = true
 macos-non-native-fullscreen = true
 macos-titlebar-style = tabs
+title = " "
 
 keybind = super+r=reload_config

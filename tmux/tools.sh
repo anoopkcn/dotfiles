@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 # TMUX SESSION MANAGEMENT TOOL (tm)
 # Author: @anoopkcn
 # License: MIT
@@ -67,6 +67,10 @@ ${BOLD}NOTES:${NC}
     - Interactive mode (-i) requires fzf to be installed
     - For more visit: https://github.com/anoopkcn/dotfiles
 EOF
+}
+
+show_version(){
+  echo "tm ${VERSION}"
 }
 
 error_msg() {
@@ -388,7 +392,7 @@ tm() {
         rename|r) rename_session "$2" "$3" ;;
         detach|d) detach_session "${2:-}" ;;
         -h|--help) show_help ;;
-        -v|--version) show_version "full" ;;
+        -v|--version) show_version ;;
         *) error_msg "Unknown command: $1" ;;
     esac
 }

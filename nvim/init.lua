@@ -15,7 +15,7 @@ vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 5
@@ -47,19 +47,24 @@ vim.keymap.set("n", "<C-f>", "<C-f>zz")
 vim.keymap.set("n", "<C-b>", "<C-b>zz")
 vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
-vim.keymap.set("n", "<leader>p", [["_dP]])
-vim.keymap.set("n", "J", "mzJ`z")
+-- vim.keymap.set("n", "<leader>p", [["_dP]])
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set("n", "<leader>Y", [["+Y]])
+vim.keymap.set("n", "J", "mzJ`z") -- Join lines without moving cursor
 vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
 vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
 vim.keymap.set("n", "<leader>F", "<cmd>Ex<CR>")
 vim.keymap.set("n", "<Leader>bd", vim.cmd.bd)
-vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
-vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
-vim.keymap.set("n", "<leader>Q", "<cmd>cclose<CR>")
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setqflist)
 vim.keymap.set('n', '<leader>\\', ':rightbelow vsplit<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>-', ':rightbelow split<CR>', { noremap = true, silent = true })
 vim.keymap.set("i", "<C-c>", "<Esc>")
+-- lsp + quickfix
+vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
+vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
+vim.keymap.set("n", "<leader>xX", vim.diagnostic.setqflist)
+vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
+vim.keymap.set("n", "<leader>xs", vim.lsp.buf.document_symbol)
+vim.keymap.set("n", "<leader>xr", vim.lsp.buf.references)
 
 -- PLUGINS
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -84,13 +89,13 @@ require("lazy").setup {
 		{
 			'projekt0n/github-nvim-theme',
 			name = 'github-theme',
-			lazy = false,
+
 			priority = 1000,
 			config = function()
 				require('github-theme').setup({})
-
 				vim.cmd('colorscheme github_dark')
-				vim.api.nvim_set_hl(0, "StatusLine", { fg = "NONE", bg = "#484f58" })
+				vim.api.nvim_set_hl(0, "StatusLine", { fg = "NONE", bg = "#2c3036" })
+				vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#484f58", bg = "NONE" })
 			end,
 		},
 
@@ -103,10 +108,17 @@ require("lazy").setup {
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
-		{ "numToStr/Comment.nvim" },
 		{ "github/copilot.vim" },
+		{ "numToStr/Comment.nvim" },
+		{ 'echasnovski/mini.ai',
+			version = '*',
+			config = function()
+				require('mini.ai').setup()
+			end
+		},
 		{ dir = "~/Dropbox/projects/split-jump.nvim" },
 	},
 }
 
 require("custom.functions")
+require("custom.codecompanion-save")
