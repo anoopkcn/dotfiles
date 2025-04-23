@@ -3,19 +3,18 @@
 -- License: MIT
 -- Refer to README.md for more information
 
--- OPTIONS
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.netrw_banner = 0
 
 vim.opt.swapfile = false
 vim.opt.number = true
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
--- vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 5
@@ -36,7 +35,6 @@ end
 
 vim.diagnostic.config({ virtual_text = false })
 
--- KEYBINDINGS
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -66,7 +64,7 @@ vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
 vim.keymap.set("n", "<leader>xs", vim.lsp.buf.document_symbol)
 vim.keymap.set("n", "<leader>xr", vim.lsp.buf.references)
 
-vim.cmd('colorscheme onehalfdark')
+vim.cmd("colorscheme onehalfdark")
 
 -- PLUGINS
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -87,23 +85,16 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
-
 		{ "tpope/vim-fugitive",
 			config = function()
 				vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")
 			end
 		},
-
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
 		{ "numToStr/Comment.nvim" },
-		{ 'echasnovski/mini.ai',
-			version = '*',
-			config = function()
-				require('mini.ai').setup()
-			end
-		},
+		{ "github/copilot.vim" },
 		{ dir = "~/develop/split-jump.nvim" },
 	},
 }
