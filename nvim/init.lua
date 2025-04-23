@@ -10,7 +10,7 @@ vim.g.netrw_banner = 0
 
 vim.opt.swapfile = false
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true
@@ -66,6 +66,8 @@ vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
 vim.keymap.set("n", "<leader>xs", vim.lsp.buf.document_symbol)
 vim.keymap.set("n", "<leader>xr", vim.lsp.buf.references)
 
+vim.cmd('colorscheme onehalfdark')
+
 -- PLUGINS
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -86,19 +88,6 @@ require("lazy").setup {
 	spec = {
 		{ import = "plugins" },
 
-		{
-			'projekt0n/github-nvim-theme',
-			name = 'github-theme',
-
-			priority = 1000,
-			config = function()
-				require('github-theme').setup({})
-				vim.cmd('colorscheme github_dark')
-				vim.api.nvim_set_hl(0, "StatusLine", { fg = "NONE", bg = "#2c3036" })
-				vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#484f58", bg = "NONE" })
-			end,
-		},
-
 		{ "tpope/vim-fugitive",
 			config = function()
 				vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")
@@ -108,7 +97,6 @@ require("lazy").setup {
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
-		{ "github/copilot.vim" },
 		{ "numToStr/Comment.nvim" },
 		{ 'echasnovski/mini.ai',
 			version = '*',
@@ -116,9 +104,8 @@ require("lazy").setup {
 				require('mini.ai').setup()
 			end
 		},
-		{ dir = "~/Dropbox/projects/split-jump.nvim" },
+		{ dir = "~/develop/split-jump.nvim" },
 	},
 }
 
 require("custom.functions")
-require("custom.codecompanion-save")

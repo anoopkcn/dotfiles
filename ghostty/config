@@ -1,11 +1,12 @@
-theme = github_dark_dimmed
 font-family = Berkeley Mono Variable
 font-size = 14
 font-feature = -calt
 macos-option-as-alt = true
 window-padding-balance = true
-macos-non-native-fullscreen = true
-macos-titlebar-style = tabs
-title = " "
+
+window-theme=auto
+window-padding-x=5
+window-padding-y=5
 
 keybind = super+r=reload_config
+keybind = super+\=goto_split:previous

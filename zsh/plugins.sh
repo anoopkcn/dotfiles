@@ -141,7 +141,7 @@ export FZF_DEFAULT_OPTS='
 --border rounded
 --prompt="❯ "
 --marker="+"
---color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#494F57,gutter:#32363B,pointer:#3c8494,prompt:#afaf87
+--color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#494F57,gutter:#292C33,pointer:#3c8494,prompt:#afaf87
 '
 export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git'
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
