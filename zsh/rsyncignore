@@ -19,3 +19,5 @@ __pycache__/*
 venv/*
 *.lock
 .DS_Store
+zig-out/*
+.zig-cache/*

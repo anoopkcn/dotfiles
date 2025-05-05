@@ -63,8 +63,10 @@ alias tree="eza --color=always --tree"
 alias tkill="tmux kill-server"
 alias tmi="tm -i"
 alias icat="chafa -f kitty"
+alias imgcat="chafa -f kitty"
 
 set_terminfo(){
   infocmp -x | ssh "$1" -- tic -x -
 }
 
+eval "$(direnv hook zsh)"

@@ -21,14 +21,14 @@ vim.api.nvim_create_autocmd("TermOpen", {
 	end,
 })
 
-vim.api.nvim_create_autocmd('LspAttach', {
-callback = function (ev)
-	local client = vim.lsp.get_client_by_id(ev.data.client_id)
-	if client:supports_method ('textDocument/completion') then
-		vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true})
-	end
-end,
-})
+-- vim.api.nvim_create_autocmd('LspAttach', {
+-- callback = function (ev)
+-- 	local client = vim.lsp.get_client_by_id(ev.data.client_id)
+-- 	if client:supports_method ('textDocument/completion') then
+-- 		vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true})
+-- 	end
+-- end,
+-- })
 
 -- Command to toggle inline diagnostics
 vim.api.nvim_create_user_command(
@@ -44,7 +44,7 @@ vim.api.nvim_create_user_command(
 	{}
 )
 
-vim.api.nvim_set_keymap('n', '<Leader>ii', '<cmd>DiagnosticsToggleVirtualText<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>e', '<cmd>DiagnosticsToggleVirtualText<CR>', { noremap = true, silent = true })
 
 -- statusline functions
 function Get_mode()
