@@ -93,3 +93,4 @@ require("lazy").setup {
 require("custom.functions")
 vim.cmd("colorscheme onehalfdark")
 vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")
+vim.keymap.set('n', '<leader>z', ':make<CR>', { noremap = true, silent = true, desc = "make project" })
