@@ -33,8 +33,6 @@ if vim.fn.executable("rg") == 1 then
 	vim.opt.grepformat = "%f:%l:%c:%m"
 end
 
-vim.diagnostic.config({ virtual_text = false })
-
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -64,8 +62,6 @@ vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
 vim.keymap.set("n", "<leader>xs", vim.lsp.buf.document_symbol)
 vim.keymap.set("n", "<leader>xr", vim.lsp.buf.references)
 
-vim.cmd("colorscheme onehalfdark")
-
 -- PLUGINS
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -85,18 +81,15 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
-		{ "tpope/vim-fugitive",
-			config = function()
-				vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")
-			end
-		},
+		{ "tpope/vim-fugitive" },
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
 		{ "numToStr/Comment.nvim" },
 		{ "github/copilot.vim" },
-		{ dir = "~/develop/split-jump.nvim" },
 	},
 }
 
 require("custom.functions")
+vim.cmd("colorscheme onehalfdark")
+vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>")

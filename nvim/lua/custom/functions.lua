@@ -31,6 +31,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- })
 
 -- Command to toggle inline diagnostics
+vim.diagnostic.config({ virtual_text = true })
 vim.api.nvim_create_user_command(
 	'DiagnosticsToggleVirtualText',
 	function()
@@ -45,6 +46,7 @@ vim.api.nvim_create_user_command(
 )
 
 vim.api.nvim_set_keymap('n', '<Leader>e', '<cmd>DiagnosticsToggleVirtualText<CR>', { noremap = true, silent = true })
+
 
 -- statusline functions
 function Get_mode()
