@@ -62,6 +62,8 @@ vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
 vim.keymap.set("n", "<leader>xs", vim.lsp.buf.document_symbol)
 vim.keymap.set("n", "<leader>xr", vim.lsp.buf.references)
 
+vim.cmd("colorscheme onehalfdark")
+
 -- PLUGINS
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -87,10 +89,11 @@ require("lazy").setup {
 		{ "tpope/vim-surround" },
 		{ "numToStr/Comment.nvim" },
 		{ "github/copilot.vim" },
+		{ "echasnovski/mini.pairs", config = function() require("mini.pairs").setup() end },
+		{ "ziglang/zig.vim"},
 	},
 }
 
 require("custom.functions")
-vim.cmd("colorscheme onehalfdark")
 vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>", { noremap = true, silent = true, desc = "git" })
 vim.keymap.set('n', '<leader>z', ':make<CR>', { noremap = true, silent = true, desc = "make project" })

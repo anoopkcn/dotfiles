@@ -173,6 +173,7 @@ plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
 plugin add "zsh-users/zsh-autosuggestions"
 plugin add "zsh-users/zsh-completions"
+plugin add "ziglang/shell-completions"
 
 # plugin settings
 autoload -Uz compinit && compinit

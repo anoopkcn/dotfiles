@@ -74,9 +74,11 @@ function Get_mode()
 	}
 	local current_mode = vim.api.nvim_get_mode().mode
 	return string.format("%%#Bold#%s%%*", modes[current_mode] or current_mode)
+	-- return string.format("%%#Bold#%%s%%*", modes[current_mode] or current_mode)
 end
 
-vim.opt.statusline = [[%{%v:lua.Get_mode()%}  %f %m %r %=%l,%c %P]]
+-- vim.opt.statusline = [[%{%v:lua.Get_mode()%}  %f %m %r %=%l,%c %P]]
+vim.opt.statusline = [[%{%v:lua.Get_mode()%} %#Comment#%f%* %m %r %=%l,%c %P]]
 
 
 -- Function to toggle quickfix list
