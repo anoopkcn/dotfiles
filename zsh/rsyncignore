@@ -21,3 +21,6 @@ venv/*
 .DS_Store
 zig-out/*
 .zig-cache/*
+zenv.json
+zenv/*
+*.egg-info

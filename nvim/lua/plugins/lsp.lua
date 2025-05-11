@@ -8,7 +8,8 @@ return {
     opts = {
         servers = {
             -- lua_ls = {},
-            zls = {}
+            zls = {},
+						ruff = {},
         }
     },
     config = function(_, opts)
