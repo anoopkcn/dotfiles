@@ -10,6 +10,7 @@ return {
             -- lua_ls = {},
             zls = {},
 						ruff = {},
+						pyright = {},
         }
     },
     config = function(_, opts)

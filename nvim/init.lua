@@ -95,5 +95,8 @@ require("lazy").setup {
 }
 
 require("custom.functions")
+
+
 vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>", { noremap = true, silent = true, desc = "git" })
--- vim.keymap.set('n', '<leader>z', ':make<CR>', { noremap = true, silent = true, desc = "make project" })
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+-- vim.keymap.set('n', '<leader>z', ':make<CR>', { noremap = true, silent = true })
