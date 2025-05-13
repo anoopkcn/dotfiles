@@ -8,3 +8,4 @@ zed/conversations/*
 zed/themes/*
 nvim/spell
 tmux-client-*.log
+Makefile

@@ -204,6 +204,9 @@ hi link gitcommitDiscardedArrow gitcommitDiscardedFile
 hi link gitcommitSelectedArrow gitcommitSelectedFile
 hi link gitcommitUnmergedArrow gitcommitUnmergedFile
 " }
+"
+" Telescope
+call s:h("TelescopeBorder", s:hoverborder, "", "")
 
 " Fix colors in neovim terminal buffers {
   if has('nvim')

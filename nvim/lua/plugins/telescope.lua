@@ -7,7 +7,9 @@ return {
 	},
 
 	config = function()
-		require('telescope').setup({})
+		require('telescope').setup({
+			defaults = require('telescope.themes').get_ivy()
+		})
 
 		local builtin = require('telescope.builtin')
 		-- git(g) something(x) g<x>
@@ -44,5 +46,8 @@ return {
 				builtin.grep_string({ search = search_term })
 			end
 		end)
+
+		require"custom.makepicker".setup()
+
 	end
 }
