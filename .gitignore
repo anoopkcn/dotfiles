@@ -9,3 +9,4 @@ zed/themes/*
 nvim/spell
 tmux-client-*.log
 Makefile
+DEVLOG.md
