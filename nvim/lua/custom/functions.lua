@@ -1,4 +1,3 @@
--- CUSTOM FUNCTIONS
 Print = function(v)
 	print(vim.inspect(v))
 	return v
@@ -45,44 +44,9 @@ vim.api.nvim_create_user_command(
 	{}
 )
 
-vim.api.nvim_set_keymap('n', '<Leader>e', '<cmd>DiagnosticsToggleVirtualText<CR>', { noremap = true, silent = true })
-
-
--- statusline functions
-function Get_mode()
-	local modes = {
-		['n']   = 'NORMAL',
-		['no']  = 'NORMAL',
-		['v']   = 'VISUAL',
-		['V']   = 'V-LINE',
-		['\22'] = 'V-BLOCK',
-		['s']   = 'SELECT',
-		['S']   = 'S-LINE',
-		['\19'] = 'S-BLOCK',
-		['i']   = 'INSERT',
-		['ic']  = 'INSERT',
-		['R']   = 'REPLACE',
-		['Rv']  = 'V-REPLACE',
-		['c']   = 'COMMAND',
-		['cv']  = 'VIM-EX',
-		['ce']  = 'EX',
-		['r']   = 'PROMPT',
-		['rm']  = 'MOAR',
-		['r?']  = 'CONFIRM',
-		['!']   = 'SHELL',
-		['t']   = 'TERMINAL'
-	}
-	local current_mode = vim.api.nvim_get_mode().mode
-	return string.format("%%#Bold#%s%%*", modes[current_mode] or current_mode)
-	-- return string.format("%%#Bold#%%s%%*", modes[current_mode] or current_mode)
-end
-
--- vim.opt.statusline = [[%{%v:lua.Get_mode()%}  %f %m %r %=%l,%c %P]]
-vim.opt.statusline = [[%{%v:lua.Get_mode()%} %#Comment#%f%* %m %r %=%l,%c %P]]
-
 
 -- Function to toggle quickfix list
-local function ToggleQuickfixList()
+ToggleQuickfixList = function()
 	local quickfix_exists = false
 	local loclist_exists = false
 
@@ -112,5 +76,35 @@ local function ToggleQuickfixList()
 	end
 end
 
--- Set the keymap to toggle function
-vim.keymap.set('n', '<leader>q', ToggleQuickfixList)
+-- statusline functions
+-- function Get_mode()
+-- 	local modes = {
+-- 		['n']   = 'NORMAL',
+-- 		['no']  = 'NORMAL',
+-- 		['v']   = 'VISUAL',
+-- 		['V']   = 'V-LINE',
+-- 		['\22'] = 'V-BLOCK',
+-- 		['s']   = 'SELECT',
+-- 		['S']   = 'S-LINE',
+-- 		['\19'] = 'S-BLOCK',
+-- 		['i']   = 'INSERT',
+-- 		['ic']  = 'INSERT',
+-- 		['R']   = 'REPLACE',
+-- 		['Rv']  = 'V-REPLACE',
+-- 		['c']   = 'COMMAND',
+-- 		['cv']  = 'VIM-EX',
+-- 		['ce']  = 'EX',
+-- 		['r']   = 'PROMPT',
+-- 		['rm']  = 'MOAR',
+-- 		['r?']  = 'CONFIRM',
+-- 		['!']   = 'SHELL',
+-- 		['t']   = 'TERMINAL'
+-- 	}
+-- 	local current_mode = vim.api.nvim_get_mode().mode
+-- 	return string.format("%%#Bold#%s%%*", modes[current_mode] or current_mode)
+-- 	-- return string.format("%%#Bold#%%s%%*", modes[current_mode] or current_mode)
+-- end
+
+-- vim.opt.statusline = [[%{%v:lua.Get_mode()%}  %f %m %r %=%l,%c %P]]
+-- vim.opt.statusline = [[%{%v:lua.Get_mode()%} %#Comment#%f%* %m %r %=%l,%c %P]]
+
