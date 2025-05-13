@@ -8,7 +8,6 @@ return {
 
 	config = function()
 		require('telescope').setup({
-			-- set height to 20% of the screen
 			defaults = require('telescope.themes').get_ivy({
 				layout_config = {
 					height = 0.2,
