@@ -31,7 +31,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- })
 
 -- Command to toggle inline diagnostics
-vim.diagnostic.config({ virtual_text = true })
+vim.diagnostic.config({ virtual_text = false }) -- Disable virtual text by default
 vim.api.nvim_create_user_command(
 	'DiagnosticsToggleVirtualText',
 	function()

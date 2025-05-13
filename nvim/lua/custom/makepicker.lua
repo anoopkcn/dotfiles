@@ -6,17 +6,12 @@ local action_state = require "telescope.actions.state"
 
 local M = {}
 
--- Generates the shell command to list make targets.
--- Uses a much simpler and more reliable approach by using `make -qp` and `grep`
 local function get_make_list_command()
     if vim.fn.executable("make") ~= 1 then
         vim.notify("Make executable not found in PATH", vim.log.levels.WARN)
         return nil
     end
 
-    -- 1. First extract documented targets with `make help` if help pattern is found
-    -- 2. Otherwise use `grep` to extract targets from Makefile directly
-    -- 3. Sort and remove duplicates
     return [[
         # Direct extraction from Makefile
         grep -E '^[a-zA-Z0-9][a-zA-Z0-9_-]*:' Makefile 2>/dev/null |
@@ -35,28 +30,10 @@ local function get_make_targets()
         return nil
     end
 
-    -- Filter out empty targets and known non-targets
     local targets = {}
-    local excludes = {
-        ["rsync"] = true,
-        ["ssh"] = true,
-        ["Makefile"] = true,
-        ["makefile"] = true,
-        ["-e"] = true,
-        ["--archive"] = true,
-        ["--itemize-changes"] = true,
-        ["--recursive"] = true,
-        ["--compress"] = true,
-        ["--verbose"] = true,
-        ["--checksum"] = true,
-        ["--prune-empty-dirs"] = true,
-    }
-
     for _, target in ipairs(result) do
         local trimmed = vim.trim(target)
-        -- Skip empty strings, known excludes, and strings that look like paths
         if trimmed ~= "" and
-           not excludes[trimmed] and
            not string.match(trimmed, "^/") and
            not string.match(trimmed, "^%-%-") then
             table.insert(targets, trimmed)
@@ -102,8 +79,8 @@ local function make_picker(opts)
                     local escaped_target = vim.fn.shellescape(target)
                     local command = string.format("make %s", escaped_target)
 
-                    vim.notify("Executing: " .. command, vim.log.levels.INFO)
-                    vim.cmd("!" .. command)
+                    -- vim.notify("Executing: " .. command, vim.log.levels.INFO)
+                    vim.cmd(string.format("botright 15split term://%s", command))
                 end
             end
 
