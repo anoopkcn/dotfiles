@@ -6,9 +6,9 @@
 # PATH
 setopt extended_glob null_glob
 path=(
-    $path
     /Library/TeX/texbin
     /Users/akc/develop/zenv/zig-out/bin
+    $path
 )
 typeset -U path
 path=($^path(N-/))
