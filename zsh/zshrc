@@ -13,7 +13,7 @@ path=(
 typeset -U path
 path=($^path(N-/))
 export PATH
-export TM_SEARCH_DIRS="$HOME $HOME/work $HOME/work/develop $HOME/Dropbox $HOME/Dropbox/projects"
+export TM_SEARCH_DIRS="$HOME $HOME/work $HOME/develop $HOME/Dropbox $HOME/Dropbox/projects"
 
 # PROMPT
 precmd(){
@@ -50,23 +50,10 @@ setopt SHARE_HISTORY
 alias ls="ls --color=auto"
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
-alias sync="rsync \
-  --archive \
-  --itemize-changes \
-  --recursive \
-  --compress \
-  --verbose \
-  --checksum \
-  --exclude-from=${HOME}/.config/zsh/rsyncignore \
-  --prune-empty-dirs"
+alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
 alias tree="eza --color=always --tree"
 alias tkill="tmux kill-server"
 alias tmi="tm -i"
 alias icat="chafa -f kitty"
 alias imgcat="chafa -f kitty"
 
-# set_terminfo(){
-#   infocmp -x | ssh "$1" -- tic -x -
-# }
-
-# eval "$(direnv hook zsh)"

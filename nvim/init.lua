@@ -90,15 +90,54 @@ require("lazy").setup {
 		{ "numToStr/Comment.nvim" },
 		{ "github/copilot.vim" },
 		{ "echasnovski/mini.pairs", config = function() require("mini.pairs").setup() end },
-		{ "ziglang/zig.vim"},
+		{ "ziglang/zig.vim" },
 	},
 }
 
 require("custom.functions")
 
 
-vim.keymap.set('n', '<leader>q', ToggleQuickfixList)
-vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>", { noremap = true, silent = true, desc = "git" })
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-vim.api.nvim_set_keymap('n', '<Leader>e', '<cmd>DiagnosticsToggleVirtualText<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', '<leader>z', ':make<CR>', { noremap = true, silent = true })
+vim.keymap.set(
+	"n",
+	"<leader>q",
+	ToggleQuickfixList,
+	{ noremap = true, silent = true, desc = "Toggle quickfix list" }
+)
+
+vim.keymap.set(
+	"n",
+	"<leader>G",
+	"<cmd>Git<CR>",
+	{ noremap = true, silent = true, desc = "git" }
+)
+
+vim.keymap.set(
+	"n",
+	"-",
+	"<CMD>Oil<CR>",
+	{ desc = "Open parent directory" }
+)
+
+vim.keymap.set(
+	"n",
+	"<leader>e",
+	"<cmd>DiagnosticsToggleVirtualText<CR>",
+	{ noremap = true, silent = true }
+)
+
+-- vim.keymap.set(
+-- 	"n",
+-- 	"<leader>z",
+-- 	":make | copen <CR>",
+-- 	{ noremap = true, silent = true }
+-- )
+
+vim.keymap.set(
+	"n",
+	"<leader>t",
+	function()
+		vim.api.nvim_put({ os.date("%FT%T") }, 'c', true, true)
+	end,
+	{ noremap = true, silent = true, }
+)
+
