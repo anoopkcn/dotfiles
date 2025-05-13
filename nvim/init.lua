@@ -27,6 +27,7 @@ vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showmode = false
 vim.opt.termguicolors = true
+vim.opt.showtabline = 0
 
 if vim.fn.executable("rg") == 1 then
 	vim.opt.grepprg = "rg --vimgrep --smart-case"
@@ -87,6 +88,7 @@ require("lazy").setup {
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
+		{ "tpope/vim-flagship" },
 		{ "numToStr/Comment.nvim" },
 		{ "github/copilot.vim" },
 		{ "echasnovski/mini.pairs", config = function() require("mini.pairs").setup() end },
@@ -143,7 +145,7 @@ vim.keymap.set(
 
 
 vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<CR>", {
-  noremap = true,
-  silent = true,
-  desc = "Open DEVLOG.md in the current directory"
+	noremap = true,
+	silent = true,
+	desc = "Open DEVLOG.md in the current directory"
 })
