@@ -1,8 +1,5 @@
 # NeoVim setup
-**Philosophy:**
-
 - If it can't be explained, it needn't be used.
-- If it can't be wielded, it needn't be wielded.
 
 ## Requirements
 
