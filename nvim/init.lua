@@ -141,3 +141,9 @@ vim.keymap.set(
 	{ noremap = true, silent = true, }
 )
 
+
+vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<CR>", {
+  noremap = true,
+  silent = true,
+  desc = "Open DEVLOG.md in the current directory"
+})
