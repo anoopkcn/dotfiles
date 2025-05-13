@@ -1,9 +1,13 @@
 #!/bin/sh
 
+# This repository is not meant to be used by others.
+# It exist as a reference to my dotfiles.
+
+
 PATH_TO_DOTFILES=''
 
 if [ -z "$PATH_TO_DOTFILES" ]; then
-  echo "Please set PATH_TO_DOTFILES to the path of your dotfiles directory."
+  echo "PATH_TO_DOTFILES is not set."
   exit 1
 fi
 
