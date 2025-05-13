@@ -20,9 +20,3 @@ Set the `PATH_TO_DOTFILES` to the path inside the `setup.sh` file
 ```sh
 sh setup.sh
 ```
-
-## Extra
-
-### `TMUX` SESSION MANAGEMENT TOOL (TM)
-
-Set variables `TM_SEARCH_DIRS` to make use of `tm` tool functionalities. Use `tm -h` or check `tmux/tools.sh` for details
