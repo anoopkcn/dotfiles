@@ -56,4 +56,7 @@ alias tkill="tmux kill-server"
 alias tmi="tm -i"
 alias icat="chafa -f kitty"
 alias imgcat="chafa -f kitty"
-
+alias ga="git add"
+alias gs="git status"
+alias gco="git checkout"
+alias gcm="git commit -m"

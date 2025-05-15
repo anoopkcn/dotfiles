@@ -8,13 +8,13 @@ vim.g.maplocalleader = " "
 vim.g.netrw_banner = 0
 
 vim.opt.swapfile = false
-vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.number = true
+-- vim.opt.relativenumber = true
 vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
--- vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 5
