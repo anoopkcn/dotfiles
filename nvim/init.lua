@@ -14,7 +14,7 @@ vim.opt.undofile = true
 vim.opt.cursorline = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 5
@@ -51,7 +51,8 @@ vim.keymap.set("n", "J", "mzJ`z") -- Join lines without moving cursor
 vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
 vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
 vim.keymap.set("n", "<leader>F", "<cmd>Ex<CR>")
-vim.keymap.set("n", "<Leader>bd", vim.cmd.bd)
+vim.keymap.set("n", "<leader>bd", vim.cmd.bd)
+vim.keymap.set("n", "<leader>on", vim.cmd.only)
 vim.keymap.set('n', '<leader>\\', ':rightbelow vsplit<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>-', ':rightbelow split<CR>', { noremap = true, silent = true })
 vim.keymap.set("i", "<C-c>", "<Esc>")
@@ -60,8 +61,6 @@ vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>xX", vim.diagnostic.setqflist)
 vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
-vim.keymap.set("n", "<leader>xs", vim.lsp.buf.document_symbol)
-vim.keymap.set("n", "<leader>xr", vim.lsp.buf.references)
 
 vim.cmd("colorscheme onehalfdark")
 
@@ -120,7 +119,9 @@ vim.keymap.set( "n", "<leader>e",
 
 vim.keymap.set("n", "<leader>t",
 	function()
-		vim.api.nvim_put({ os.date("%FT%T") }, 'c', true, true)
+		local raw_timestamp = os.date("%FT%T")
+		local timestamp_str = string.format("%s", raw_timestamp or "")
+		vim.api.nvim_put({ timestamp_str }, 'c', true, true)
 	end,
 	{ noremap = true, silent = true, }
 )
@@ -142,4 +143,3 @@ vim.keymap.set("n", "<leader>,",
 -- 	":make | copen <CR>",
 -- 	{ noremap = true, silent = true }
 -- )
-
