@@ -98,44 +98,27 @@ require("lazy").setup {
 require("custom.functions")
 
 
-vim.keymap.set(
-	"n",
-	"<leader>q",
+vim.keymap.set( "n", "<leader>q",
 	ToggleQuickfixList,
 	{ noremap = true, silent = true, desc = "Toggle quickfix list" }
 )
 
-vim.keymap.set(
-	"n",
-	"<leader>G",
+vim.keymap.set( "n", "<leader>G",
 	"<cmd>Git<CR>",
 	{ noremap = true, silent = true, desc = "git" }
 )
 
-vim.keymap.set(
-	"n",
-	"<C-p>",
+vim.keymap.set( "n", "<C-p>",
 	"<CMD>Oil<CR>",
 	{ desc = "Open parent directory" }
 )
 
-vim.keymap.set(
-	"n",
-	"<leader>e",
+vim.keymap.set( "n", "<leader>e",
 	"<cmd>DiagnosticsToggleVirtualText<CR>",
 	{ noremap = true, silent = true }
 )
 
--- vim.keymap.set(
--- 	"n",
--- 	"<leader>z",
--- 	":make | copen <CR>",
--- 	{ noremap = true, silent = true }
--- )
-
-vim.keymap.set(
-	"n",
-	"<leader>t",
+vim.keymap.set("n", "<leader>t",
 	function()
 		vim.api.nvim_put({ os.date("%FT%T") }, 'c', true, true)
 	end,
@@ -143,8 +126,20 @@ vim.keymap.set(
 )
 
 
-vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<CR>", {
-	noremap = true,
-	silent = true,
-	desc = "Open DEVLOG.md in the current directory"
-})
+vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<CR>",
+	{ noremap = true, silent = true, desc = "Open DEVLOG.md" }
+)
+
+
+vim.keymap.set("n", "<leader>,",
+	function()
+		vim.lsp.buf.format({ async = true })
+	end,
+	{ noremap = true, silent = true, desc = "Format buffer" }
+)
+
+-- vim.keymap.set( "n", "<leader>z",
+-- 	":make | copen <CR>",
+-- 	{ noremap = true, silent = true }
+-- )
+
