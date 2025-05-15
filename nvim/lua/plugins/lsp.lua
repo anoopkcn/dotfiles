@@ -7,14 +7,35 @@ return {
 
 	opts = {
 		servers = {
-			lua_ls = {},
+			lua_ls = {
+				settings = {
+					Lua = {
+						runtime = {
+							version = 'LuaJIT',
+						},
+						diagnostics = {
+							globals = {
+								'vim',
+								'require'
+							},
+						},
+						workspace = {
+							-- Make the server aware of Neovim runtime files
+							library = vim.api.nvim_get_runtime_file("", true),
+						},
+						telemetry = {
+							enable = false,
+						},
+					},
+				},
+			},
 			zls = {},
 			ruff = {},
 			pyright = {
 				settings = {
 					python = {
 						analysis = {
-							typeCheckingMode = "basic",   -- "off", "basic", or "strict"
+							typeCheckingMode = "basic", -- "off", "basic", or "strict"
 							reportMissingImports = "warning",
 							-- Add other Pyright analysis settings here
 							-- e.g., diagnosticSeverityOverrides
