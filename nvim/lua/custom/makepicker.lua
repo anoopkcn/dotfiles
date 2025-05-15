@@ -79,8 +79,12 @@ local function make_picker(opts)
                     local escaped_target = vim.fn.shellescape(target)
                     local command = string.format("make %s", escaped_target)
 
-                    -- vim.notify("Executing: " .. command, vim.log.levels.INFO)
+                    -- Use terminal split with controlled height
                     vim.cmd(string.format("botright 15split term://%s", command))
+                    local term_buf = vim.api.nvim_get_current_buf()
+                    vim.api.nvim_buf_set_name(term_buf, "Make Output: " .. target)
+                    vim.api.nvim_buf_set_option(term_buf, "bufhidden", "wipe")
+                    vim.cmd("startinsert")
                 end
             end
 
