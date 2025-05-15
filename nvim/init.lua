@@ -90,8 +90,8 @@ require("lazy").setup {
 		{ "tpope/vim-surround" },
 		{ "tpope/vim-flagship" },
 		{ "numToStr/Comment.nvim" },
-		{ "echasnovski/mini.pairs", config = function() require("mini.pairs").setup() end },
 		{ "ziglang/zig.vim" },
+		{ "echasnovski/mini.pairs", config = function() require("mini.pairs").setup() end },
 	},
 }
 
