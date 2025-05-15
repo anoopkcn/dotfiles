@@ -10,7 +10,7 @@ return {
 		require('telescope').setup({
 			defaults = require('telescope.themes').get_ivy({
 				layout_config = {
-					height = 0.2,
+					height = 0.3,
 				},
 			}),
 		})
