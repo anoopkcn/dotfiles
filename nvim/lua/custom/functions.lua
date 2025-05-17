@@ -1,3 +1,6 @@
+-- Custom functions for Neovim configuration
+-- @anoopkcn
+
 Print = function(v)
 	print(vim.inspect(v))
 	return v
@@ -107,4 +110,3 @@ end
 
 -- vim.opt.statusline = [[%{%v:lua.Get_mode()%}  %f %m %r %=%l,%c %P]]
 -- vim.opt.statusline = [[%{%v:lua.Get_mode()%} %#Comment#%f%* %m %r %=%l,%c %P]]
-
