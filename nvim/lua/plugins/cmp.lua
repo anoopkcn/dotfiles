@@ -30,7 +30,7 @@ return {
 				["<C-n>"] = cmp.mapping.select_next_item(), -- Or <C-n>
 				["<Down>"] = cmp.mapping.select_next_item(),
 				["<C-e>"] = cmp.mapping.abort(),
-				["<CR>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
+				-- ["<CR>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
 			}),
 
 			sources = cmp.config.sources({
