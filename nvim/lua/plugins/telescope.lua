@@ -45,7 +45,7 @@ return {
 		end)
 
 		vim.keymap.set('n', '<leader>/', function()
-			local search_term = vim.fn.input("Grep > ")
+			local search_term = vim.fn.input("grep: ")
 			if search_term ~= "" then
 				builtin.grep_string({ search = search_term })
 			end
