@@ -32,7 +32,7 @@ return {
 		vim.keymap.set('n', '<leader>fr', builtin.lsp_references)
 		vim.keymap.set('n', '<leader>fd', builtin.lsp_definitions)
 		vim.keymap.set('n', '<leader>fi', builtin.lsp_implementations)
-		vim.keymap.set('n', '<leader>fm', '<cmd>Telescope make<cr>', { desc = 'Find/Run Make target' })
+		-- vim.keymap.set('n', '<leader>fm', builtin.marks)
 
 		vim.keymap.set('n', '<leader>fw', function()
 			local word = vim.fn.expand("<cword>")

@@ -83,7 +83,7 @@ local function make_picker(opts)
                     vim.cmd(string.format("botright 15split term://%s", command))
                     local term_buf = vim.api.nvim_get_current_buf()
                     vim.api.nvim_buf_set_name(term_buf, "Make Output: " .. target)
-                    vim.api.nvim_buf_set_option(term_buf, "bufhidden", "wipe")
+                    vim.api.nvim_buf_set_option_value(term_buf, "bufhidden", "wipe")
                     -- Add 'q' keymap to close the terminal window
                     vim.api.nvim_buf_set_keymap(term_buf, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
                     vim.cmd("startinsert")
