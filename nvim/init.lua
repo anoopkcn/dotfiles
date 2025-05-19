@@ -3,6 +3,7 @@
 -- License: MIT
 -- Refer to README.md for more information
 
+-- BUILT-IN
 require("custom.options")
 require("custom.functions")
 vim.cmd("colorscheme onehalfdark")
@@ -37,6 +38,7 @@ require("lazy").setup {
 	},
 }
 
+-- KEYMAPS
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
