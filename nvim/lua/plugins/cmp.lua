@@ -47,7 +47,7 @@ return {
 					ellipsis_char = "...",
 					symbol_map = { Copilot = "" },
 				})
-			},
+			},	
 			-- DO NOT use this, doesnt work properly with copilot and lsp(text shifts around)
 			-- experimental = {
 			-- 	ghost_text = true, -- Show completion preview inline (requires Neovim 0.10+)

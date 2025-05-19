@@ -52,8 +52,8 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 -- vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd)
 vim.keymap.set("n", "<leader>on", vim.cmd.only)
-vim.keymap.set('n', '<leader>\\', ':rightbelow vsplit<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>-', ':rightbelow split<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>-", ":rightbelow split<CR>", { noremap = true, silent = true })
 vim.keymap.set("i", "<C-c>", "<Esc>")
 -- lsp + quickfix
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
@@ -86,6 +86,7 @@ require("lazy").setup {
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "tpope/vim-surround" },
+		{ "echasnovski/mini.ai" },
 		{ "numToStr/Comment.nvim" },
 		{ "ziglang/zig.vim" },
 		{ "mg979/vim-visual-multi" },
@@ -119,7 +120,7 @@ vim.keymap.set("n", "<leader>t",
 	function()
 		local raw_timestamp = os.date("%FT%T")
 		local timestamp_str = string.format("%s", raw_timestamp or "")
-		vim.api.nvim_put({ timestamp_str }, 'c', true, true)
+		vim.api.nvim_put({ timestamp_str }, "c", true, true)
 	end,
 	{ noremap = true, silent = true, }
 )
