@@ -9,7 +9,7 @@ require("custom.functions")
 vim.cmd("colorscheme onehalfdark")
 
 -- PLUGINS
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
@@ -50,9 +50,8 @@ vim.keymap.set("n", "<C-b>", "<C-b>zz")
 vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
 vim.keymap.set("n", "J", "mzJ`z") -- Join lines without moving cursor
--- vim.keymap.set("n", "<leader>p", [["_dP]])
+vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
-vim.keymap.set("n", "<leader>Y", [["+Y]])
 -- vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
 -- vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd)
@@ -65,6 +64,9 @@ vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>xX", vim.diagnostic.setqflist)
 vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
+vim.keymap.set("n", "]]", vim.diagnostic.goto_next)
+vim.keymap.set("n", "[[", vim.diagnostic.goto_prev)
+
 
 vim.keymap.set("n", "<leader>q",
 	ToggleQuickfixList,
