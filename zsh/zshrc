@@ -62,3 +62,4 @@ alias gs="git status"
 alias gco="git checkout"
 alias gcm="git commit -m"
 alias fcat="fancy-cat"
+
