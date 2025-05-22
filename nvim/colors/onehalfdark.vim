@@ -40,8 +40,8 @@ let s:color_col   = { "gui": "#313640", "cterm": "237" }
 let s:selection   = { "gui": "#474e5d", "cterm": "239" }
 let s:vertsplit   = { "gui": "#313640", "cterm": "237" }
 
-let s:hovercolor = { "gui": "#22252a", "cterm": "236" }
-let s:hoverborder = { "gui": "#53555D", "cterm": "240" }
+let s:hovercolor = { "gui": "#303030", "cterm": "236" }
+let s:hoverborder = { "gui": "#585858", "cterm": "242" }
 
 
 function! s:h(group, fg, bg, attr)
@@ -91,8 +91,8 @@ call s:h("Pmenu", s:fg, s:hovercolor, "")
 call s:h("PmenuSel", s:fg, s:blue, "")
 call s:h("PmenuSbar", "", s:selection, "")
 call s:h("PmenuThumb", "", s:fg, "")
-call s:h("NormalFloat", s:fg, s:hovercolor, "")
-call s:h("FloatBorder", s:hoverborder, s:hovercolor, "")
+call s:h("NormalFloat", s:fg, "", "")
+call s:h("FloatBorder", s:hoverborder, "", "")
 
 call s:h("SpellBad", s:red, "", "")
 call s:h("SpellCap", s:yellow, "", "")
