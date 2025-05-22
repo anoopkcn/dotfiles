@@ -28,11 +28,11 @@ require("lazy").setup {
 	spec = {
 		{ import = "plugins" },
 		{ "tpope/vim-fugitive" },
+		{ "tpope/vim-surround" },
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
-		{ "tpope/vim-surround" },
-		{ "echasnovski/mini.ai" },
 		{ "numToStr/Comment.nvim" },
+		{ "echasnovski/mini.ai" },
 		{ "ziglang/zig.vim" },
 	},
 }

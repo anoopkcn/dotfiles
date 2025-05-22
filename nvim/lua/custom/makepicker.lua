@@ -82,7 +82,6 @@ local function make_picker(opts)
 					-- Use terminal split with controlled height
 					vim.cmd(string.format("botright 15split term://%s", command))
 					local term_buf = vim.api.nvim_get_current_buf()
--- 2025-05-22T15:31:15
 					local timestamp_suffix = vim.fn.strftime("%Y-%m-%dT%T") .. "." .. math.random(10, 99)
 					local new_buffer_name = string.format("Output: %s [%s]", target, timestamp_suffix)
 
