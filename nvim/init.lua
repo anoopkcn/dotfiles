@@ -34,7 +34,6 @@ require("lazy").setup {
 		{ "echasnovski/mini.ai" },
 		{ "numToStr/Comment.nvim" },
 		{ "ziglang/zig.vim" },
-		{ "mg979/vim-visual-multi" },
 	},
 }
 
