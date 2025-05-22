@@ -82,7 +82,7 @@ local function make_picker(opts)
 					-- Use terminal split with controlled height
 					vim.cmd(string.format("botright 15split term://%s", command))
 					local term_buf = vim.api.nvim_get_current_buf()
-					local timestamp_suffix = vim.fn.strftime("%Y-%m-%dT%T") .. "." .. math.random(10, 99)
+					local timestamp_suffix = vim.fn.strftime("%FT%T") .. "." .. math.random(100, 999)
 					local new_buffer_name = string.format("Output: %s [%s]", target, timestamp_suffix)
 
 					-- Attempt to set the new unique buffer name
@@ -115,7 +115,7 @@ local function make_picker(opts)
 	}):find()
 end
 
--- Setup function to be called from your Telescope configuration
+-- -- Setup function to be called from the Telescope configuration
 function M.setup()
 	vim.keymap.set('n', '<leader>fm', make_picker, { desc = '[F]ind [M]ake Target' })
 end
