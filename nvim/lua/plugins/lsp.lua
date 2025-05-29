@@ -16,21 +16,10 @@ return {
 			lua_ls = {
 				settings = {
 					Lua = {
-						runtime = {
-							version = 'LuaJIT',
-						},
-						diagnostics = {
-							globals = {
-								'vim',
-								'require'
-							},
-						},
-						workspace = {
-							library = vim.api.nvim_get_runtime_file("", true),
-						},
-						telemetry = {
-							enable = false,
-						},
+						runtime = { version = 'LuaJIT', },
+						diagnostics = { globals = { 'vim', 'require' }, },
+						workspace = { library = vim.api.nvim_get_runtime_file("", true), },
+						telemetry = { enable = false, },
 					},
 				},
 			},
@@ -40,7 +29,8 @@ return {
 				settings = {
 					python = {
 						analysis = {
-							typeCheckingMode = "basic", -- "off", "basic", or "strict"
+							-- "off", "basic", or "strict"
+							typeCheckingMode = "basic",
 							reportMissingImports = "warning",
 							diagnosticSeverityOverrides = {
 								reportUnusedVariable = "none",
@@ -52,9 +42,10 @@ return {
 			},
 		}
 
+		-- Using mason to install LSP servers
 		local ensure_installed = vim.tbl_keys(servers or {})
-		vim.list_extend(ensure_installed, { 'stylua' })
-		require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+		vim.list_extend(ensure_installed, { "stylua" })
+		require("mason-tool-installer").setup { ensure_installed = ensure_installed }
 
 
 		local on_attach = function(client, bufnr)
@@ -76,13 +67,17 @@ return {
 			)
 		end
 
-		local capabilities = require('cmp_nvim_lsp').default_capabilities()
+		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 		for server_name, server_opts in pairs(servers) do
-			local server_config = vim.tbl_deep_extend('force', {
-				on_attach = on_attach,
-				capabilities = capabilities,
-			}, server_opts or {})
+			local server_config = vim.tbl_deep_extend(
+				"force",
+				{
+					on_attach = on_attach,
+					capabilities = capabilities,
+				},
+				server_opts or {}
+			)
 
 			require("lspconfig")[server_name].setup(server_config)
 		end
