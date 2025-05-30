@@ -1,3 +1,8 @@
+" Name:        Default Shade
+" Author:      Anoop K Chandran @anoopkcn
+" Url:         https://github.com/anoopkcn/dotfiles/tree/main/nvim/colors
+" License:     The MIT License (MIT)
+
 set background=dark
 
 let g:colors_name = "defaultshade"
@@ -32,7 +37,6 @@ call s:h("StatusLine", s:fg, s:cursor_line, "")
 call s:h("StatusLineNC", s:comment_fg, s:cursor_line, "")
 call s:h("CursorColumn", "", s:cursor_line, "")
 call s:h("CursorLine", "", s:cursor_line, "")
-
 
 if has('nvim')
   call s:h("WinSeparator", s:comment_fg, "", "")
