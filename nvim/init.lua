@@ -45,7 +45,7 @@ vim.keymap.set("n", "<C-f>", "<C-f>zz")
 vim.keymap.set("n", "<C-b>", "<C-b>zz")
 vim.keymap.set("n", "n", "nzz")
 vim.keymap.set("n", "N", "Nzz")
-vim.keymap.set("n", "J", "mzJ`z") -- Join lines without moving cursor
+vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 -- vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
