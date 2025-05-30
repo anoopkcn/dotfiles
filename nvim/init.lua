@@ -3,12 +3,10 @@
 -- License: MIT
 -- Refer to README.md for more information
 
--- BUILT-IN
 require("custom.options")
 require("custom.functions")
-vim.cmd("colorscheme onehalfdark")
+vim.cmd("colorscheme defaultshade")
 
--- PLUGINS
 local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
@@ -37,7 +35,6 @@ require("lazy").setup {
 	},
 }
 
--- KEYMAPS
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
