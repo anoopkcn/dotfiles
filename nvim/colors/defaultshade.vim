@@ -1,7 +1,7 @@
-" Name:        Default Shade
-" Author:      Anoop K Chandran @anoopkcn
-" Url:         https://github.com/anoopkcn/dotfiles/tree/main/nvim/colors
-" License:     The MIT License (MIT)
+"Name:        Default Shade
+"Author:      Anoop K Chandran @anoopkcn
+"Url:         https://github.com/anoopkcn/dotfiles/tree/main/nvim/colors
+"License:     The MIT License (MIT)
 
 set background=dark
 
