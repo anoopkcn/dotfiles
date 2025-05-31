@@ -13,18 +13,18 @@ return {
 
 	config = function()
 		local servers = {
+			zls = {},
+			ruff = {},
 			lua_ls = {
 				settings = {
 					Lua = {
 						runtime = { version = 'LuaJIT', },
 						diagnostics = { globals = { 'vim', 'require' }, },
-						workspace = { library = vim.api.nvim_get_runtime_file("", true), },
+						workspace = { library = {vim.env.VIMRUNTIME, "${3rd}/luv/library"}},
 						telemetry = { enable = false, },
 					},
 				},
 			},
-			zls = {},
-			ruff = {},
 			pyright = {
 				settings = {
 					python = {

@@ -29,8 +29,6 @@ require("lazy").setup {
 		{ "tpope/vim-surround" },
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
-		{ "numToStr/Comment.nvim" },
-		{ "echasnovski/mini.ai" },
 		{ "ziglang/zig.vim" },
 	},
 }
@@ -60,8 +58,8 @@ vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>xX", vim.diagnostic.setqflist)
 vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
-vim.keymap.set("n", "]]", vim.diagnostic.goto_next)
-vim.keymap.set("n", "[[", vim.diagnostic.goto_prev)
+vim.keymap.set("n", "]]", function() vim.diagnostic.jump({ count = 1 }) end)
+vim.keymap.set("n", "[[", function() vim.diagnostic.jump({ count = -1 }) end)
 
 
 vim.keymap.set("n", "<leader>q",
@@ -74,7 +72,7 @@ vim.keymap.set("n", "<leader>G",
 	{ noremap = true, silent = true, desc = "git" }
 )
 
-vim.keymap.set("n", "<C-->",
+vim.keymap.set("n", "<leader>fe",
 	"<CMD>Oil<CR>",
 	{ desc = "Open parent directory" }
 )
