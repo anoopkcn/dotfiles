@@ -48,12 +48,13 @@ vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 -- vim.keymap.set("n", "j", "v:count ? 'j' : 'gj'", { expr = true })
 -- vim.keymap.set("n", "k", "v:count ? 'k' : 'gk'", { expr = true })
+
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd)
 vim.keymap.set("n", "<leader>on", vim.cmd.only)
 vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>-", ":rightbelow split<CR>", { noremap = true, silent = true })
 vim.keymap.set("i", "<C-c>", "<Esc>")
--- lsp + quickfix
+
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>xX", vim.diagnostic.setqflist)
@@ -62,49 +63,25 @@ vim.keymap.set("n", "]]", function() vim.diagnostic.jump({ count = 1 }) end)
 vim.keymap.set("n", "[[", function() vim.diagnostic.jump({ count = -1 }) end)
 
 
-vim.keymap.set("n", "<leader>q",
-	ToggleQuickfixList,
-	{ noremap = true, silent = true, desc = "Toggle quickfix list" }
-)
+vim.keymap.set("n", "<leader>q", ToggleQuickfixList, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>G", "<cmd>Git<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>fe", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>z", ":!", { noremap = true })
 
-vim.keymap.set("n", "<leader>G",
-	"<cmd>Git<CR>",
-	{ noremap = true, silent = true, desc = "git" }
-)
+vim.keymap.set("n", "<leader>,", function()
+	vim.lsp.buf.format({ async = true })
+end, { noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>fe",
-	"<CMD>Oil<CR>",
-	{ desc = "Open parent directory" }
-)
+-- Toggle diagnostic virtual_lines: can also be replaced with virtual_text
+vim.diagnostic.config({ virtual_lines = false })
+vim.keymap.set("n", "<leader>e", function()
+	local new_config = not vim.diagnostic.config().virtual_lines
+	vim.diagnostic.config({ virtual_lines = new_config })
+end, { desc = "Toggle diagnostic virtual_lines" })
 
-vim.keymap.set("n", "<leader>e",
-	"<cmd>DiagnosticsToggleVirtualText<CR>",
-	{ noremap = true, silent = true }
-)
-
-vim.keymap.set("n", "<leader>t",
-	function()
-		local raw_timestamp = os.date("%FT%T")
-		local timestamp_str = string.format("%s", raw_timestamp or "")
-		vim.api.nvim_put({ timestamp_str }, "c", true, true)
-	end,
-	{ noremap = true, silent = true, }
-)
-
-
-vim.keymap.set("n", "<leader>dl",
-	":edit DEVLOG.md<CR>",
-	{ noremap = true, silent = true, desc = "Open DEVLOG.md" }
-)
-
-
-vim.keymap.set("n", "<leader>,",
-	function()
-		vim.lsp.buf.format({ async = true })
-	end,
-	{ noremap = true, silent = true, desc = "Format buffer" }
-)
-
-vim.keymap.set("n", "<leader>z",
-	":!", { noremap = true }
-)
+vim.keymap.set("n", "<leader>t", function()
+	local raw_timestamp = os.date("%FT%T")
+	local timestamp_str = string.format("%s", raw_timestamp or "")
+	vim.api.nvim_put({ timestamp_str }, "c", true, true)
+end, { noremap = true, silent = true, })
