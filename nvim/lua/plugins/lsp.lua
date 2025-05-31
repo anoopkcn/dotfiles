@@ -20,7 +20,7 @@ return {
 					Lua = {
 						runtime = { version = 'LuaJIT', },
 						diagnostics = { globals = { 'vim', 'require' }, },
-						workspace = { library = {vim.env.VIMRUNTIME, "${3rd}/luv/library"}},
+						workspace = { library = { vim.env.VIMRUNTIME, "${3rd}/luv/library" } },
 						telemetry = { enable = false, },
 					},
 				},

@@ -130,8 +130,6 @@ if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
     fi
 fi
 
-export BAT_THEME="one_dark"
-
 export FZF_DEFAULT_OPTS='
 --bind up:preview-up,down:preview-down
 --scrollbar=""
@@ -139,9 +137,6 @@ export FZF_DEFAULT_OPTS='
 --height 50%
 --layout reverse
 --border rounded
---prompt="❯ "
---marker="+"
---color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#494F57,gutter:#292C33,pointer:#3c8494,prompt:#afaf87
 '
 export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git'
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
@@ -179,5 +174,4 @@ plugin add "anoopkcn/zig-shell-completions"
 autoload -Uz compinit && compinit
 if [ -n "$ZSH_VERSION" ]; then
     zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-    # zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 fi
