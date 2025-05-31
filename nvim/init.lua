@@ -1,7 +1,6 @@
 -- Neovim configuration
--- Author: @anoopkcn
+-- Author:  @anoopkcn
 -- License: MIT
--- Refer to README.md for more information
 
 require("custom.options")
 require("custom.functions")
@@ -9,9 +8,7 @@ vim.cmd("colorscheme defaultshade")
 
 local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
+	vim.fn.system({ "git", "clone",
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
 		"--branch=stable",
@@ -57,8 +54,8 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
-vim.keymap.set("n", "<leader>xX", vim.diagnostic.setqflist)
-vim.keymap.set("n", "<leader>xx", vim.diagnostic.setloclist)
+vim.keymap.set("n", "<leader>xx", vim.diagnostic.setqflist)
+vim.keymap.set("n", "<leader>xX", vim.diagnostic.setloclist)
 vim.keymap.set("n", "]]", function() vim.diagnostic.jump({ count = 1 }) end)
 vim.keymap.set("n", "[[", function() vim.diagnostic.jump({ count = -1 }) end)
 
