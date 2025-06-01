@@ -1,14 +1,14 @@
 return {
-	'neovim/nvim-lspconfig',
+	"neovim/nvim-lspconfig",
 	dependencies = {
 		{ "hrsh7th/nvim-cmp" },
 		{ "hrsh7th/cmp-nvim-lsp" },
 		{
-			'mason-org/mason.nvim',
+			"mason-org/mason.nvim",
 			opts = {}
 		},
-		{ 'mason-org/mason-lspconfig.nvim' },
-		{ 'WhoIsSethDaniel/mason-tool-installer.nvim' },
+		{ "mason-org/mason-lspconfig.nvim" },
+		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 	},
 
 	config = function()
@@ -18,8 +18,8 @@ return {
 			lua_ls = {
 				settings = {
 					Lua = {
-						runtime = { version = 'LuaJIT', },
-						diagnostics = { globals = { 'vim', 'require' }, },
+						runtime = { version = "LuaJIT", },
+						diagnostics = { globals = { "vim", "require" }, },
 						workspace = { library = { vim.env.VIMRUNTIME, "${3rd}/luv/library" } },
 						telemetry = { enable = false, },
 					},

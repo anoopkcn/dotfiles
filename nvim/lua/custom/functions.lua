@@ -1,6 +1,3 @@
--- Custom functions for Neovim configuration
--- @anoopkcn
-
 Print = function(v)
 	print(vim.inspect(v))
 	return v

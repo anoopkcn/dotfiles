@@ -13,7 +13,6 @@ local function get_make_list_command()
 	end
 
 	return [[
-        # Direct extraction from Makefile
         grep -E '^[a-zA-Z0-9][a-zA-Z0-9_-]*:' Makefile 2>/dev/null |
         sed -E 's/:.*//' | grep -v -E '^[A-Z]+$'
     ]]
@@ -80,7 +79,8 @@ local function make_picker(opts)
 					local command = string.format("make %s", escaped_target)
 
 					-- Use terminal split with controlled height
-					vim.cmd(string.format("botright 15split term://%s", command))
+					-- vim.cmd(string.format("botright 20split term://%s", command))
+					vim.cmd(string.format("botright %dsplit term://%s", math.floor(vim.o.lines * 0.38), command))
 					local term_buf = vim.api.nvim_get_current_buf()
 					local timestamp_suffix = vim.fn.strftime("%FT%T") .. "." .. math.random(100, 999)
 					local new_buffer_name = string.format("Output: %s [%s]", target, timestamp_suffix)

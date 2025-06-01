@@ -39,12 +39,13 @@ require("lazy").setup {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>")
-vim.keymap.set("i", "<C-c>", "<Esc>")
-vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd)
 vim.keymap.set("n", "<leader>on", vim.cmd.only)
+
+vim.keymap.set("i", "<C-c>", "<Esc>")
 
 vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>-", ":rightbelow split<cr>", { noremap = true, silent = true })
