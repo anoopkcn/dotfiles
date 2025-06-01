@@ -1,4 +1,3 @@
--- Neovim configuration
 -- Author:  @anoopkcn
 -- License: MIT
 
@@ -25,7 +24,6 @@ require("lazy").setup {
 		{ "tpope/vim-surround" },
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
-		{ "ziglang/zig.vim" },
 		{
 			"catppuccin/nvim",
 			name = "catppuccin",
@@ -33,7 +31,8 @@ require("lazy").setup {
 			config = function()
 				vim.cmd.colorscheme "catppuccin"
 			end
-		}
+		},
+		{ "ziglang/zig.vim" },
 	},
 }
 
