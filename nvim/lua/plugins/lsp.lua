@@ -59,12 +59,13 @@ return {
 			end
 
 			local map_opts = { buffer = bufnr, noremap = true, silent = true }
-			vim.keymap.set("n", "K",
-				function()
+			vim.keymap.set("n", "K", function()
 					vim.lsp.buf.hover { border = "single", max_height = 25, max_width = 120 }
 				end,
 				map_opts
 			)
+			vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", map_opts)
+			vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", map_opts)
 		end
 
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()

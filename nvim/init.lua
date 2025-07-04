@@ -3,6 +3,7 @@
 
 require("custom.options")
 require("custom.functions")
+vim.cmd([[colorscheme onehalfdark]])
 
 local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -24,14 +25,6 @@ require("lazy").setup {
 		{ "tpope/vim-surround" },
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
-		{
-			"catppuccin/nvim",
-			name = "catppuccin",
-			priority = 1000,
-			config = function()
-				vim.cmd.colorscheme "catppuccin"
-			end
-		},
 		{ "ziglang/zig.vim" },
 	},
 }

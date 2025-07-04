@@ -14,7 +14,6 @@ path=(
 typeset -U path
 path=($^path(N-/))
 export PATH
-export TM_SEARCH_DIRS="$HOME $HOME/work $HOME/develop $HOME/Dropbox $HOME/Dropbox/projects"
 
 # PROMPT
 precmd(){
@@ -35,8 +34,9 @@ path() { echo -e ${PATH//:/\\n} }
 
 # SOURCE
 source_file $HOME/.config/zsh/plugins.sh
-source_file $HOME/.config/tmux/tools.sh
 source_file $HOME/.privaterc
+# export TM_SEARCH_DIRS="$HOME $HOME/work $HOME/develop $HOME/Dropbox $HOME/Dropbox/projects"
+# source_file $HOME/.config/tmux/tools.sh
 
 # HISTORY OPTIONS
 HISTFILE=$HOME/.zsh_history
@@ -58,7 +58,7 @@ alias tmi="tm -i"
 alias icat="chafa -f kitty"
 alias imgcat="chafa -f kitty"
 alias ga="git add"
-alias gs="git status"
+alias gs="git status --short"
 alias gco="git checkout"
 alias gcm="git commit -m"
 alias fcat="fancy-cat"

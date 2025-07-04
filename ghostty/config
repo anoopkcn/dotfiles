@@ -1,5 +1,5 @@
-theme = catppuccin-mocha
 font-family = Berkeley Mono Variable
+font-thicken = true
 font-size = 14
 font-feature = -calt
 
