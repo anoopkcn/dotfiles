@@ -3,10 +3,11 @@ vim.g.maplocalleader = " "
 vim.g.netrw_banner = 0
 
 vim.opt.swapfile = false
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.undofile = true
+-- vim.opt.number = true
+-- vim.opt.relativenumber = true
 vim.opt.cursorline = true
+vim.opt.showtabline = 0
+vim.opt.laststatus = 0
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 -- vim.opt.clipboard = "unnamedplus"
@@ -22,7 +23,7 @@ vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showmode = false
 vim.opt.termguicolors = true
-vim.opt.showtabline = 0
+vim.opt.undofile = true
 
 if vim.fn.executable("rg") == 1 then
 	vim.opt.grepprg = "rg --vimgrep --smart-case"

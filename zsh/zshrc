@@ -1,9 +1,6 @@
-# ZSH configuration
 # Author: @anoopkcn
 # License: MIT
-# Refer to README.md for more information
 
-# PATH
 setopt extended_glob null_glob
 path=(
     /Users/akc/.local/bin
@@ -57,9 +54,10 @@ alias tkill="tmux kill-server"
 alias tmi="tm -i"
 alias icat="chafa -f kitty"
 alias imgcat="chafa -f kitty"
+alias fcat="fancy-cat"
+# git aliases
 alias ga="git add"
 alias gs="git status --short"
 alias gco="git checkout"
 alias gcm="git commit -m"
-alias fcat="fancy-cat"
 

@@ -3,7 +3,7 @@
 
 require("custom.options")
 require("custom.functions")
-vim.cmd([[colorscheme onehalfdark]])
+vim.cmd("colorscheme onehalfdark")
 
 local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
