@@ -44,10 +44,10 @@ vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<cr>", { noremap = true, si
 vim.keymap.set("n", "<leader>-", ":rightbelow split<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<cr>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<cr>")
-vim.keymap.set("n", "<leader>xx", vim.diagnostic.setqflist)
-vim.keymap.set("n", "<leader>xX", vim.diagnostic.setloclist)
-vim.keymap.set("n", "]]", function() vim.diagnostic.jump({ count = 1 }) end)
-vim.keymap.set("n", "[[", function() vim.diagnostic.jump({ count = -1 }) end)
+vim.keymap.set("n", "<leader>tt", vim.diagnostic.setqflist)
+-- vim.keymap.set("n", "<leader>xX", vim.diagnostic.setloclist)
+vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end)
+vim.keymap.set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end)
 
 
 vim.keymap.set("n", "<leader>q", ToggleQuickfixList, { noremap = true, silent = true })
@@ -67,7 +67,7 @@ vim.keymap.set("n", "<leader>e", function()
 	vim.diagnostic.config({ virtual_lines = new_config })
 end, { desc = "Toggle diagnostic virtual_lines" })
 
-vim.keymap.set("n", "<leader>t", function()
+vim.keymap.set("n", "<leader>'", function()
 	local raw_timestamp = os.date("%FT%T")
 	local timestamp_str = string.format("%s", raw_timestamp or "")
 	vim.api.nvim_put({ timestamp_str }, "c", true, true)
