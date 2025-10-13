@@ -122,6 +122,12 @@ call s:h("Title", s:green, "", "")
 call s:h("WildMenu", s:fg, "", "")
 " }
 
+" LSP
+call s:h("DiagnosticUnderlineError",  "", "","undercurl")
+call s:h("DiagnosticUnderlineWarn",  "", "","undercurl")
+call s:h("DiagnosticUnderlineInfo",  "", "","undercurl")
+call s:h("DiagnosticUnderlineHint",  "", "","undercurl")
+
 
 " Syntax colors {
 " Whitespace is defined in Neovim, not Vim.

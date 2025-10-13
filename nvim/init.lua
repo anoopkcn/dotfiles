@@ -21,6 +21,13 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
+		{ "mason-org/mason.nvim", opts = {} },
+		{ "mason-org/mason-lspconfig.nvim" },
+		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
+
+		-- Completion engine
+		{ "hrsh7th/nvim-cmp" },
+		{ "hrsh7th/cmp-nvim-lsp" },
 		{ "tpope/vim-fugitive" },
 		{ "tpope/vim-surround" },
 		{ "tpope/vim-unimpaired" },
@@ -28,6 +35,20 @@ require("lazy").setup {
 		{ "ziglang/zig.vim" },
 	},
 }
+
+-- Load LSP configuration immediately
+require("custom.lsp")
+
+vim.diagnostic.config({
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "⏺",
+			[vim.diagnostic.severity.WARN] = "⚬",
+			[vim.diagnostic.severity.INFO] = "⚬",
+			[vim.diagnostic.severity.HINT] = "⚬",
+		}
+	}
+})
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
@@ -61,11 +82,15 @@ vim.keymap.set("n", "<leader>,", function()
 end, { noremap = true, silent = true })
 
 -- Toggle diagnostic virtual_lines: can also be replaced with virtual_text
-vim.diagnostic.config({ virtual_lines = false })
+-- vim.diagnostic.config({ virtual_lines = false })
+-- vim.keymap.set("n", "<leader>e", function()
+-- 	local new_config = not vim.diagnostic.config().virtual_lines
+-- 	vim.diagnostic.config({ virtual_lines = new_config })
+-- end, { desc = "Toggle diagnostic virtual_lines" })
+
 vim.keymap.set("n", "<leader>e", function()
-	local new_config = not vim.diagnostic.config().virtual_lines
-	vim.diagnostic.config({ virtual_lines = new_config })
-end, { desc = "Toggle diagnostic virtual_lines" })
+	vim.diagnostic.open_float({ border = 'single' })
+end, {})
 
 vim.keymap.set("n", "<leader>'", function()
 	local raw_timestamp = os.date("%FT%T")

@@ -3,11 +3,11 @@ vim.g.maplocalleader = " "
 vim.g.netrw_banner = 0
 
 vim.opt.swapfile = false
--- vim.opt.number = true
--- vim.opt.relativenumber = true
+vim.opt.number = true
+vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.showtabline = 0
-vim.opt.laststatus = 0
+vim.opt.laststatus = 2
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 -- vim.opt.clipboard = "unnamedplus"
