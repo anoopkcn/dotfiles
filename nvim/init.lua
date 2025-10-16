@@ -4,6 +4,7 @@
 require("custom.options")
 require("custom.functions")
 require("custom.statusline")
+
 vim.cmd("colorscheme onehalfdark")
 vim.cmd([[
   highlight SpellBad   gui=undercurl guisp=#be5046
@@ -28,7 +29,7 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
-		{ "mason-org/mason.nvim", opts = {} },
+		{ "mason-org/mason.nvim", opts = {}, },
 		{ "mason-org/mason-lspconfig.nvim" },
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 
@@ -43,7 +44,6 @@ require("lazy").setup {
 	},
 }
 
--- Load LSP configuration immediately
 require("custom.lsp")
 
 vim.diagnostic.config({
