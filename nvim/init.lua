@@ -78,7 +78,7 @@ vim.keymap.set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end)
 
 
 vim.keymap.set("n", "<leader>q", ToggleQuickfixList, { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>G", "<cmd>Neogit<cr>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>G", "<cmd>Neogit kind=split<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>fe", "<cmd>Oil<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>z", ":!", { noremap = true })
