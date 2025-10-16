@@ -11,10 +11,13 @@ macos-option-as-alt = true
 macos-titlebar-style = tabs
 window-save-state=always
 macos-titlebar-proxy-icon=hidden
+quick-terminal-position=bottom
 
 keybind = super+s>r=reload_config
 keybind = super+s>x=close_surface
 keybind = shift+enter=text:\x1b\r
+keybind = global:ctrl+backquote=toggle_quick_terminal
+
 
 # quick tab switch
 keybind = cmd+s>1=goto_tab:1

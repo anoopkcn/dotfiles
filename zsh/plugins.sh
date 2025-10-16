@@ -138,6 +138,8 @@ export FZF_DEFAULT_OPTS='
 --layout reverse
 --border rounded
 '
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=fg:#abb2bf,bg:#282c34,hl:#61afef --color=fg+:#abb2bf,bg+:#282c34,hl+:#56b6c2 --color=info:#afaf87,prompt:#e06c75,pointer:#C678DD --color=marker:#98c379,spinner:#c678dd,header:#87afaf'
+
 export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git'
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

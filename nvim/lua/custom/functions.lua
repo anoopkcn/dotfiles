@@ -5,7 +5,7 @@ end
 
 -- Enable spell check for git commits
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "gitcommit",
+  pattern = "gitcommit,markdown",
   callback = function()
     vim.opt_local.spell = true
     vim.opt_local.spelllang = "en_us" -- Or your preferred language
