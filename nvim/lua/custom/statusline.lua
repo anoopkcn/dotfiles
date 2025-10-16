@@ -4,17 +4,17 @@ local modes = {
   ["n"] = "NORMAL",
   ["no"] = "NORMAL",
   ["v"] = "VISUAL",
-  ["V"] = "VISUAL LINE",
-  [""] = "VISUAL BLOCK",
+  ["V"] = "VISUAL_LINE",
+  [""] = "VISUAL_BLOCK",
   ["s"] = "SELECT",
-  ["S"] = "SELECT LINE",
-  [""] = "SELECT BLOCK",
+  ["S"] = "SELECT_LINE",
+  [""] = "SELECT_BLOCK",
   ["i"] = "INSERT",
   ["ic"] = "INSERT",
   ["R"] = "REPLACE",
-  ["Rv"] = "VISUAL REPLACE",
+  ["Rv"] = "VISUAL_REPLACE",
   ["c"] = "COMMAND",
-  ["cv"] = "VIM EX",
+  ["cv"] = "VIM_EX",
   ["ce"] = "EX",
   ["r"] = "PROMPT",
   ["rm"] = "MOAR",
@@ -51,9 +51,17 @@ end
 
 
 local function filepath()
-  local fpath = vim.fn.fnamemodify(vim.fn.expand "%", ":~:.:h")
-  if fpath == "" or fpath == "." then
-      return " "
+  local fpath
+  if vim.fn.bufname('%') == "" then
+    fpath = vim.fn.getcwd()
+    fpath = vim.fn.fnamemodify(fpath, ":~")
+  else
+    fpath = vim.fn.expand('%:p:h')
+    fpath = vim.fn.fnamemodify(fpath, ":~:.")
+  end
+
+  if fpath == "" then
+    return " "
   end
 
   return string.format(" %%<%s/", fpath)
@@ -100,7 +108,7 @@ local function lsp()
     info = " I[" .. count["info"] .. "] "
   end
 
-  return errors .. warnings .. hints .. info .. "%#Normal#"
+  return errors .. warnings .. hints .. info
 end
 
 local vcs = function()
@@ -108,9 +116,9 @@ local vcs = function()
   if not git_info or git_info.head == "" then
     return ""
   end
-  local added = git_info.added and ("%#GitSignsAdd#+" .. git_info.added .. " ") or ""
-  local changed = git_info.changed and ("%#GitSignsChange#~" .. git_info.changed .. " ") or ""
-  local removed = git_info.removed and ("%#GitSignsDelete#-" .. git_info.removed .. " ") or ""
+  local added = git_info.added and ("+" .. git_info.added .. " ") or ""
+  local changed = git_info.changed and ("~" .. git_info.changed .. " ") or ""
+  local removed = git_info.removed and ("-" .. git_info.removed .. " ") or ""
   if git_info.added == 0 then
     added = ""
   end
@@ -121,14 +129,14 @@ local vcs = function()
     removed = ""
   end
   return table.concat {
-     " ",
+     " ",
+     git_info.head,
+		 " ",
      added,
      changed,
      removed,
      " ",
-     "%#GitSignsAdd# ",
-     git_info.head,
-     " %#Normal#",
+     -- " %#Normal#",
   }
 end
 
@@ -152,7 +160,7 @@ Statusline.active = function()
     "%#Statusline#",
     update_mode_colors(),
     mode(),
-    "%#Normal# ",
+    -- "%#Normal# ",
     filepath(),
     filename(),
     lsp(),
