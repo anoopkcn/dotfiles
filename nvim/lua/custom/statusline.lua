@@ -88,16 +88,16 @@ local function lsp()
   local info = ""
 
   if count["errors"] ~= 0 then
-    errors = " E " .. count["errors"]
+    errors = " E[" .. count["errors"] .. "] "
   end
   if count["warnings"] ~= 0 then
-    warnings = " W " .. count["warnings"]
+    warnings = " W[" .. count["warnings"] .. "] "
   end
   if count["hints"] ~= 0 then
-    hints = " H " .. count["hints"]
+    hints = " H[" .. count["hints"] .. "] "
   end
   if count["info"] ~= 0 then
-    info = " I " .. count["info"]
+    info = " I[" .. count["info"] .. "] "
   end
 
   return errors .. warnings .. hints .. info .. "%#Normal#"
@@ -167,13 +167,13 @@ function Statusline.inactive()
   return " %F"
 end
 
-vim.api.nvim_exec([[
+vim.api.nvim_exec2([[
   augroup Statusline
   au!
   au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
   au WinLeave,BufLeave * setlocal statusline=%!v:lua.Statusline.inactive()
   augroup END
-]], false)
+]],{})
 
 
 
