@@ -3,7 +3,14 @@
 
 require("custom.options")
 require("custom.functions")
+require("custom.statusline")
 vim.cmd("colorscheme onehalfdark")
+vim.cmd([[
+  highlight SpellBad   gui=undercurl guisp=#be5046
+  highlight SpellCap   gui=undercurl guisp=#61afef
+  highlight SpellRare  gui=undercurl guisp=#c678dd
+  highlight SpellLocal gui=undercurl guisp=#98c379
+]])
 
 local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then

@@ -3,6 +3,15 @@ Print = function(v)
 	return v
 end
 
+-- Enable spell check for git commits
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "gitcommit",
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "en_us" -- Or your preferred language
+  end,
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Temporary highlight indicator when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("custom-highlight-yank", { clear = true }),
