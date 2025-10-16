@@ -1,3 +1,5 @@
+-- custom statusline configuration
+
 local modes = {
   ["n"] = "NORMAL",
   ["no"] = "NORMAL",
@@ -63,7 +65,7 @@ local function filename()
   if fname == "" then
       return ""
   end
-  return fname .. " "
+  return fname .. "%m "
 end
 
 
@@ -86,16 +88,16 @@ local function lsp()
   local info = ""
 
   if count["errors"] ~= 0 then
-    errors = " %#LspDiagnosticsSignError#⏺ " .. count["errors"]
+    errors = " E " .. count["errors"]
   end
   if count["warnings"] ~= 0 then
-    warnings = " %#LspDiagnosticsSignWarning#⚬ " .. count["warnings"]
+    warnings = " W " .. count["warnings"]
   end
   if count["hints"] ~= 0 then
-    hints = " %#LspDiagnosticsSignHint#⚬ " .. count["hints"]
+    hints = " H " .. count["hints"]
   end
   if count["info"] ~= 0 then
-    info = " %#LspDiagnosticsSignInformation#⚬ " .. count["info"]
+    info = " I " .. count["info"]
   end
 
   return errors .. warnings .. hints .. info .. "%#Normal#"
@@ -153,9 +155,9 @@ Statusline.active = function()
     "%#Normal# ",
     filepath(),
     filename(),
-    "%#Normal#",
     lsp(),
-    "%=%#StatusLineExtra#",
+    "%=",
+		vcs(),
     filetype(),
     lineinfo(),
   }
@@ -165,17 +167,11 @@ function Statusline.inactive()
   return " %F"
 end
 
-function Statusline.short()
-  return "%#StatusLineNC#   NvimTree"
-end
-
-
 vim.api.nvim_exec([[
   augroup Statusline
   au!
   au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
   au WinLeave,BufLeave * setlocal statusline=%!v:lua.Statusline.inactive()
-  au WinEnter,BufEnter,FileType NvimTree setlocal statusline=%!v:lua.Statusline.short()
   augroup END
 ]], false)
 
