@@ -17,7 +17,8 @@ return {
 			},
 		})
 
-		vim.keymap.set("n", "<leader>g", "<CMD>Neogit kind=split_below_all<CR>", { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>g", "<CMD>Neogit kind=replace<CR>", { noremap = true, silent = true })
+		-- vim.keymap.set("n", "<leader>g", "<CMD>Neogit kind=split_below_all<CR>", { noremap = true, silent = true })
 		-- vim.keymap.set("n", "<leader>l", function() neogit.action("log", "log_current")() end)
 		vim.keymap.set("n", "<leader>l", function() neogit.open({"log"}) end)
 	end
