@@ -17,6 +17,6 @@ return {
 			},
 		})
 
-		vim.keymap.set("n", "<leader>G", "<CMD>Neogit kind=split_above_all<CR>", { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>g", "<CMD>Neogit kind=split_above_all<CR>", { noremap = true, silent = true })
 	end
 }

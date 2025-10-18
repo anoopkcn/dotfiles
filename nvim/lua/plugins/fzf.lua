@@ -30,12 +30,8 @@ return {
 		vim.keymap.set("n", "<leader>/", fzf.grep)
 		vim.keymap.set("n", "<leader>fw", fzf.grep_cword)
 		vim.keymap.set("n", "<leader>fW", fzf.grep_cWORD)
-		vim.keymap.set("n", "<leader>gl", fzf.git_bcommits)
-		vim.keymap.set("n", "<leader>gL", fzf.git_commits)
-		vim.keymap.set("n", "<leader>gs", fzf.git_status)
-		vim.keymap.set("n", "<leader>gt", fzf.git_worktrees)
-		vim.keymap.set("n", "<leader>gb", fzf.git_branches)
 		vim.keymap.set("n", "<leader>fh", fzf.helptags)
+		vim.keymap.set("n", "<leader>ft", fzf.git_worktrees)
 		-- vim.keymap.set("n", "<leader>fs", fzf.lsp_live_workspace_symbols)
 		-- vim.keymap.set("n", "<leader>fS", fzf.lsp_document_symbols)
 		vim.keymap.set("n", "<leader>fr", fzf.lsp_references)
@@ -45,6 +41,11 @@ return {
 		vim.keymap.set("n", "<leader>z", fzf.spell_suggest)
 		vim.keymap.set("n", "<leader>s", fzf.builtin)
 
+
+		-- vim.keymap.set("n", "<leader>gl", fzf.git_bcommits)
+		-- vim.keymap.set("n", "<leader>gL", fzf.git_commits)
+		-- vim.keymap.set("n", "<leader>gs", fzf.git_status)
+		-- vim.keymap.set("n", "<leader>gb", fzf.git_branches)
 
 		-- Setup makepicker
 		require("custom.makepicker").setup()

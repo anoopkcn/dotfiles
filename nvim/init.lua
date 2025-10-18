@@ -1,5 +1,5 @@
 -- Author:  @anoopkcn
--- License: MIT correction 
+-- License: MIT
 
 require("custom.options")
 require("custom.functions")
@@ -29,7 +29,10 @@ require("lazy").setup {
 	change_detection = { notify = false },
 	spec = {
 		{ import = "plugins" },
-		{ "mason-org/mason.nvim", opts = {}, },
+		{
+			"mason-org/mason.nvim",
+			opts = {},
+		},
 		{ "mason-org/mason-lspconfig.nvim" },
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 
