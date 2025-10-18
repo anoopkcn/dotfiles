@@ -213,6 +213,7 @@ hi link gitcommitUnmergedArrow gitcommitUnmergedFile
 "
 " Telescope
 call s:h("TelescopeBorder", s:hoverborder, "", "")
+call s:h("FzfLuaBorder", s:hoverborder, "", "")
 
 " Fix colors in neovim terminal buffers {
   if has('nvim')

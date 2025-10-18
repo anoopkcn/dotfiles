@@ -1,8 +1,4 @@
-local finders = require "telescope.finders"
-local pickers = require "telescope.pickers"
-local conf = require("telescope.config").values
-local actions = require "telescope.actions"
-local action_state = require "telescope.actions.state"
+local fzf = require "fzf-lua"
 
 local M = {}
 
@@ -42,7 +38,7 @@ local function get_make_targets()
 	return targets
 end
 
--- Creates and displays the Telescope picker for Makefile targets.
+-- Creates and displays the fzf-lua picker for Makefile targets.
 local function make_picker(opts)
 	opts = opts or {}
 
@@ -54,68 +50,30 @@ local function make_picker(opts)
 		return
 	end
 
-	pickers.new(opts, {
-		prompt_title = "Makefile Targets",
-		finder = finders.new_table {
-			results = targets,
-			entry_maker = function(entry)
-				return {
-					value = entry,
-					display = entry,
-					ordinal = entry
-				}
-			end,
+	-- Execute selected make target
+	local function execute_make_target(selected)
+		if not selected or #selected == 0 then return end
+
+		local target = selected[1]
+		local escaped_target = vim.fn.shellescape(target)
+		local command = string.format("make %s", escaped_target)
+
+		vim.cmd(string.format("botright %dsplit term://%s", math.floor(vim.o.lines * 0.38), command))
+		vim.cmd("startinsert")
+	end
+
+	fzf.fzf_exec(targets, {
+		prompt = "Targets> ",
+		actions = {
+			['default'] = execute_make_target,
 		},
-		sorter = conf.generic_sorter(opts),
-		attach_mappings = function(prompt_bufnr, map)
-			-- Execute selected make target
-			local function execute_make_target()
-				local selection = action_state.get_selected_entry()
-				actions.close(prompt_bufnr)
-
-				if selection then
-					local target = selection.value
-					local escaped_target = vim.fn.shellescape(target)
-					local command = string.format("make %s", escaped_target)
-
-					-- Use terminal split with controlled height
-					-- vim.cmd(string.format("botright 20split term://%s", command))
-					vim.cmd(string.format("botright %dsplit term://%s", math.floor(vim.o.lines * 0.38), command))
-					local term_buf = vim.api.nvim_get_current_buf()
-					local timestamp_suffix = vim.fn.strftime("%FT%T") .. "." .. math.random(100, 999)
-					local new_buffer_name = string.format("Output: %s [%s]", target, timestamp_suffix)
-
-					-- Attempt to set the new unique buffer name
-					local ok, err = pcall(vim.api.nvim_buf_set_name, term_buf, new_buffer_name)
-					if not ok then
-						vim.notify(
-							string.format("Warning: Could not set terminal buffer name to '%s'. Error: %s", new_buffer_name,
-								tostring(err)),
-							vim.log.levels.WARN
-						)
-						-- The terminal will still open, just possibly with a generic name.
-					end
-
-					-- vim.api.nvim_buf_set_name(term_buf, "Make Output: " .. target)
-					-- TODO: bufferwipe result in error probably due to the native fzf plugin(being so fast)
-					-- vim.api.nvim_buf_set_option_value(term_buf, "bufhidden", "wipe", {})
-					-- Add 'q' keymap to close the terminal window
-					vim.api.nvim_buf_set_keymap(term_buf, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
-					vim.cmd("startinsert")
-				end
-			end
-
-			-- Map Enter key to execute the target in both insert and normal mode
-			actions.select_default:replace(execute_make_target)
-			map("i", "<CR>", execute_make_target)
-			map("n", "<CR>", execute_make_target)
-
-			return true
-		end,
-	}):find()
+		winopts = {
+			backdrop = 100,
+		},
+	})
 end
 
--- -- Setup function to be called from the Telescope configuration
+-- Setup function to configure the make picker
 function M.setup()
 	vim.keymap.set('n', '<leader>fm', make_picker, { desc = '[F]ind [M]ake Target' })
 end
