@@ -46,7 +46,7 @@ local function make_picker(opts)
 	if not targets then return end
 
 	if #targets == 0 then
-		vim.notify("No make targets found in the current directory", vim.log.levels.INFO)
+		vim.notify("No make targets found in project root", vim.log.levels.INFO)
 		return
 	end
 
@@ -63,7 +63,7 @@ local function make_picker(opts)
 	end
 
 	fzf.fzf_exec(targets, {
-		prompt = "Targets> ",
+		prompt = "Run> ",
 		actions = {
 			['default'] = execute_make_target,
 		},

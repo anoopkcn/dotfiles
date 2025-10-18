@@ -3,10 +3,10 @@ return {
 	dependencies = {
 		"nvim-lua/plenary.nvim",       -- required
 		"sindrets/diffview.nvim",      -- optional - Diff integration
-		"nvim-telescope/telescope.nvim", -- optional
 	},
 	config = function()
-		require("neogit").setup({
+		local neogit = require('neogit')
+		neogit.setup({
 			disable_hint = true,
 			graph_style = "kitty",
 			signs = {
@@ -16,5 +16,7 @@ return {
 				section = { "", "" },
 			},
 		})
+
+		vim.keymap.set("n", "<leader>G", "<CMD>Neogit kind=split_above_all<CR>", { noremap = true, silent = true })
 	end
 }

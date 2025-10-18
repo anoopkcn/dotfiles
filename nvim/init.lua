@@ -1,5 +1,5 @@
 -- Author:  @anoopkcn
--- License: MIT
+-- License: MIT correction 
 
 require("custom.options")
 require("custom.functions")
@@ -62,6 +62,10 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>")
 vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "J", "mzJ`z")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd)
 vim.keymap.set("n", "<leader>on", vim.cmd.only)
 
@@ -78,10 +82,9 @@ vim.keymap.set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end)
 
 
 vim.keymap.set("n", "<leader>q", ToggleQuickfixList, { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>G", "<cmd>Neogit kind=split<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>fe", "<cmd>Oil<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<cr>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>z", ":!", { noremap = true })
+-- vim.keymap.set("n", "<leader>z", ":!", { noremap = true })
 
 vim.keymap.set("n", "<leader>,", function()
 	vim.lsp.buf.format({ async = true })
