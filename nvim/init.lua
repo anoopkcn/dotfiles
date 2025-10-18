@@ -33,7 +33,6 @@ require("lazy").setup {
 		{ "mason-org/mason-lspconfig.nvim" },
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 
-		-- Completion engine
 		{ "hrsh7th/nvim-cmp" },
 		{ "hrsh7th/cmp-nvim-lsp" },
 		{ "tpope/vim-surround" },
@@ -48,10 +47,10 @@ require("custom.lsp")
 vim.diagnostic.config({
 	signs = {
 		text = {
-			[vim.diagnostic.severity.ERROR] = "⏺",
-			[vim.diagnostic.severity.WARN] = "⚬",
-			[vim.diagnostic.severity.INFO] = "⚬",
-			[vim.diagnostic.severity.HINT] = "⚬",
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "󰗖",
+			[vim.diagnostic.severity.INFO] = "󰄰",
+			[vim.diagnostic.severity.HINT] = "󰄰",
 		}
 	}
 })
@@ -76,19 +75,13 @@ vim.keymap.set("n", "<leader>-", ":rightbelow split<cr>", { noremap = true, sile
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<cr>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<cr>")
 vim.keymap.set("n", "<leader>tt", vim.diagnostic.setqflist)
--- vim.keymap.set("n", "<leader>xX", vim.diagnostic.setloclist)
+vim.keymap.set("n", "<leader>t", function() vim.diagnostic.open_float({ border = 'single' }) end, {})
 vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end)
 vim.keymap.set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end)
 
-
 vim.keymap.set("n", "<leader>q", ToggleQuickfixList, { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>fe", "<cmd>Oil<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<cr>", { noremap = true, silent = true })
--- vim.keymap.set("n", "<leader>z", ":!", { noremap = true })
-
-vim.keymap.set("n", "<leader>,", function()
-	vim.lsp.buf.format({ async = true })
-end, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end, { noremap = true, silent = true })
 
 -- Toggle diagnostic virtual_lines: can also be replaced with virtual_text
 -- vim.diagnostic.config({ virtual_lines = false })
@@ -96,10 +89,6 @@ end, { noremap = true, silent = true })
 -- 	local new_config = not vim.diagnostic.config().virtual_lines
 -- 	vim.diagnostic.config({ virtual_lines = new_config })
 -- end, { desc = "Toggle diagnostic virtual_lines" })
-
-vim.keymap.set("n", "<leader>e", function()
-	vim.diagnostic.open_float({ border = 'single' })
-end, {})
 
 vim.keymap.set("n", "<leader>'", function()
 	local raw_timestamp = os.date("%FT%T")

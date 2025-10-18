@@ -15,10 +15,20 @@ return {
 					return name == ".git"
 				end,
 			},
+			float = {
+				border = "rounded",
+				max_width = 0.5,
+				max_height = 0.4,
+			},
+			confirmation = {
+				border = "rounded",
+			},
 			keymaps = {
 				["<C-c>"] = false,
 				["q"] = "actions.close",
 			},
 		})
+
+		vim.keymap.set("n", "<leader>fe", "<cmd>Oil --float<cr>", { noremap = true, silent = true })
 	end
 }
