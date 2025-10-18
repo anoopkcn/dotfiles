@@ -96,16 +96,16 @@ local function lsp()
 	local info = ""
 
 	if count["errors"] ~= 0 then
-		errors = " E " .. count["errors"] .. " "
+		errors = "  " .. count["errors"] .. " "
 	end
 	if count["warnings"] ~= 0 then
-		warnings = " W " .. count["warnings"] .. " "
+		warnings = " 󰗖 " .. count["warnings"] .. " "
 	end
 	if count["hints"] ~= 0 then
-		hints = " H " .. count["hints"] .. " "
+		hints = " 󰐙 " .. count["hints"] .. " "
 	end
 	if count["info"] ~= 0 then
-		info = " I " .. count["info"] .. " "
+		info = " 󰐙 " .. count["info"] .. " "
 	end
 
 	return errors .. warnings .. hints .. info

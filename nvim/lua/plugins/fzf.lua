@@ -4,6 +4,7 @@ return {
 	config = function()
 		local fzf = require("fzf-lua")
 		fzf.setup({
+			defaults = { file_icons = false },
 			winopts = {
 				backdrop = 100,
 				preview  = {
@@ -35,13 +36,14 @@ return {
 		vim.keymap.set("n", "<leader>gt", fzf.git_worktrees)
 		vim.keymap.set("n", "<leader>gb", fzf.git_branches)
 		vim.keymap.set("n", "<leader>fh", fzf.helptags)
-		vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols)
-		vim.keymap.set("n", "<leader>fS", fzf.lsp_workspace_symbols)
+		vim.keymap.set("n", "<leader>fs", fzf.lsp_live_workspace_symbols)
+		vim.keymap.set("n", "<leader>fS", fzf.lsp_document_symbols)
 		vim.keymap.set("n", "<leader>fr", fzf.lsp_references)
 		vim.keymap.set("n", "<leader>fd", fzf.lsp_definitions)
 		vim.keymap.set("n", "<leader>fi", fzf.lsp_implementations)
 		vim.keymap.set("n", "<leader>r", fzf.resume)
 		vim.keymap.set("n", "<leader>z", fzf.spell_suggest)
+		vim.keymap.set("n", "<leader>s", fzf.marks)
 
 
 		-- Setup makepicker
