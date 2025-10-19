@@ -29,7 +29,7 @@ return {
 		vim.keymap.set("n", "<leader>gu", function() require('gitsigns').reset_buffer_index() end, { noremap = true, silent = true, desc = "Unstage current file" })
 
 		-- Discard changes in current file
-		vim.keymap.set("n", "<leader>gx", "<CMD>!git checkout -- %<CR><CR>", { noremap = true, silent = true, desc = "Discard changes in current file" })
+		vim.keymap.set("n", "<leader>gx", "<CMD>!git checkout -- %<CR>", { noremap = true, silent = true, desc = "Discard changes in current file" })
 
 		-- Commit
 		vim.keymap.set("n", "<leader>gc", function() neogit.action("commit", "commit")() end, { noremap = true, silent = true, desc = "Commit" })
