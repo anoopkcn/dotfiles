@@ -44,7 +44,7 @@ return {
 		vim.keymap.set("n", "<leader>gb", fzf.git_branches)
 		-- vim.keymap.set("n", "<leader>gl", fzf.git_bcommits)
 		-- vim.keymap.set("n", "<leader>gl", fzf.git_commits)
-		vim.keymap.set("n", "<leader>gs", fzf.git_status)
+		-- vim.keymap.set("n", "<leader>gs", fzf.git_status)
 
 		-- Setup makepicker
 		require("custom.makepicker").setup()
