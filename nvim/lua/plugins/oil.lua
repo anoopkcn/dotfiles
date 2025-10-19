@@ -23,8 +23,8 @@ return {
 			},
 			float = {
 				border = "rounded",
-				max_width = 0.5,
-				max_height = 0.4,
+				max_width = 0.7,
+				max_height = 0.5,
 			},
 			confirmation = {
 				border = "rounded",
