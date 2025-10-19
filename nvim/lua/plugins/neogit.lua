@@ -11,8 +11,8 @@ return {
 			graph_style = "kitty",
 			signs = {
 				hunk = { "", "" },
-				item = { "", "" },
-				section = { "", "" },
+				item = { "󰼛", "" },
+				section = { "󰼛", "" },
 			},
 		})
 
