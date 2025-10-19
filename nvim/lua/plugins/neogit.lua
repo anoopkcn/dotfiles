@@ -29,19 +29,6 @@ return {
 			function() neogit.open({ "log" }) end,
 			{ noremap = true, silent = true, desc = "Git log" }
 		)
-
-		vim.keymap.set(
-			"n",
-			"<leader>gx",
-			"<CMD>!git checkout -- %<CR>",
-			{ noremap = true, silent = true, desc = "Discard changes in current file" }
-		)
-
-		vim.keymap.set(
-			"n",
-			"<leader>gc",
-			function() neogit.action("commit", "commit")() end,
-			{ noremap = true, silent = true, desc = "Commit" }
-		)
 	end
+
 }

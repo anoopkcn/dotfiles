@@ -35,7 +35,6 @@ require("lazy").setup {
 		},
 		{ "mason-org/mason-lspconfig.nvim" },
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
-
 		{ "hrsh7th/nvim-cmp" },
 		{ "hrsh7th/cmp-nvim-lsp" },
 		{ "tpope/vim-surround" },
