@@ -28,7 +28,7 @@ precmd(){
     print ""
     print -P "%F{cyan}%~%f git:${vcs_info_msg_0_}"
 }
-PROMPT='%(?.%F{green}❯%f.%F{red}❯%f) '
+PROMPT='%(?.%F{green}%f.%F{red}%f) '
 
 # INPUTRC
 bindkey '\e[A' history-search-backward
