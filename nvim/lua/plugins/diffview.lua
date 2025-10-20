@@ -9,7 +9,6 @@ return {
 			},
 		})
 
-		-- Keybinding to open DiffView
 		vim.keymap.set(
 			"n",
 			"<leader>go",
@@ -17,7 +16,6 @@ return {
 			{ noremap = true, silent = true, desc = "Open Diffview" }
 		)
 
-		-- Keybinding to close DiffView
 		vim.keymap.set(
 			"n",
 			"<leader>gq",
