@@ -18,9 +18,16 @@ return {
 
 		vim.keymap.set(
 			"n",
-			"<leader>gq",
+			"<leader>gc",
 			"<CMD>DiffviewClose<CR>",
 			{ noremap = true, silent = true, desc = "Close Diffview" }
+		)
+
+		vim.keymap.set(
+			"n",
+			"<leader>gh",
+			"<CMD>DiffviewFileHistory<CR>",
+			{ noremap = true, silent = true, desc = "Show Diffview File History" }
 		)
 	end
 }

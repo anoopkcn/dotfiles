@@ -59,6 +59,7 @@ vim.diagnostic.config({
 
 local set = vim.keymap.set
 
+set("i", "<C-c>", "<Esc>")
 set({ "n", "v" }, "<Space>", "<Nop>")
 set({ "n", "v" }, "<C-Space>", "<Nop>")
 set("n", "<Esc>", "<cmd>nohlsearch<cr>")
@@ -71,8 +72,6 @@ set("n", "n", "nzzzv")
 set("n", "N", "Nzzzv")
 set("n", "<leader>bd", vim.cmd.bd)
 set("n", "<leader>on", vim.cmd.only)
-
-set("i", "<C-c>", "<Esc>")
 
 set("n", "<leader>\\", ":rightbelow vsplit<cr>", { noremap = true, silent = true })
 set("n", "<leader>-", ":rightbelow split<cr>", { noremap = true, silent = true })

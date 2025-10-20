@@ -26,7 +26,7 @@ zstyle ':vcs_info:*' stagedstr ' ✚'
 precmd(){
     vcs_info
     print ""
-    print -P "%F{cyan}%~%f ${vcs_info_msg_0_}"
+    print -P "%F{cyan}%~%f git:${vcs_info_msg_0_}"
 }
 PROMPT='%(?.%F{green}❯%f.%F{red}❯%f) '
 

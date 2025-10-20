@@ -9,7 +9,7 @@ return {
 				backdrop = 100,
 				preview  = {
 					scrollbar = false,
-					-- hidden = true,
+					hidden = true,
 				},
 			},
 			keymap = {
