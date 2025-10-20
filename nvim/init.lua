@@ -79,9 +79,9 @@ set("n", "<leader>-", ":rightbelow split<cr>", { noremap = true, silent = true }
 set("n", "<M-j>", "<cmd>cnext<cr>")
 set("n", "<M-k>", "<cmd>cprev<cr>")
 set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'single' }) end, {})
-set("n", "<leader>tt", vim.diagnostic.setqflist)
 set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end)
 set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end)
+set("n", "<leader>tt", vim.diagnostic.setqflist)
 
 set("n", "<leader>q", ToggleQuickfixList, { noremap = true, silent = true })
 set("n", "<leader>dl", ":edit DEVLOG.md<cr>", { noremap = true, silent = true })
