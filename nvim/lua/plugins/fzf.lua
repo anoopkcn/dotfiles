@@ -16,7 +16,7 @@ return {
 				builtin = {
 					["<c-u>"] = "preview-page-up",
 					["<c-d>"] = "preview-page-down",
-					["<c-p>"] = "toggle-preview",
+					["<c-h>"] = "toggle-preview",
 				},
 				fzf = {
 					["ctrl-q"] = "select-all+accept",
