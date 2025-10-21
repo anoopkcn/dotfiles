@@ -38,7 +38,7 @@ return {
 		vim.keymap.set("n", "<leader>fi", fzf.lsp_implementations)
 		vim.keymap.set("n", "<leader>r", fzf.resume)
 		vim.keymap.set("n", "<leader>z", fzf.spell_suggest)
-		vim.keymap.set("n", "<leader>s", fzf.builtin)
+		vim.keymap.set("n", "<leader>fe", fzf.builtin)
 
 		vim.keymap.set("n", "<leader>gt", fzf.git_worktrees)
 		vim.keymap.set("n", "<leader>gb", fzf.git_branches)
