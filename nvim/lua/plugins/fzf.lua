@@ -36,18 +36,15 @@ return {
 		vim.keymap.set("n", "<leader>fr", fzf.lsp_references)
 		vim.keymap.set("n", "<leader>fd", fzf.lsp_definitions)
 		vim.keymap.set("n", "<leader>fi", fzf.lsp_implementations)
-		vim.keymap.set("n", "<leader>r", fzf.resume)
-		vim.keymap.set("n", "<leader>z", fzf.spell_suggest)
 		vim.keymap.set("n", "<leader>fe", fzf.builtin)
 
 		vim.keymap.set("n", "<leader>gt", fzf.git_worktrees)
 		vim.keymap.set("n", "<leader>gb", fzf.git_branches)
-		-- vim.keymap.set("n", "<leader>gl", fzf.git_bcommits)
-		-- vim.keymap.set("n", "<leader>gl", fzf.git_commits)
 		-- vim.keymap.set("n", "<leader>gs", fzf.git_status)
 		vim.keymap.set("n", "<leader>ql", fzf.quickfix_stack)
+		vim.keymap.set("n", "<leader>r", fzf.resume)
+		vim.keymap.set("n", "<leader>z", fzf.spell_suggest)
 
-		-- Setup makepicker
 		require("custom.makepicker").setup()
 	end,
 }
