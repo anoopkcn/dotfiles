@@ -41,6 +41,11 @@ require("lazy").setup {
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
 		{ "ziglang/zig.vim" },
+		{
+			'windwp/nvim-autopairs',
+			event = "InsertEnter",
+			config = true
+		}
 	},
 }
 
