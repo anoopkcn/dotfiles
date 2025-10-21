@@ -80,11 +80,11 @@ set("n", "<leader>on",
 	{ noremap = true, silent = true, desc = "Close other buffers" })
 
 set("n", "<leader>\\",
-	":rightbelow vsplit<cr>",
+	":rightbelow vsplit<CR>",
 	{ noremap = true, silent = true, desc = "Vertical split" })
 
 set("n", "<leader>-",
-	":rightbelow split<cr>",
+	":rightbelow split<CR>",
 	{ noremap = true, silent = true, desc = "Horizontal split" })
 
 set("n", "<M-j>",
