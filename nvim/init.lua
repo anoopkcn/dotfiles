@@ -71,13 +71,20 @@ set("n", "<C-u>", "<C-u>zz")
 set("n", "n", "nzzzv")
 set("n", "N", "Nzzzv")
 
-set("n", "<leader>bd", vim.cmd.bd, { noremap = true, silent = true, desc = "Buffer delete" })
-set("n", "<leader>on", vim.cmd.only, { noremap = true, silent = true, desc = "Close other buffers" })
-set("n", "<leader>\\", ":rightbelow vsplit<cr>", { noremap = true, silent = true, desc = "Vertical split" })
-set("n", "<leader>-", ":rightbelow split<cr>", { noremap = true, silent = true, desc = "Horizontal split" })
-set("n", "<M-j>", "<CMD>cnext<CR>", { noremap = true, silent = true, desc = "Next item in quickfixlist" })
-set("n", "<M-k>", "<CMD>cprev<CR>", { noremap = true, silent = true, desc = "Previous item in quickfixlist" })
-set("n", "<leader>q", ToggleQuickfixList, { noremap = true, silent = true, desc = "Toggle quickfixlist" })
+set("n", "<leader>bd", vim.cmd.bd,
+	{ noremap = true, silent = true, desc = "Buffer delete" })
+set("n", "<leader>on", vim.cmd.only,
+	{ noremap = true, silent = true, desc = "Close other buffers" })
+set("n", "<leader>\\", ":rightbelow vsplit<cr>",
+	{ noremap = true, silent = true, desc = "Vertical split" })
+set("n", "<leader>-", ":rightbelow split<cr>",
+	{ noremap = true, silent = true, desc = "Horizontal split" })
+set("n", "<M-j>", "<CMD>cnext<CR>",
+	{ noremap = true, silent = true, desc = "Next item in quickfixlist" })
+set("n", "<M-k>", "<CMD>cprev<CR>",
+	{ noremap = true, silent = true, desc = "Previous item in quickfixlist" })
+set("n", "<leader>qq", ToggleQuickfixList,
+	{ noremap = true, silent = true, desc = "Toggle quickfixlist" })
 set("n", "<leader>tt", vim.diagnostic.setqflist,
 	{ noremap = true, silent = true, desc = "Send diagnostics to quickfixlist" })
 set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end,
@@ -88,16 +95,17 @@ set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'single' }
 	{ noremap = true, silent = true, desc = "Open diagnostic float" })
 set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
 	{ noremap = true, silent = true, desc = "Format buffer" })
-
-set("n", "<leader>dl", ":edit DEVLOG.md<cr>", { noremap = true, silent = true })
+set("n", "<leader>dl", ":edit DEVLOG.md<cr>",
+	{ noremap = true, silent = true })
 set("n", "<leader>n", ":edit ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/scratchpad.md<cr>",
 	{ noremap = true, silent = true })
 
 set("n", "<leader>'", function()
-	local raw_timestamp = os.date("%FT%T")
-	local timestamp_str = string.format("%s", raw_timestamp or "")
-	vim.api.nvim_put({ timestamp_str }, "c", true, true)
-end, { noremap = true, silent = true, })
+		local raw_timestamp = os.date("%FT%T")
+		local timestamp_str = string.format("%s", raw_timestamp or "")
+		vim.api.nvim_put({ timestamp_str }, "c", true, true)
+	end,
+	{ noremap = true, silent = true, })
 
 -- Toggle diagnostic virtual_lines: can also be replaced with virtual_text
 -- vim.diagnostic.config({ virtual_lines = false })
