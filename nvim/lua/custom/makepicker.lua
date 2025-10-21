@@ -10,7 +10,7 @@ local function get_make_list_command()
 
 	return [[
         grep -E '^[a-zA-Z0-9][a-zA-Z0-9_-]*:' Makefile 2>/dev/null |
-        sed -E 's/:.*//' | grep -v -E '^[A-Z]+$'
+        sed 's/:.*//' | grep -v -E '^[A-Z]+$'
     ]]
 end
 
