@@ -18,6 +18,9 @@ return {
 				completion = cmp.config.window.bordered(),
 				documentation = cmp.config.window.bordered(),
 			},
+			performance = {
+          max_view_entries = 10,
+      },
 			mapping = cmp.mapping.preset.insert({
 				["<C-p>"] = cmp.mapping.select_prev_item(),
 				["<Up>"] = cmp.mapping.select_prev_item(),
