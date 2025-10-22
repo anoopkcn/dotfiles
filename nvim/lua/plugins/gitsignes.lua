@@ -30,7 +30,7 @@ return {
 
 				-- Actions
 				vim.keymap.set('n', '<leader>hs', gitsigns.stage_hunk, { noremap = true, silent = true, desc = "Stage hunk" })
-				vim.keymap.set('n', '<leader>hr', gitsigns.reset_hunk, { noremap = true, silent = true, desc = "Reset hunk" })
+				vim.keymap.set('n', '<leader>hx', gitsigns.reset_hunk, { noremap = true, silent = true, desc = "Reset hunk" })
 				vim.keymap.set('n', '<leader>hu', gitsigns.undo_stage_hunk, { noremap = true, silent = true, desc = "Undo stage hunk" })
 				vim.keymap.set('n', '<leader>hv', gitsigns.preview_hunk_inline, { noremap = true, silent = true, desc = "Preview hunk inline" })
 				vim.keymap.set('n', '<leader>hb', gitsigns.blame_line, { noremap = true, silent = true, desc = "Blame line" })
