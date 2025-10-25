@@ -11,6 +11,8 @@ path=(
 typeset -U path
 path=($^path(N-/))
 export PATH
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+export CONDA_CHANGEPS1=no
 
 # PROMPT
 autoload -Uz vcs_info
@@ -49,9 +51,24 @@ precmd(){
           short_path+="${parts[-1]}"
       fi
 
-      PROMPT="%F{cyan}${short_path}%f \${vcs_info_msg_0_}%(?.%F{cyan}%f.%F{red}%f) "
+      local env_text=""
+      if [[ -n ${VIRTUAL_ENV_PROMPT:-} ]]; then
+          env_text=$VIRTUAL_ENV_PROMPT
+      elif [[ -n ${CONDA_PROMPT_MODIFIER:-} ]]; then
+          env_text=$CONDA_PROMPT_MODIFIER
+      elif [[ -n ${VIRTUAL_ENV:-} ]]; then
+          env_text="(${VIRTUAL_ENV:t})"
+      fi
+
+      local env_segment=""
+      if [[ -n "$env_text" ]]; then
+          env_segment="env:%F{magenta}${env_text//\%/%%}%f"
+      fi
+
+      print -P "%F{cyan}${short_path}%f ${env_segment}${vcs_info_msg_0_}"
   }
 
+PROMPT="%(?.%F{cyan}%f.%F{red}%f) "
 # INPUTRC
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
@@ -95,4 +112,3 @@ alias gs="git status --short"
 alias gco="git checkout"
 alias gcm="git commit -m"
 alias gb="git branch --show-current"
-
