@@ -9,7 +9,7 @@ return {
 		local dap, dapui = require("dap"), require("dapui")
 		dapui.setup({
 			controls = { enabled = false },
-			expand_lines = true,
+			expand_lines = false,
 			floating = { border = "rounded" },
 			-- render = {
 			-- 	max_type_length = 60,
@@ -17,10 +17,12 @@ return {
 			-- },
 			layouts = { {
 				elements = {
-					{ id = "scopes", size = 1.0, },
+					{ id = "stacks", size = 0.25, },
+					{ id = "scopes", size = 0.75, },
+					-- { id = "watches", size = 0.30, },
 				},
 				position = "bottom",
-				size = 15,
+				size = 12,
 			} }
 		})
 
