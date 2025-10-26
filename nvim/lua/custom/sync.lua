@@ -67,12 +67,12 @@ local function reset_job()
 	state.job = nil
 end
 
-local function notify(msg, level, opts)
+local function notify(msg, level, nopts)
 	local severity = level or vim.log.levels.INFO
 	local prefix_hl = "Identifier"
 	local text_hl = "MoreMsg"
 
-	if opts and opts.in_progress then
+	if nopts and nopts.in_progress then
 		prefix_hl = "Identifier"
 		-- text_hl = "WarningMsg"
 	elseif severity == vim.log.levels.ERROR then
