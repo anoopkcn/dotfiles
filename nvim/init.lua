@@ -4,7 +4,6 @@
 require("custom.options")
 require("custom.functions")
 require("custom.statusline")
-local sync = require("custom.sync")
 
 vim.cmd("colorscheme onehalfdark")
 vim.cmd([[
@@ -140,21 +139,23 @@ set("n", "<leader>'", function()
 	end,
 	{ noremap = true, silent = true, desc = "Insert current timestamp" })
 
-vim.api.nvim_create_user_command("Sync", function(opts)
-	sync.handle_command(opts)
-end, {
-	nargs = "*",
-	complete = function(arglead, cmdline)
-		local subcommands = { "on", "off", "status", "now" }
-		local has_on = cmdline:match("^%s*Sync%s+on")
-		if has_on then
-			return {}
-		end
-		return vim.tbl_filter(function(cmd)
-			return cmd:find("^" .. arglead)
-		end, subcommands)
-	end,
-})
+-- SYNC ON SAVE
+-- local sync = require("custom.sync")
+-- vim.api.nvim_create_user_command("Sync", function(opts)
+-- 	sync.handle_command(opts)
+-- end, {
+-- 	nargs = "*",
+-- 	complete = function(arglead, cmdline)
+-- 		local subcommands = { "on", "off", "status", "now" }
+-- 		local has_on = cmdline:match("^%s*Sync%s+on")
+-- 		if has_on then
+-- 			return {}
+-- 		end
+-- 		return vim.tbl_filter(function(cmd)
+-- 			return cmd:find("^" .. arglead)
+-- 		end, subcommands)
+-- 	end,
+-- })
 
 -- Toggle diagnostic virtual_lines: can also be replaced with virtual_text
 -- vim.diagnostic.config({ virtual_lines = false })
