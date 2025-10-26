@@ -25,7 +25,7 @@ end
 local function build_command()
 	local remote = state.remote or vim.g.sync_remote or opts.remote
 	if not remote or remote == "" then
-		return nil, "remote target not set. Use :Sync on {user@host:path}"
+		return nil, "Remote target not set. Use :Sync on {user@host:path}"
 	end
 
 	local base_args = opts.args or vim.g.sync_args or { "-macviz" }
@@ -67,25 +67,29 @@ local function reset_job()
 	state.job = nil
 end
 
-local function notify(msg, level)
+local function notify(msg, level, opts)
 	local severity = level or vim.log.levels.INFO
-	local hl = "MoreMsg"
 	local prefix_hl = "Identifier"
-	if severity == vim.log.levels.ERROR then
-		hl = "ErrorMsg"
+	local text_hl = "MoreMsg"
+
+	if opts and opts.in_progress then
+		prefix_hl = "Identifier"
+		-- text_hl = "WarningMsg"
+	elseif severity == vim.log.levels.ERROR then
 		prefix_hl = "ErrorMsg"
+		text_hl = "ErrorMsg"
 	elseif severity == vim.log.levels.WARN then
-		hl = "WarningMsg"
 		prefix_hl = "WarningMsg"
+		text_hl = "WarningMsg"
 	else
 		prefix_hl = "DiffAdd"
-		hl = "MoreMsg"
+		text_hl = "MoreMsg"
 	end
 
 	vim.schedule(function()
 		vim.api.nvim_echo({
 			{ "[Sync] ", prefix_hl },
-			{ msg, hl },
+			{ msg, text_hl },
 		}, false, {})
 		vim.cmd("redrawstatus")
 	end)
@@ -106,7 +110,7 @@ local function run_sync(force)
 		return
 	end
 
-	notify(("syncing → %s"):format(remote))
+	notify(("syncing → %s"):format(remote), nil, { in_progress = true })
 
 	state.job = vim.fn.jobstart(command, {
 		cwd = cwd,
