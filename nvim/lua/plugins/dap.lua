@@ -56,5 +56,6 @@ return {
 		vim.keymap.set("n", "<leader>dv", function() dapui.eval() end, { desc = "DAP: Evaluate Expression" })
 		vim.keymap.set("n", "<leader>de", function() dapui.eval(nil, { enter = true }) end,
 			{ desc = "DAP: Evaluate Expression" })
+		vim.keymap.set("n", "<leader>du", function() dapui.toggle() end, { desc = "DAP: Toggle UI" })
 	end,
 }

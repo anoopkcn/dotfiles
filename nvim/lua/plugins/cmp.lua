@@ -6,12 +6,12 @@ return {
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-buffer",
 		"onsails/lspkind.nvim",
-		"zbirenbaum/copilot-cmp",
+		-- "zbirenbaum/copilot-cmp",
 	},
 	config = function()
 		local cmp = require("cmp")
 		local lspkind = require("lspkind")
-		require("copilot_cmp").setup()
+		-- require("copilot_cmp").setup()
 
 		cmp.setup({
 			window = {
@@ -30,7 +30,7 @@ return {
 			}),
 
 			sources = cmp.config.sources({
-				{ name = "copilot",  group_index = 2 },
+				-- { name = "copilot",  group_index = 2 },
 				{ name = "nvim_lsp", group_index = 2 },
 				{ name = "buffer",   group_index = 2 },
 				{ name = "path",     group_index = 2 },

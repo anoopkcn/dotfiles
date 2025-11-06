@@ -40,12 +40,14 @@ require("lazy").setup {
 		{ "tpope/vim-surround" },
 		{ "tpope/vim-unimpaired" },
 		{ "tpope/vim-repeat" },
-		{ "ziglang/zig.vim" },
-		{
-			'windwp/nvim-autopairs',
-			event = "InsertEnter",
-			config = true
-		}
+		{ "github/copilot.vim" },
+		{ "mbbill/undotree" },
+		-- { "ziglang/zig.vim" },
+		-- {
+		-- 	"windwp/nvim-autopairs",
+		-- 	event = "InsertEnter",
+		-- 	config = true
+		-- }
 	},
 }
 
@@ -123,6 +125,10 @@ set("n", "<leader>x",
 set("n", "<leader>,",
 	function() vim.lsp.buf.format({ async = true }) end,
 	{ noremap = true, silent = true, desc = "Format buffer" })
+
+set("n", "<leader>u",
+	":UndotreeToggle<cr>",
+	{ noremap = true, silent = true, desc = "Toggle Undotree" })
 
 set("n", "<leader>dl",
 	":edit DEVLOG.md<cr>",

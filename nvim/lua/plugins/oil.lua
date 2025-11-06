@@ -9,7 +9,7 @@ return {
 			delete_to_trash = true,
 			skip_confirm_for_simple_edits = true,
 			columns = {
-				-- "icon",
+				"icon",
 				-- "permissions",
 				-- "size",
 				-- "mtime",
@@ -35,7 +35,6 @@ return {
 			},
 		})
 
-		-- vim.keymap.set("n", "<leader>s", "<cmd>Oil --float<cr>", { noremap = true, silent = true })
-		vim.keymap.set("n", "<leader>e", "<CMD>lua require('oil').toggle_float('.')<CR>", { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>s", "<CMD>lua require('oil').toggle_float('.')<CR>", { noremap = true, silent = true })
 	end
 }

@@ -1,6 +1,25 @@
 -- LSP Configuration using Neovim 0.11+ built-in vim.lsp.config()
 
 local servers = {
+	texlab = {
+		cmd = { "texlab" },
+		filetypes = { "tex", "bib" },
+		root_markers = { "texlab.tex", ".latexmkrc", ".git" },
+		settings = {
+			texlab = {
+				build = {
+					executable = "pdflatex",
+					args = { "-synctex=1", "-interaction=nonstopmode", "%f"  },
+					onSave = true,
+				},
+				forwardSearch = {
+					executable = "zathura",
+					args = { "--synctex-forward", "%l:1:%f", "%p" },
+				},
+				latexFormatter = "latexindent",
+			},
+		},
+	},
 	zls = {
 		cmd = { "zls" },
 		filetypes = { "zig", "zir" },
