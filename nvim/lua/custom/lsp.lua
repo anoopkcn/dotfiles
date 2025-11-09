@@ -1,6 +1,11 @@
 -- LSP Configuration using Neovim 0.11+ built-in vim.lsp.config()
 
 local servers = {
+	marksman = {
+		cmd = { "marksman", "server" },
+		filetypes = { "markdown" },
+		root_markers = { ".marksman.toml", ".git"},
+	},
 	texlab = {
 		cmd = { "texlab" },
 		filetypes = { "tex", "bib" },
@@ -9,7 +14,7 @@ local servers = {
 			texlab = {
 				build = {
 					executable = "pdflatex",
-					args = { "-synctex=1", "-interaction=nonstopmode", "%f"  },
+					args = { "-synctex=1", "-interaction=nonstopmode", "%f" },
 					onSave = true,
 				},
 				forwardSearch = {

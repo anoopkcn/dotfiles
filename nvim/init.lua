@@ -131,10 +131,6 @@ vim.keymap.set("n", "<leader>dl",
 	":edit DEVLOG.md<cr>",
 	{ noremap = true, silent = true, desc = "Open DEVLOG.md" })
 
-vim.keymap.set("n", "<leader>n",
-	":edit ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/scratchpad.md<cr>",
-	{ noremap = true, silent = true, desc = "Open scratchpad.md" })
-
 vim.keymap.set("n", "<leader>'", function()
 		local raw_timestamp = os.date("%FT%T")
 		local timestamp_str = string.format("%s", raw_timestamp or "")
