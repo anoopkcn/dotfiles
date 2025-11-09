@@ -5,14 +5,6 @@ require("custom.options")
 require("custom.functions")
 require("custom.statusline")
 
-vim.cmd("colorscheme onehalfdark")
-vim.cmd([[
-  highlight SpellBad   gui=undercurl guisp=#be5046
-  highlight SpellCap   gui=undercurl guisp=#61afef
-  highlight SpellRare  gui=undercurl guisp=#c678dd
-  highlight SpellLocal gui=undercurl guisp=#98c379
-]])
-
 local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({ "git", "clone",
@@ -52,6 +44,13 @@ require("lazy").setup {
 }
 
 require("custom.lsp")
+vim.cmd("colorscheme onehalfdark")
+vim.cmd([[
+  highlight SpellBad   gui=undercurl guisp=#be5046
+  highlight SpellCap   gui=undercurl guisp=#61afef
+  highlight SpellRare  gui=undercurl guisp=#c678dd
+  highlight SpellLocal gui=undercurl guisp=#98c379
+]])
 
 vim.diagnostic.config({
 	signs = {
@@ -64,81 +63,79 @@ vim.diagnostic.config({
 	}
 })
 
-local set = vim.keymap.set
+vim.keymap.set("i", "<C-c>", "<Esc>")
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
+vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>")
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>")
+vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set("n", "J", "mzJ`z")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
 
-set("i", "<C-c>", "<Esc>")
-set({ "n", "v" }, "<Space>", "<Nop>")
-set({ "n", "v" }, "<C-Space>", "<Nop>")
-set("n", "<Esc>", "<cmd>nohlsearch<cr>")
-set({ "n", "v" }, "<leader>p", [["+p]])
-set({ "n", "v" }, "<leader>y", [["+y]])
-set("n", "J", "mzJ`z")
-set("n", "<C-d>", "<C-d>zz")
-set("n", "<C-u>", "<C-u>zz")
-set("n", "n", "nzzzv")
-set("n", "N", "Nzzzv")
-
-set("n", "<leader>bd",
+vim.keymap.set("n", "<leader>bd",
 	vim.cmd.bd,
 	{ noremap = true, silent = true, desc = "Buffer delete" })
 
-set("n", "<leader>on",
+vim.keymap.set("n", "<leader>on",
 	vim.cmd.only,
 	{ noremap = true, silent = true, desc = "Close other buffers" })
 
-set("n", "<leader>\\",
+vim.keymap.set("n", "<leader>\\",
 	":rightbelow vsplit<CR>",
 	{ noremap = true, silent = true, desc = "Vertical split" })
 
-set("n", "<leader>-",
+vim.keymap.set("n", "<leader>-",
 	":rightbelow split<CR>",
 	{ noremap = true, silent = true, desc = "Horizontal split" })
 
-set("n", "<M-j>",
+vim.keymap.set("n", "<M-j>",
 	"<CMD>cnext<CR>",
 	{ noremap = true, silent = true, desc = "Next item in quickfixlist" })
 
-set("n", "<M-k>",
+vim.keymap.set("n", "<M-k>",
 	"<CMD>cprev<CR>",
 	{ noremap = true, silent = true, desc = "Prev item in quickfixlist" })
 
-set("n", "<leader>qq",
+vim.keymap.set("n", "<leader>qq",
 	ToggleQuickfixList,
 	{ noremap = true, silent = true, desc = "Toggle quickfixlist" })
 
-set("n", "<leader>tt",
+vim.keymap.set("n", "<leader>tt",
 	vim.diagnostic.setqflist,
 	{ noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
 
-set("n", "]t",
+vim.keymap.set("n", "]t",
 	function() vim.diagnostic.jump({ count = 1 }) end,
 	{ noremap = true, silent = true, desc = "Next diagnostic" })
 
-set("n", "[t",
+vim.keymap.set("n", "[t",
 	function() vim.diagnostic.jump({ count = -1 }) end,
 	{ noremap = true, silent = true, desc = "Previous diagnostic" })
 
-set("n", "<leader>x",
+vim.keymap.set("n", "<leader>x",
 	function() vim.diagnostic.open_float({ border = 'single' }) end,
 	{ noremap = true, silent = true, desc = "Open diagnostic float" })
 
-set("n", "<leader>,",
+vim.keymap.set("n", "<leader>,",
 	function() vim.lsp.buf.format({ async = true }) end,
 	{ noremap = true, silent = true, desc = "Format buffer" })
 
-set("n", "<leader>u",
+vim.keymap.set("n", "<leader>u",
 	":UndotreeToggle<cr>",
 	{ noremap = true, silent = true, desc = "Toggle Undotree" })
 
-set("n", "<leader>dl",
+vim.keymap.set("n", "<leader>dl",
 	":edit DEVLOG.md<cr>",
 	{ noremap = true, silent = true, desc = "Open DEVLOG.md" })
 
-set("n", "<leader>n",
+vim.keymap.set("n", "<leader>n",
 	":edit ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/scratchpad.md<cr>",
 	{ noremap = true, silent = true, desc = "Open scratchpad.md" })
 
-set("n", "<leader>'", function()
+vim.keymap.set("n", "<leader>'", function()
 		local raw_timestamp = os.date("%FT%T")
 		local timestamp_str = string.format("%s", raw_timestamp or "")
 		vim.api.nvim_put({ timestamp_str }, "c", true, true)
