@@ -5,7 +5,7 @@
 "   License:     The MIT License (MIT)
 "
 "   A dark vim color scheme based on Atom's One. See github.com/sonph/onehalf
-"   Modified by @anookcn to add additional features and Neovim support
+"   Modified by @mitchellh and @anookcn to add additional features and Neovim support
 " ==============================================================================
 
 set background=dark
