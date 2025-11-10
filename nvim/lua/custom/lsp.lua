@@ -4,7 +4,7 @@ local servers = {
 	marksman = {
 		cmd = { "marksman", "server" },
 		filetypes = { "markdown" },
-		root_markers = { ".marksman.toml", ".git"},
+		root_markers = { ".marksman.toml", ".git" },
 	},
 	texlab = {
 		cmd = { "texlab" },
@@ -89,11 +89,11 @@ vim.lsp.enable(vim.tbl_keys(servers))
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
 		-- Disable semantic highlighting to prevent flicker when opening files
-		local client = vim.lsp.get_client_by_id(args.data.client_id)
-		if client.supports_method("textDocument/semanticTokens", { full = true }) or
-				client.supports_method("textDocument/semanticTokens", { range = true }) then
-			client.server_capabilities.semanticTokensProvider = nil
-		end
+		-- local client = vim.lsp.get_client_by_id(args.data.client_id)
+		-- if client:supports_method("textDocument/semanticTokens", { full = true }) or
+		-- 		client:supports_method("textDocument/semanticTokens", { range = true }) then
+		-- 	client.server_capabilities.semanticTokensProvider = nil
+		-- end
 
 		-- LSP keybindings
 		local bufnr = args.buf
