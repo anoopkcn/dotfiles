@@ -9,7 +9,11 @@ function M.setup()
 	configs.setup {
 		ensure_installed = {
 			"c",
+			"cpp",
 			"zig",
+			"rust",
+			"go",
+			"fortran",
 			"python",
 			"bash",
 			"lua",
@@ -18,7 +22,10 @@ function M.setup()
 			"query",
 			"markdown",
 			"markdown_inline",
+			"html",
+			"toml",
 			"yaml",
+			"json",
 		},
 		sync_install = false,
 		auto_install = false,
