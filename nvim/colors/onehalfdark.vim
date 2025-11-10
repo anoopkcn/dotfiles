@@ -62,7 +62,6 @@ function! s:h(group, fg, bg, attr)
 endfun
 
 
-" User interface colors {
 call s:h("Normal", s:fg, s:bg, "")
 
 call s:h("Cursor", s:bg, s:blue, "")
@@ -97,10 +96,13 @@ call s:h("SpellBad", s:red, "", "")
 call s:h("SpellCap", s:yellow, "", "")
 call s:h("SpellLocal", s:yellow, "", "")
 call s:h("SpellRare", s:yellow, "", "")
-highlight SpellBad gui=undercurl guisp=#be5046
-highlight SpellCap gui=undercurl guisp=#61afef
-highlight SpellRare gui=undercurl guisp=#c678dd
-highlight SpellLocal gui=undercurl guisp=#98c379
+
+if has('nvim')
+    highlight SpellBad gui=undercurl guisp=#be5046
+    highlight SpellCap gui=undercurl guisp=#61afef
+    highlight SpellRare gui=undercurl guisp=#c678dd
+    highlight SpellLocal gui=undercurl guisp=#98c379
+endif
 
 call s:h("StatusLine", s:fg, s:cursor_line, "")
 call s:h("StatusLineNC", s:comment_fg, s:cursor_line, "")
@@ -123,7 +125,6 @@ call s:h("MatchParen", s:blue, "", "underline")
 call s:h("SpecialKey", s:fg, "", "")
 call s:h("Title", s:green, "", "")
 call s:h("WildMenu", s:fg, "", "")
-" }
 
 " LSP
 call s:h("DiagnosticUnderlineError",  "", "","undercurl")
@@ -131,8 +132,6 @@ call s:h("DiagnosticUnderlineWarn",  "", "","undercurl")
 call s:h("DiagnosticUnderlineInfo",  "", "","undercurl")
 call s:h("DiagnosticUnderlineHint",  "", "","undercurl")
 
-
-" Syntax colors {
 " Whitespace is defined in Neovim, not Vim.
 " See :help hl-Whitespace and :help hl-SpecialKey
 call s:h("Whitespace", s:non_text, "", "")
@@ -177,10 +176,7 @@ call s:h("Underlined", s:fg, "", "")
 call s:h("Ignore", s:fg, "", "")
 call s:h("Error", s:red, s:gutter_bg, "")
 call s:h("Todo", s:purple, "", "")
-" }
 
-
-" Plugins {
 " GitGutter
 call s:h("GitGutterAdd", s:green, s:gutter_bg, "")
 call s:h("GitGutterDelete", s:red, s:gutter_bg, "")
@@ -189,10 +185,7 @@ call s:h("GitGutterChangeDelete", s:red, s:gutter_bg, "")
 " Fugitive
 call s:h("diffAdded", s:green, "", "")
 call s:h("diffRemoved", s:red, "", "")
-" }
 
-
-" Git {
 call s:h("gitcommitComment", s:comment_fg, "", "")
 call s:h("gitcommitUnmerged", s:red, "", "")
 call s:h("gitcommitOnBranch", s:fg, "", "")
@@ -212,14 +205,12 @@ hi link gitcommitSelected gitcommitComment
 hi link gitcommitDiscardedArrow gitcommitDiscardedFile
 hi link gitcommitSelectedArrow gitcommitSelectedFile
 hi link gitcommitUnmergedArrow gitcommitUnmergedFile
-" }
-"
+
 " Telescope
 call s:h("TelescopeBorder", s:hoverborder, "", "")
 call s:h("FzfLuaBorder", s:hoverborder, "", "")
 
-" Fix colors in neovim terminal buffers {
-  if has('nvim')
+if has('nvim')
     let g:terminal_color_0 = s:black.gui
     let g:terminal_color_1 = s:red.gui
     let g:terminal_color_2 = s:green.gui
@@ -238,18 +229,11 @@ call s:h("FzfLuaBorder", s:hoverborder, "", "")
     let g:terminal_color_15 = s:white.gui
     let g:terminal_color_background = s:bg.gui
     let g:terminal_color_foreground = s:fg.gui
-  endif
-" }
-
-" mitchellh's personal customizations {
-  if has('nvim')
     " The separator between splits
     call s:h("WinSeparator", s:comment_fg, "", "")
 
-    " nvim-treesitter-context
     call s:h("TreesitterContext", s:gutter_fg, s:gutter_bg, "")
     call s:h("TreesitterContextBottom", "", "", "underline")
     call s:h("TreesitterContextLineNumber", s:fg, s:gutter_bg, "")
     call s:h("TreesitterContextLineNumberBottom", "", "", "underline")
-  endif
-  " }
+endif
