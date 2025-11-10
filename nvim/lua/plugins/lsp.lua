@@ -135,8 +135,8 @@ local function setup_lsp_autocmd()
 	vim.api.nvim_create_autocmd('LspAttach', {
 		group = group,
 		callback = function(args)
-			local client = client_from_args(args)
-			disable_semantic_tokens(client)
+			-- local client = client_from_args(args)
+			-- disable_semantic_tokens(client)
 
 			local bufnr = args.buf
 			local map_opts = { buffer = bufnr, noremap = true, silent = true }
