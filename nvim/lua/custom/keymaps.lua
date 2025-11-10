@@ -12,68 +12,68 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 vim.keymap.set("n", "<leader>bd",
-	vim.cmd.bd,
-	{ noremap = true, silent = true, desc = "Buffer delete" })
+    vim.cmd.bd,
+    { noremap = true, silent = true, desc = "Buffer delete" })
 
 vim.keymap.set("n", "<leader>on",
-	vim.cmd.only,
-	{ noremap = true, silent = true, desc = "Close other buffers" })
+    vim.cmd.only,
+    { noremap = true, silent = true, desc = "Close other buffers" })
 
 vim.keymap.set("n", "<leader>\\",
-	":rightbelow vsplit<CR>",
-	{ noremap = true, silent = true, desc = "Vertical split" })
+    ":rightbelow vsplit<CR>",
+    { noremap = true, silent = true, desc = "Vertical split" })
 
 vim.keymap.set("n", "<leader>-",
-	":rightbelow split<CR>",
-	{ noremap = true, silent = true, desc = "Horizontal split" })
+    ":rightbelow split<CR>",
+    { noremap = true, silent = true, desc = "Horizontal split" })
 
 vim.keymap.set("n", "<M-j>",
-	"<CMD>cnext<CR>",
-	{ noremap = true, silent = true, desc = "Next item in quickfixlist" })
+    "<CMD>cnext<CR>",
+    { noremap = true, silent = true, desc = "Next item in quickfixlist" })
 
 vim.keymap.set("n", "<M-k>",
-	"<CMD>cprev<CR>",
-	{ noremap = true, silent = true, desc = "Prev item in quickfixlist" })
+    "<CMD>cprev<CR>",
+    { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
 
 vim.keymap.set("n", "<leader>qq",
-	ToggleQuickfixList,
-	{ noremap = true, silent = true, desc = "Toggle quickfixlist" })
+    ToggleQuickfixList,
+    { noremap = true, silent = true, desc = "Toggle quickfixlist" })
 
 vim.keymap.set("n", "<leader>tt",
-	vim.diagnostic.setqflist,
-	{ noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
+    vim.diagnostic.setqflist,
+    { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
 
 vim.keymap.set("n", "]t",
-	function() vim.diagnostic.jump({ count = 1 }) end,
-	{ noremap = true, silent = true, desc = "Next diagnostic" })
+    function() vim.diagnostic.jump({ count = 1 }) end,
+    { noremap = true, silent = true, desc = "Next diagnostic" })
 
 vim.keymap.set("n", "[t",
-	function() vim.diagnostic.jump({ count = -1 }) end,
-	{ noremap = true, silent = true, desc = "Previous diagnostic" })
+    function() vim.diagnostic.jump({ count = -1 }) end,
+    { noremap = true, silent = true, desc = "Previous diagnostic" })
 
 vim.keymap.set("n", "<leader>x",
-	function() vim.diagnostic.open_float({ border = 'single' }) end,
-	{ noremap = true, silent = true, desc = "Open diagnostic float" })
+    function() vim.diagnostic.open_float({ border = 'single' }) end,
+    { noremap = true, silent = true, desc = "Open diagnostic float" })
 
 vim.keymap.set("n", "<leader>,",
-	function() vim.lsp.buf.format({ async = true }) end,
-	{ noremap = true, silent = true, desc = "Format buffer" })
+    function() vim.lsp.buf.format({ async = true }) end,
+    { noremap = true, silent = true, desc = "Format buffer" })
 
 vim.keymap.set("n", "<leader>u",
-	":UndotreeToggle<cr>",
-	{ noremap = true, silent = true, desc = "Toggle Undotree" })
+    ":UndotreeToggle<cr>",
+    { noremap = true, silent = true, desc = "Toggle Undotree" })
 
 vim.keymap.set("n", "<leader>dl",
-	":edit DEVLOG.md<cr>",
-	{ noremap = true, silent = true, desc = "Open DEVLOG.md" })
+    ":edit DEVLOG.md<cr>",
+    { noremap = true, silent = true, desc = "Open DEVLOG.md" })
 
 vim.keymap.set("n", "<leader>'", function()
-		local raw_timestamp = os.date("%FT%T")
-		local timestamp_str = string.format("%s", raw_timestamp or "")
-		vim.api.nvim_put({ timestamp_str }, "c", true, true)
-	end,
-	{ noremap = true, silent = true, desc = "Insert current timestamp" })
+        local raw_timestamp = os.date("%FT%T")
+        local timestamp_str = string.format("%s", raw_timestamp or "")
+        vim.api.nvim_put({ timestamp_str }, "c", true, true)
+    end,
+    { noremap = true, silent = true, desc = "Insert current timestamp" })
 
 vim.keymap.set("n", "<leader>U",
-	function() vim.pack.update() end,
-	{ noremap = true, silent = true, desc = "Update plugins" })
+    function() vim.pack.update() end,
+    { noremap = true, silent = true, desc = "Update plugins" })
