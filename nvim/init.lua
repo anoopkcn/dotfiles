@@ -99,10 +99,3 @@ vim.keymap.set("n", "<leader>'", function()
 		vim.api.nvim_put({ timestamp_str }, "c", true, true)
 	end,
 	{ noremap = true, silent = true, desc = "Insert current timestamp" })
-
--- Toggle diagnostic virtual_lines: can also be replaced with virtual_text
--- vim.diagnostic.config({ virtual_lines = false })
--- vim.keymap.set("n", "<leader>e", function()
--- 	local new_config = not vim.diagnostic.config().virtual_lines
--- 	vim.diagnostic.config({ virtual_lines = new_config })
--- end, { desc = "Toggle diagnostic virtual_lines" })

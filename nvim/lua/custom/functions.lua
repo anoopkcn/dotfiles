@@ -12,14 +12,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- vim.api.nvim_create_autocmd("TextYankPost", {
--- 	desc = "Temporary highlight indicator when yanking (copying) text",
--- 	group = vim.api.nvim_create_augroup("custom-highlight-yank", { clear = true }),
--- 	callback = function()
--- 		vim.highlight.on_yank()
--- 	end,
--- })
-
 -- highlight yank
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
@@ -169,10 +161,4 @@ function ShowDiagnostics()
 
 	vim.api.nvim_echo(truncated_chunks, false, {})
 end
-
--- vim.api.nvim_create_autocmd('CursorMoved', {
--- 	pattern = '*',
--- 	callback = ShowDiagnostics,
--- })
-
 

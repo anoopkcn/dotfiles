@@ -47,8 +47,6 @@ function M.setup()
 	vim.keymap.set("n", "<leader>ql", fzf.quickfix_stack)
 	vim.keymap.set("n", "<leader>r", fzf.resume)
 	vim.keymap.set("n", "<leader>z", fzf.spell_suggest)
-
-	require("custom.makepicker").setup()
 end
 
 return M

@@ -2,10 +2,10 @@ local M = {}
 
 local plugin_specs = {
 	-- LSP
-	"https://github.com/nvim-treesitter/nvim-treesitter",
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+	"https://github.com/nvim-treesitter/nvim-treesitter",
 	-- Autompletion
 	"https://github.com/hrsh7th/nvim-cmp",
 	"https://github.com/hrsh7th/cmp-nvim-lsp",
@@ -39,6 +39,7 @@ local plugin_configs = {
 	"plugins.oil",
 	"plugins.treesitter",
 	"plugins.lsp",
+	"plugins.makepicker" -- must be after fzf and treesitter
 }
 
 local function setup_pack_hooks()
