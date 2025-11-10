@@ -60,7 +60,6 @@ plugin_specs = {
     "hrsh7th/nvim-cmp",
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
-    -- "hrsh7th/cmp-path",
     -- Debugging
     "mfussenegger/nvim-dap",
     "rcarriga/nvim-dap-ui",
@@ -75,7 +74,6 @@ plugin_specs = {
     -- Utilities
     "lewis6991/gitsigns.nvim",
     "ibhagwan/fzf-lua",
-    -- "stevearc/oil.nvim",
 }
 
 plugin_configs = {
@@ -86,7 +84,6 @@ plugin_configs = {
     "plugins.fzf",
     "plugins.fugitive",
     "plugins.gitsigns",
-    -- "plugins.oil",
     "plugins.treesitter",
     "plugins.copilot",
     "plugins.makepicker"
