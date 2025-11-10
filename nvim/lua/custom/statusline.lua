@@ -23,6 +23,41 @@ local modes = {
 	["t"] = "TERMINAL",
 }
 
+local diagnostic_symbol = ""
+local diagnostic_sections = {
+	{ key = "Error", severity = vim.diagnostic.severity.ERROR, source = "DiagnosticError", fallback = "#e06c75" },
+	{ key = "Warn", severity = vim.diagnostic.severity.WARN, source = "DiagnosticWarn", fallback = "#e5c07b" },
+	{ key = "Info", severity = vim.diagnostic.severity.INFO, source = "DiagnosticInfo", fallback = "#56b6c2" },
+	{ key = "Hint", severity = vim.diagnostic.severity.HINT, source = "DiagnosticHint", fallback = "#98c379" },
+}
+
+local function get_hl_def(group)
+	local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
+	if ok then
+		return hl
+	end
+	return {}
+end
+
+local function set_statusline_diagnostic_highlights()
+	local statusline_bg = get_hl_def("StatusLine").bg or "#313640"
+	for _, section in ipairs(diagnostic_sections) do
+		local fg = get_hl_def(section.source).fg or section.fallback
+		vim.api.nvim_set_hl(0, "StatuslineDiagnostic" .. section.key, {
+			fg = fg,
+			bg = statusline_bg,
+			bold = true,
+		})
+	end
+end
+
+set_statusline_diagnostic_highlights()
+local statusline_hl_group = vim.api.nvim_create_augroup("StatuslineDiagnosticHighlights", { clear = true })
+vim.api.nvim_create_autocmd("ColorScheme", {
+	group = statusline_hl_group,
+	callback = set_statusline_diagnostic_highlights,
+})
+
 
 local function mode()
 	local current_mode = vim.api.nvim_get_mode().mode
@@ -78,37 +113,27 @@ end
 
 
 local function lsp()
-	local count = {}
-	local levels = {
-		errors = "Error",
-		warnings = "Warn",
-		info = "Info",
-		hints = "Hint",
-	}
-
-	for k, level in pairs(levels) do
-		count[k] = vim.tbl_count(vim.diagnostic.get(0, { severity = level }))
+	local segments = {}
+	for _, section in ipairs(diagnostic_sections) do
+		local diagnostics = vim.diagnostic.get(0, {
+			severity = {
+				min = section.severity,
+				max = section.severity,
+			},
+		})
+		local count = #diagnostics
+		if count > 0 then
+			table.insert(segments,
+				string.format("%%#StatuslineDiagnostic%s# %s %d ", section.key, diagnostic_symbol, count))
+		end
 	end
 
-	local errors = ""
-	local warnings = ""
-	local hints = ""
-	local info = ""
-
-	if count["errors"] ~= 0 then
-		errors = "  " .. count["errors"] .. " "
-	end
-	if count["warnings"] ~= 0 then
-		warnings = " 󰗖 " .. count["warnings"] .. " "
-	end
-	if count["hints"] ~= 0 then
-		hints = " 󰄰 " .. count["hints"] .. " "
-	end
-	if count["info"] ~= 0 then
-		info = " 󰄰 " .. count["info"] .. " "
+	if #segments == 0 then
+		return ""
 	end
 
-	return errors .. warnings .. hints .. info
+	table.insert(segments, "%#Statusline#")
+	return table.concat(segments)
 end
 
 
@@ -161,7 +186,7 @@ Statusline.active = function()
 		"%#Statusline#",
 		update_mode_colors(),
 		mode(),
-		"%#Normal# ",
+		-- "%#Normal# ",
 		filepath(),
 		filename(),
 		lsp(),
