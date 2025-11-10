@@ -4,46 +4,9 @@
 require("custom.options")
 require("custom.functions")
 require("custom.statusline")
-
-local lazypath = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "lazy.nvim")
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	vim.fn.system({ "git", "clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
-	})
-end
-
-vim.opt.runtimepath:prepend(lazypath)
-
-require("lazy").setup {
-	change_detection = { notify = false },
-	spec = {
-		{ import = "plugins" },
-		{
-			"mason-org/mason.nvim",
-			opts = {},
-		},
-		{ "mason-org/mason-lspconfig.nvim" },
-		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
-		{ "hrsh7th/nvim-cmp" },
-		{ "hrsh7th/cmp-nvim-lsp" },
-		{ "tpope/vim-surround" },
-		{ "tpope/vim-unimpaired" },
-		{ "tpope/vim-repeat" },
-		{ "github/copilot.vim" },
-		{ "mbbill/undotree" },
-		-- { "ziglang/zig.vim" },
-		-- {
-		-- 	"windwp/nvim-autopairs",
-		-- 	event = "InsertEnter",
-		-- 	config = true
-		-- }
-	},
-}
-
+require("custom.pack").setup()
 require("custom.lsp")
+
 vim.cmd("colorscheme onehalfdark")
 vim.cmd([[
   highlight SpellBad   gui=undercurl guisp=#be5046
