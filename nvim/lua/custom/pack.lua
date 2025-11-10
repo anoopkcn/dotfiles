@@ -26,10 +26,6 @@ local plugin_specs = {
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/ibhagwan/fzf-lua",
 	"https://github.com/stevearc/oil.nvim",
-	-- "https://github.com/mbbill/undotree",
-	-- "https://github.com/onsails/lspkind.nvim",
-	-- "https://github.com/zbirenbaum/copilot.lua",
-	-- "https://github.com/nvim-tree/nvim-web-devicons",
 }
 
 local plugin_configs = {
@@ -42,6 +38,7 @@ local plugin_configs = {
 	"plugins.gitsigns",
 	"plugins.oil",
 	"plugins.treesitter",
+	"plugins.lsp",
 }
 
 local function setup_pack_hooks()
