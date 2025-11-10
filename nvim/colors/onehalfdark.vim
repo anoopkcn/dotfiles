@@ -5,8 +5,7 @@
 "   License:     The MIT License (MIT)
 "
 "   A dark vim color scheme based on Atom's One. See github.com/sonph/onehalf
-"   for installation instructions, a light color scheme, versions for other
-"   editors/terminals, and a matching theme for vim-airline.
+"   Modified by @anookcn to add additional features and Neovim support
 " ==============================================================================
 
 set background=dark
@@ -98,6 +97,10 @@ call s:h("SpellBad", s:red, "", "")
 call s:h("SpellCap", s:yellow, "", "")
 call s:h("SpellLocal", s:yellow, "", "")
 call s:h("SpellRare", s:yellow, "", "")
+highlight SpellBad gui=undercurl guisp=#be5046
+highlight SpellCap gui=undercurl guisp=#61afef
+highlight SpellRare gui=undercurl guisp=#c678dd
+highlight SpellLocal gui=undercurl guisp=#98c379
 
 call s:h("StatusLine", s:fg, s:cursor_line, "")
 call s:h("StatusLineNC", s:comment_fg, s:cursor_line, "")
