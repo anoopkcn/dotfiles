@@ -106,19 +106,38 @@ local function configure_servers()
 	vim.lsp.enable(vim.tbl_keys(servers))
 end
 
+local function client_from_args(args)
+	if not args then
+		return nil
+	end
+	local data = args.data or {}
+	local client_id = data.client_id or args.client_id
+	if not client_id then
+		return nil
+	end
+	return vim.lsp.get_client_by_id(client_id)
+end
+
+local function disable_semantic_tokens(client)
+	if not client then
+		return
+	end
+	local provider = client.server_capabilities and client.server_capabilities.semanticTokensProvider
+	if not provider then
+		return
+	end
+	if provider.full or provider.range then
+		client.server_capabilities.semanticTokensProvider = nil
+	end
+end
+
 local function setup_lsp_autocmd()
 	local group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
 	vim.api.nvim_create_autocmd('LspAttach', {
 		group = group,
 		callback = function(args)
-			local client = args.data and vim.lsp.get_client_by_id(args.data.client_id)
-			if client then
-				local has_full = client:supports_method("textDocument/semanticTokens", { full = true })
-				local has_range = client:supports_method("textDocument/semanticTokens", { range = true })
-				if has_full or has_range then
-					client.server_capabilities.semanticTokensProvider = nil
-				end
-			end
+			local client = client_from_args(args)
+			disable_semantic_tokens(client)
 
 			local bufnr = args.buf
 			local map_opts = { buffer = bufnr, noremap = true, silent = true }
