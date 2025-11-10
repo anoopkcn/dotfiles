@@ -6,6 +6,7 @@ function M.setup()
 		return
 	end
 
+	---@diagnostic disable-next-line: redundant-parameter
 	gitsigns.setup({
 		on_attach = function(bufnr)
 			local function map(mode, lhs, rhs, opts)

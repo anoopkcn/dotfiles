@@ -11,6 +11,7 @@ function M.setup()
 	-- 	return
 	-- end
 
+	---@diagnostic disable-next-line: redundant-parameter
 	cmp.setup({
 		window = {
 			completion = cmp.config.window.bordered(),

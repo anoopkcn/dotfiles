@@ -6,6 +6,7 @@ function M.setup()
 		return
 	end
 
+	---@diagnostic disable-next-line: redundant-parameter
 	oil.setup({
 		default_file_explorer = true,
 		delete_to_trash = true,
