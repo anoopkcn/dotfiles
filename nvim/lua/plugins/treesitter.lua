@@ -26,6 +26,7 @@ function M.setup()
 			"toml",
 			"yaml",
 			"json",
+			"xml",
 		},
 		sync_install = false,
 		auto_install = false,
