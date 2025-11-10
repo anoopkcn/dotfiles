@@ -1,6 +1,5 @@
 local M = {}
 
--- LSP Configuration using Neovim 0.11+ built-in vim.lsp.config()
 local servers = {
 	marksman = {
 		cmd = { "marksman", "server" },

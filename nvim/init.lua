@@ -100,7 +100,6 @@ vim.keymap.set("n", "<leader>'", function()
 	end,
 	{ noremap = true, silent = true, desc = "Insert current timestamp" })
 
--- add keymap to update pack plugins
 vim.keymap.set("n", "<leader>U",
 	function() vim.pack.update() end,
 	{ noremap = true, silent = true, desc = "Update plugins" })

@@ -39,7 +39,7 @@ local plugin_configs = {
 	"plugins.oil",
 	"plugins.treesitter",
 	"plugins.lsp",
-	"plugins.makepicker" -- must be after fzf and treesitter
+	"plugins.makepicker"
 }
 
 local function setup_pack_hooks()
