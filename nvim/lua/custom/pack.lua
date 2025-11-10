@@ -1,26 +1,31 @@
 local M = {}
 
 local plugin_specs = {
+	-- LSP
 	"https://github.com/nvim-treesitter/nvim-treesitter",
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+	-- Autompletion
 	"https://github.com/hrsh7th/nvim-cmp",
 	"https://github.com/hrsh7th/cmp-nvim-lsp",
 	"https://github.com/hrsh7th/cmp-path",
 	"https://github.com/hrsh7th/cmp-buffer",
+	-- Debugging
 	"https://github.com/mfussenegger/nvim-dap",
 	"https://github.com/rcarriga/nvim-dap-ui",
 	"https://github.com/nvim-neotest/nvim-nio",
 	"https://github.com/mfussenegger/nvim-dap-python",
+	-- tpope
 	"https://github.com/tpope/vim-fugitive",
-	"https://github.com/ibhagwan/fzf-lua",
-	"https://github.com/lewis6991/gitsigns.nvim",
-	"https://github.com/stevearc/oil.nvim",
 	"https://github.com/tpope/vim-surround",
 	"https://github.com/tpope/vim-unimpaired",
 	"https://github.com/tpope/vim-repeat",
-	"https://github.com/github/copilot.vim",
+	"https://github.com/github/copilot.vim", -- yes, it's from tpope
+	-- Utilities
+	"https://github.com/lewis6991/gitsigns.nvim",
+	"https://github.com/ibhagwan/fzf-lua",
+	"https://github.com/stevearc/oil.nvim",
 	-- "https://github.com/mbbill/undotree",
 	-- "https://github.com/onsails/lspkind.nvim",
 	-- "https://github.com/zbirenbaum/copilot.lua",
@@ -60,9 +65,9 @@ local function setup_pack_hooks()
 				vim.cmd.packadd(name)
 			end
 
-			vim.schedule(function()
-				pcall(vim.cmd, "TSUpdate")
-			end)
+			-- vim.schedule(function()
+			-- 	pcall(vim.cmd, "TSUpdate")
+			-- end)
 		end,
 	})
 end
