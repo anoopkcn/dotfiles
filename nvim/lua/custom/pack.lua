@@ -54,14 +54,13 @@ end
 plugin_specs = {
     -- LSP
     "mason-org/mason.nvim",
-    "mason-org/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     "nvim-treesitter/nvim-treesitter",
     -- Autompletion
     "hrsh7th/nvim-cmp",
     "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-path",
     "hrsh7th/cmp-buffer",
+    -- "hrsh7th/cmp-path",
     -- Debugging
     "mfussenegger/nvim-dap",
     "rcarriga/nvim-dap-ui",
@@ -76,20 +75,20 @@ plugin_specs = {
     -- Utilities
     "lewis6991/gitsigns.nvim",
     "ibhagwan/fzf-lua",
-    "stevearc/oil.nvim",
+    -- "stevearc/oil.nvim",
 }
 
 plugin_configs = {
     "plugins.mason",
-    "plugins.cmp",
-    "plugins.copilot",
-    "plugins.dap",
-    "plugins.fugitive",
-    "plugins.fzf",
-    "plugins.gitsigns",
-    "plugins.oil",
-    "plugins.treesitter",
     "plugins.lsp",
+    "plugins.cmp",
+    "plugins.dap",
+    "plugins.fzf",
+    "plugins.fugitive",
+    "plugins.gitsigns",
+    -- "plugins.oil",
+    "plugins.treesitter",
+    "plugins.copilot",
     "plugins.makepicker"
 }
 

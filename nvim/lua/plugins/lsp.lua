@@ -67,9 +67,17 @@ local servers = {
     },
 }
 
+-- Mapping from lspconfig server names to mason package names
+local mason_aliases = {
+    lua_ls = "lua-language-server",
+}
+
 local function ensure_tools()
-    local ensure_installed = vim.tbl_keys(servers)
-    vim.list_extend(ensure_installed, { "stylua" })
+    local ensure_installed = {}
+    for server_name in pairs(servers) do
+        table.insert(ensure_installed, mason_aliases[server_name] or server_name)
+    end
+    table.insert(ensure_installed, "stylua")
 
     local ok, installer = pcall(require, "mason-tool-installer")
     if ok then

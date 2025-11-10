@@ -14,6 +14,11 @@ vim.diagnostic.config({
     }
 })
 
+-- auto resize splits when the terminal's window is resized
+vim.api.nvim_create_autocmd("VimResized", {
+    command = "wincmd =",
+})
+
 -- Enable spell check for git commits
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "gitcommit,markdown",
@@ -49,15 +54,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- open help in vertical split
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "help",
-    command = "wincmd L",
-})
-
--- auto resize splits when the terminal's window is resized
-vim.api.nvim_create_autocmd("VimResized", {
-    command = "wincmd =",
-})
+-- vim.api.nvim_create_autocmd("FileType", {
+--     pattern = "help",
+--     command = "wincmd L",
+-- })
 
 -- no auto continue comments on new line
 -- vim.api.nvim_create_autocmd("FileType", {

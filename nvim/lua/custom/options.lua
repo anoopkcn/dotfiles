@@ -1,6 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.netrw_banner = 0
+-- vim.g.netrw_banner = 0
 
 vim.opt.swapfile = false
 vim.opt.number = true
