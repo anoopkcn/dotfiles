@@ -8,6 +8,7 @@ local function has_pack()
 end
 
 local function flatten_specs(specs)
+    -- Flatten and deduplicate specs
     local items = {}
     for _, spec in ipairs(specs or {}) do
         if type(spec) == "string" and not ensured[spec] then
@@ -19,6 +20,7 @@ local function flatten_specs(specs)
 end
 
 function M.ensure_specs(specs)
+    -- Ensure that pack functionality is available
     if not has_pack() then
         return
     end
@@ -26,10 +28,15 @@ function M.ensure_specs(specs)
     if #items == 0 then
         return
     end
+    -- Add specs to pack without confirmation and load them
+    -- loading is necessary for vim plugins to be available immediately
+    -- neovim plugins require them to be loaded using setup functions
     vim.pack.add(items, { confirm = false, load = true })
 end
 
 function M.setup_pack_hooks()
+    -- Sets up autocommands to handle post-install/update actions for specific plugins
+    -- Currently, it handles nvim-treesitter to run :TSUpdate after installation or update
     if hooks_installed or not vim.api then
         return
     end
@@ -62,6 +69,7 @@ function M.setup_pack_hooks()
 end
 
 function M.plugin_setup(plugin_modules)
+    -- Load and setup plugins from the given list of module names
     for _, module_name in ipairs(plugin_modules) do
         local ok, mod = pcall(require, module_name)
         if ok and type(mod.setup) == "function" then
