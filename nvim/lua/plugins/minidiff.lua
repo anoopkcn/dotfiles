@@ -14,7 +14,7 @@ function M.setup()
         minidiff.setup({
             view = {
                 style = "sign",
-                signs = { add = "░", change = "░", delete = "_" },
+                signs = { add = "░", change = "░", delete = "░" },
             }
         })
     end
