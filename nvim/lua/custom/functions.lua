@@ -1,19 +1,14 @@
-Print = function(v)
-    print(vim.inspect(v))
-    return v
-end
-
 --  show diagnostics with custom signs
 vim.diagnostic.config({
-    -- signs = false,
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = "",
-            [vim.diagnostic.severity.WARN] = "",
-            [vim.diagnostic.severity.INFO] = "",
-            [vim.diagnostic.severity.HINT] = "",
-        }
-    }
+    signs = false,
+    -- signs = {
+    --     text = {
+    --         [vim.diagnostic.severity.ERROR] = "",
+    --         [vim.diagnostic.severity.WARN] = "",
+    --         [vim.diagnostic.severity.INFO] = "",
+    --         [vim.diagnostic.severity.HINT] = "",
+    --     }
+    -- }
 })
 
 -- auto resize splits when the terminal's window is resized
@@ -26,7 +21,7 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = "gitcommit,markdown",
     callback = function()
         vim.opt_local.spell = true
-        vim.opt_local.spelllang = "en_us" -- Or your preferred language
+        vim.opt_local.spelllang = "en_us"
     end,
 })
 
