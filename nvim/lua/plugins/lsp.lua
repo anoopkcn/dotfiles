@@ -125,6 +125,7 @@ local function client_from_args(args)
     return vim.lsp.get_client_by_id(client_id)
 end
 
+-- stop LSP from relying on semantic tokens, which are very slow in some servers
 local function disable_semantic_tokens(client)
     if not client then
         return
