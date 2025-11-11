@@ -4,6 +4,10 @@
       "rev": "40380e7",
       "src": "https://github.com/saghen/blink.cmp"
     },
+    "context.vim": {
+      "rev": "82eb26d",
+      "src": "https://github.com/wellle/context.vim"
+    },
     "copilot.vim": {
       "rev": "da369d9",
       "src": "https://github.com/github/copilot.vim"
@@ -43,6 +47,10 @@
     "nvim-treesitter": {
       "rev": "42fc28ba",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "undotree": {
+      "rev": "0f1c981",
+      "src": "https://github.com/mbbill/undotree"
     },
     "vim-fugitive": {
       "rev": "61b51c0",
