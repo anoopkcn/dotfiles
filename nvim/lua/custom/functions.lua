@@ -1,6 +1,11 @@
 --  show diagnostics with custom signs
 vim.diagnostic.config({
     signs = false,
+    -- OR
+    -- virtual_lines = true,
+    -- OR
+    -- virtual_lines = { current_line = true},
+    -- OR
     -- signs = {
     --     text = {
     --         [vim.diagnostic.severity.ERROR] = "",

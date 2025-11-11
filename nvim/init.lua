@@ -8,6 +8,7 @@ vim.cmd.colorscheme("onehalfdark")
 
 local pack = require("custom.pack")
 pack.setup_pack_hooks()
+
 pack.ensure_specs({
     "https://github.com/tpope/vim-surround",
     "https://github.com/tpope/vim-unimpaired",
