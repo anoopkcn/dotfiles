@@ -191,6 +191,8 @@ call s:h("GitGutterAdd", s:green, s:gutter_bg, "")
 call s:h("GitGutterDelete", s:red, s:gutter_bg, "")
 call s:h("GitGutterChange", s:yellow, s:gutter_bg, "")
 call s:h("GitGutterChangeDelete", s:red, s:gutter_bg, "")
+" netrw
+call s:h("NetrwMarkFile", s:bg, s:blue, "bold")
 " Fugitive
 call s:h("diffAdded", s:green, "", "")
 call s:h("diffRemoved", s:red, "", "")
