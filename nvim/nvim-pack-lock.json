@@ -8,14 +8,6 @@
       "rev": "996b236",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
-    "gitsigns.nvim": {
-      "rev": "20ad441",
-      "src": "https://github.com/lewis6991/gitsigns.nvim"
-    },
-    "mason-lspconfig.nvim": {
-      "rev": "b1d9a91",
-      "src": "https://github.com/mason-org/mason-lspconfig.nvim"
-    },
     "mason-tool-installer.nvim": {
       "rev": "517ef59",
       "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
@@ -28,29 +20,9 @@
       "rev": "fbb93ea",
       "src": "https://github.com/nvim-mini/mini.diff"
     },
-    "nvim-dap": {
-      "rev": "4c0e3a9",
-      "src": "https://github.com/mfussenegger/nvim-dap"
-    },
-    "nvim-dap-python": {
-      "rev": "64652d1",
-      "src": "https://github.com/mfussenegger/nvim-dap-python"
-    },
-    "nvim-dap-ui": {
-      "rev": "cf91d5e",
-      "src": "https://github.com/rcarriga/nvim-dap-ui"
-    },
-    "nvim-nio": {
-      "rev": "21f5324",
-      "src": "https://github.com/nvim-neotest/nvim-nio"
-    },
     "nvim-treesitter": {
       "rev": "42fc28ba",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
-    },
-    "oil.nvim": {
-      "rev": "7e1cd77",
-      "src": "https://github.com/stevearc/oil.nvim"
     },
     "vim-fugitive": {
       "rev": "61b51c0",

@@ -1,4 +1,12 @@
+local pack = require("custom.pack")
+
 local M = {}
+
+M.specs = {
+    "https://github.com/github/copilot.vim",
+}
+
+pack.ensure_specs(M.specs)
 
 function M.setup()
     local ok, copilot = pcall(require, "copilot")

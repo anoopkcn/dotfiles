@@ -1,4 +1,12 @@
+local pack = require("custom.pack")
+
 local M = {}
+
+M.specs = {
+    "https://github.com/nvim-treesitter/nvim-treesitter",
+}
+
+pack.ensure_specs(M.specs)
 
 function M.setup()
     local ok, configs = pcall(require, "nvim-treesitter.configs")

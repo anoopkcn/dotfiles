@@ -1,4 +1,12 @@
+local pack = require("custom.pack")
+
 local M = {}
+
+M.specs = {
+    "https://github.com/tpope/vim-fugitive",
+}
+
+pack.ensure_specs(M.specs)
 
 function M.setup()
     vim.keymap.set(
