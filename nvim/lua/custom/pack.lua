@@ -61,4 +61,15 @@ function M.setup_pack_hooks()
     })
 end
 
+function M.plugin_setup(plugin_modules)
+    for _, module_name in ipairs(plugin_modules) do
+        local ok, mod = pcall(require, module_name)
+        if ok and type(mod.setup) == "function" then
+            mod.setup()
+        elseif not ok then
+            vim.notify(string.format("Failed to load %s: %s", module_name, mod), vim.log.levels.WARN)
+        end
+    end
+end
+
 return M
