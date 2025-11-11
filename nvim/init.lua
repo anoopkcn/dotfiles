@@ -24,6 +24,7 @@ local plugin_modules = {
     "plugins.copilot",
     "plugins.makepicker",
     "plugins.minidiff",
+    "plugins.blink",
 }
 
 pack.plugin_setup(plugin_modules)

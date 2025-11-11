@@ -59,13 +59,13 @@ local function setup_lsp_autocmd()
             disable_semantic_tokens(client)
 
             local bufnr = args.buf
-            if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
-                vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
-                vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-                vim.keymap.set('i', '<C-Space>', function()
-                    vim.lsp.completion.get()
-                end)
-            end
+            -- if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+            --     vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
+            --     vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+            --     vim.keymap.set('i', '<C-Space>', function()
+            --         vim.lsp.completion.get()
+            --     end)
+            -- end
             local map_opts = { buffer = bufnr, noremap = true, silent = true }
             vim.keymap.set("n", "K", function()
                 vim.lsp.buf.hover { border = "single", max_height = 25, max_width = 120 }
