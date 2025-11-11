@@ -88,12 +88,7 @@ local function ensure_tools()
 end
 
 local function shared_capabilities()
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-    if ok and cmp_lsp and cmp_lsp.default_capabilities then
-        capabilities = cmp_lsp.default_capabilities(capabilities)
-    end
-    return capabilities
+    return vim.lsp.protocol.make_client_capabilities()
 end
 
 local function configure_servers()
@@ -148,6 +143,9 @@ local function setup_lsp_autocmd()
             disable_semantic_tokens(client)
 
             local bufnr = args.buf
+            vim.api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", { buf = bufnr })
+            vim.api.nvim_set_option_value("completeopt", "menuone,noinsert,noselect", {})
+
             local map_opts = { buffer = bufnr, noremap = true, silent = true }
             vim.keymap.set("n", "K", function()
                 vim.lsp.buf.hover { border = "single", max_height = 25, max_width = 120 }

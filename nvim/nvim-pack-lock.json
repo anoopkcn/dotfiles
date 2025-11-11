@@ -1,17 +1,5 @@
 {
   "plugins": {
-    "cmp-buffer": {
-      "rev": "b74fab3",
-      "src": "https://github.com/hrsh7th/cmp-buffer"
-    },
-    "cmp-nvim-lsp": {
-      "rev": "bd5a7d6",
-      "src": "https://github.com/hrsh7th/cmp-nvim-lsp"
-    },
-    "cmp-path": {
-      "rev": "c642487",
-      "src": "https://github.com/hrsh7th/cmp-path"
-    },
     "copilot.vim": {
       "rev": "da369d9",
       "src": "https://github.com/github/copilot.vim"
@@ -39,10 +27,6 @@
     "mini.diff": {
       "rev": "fbb93ea",
       "src": "https://github.com/nvim-mini/mini.diff"
-    },
-    "nvim-cmp": {
-      "rev": "106c4bc",
-      "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-dap": {
       "rev": "4c0e3a9",

@@ -56,10 +56,6 @@ plugin_specs = {
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
-    -- Autompletion
-    "https://github.com/hrsh7th/nvim-cmp",
-    "https://github.com/hrsh7th/cmp-nvim-lsp",
-    "https://github.com/hrsh7th/cmp-buffer",
     -- Debugging
     -- "https://github.com/mfussenegger/nvim-dap",
     -- "https://github.com/rcarriga/nvim-dap-ui",
@@ -79,7 +75,6 @@ plugin_specs = {
 plugin_configs = {
     "plugins.mason",
     "plugins.lsp",
-    "plugins.cmp",
     -- "plugins.dap",
     "plugins.fzf",
     "plugins.fugitive",
