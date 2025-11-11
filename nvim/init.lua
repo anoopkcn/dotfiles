@@ -1,6 +1,5 @@
 -- Author:  @anoopkcn
 -- License: MIT
-
 require("custom.options")
 require("custom.functions")
 require("custom.keymaps")

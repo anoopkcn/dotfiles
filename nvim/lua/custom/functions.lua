@@ -4,14 +4,15 @@ Print = function(v)
 end
 
 vim.diagnostic.config({
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = "",
-            [vim.diagnostic.severity.WARN] = "",
-            [vim.diagnostic.severity.INFO] = "",
-            [vim.diagnostic.severity.HINT] = "",
-        }
-    }
+    signs = false,
+    -- signs = {
+    --     text = {
+    --         [vim.diagnostic.severity.ERROR] = "",
+    --         [vim.diagnostic.severity.WARN] = "",
+    --         [vim.diagnostic.severity.INFO] = "",
+    --         [vim.diagnostic.severity.HINT] = "",
+    --     }
+    -- }
 })
 
 -- auto resize splits when the terminal's window is resized
