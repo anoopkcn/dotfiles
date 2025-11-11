@@ -1,91 +1,7 @@
 local M = {}
 
-local servers = {
-    marksman = {
-        cmd = { "marksman", "server" },
-        filetypes = { "markdown" },
-        root_markers = { ".marksman.toml", ".git" },
-    },
-    texlab = {
-        cmd = { "texlab" },
-        filetypes = { "tex", "bib" },
-        root_markers = { "texlab.tex", ".latexmkrc", ".git" },
-        settings = {
-            texlab = {
-                build = {
-                    executable = "pdflatex",
-                    args = { "-synctex=1", "-interaction=nonstopmode", "%f" },
-                    onSave = true,
-                },
-                forwardSearch = {
-                    executable = "zathura",
-                    args = { "--synctex-forward", "%l:1:%f", "%p" },
-                },
-                latexFormatter = "latexindent",
-            },
-        },
-    },
-    zls = {
-        cmd = { "zls" },
-        filetypes = { "zig", "zir" },
-        root_markers = { "zls.json", "build.zig", ".git" },
-    },
-    ruff = {
-        cmd = { "ruff", "server" },
-        filetypes = { "python" },
-        root_markers = { "pyproject.toml", "setup.py", "requirements.txt", ".git" },
-    },
-    lua_ls = {
-        cmd = { "lua-language-server" },
-        filetypes = { "lua" },
-        root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
-        settings = {
-            Lua = {
-                runtime = { version = "LuaJIT" },
-                diagnostics = { globals = { "vim", "require" } },
-                workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-                telemetry = { enable = false },
-            },
-        },
-    },
-    pyright = {
-        cmd = { "pyright-langserver", "--stdio" },
-        filetypes = { "python" },
-        root_markers = { "pyproject.toml", "setup.py", "requirements.txt", ".git" },
-        settings = {
-            python = {
-                analysis = {
-                    typeCheckingMode = "basic",
-                    reportMissingImports = "warning",
-                    diagnosticSeverityOverrides = {
-                        reportUnusedVariable = "none",
-                        reportGeneralTypeIssues = "information"
-                    }
-                }
-            },
-        }
-    },
-}
-
--- Mapping from lspconfig server names to mason package names
-local mason_aliases = {
-    lua_ls = "lua-language-server",
-}
-
-local function ensure_tools()
-    local ensure_installed = {}
-    for server_name in pairs(servers) do
-        table.insert(ensure_installed, mason_aliases[server_name] or server_name)
-    end
-    table.insert(ensure_installed, "stylua")
-
-    local ok, installer = pcall(require, "mason-tool-installer")
-    if ok then
-        installer.setup { ensure_installed = ensure_installed }
-    else
-        vim.notify("mason-tool-installer is not available", vim.log.levels.WARN)
-    end
-end
+local server_config = require("plugins.servers")
+local servers = server_config.definitions
 
 local function shared_capabilities()
     return vim.lsp.protocol.make_client_capabilities()
@@ -157,7 +73,6 @@ local function setup_lsp_autocmd()
 end
 
 function M.setup()
-    ensure_tools()
     configure_servers()
     setup_lsp_autocmd()
 end
