@@ -53,26 +53,26 @@ end
 
 plugin_specs = {
     -- LSP
-    "mason-org/mason.nvim",
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    "nvim-treesitter/nvim-treesitter",
+    "https://github.com/mason-org/mason.nvim",
+    "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+    "https://github.com/nvim-treesitter/nvim-treesitter",
     -- Autompletion
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-buffer",
+    "https://github.com/hrsh7th/nvim-cmp",
+    "https://github.com/hrsh7th/cmp-nvim-lsp",
+    "https://github.com/hrsh7th/cmp-buffer",
     -- Debugging
-    -- "mfussenegger/nvim-dap",
-    -- "rcarriga/nvim-dap-ui",
-    -- "nvim-neotest/nvim-nio",
-    -- "mfussenegger/nvim-dap-python",
+    -- "https://github.com/mfussenegger/nvim-dap",
+    -- "https://github.com/rcarriga/nvim-dap-ui",
+    -- "https://github.com/nvim-neotest/nvim-nio",
+    -- "https://github.com/mfussenegger/nvim-dap-python",
     -- tpope
-    "tpope/vim-fugitive",
-    "tpope/vim-surround",
-    "tpope/vim-unimpaired",
-    "tpope/vim-repeat",
-    "github/copilot.vim", -- yes, it's from tpope
+    "https://github.com/tpope/vim-fugitive",
+    "https://github.com/tpope/vim-surround",
+    "https://github.com/tpope/vim-unimpaired",
+    "https://github.com/tpope/vim-repeat",
+    "https://github.com/github/copilot.vim", -- yes, it's from tpope
     -- Utilities
-    "ibhagwan/fzf-lua",
+    "https://github.com/ibhagwan/fzf-lua",
     "https://github.com/nvim-mini/mini.diff"
 }
 
