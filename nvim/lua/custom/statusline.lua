@@ -56,6 +56,16 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     callback = set_statusline_diagnostic_highlights,
 })
 
+local function get_git_branch()
+    if vim.fn.exists("*FugitiveHead") == 1 then
+        local ok, head = pcall(vim.fn.FugitiveHead)
+        if ok and head ~= "" then
+            return head
+        end
+    end
+    return ""
+end
+
 
 local function mode()
     local current_mode = vim.api.nvim_get_mode().mode
@@ -136,31 +146,39 @@ end
 
 
 local vcs = function()
-    local git_info = vim.b.gitsigns_status_dict
-    if not git_info or git_info.head == "" then
+    local summary = vim.b.minidiff_summary
+    local summary_string = ""
+    if summary and summary.source_name then
+        summary_string = vim.b.minidiff_summary_string or ""
+        if summary_string == "" then
+            local segments = {}
+            if summary.add and summary.add > 0 then
+                table.insert(segments, "+" .. summary.add)
+            end
+            if summary.change and summary.change > 0 then
+                table.insert(segments, "~" .. summary.change)
+            end
+            if summary.delete and summary.delete > 0 then
+                table.insert(segments, "-" .. summary.delete)
+            end
+            summary_string = table.concat(segments, " ")
+        end
+    end
+
+    local label = get_git_branch()
+    if label == "" and summary and summary.source_name then
+        label = summary.source_name
+    end
+
+    if label == "" and summary_string == "" then
         return ""
     end
-    local added = git_info.added and ("+" .. git_info.added .. " ") or ""
-    local changed = git_info.changed and ("~" .. git_info.changed .. " ") or ""
-    local removed = git_info.removed and ("-" .. git_info.removed .. " ") or ""
-    if git_info.added == 0 then
-        added = ""
+
+    if summary_string ~= "" then
+        summary_string = " " .. summary_string
     end
-    if git_info.changed == 0 then
-        changed = ""
-    end
-    if git_info.removed == 0 then
-        removed = ""
-    end
-    return table.concat {
-        " ",
-        git_info.head,
-        " ",
-        added,
-        changed,
-        removed,
-        " ",
-    }
+
+    return string.format(" %s%s ", label, summary_string)
 end
 
 

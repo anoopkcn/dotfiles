@@ -7,3 +7,4 @@ require("custom.keymaps")
 require("custom.statusline")
 vim.cmd.colorscheme("onehalfdark")
 require("custom.pack").setup()
+

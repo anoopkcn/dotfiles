@@ -72,8 +72,8 @@ plugin_specs = {
     "tpope/vim-repeat",
     "github/copilot.vim", -- yes, it's from tpope
     -- Utilities
-    "lewis6991/gitsigns.nvim",
     "ibhagwan/fzf-lua",
+    "https://github.com/nvim-mini/mini.diff"
 }
 
 plugin_configs = {
@@ -83,10 +83,10 @@ plugin_configs = {
     -- "plugins.dap",
     "plugins.fzf",
     "plugins.fugitive",
-    "plugins.gitsigns",
     "plugins.treesitter",
     "plugins.copilot",
-    "plugins.makepicker"
+    "plugins.makepicker",
+    "plugins.minidiff"
 }
 
 return M

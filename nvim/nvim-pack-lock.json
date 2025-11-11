@@ -36,6 +36,10 @@
       "rev": "ad7146a",
       "src": "https://github.com/mason-org/mason.nvim"
     },
+    "mini.diff": {
+      "rev": "fbb93ea",
+      "src": "https://github.com/nvim-mini/mini.diff"
+    },
     "nvim-cmp": {
       "rev": "106c4bc",
       "src": "https://github.com/hrsh7th/nvim-cmp"
