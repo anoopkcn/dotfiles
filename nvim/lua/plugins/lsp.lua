@@ -36,7 +36,6 @@ local function client_from_args(args)
     return vim.lsp.get_client_by_id(client_id)
 end
 
--- stop LSP from relying on semantic tokens, which are very slow in some servers
 local function disable_semantic_tokens(client)
     if not client then
         return
@@ -56,9 +55,11 @@ local function setup_lsp_autocmd()
         group = group,
         callback = function(args)
             local client = client_from_args(args)
+            -- stop LSP from relying on semantic tokens, which are very slow in some servers
             disable_semantic_tokens(client)
 
             local bufnr = args.buf
+            -- The following is replaced by blink.nvim
             -- if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
             --     vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
             --     vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
