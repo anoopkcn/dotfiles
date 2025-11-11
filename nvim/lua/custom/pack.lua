@@ -80,7 +80,7 @@ plugin_configs = {
     "plugins.mason",
     "plugins.lsp",
     "plugins.cmp",
-    "plugins.dap",
+    -- "plugins.dap",
     "plugins.fzf",
     "plugins.fugitive",
     "plugins.gitsigns",
