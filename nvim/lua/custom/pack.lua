@@ -61,10 +61,10 @@ plugin_specs = {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     -- Debugging
-    "mfussenegger/nvim-dap",
-    "rcarriga/nvim-dap-ui",
-    "nvim-neotest/nvim-nio",
-    "mfussenegger/nvim-dap-python",
+    -- "mfussenegger/nvim-dap",
+    -- "rcarriga/nvim-dap-ui",
+    -- "nvim-neotest/nvim-nio",
+    -- "mfussenegger/nvim-dap-python",
     -- tpope
     "tpope/vim-fugitive",
     "tpope/vim-surround",
