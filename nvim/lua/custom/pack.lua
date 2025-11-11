@@ -56,11 +56,6 @@ plugin_specs = {
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
-    -- Debugging
-    -- "https://github.com/mfussenegger/nvim-dap",
-    -- "https://github.com/rcarriga/nvim-dap-ui",
-    -- "https://github.com/nvim-neotest/nvim-nio",
-    -- "https://github.com/mfussenegger/nvim-dap-python",
     -- tpope
     "https://github.com/tpope/vim-fugitive",
     "https://github.com/tpope/vim-surround",
