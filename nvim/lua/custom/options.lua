@@ -25,6 +25,8 @@ vim.opt.linebreak = true
 vim.opt.showmode = false
 vim.opt.termguicolors = true
 vim.opt.undofile = true
+vim.opt.path:append("**")
+vim.opt.wildmenu = true
 
 if vim.fn.executable("rg") == 1 then
     vim.opt.grepprg = "rg --vimgrep --smart-case"

@@ -70,6 +70,8 @@ local function setup_lsp_autocmd()
             vim.keymap.set("n", "K", function()
                 vim.lsp.buf.hover { border = "single", max_height = 25, max_width = 120 }
             end, map_opts)
+            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+            vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
         end,
     })
 end

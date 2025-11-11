@@ -25,6 +25,7 @@ local plugin_modules = {
     "plugins.makepicker",
     "plugins.minidiff",
     "plugins.blink",
+    -- "plugins.dap",
 }
 
 pack.plugin_setup(plugin_modules)
