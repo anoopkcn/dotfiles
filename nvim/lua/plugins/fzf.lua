@@ -45,6 +45,8 @@ function M.setup()
     vim.keymap.set("n", "<leader>fh", fzf.helptags)
     -- vim.keymap.set("n", "<leader>fs", fzf.lsp_live_workspace_symbols)
     vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols)
+    --jumplist
+    vim.keymap.set("n", "<leader>fj", fzf.jumps)
     -- vim.keymap.set("n", "<leader>fr", fzf.lsp_references)
     -- vim.keymap.set("n", "<leader>fd", fzf.lsp_definitions)
     -- vim.keymap.set("n", "<leader>fi", fzf.lsp_implementations)
