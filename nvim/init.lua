@@ -13,7 +13,7 @@ pack.ensure_specs({
     "https://github.com/tpope/vim-surround",
     "https://github.com/tpope/vim-unimpaired",
     "https://github.com/tpope/vim-repeat",
-    "https://github.com/mbbill/undotree",
+    -- "https://github.com/mbbill/undotree",
     "https://github.com/wellle/context.vim"
 })
 
