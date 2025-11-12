@@ -8,7 +8,7 @@ require("custom.statusline")
 vim.cmd.colorscheme("onehalfdark")
 
 local pack = require("custom.pack")
-pack.setup_pack_hooks()
+pack.pack_hooks()
 
 pack.ensure_specs({
     "https://github.com/tpope/vim-surround",
@@ -16,7 +16,7 @@ pack.ensure_specs({
     "https://github.com/tpope/vim-repeat",
 })
 
-local plugin_modules = {
+local plugins = {
     "plugins.mason",
     "plugins.lsp",
     "plugins.fzf",
@@ -30,4 +30,4 @@ local plugin_modules = {
     -- "plugins.dap",
 }
 
-pack.plugin_setup(plugin_modules)
+pack.setup(plugins)

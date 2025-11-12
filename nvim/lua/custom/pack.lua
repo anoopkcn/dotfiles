@@ -36,7 +36,7 @@ function M.ensure_specs(specs)
     vim.pack.add(items, { confirm = false, load = true })
 end
 
-function M.setup_pack_hooks()
+function M.pack_hooks()
     -- Sets up autocommands to handle post-install/update actions for specific plugins
     -- Currently, it handles nvim-treesitter to run :TSUpdate after installation or update
     if hooks_installed or not vim.api then
@@ -70,7 +70,7 @@ function M.setup_pack_hooks()
     })
 end
 
-function M.plugin_setup(plugin_modules)
+function M.setup(plugin_modules)
     -- Load and setup plugins from the given list of module names
     for _, module_name in ipairs(plugin_modules) do
         local ok, mod = pcall(require, module_name)
