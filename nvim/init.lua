@@ -27,6 +27,7 @@ local plugin_modules = {
     "plugins.makepicker",
     "plugins.minidiff",
     "plugins.blink",
+    "plugins.grug",
     -- "plugins.dap",
 }
 
