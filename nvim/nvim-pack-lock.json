@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "blink-copilot": {
+      "rev": "7ad8209",
+      "src": "https://github.com/fang2hou/blink-copilot"
+    },
     "blink.cmp": {
       "rev": "40380e7",
       "src": "https://github.com/saghen/blink.cmp"

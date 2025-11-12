@@ -3,7 +3,8 @@ local pack = require("custom.pack")
 local M = {}
 
 M.specs = {
-    "https://github.com/saghen/blink.cmp"
+    "https://github.com/saghen/blink.cmp",
+    "https://github.com/fang2hou/blink-copilot"
 }
 
 pack.ensure_specs(M.specs)
@@ -21,10 +22,21 @@ function M.setup()
                 auto_show = true,
             },
             -- <ctrl-space> to manually trigger documentation
-            -- documentation = { auto_show = true},
+            documentation = { auto_show = true},
         },
         sources = {
-            default = { 'lsp', 'path', 'snippets', 'buffer' },
+            default = { "copilot", 'lsp', 'path', 'snippets', 'buffer' },
+            providers = {
+                copilot = {
+                    name = "copilot",
+                    module = "blink-copilot",
+                    score_offset = 100,
+                    async = true,
+                    opts = {
+                        max_completions = 3,
+                    }
+                }
+            },
         },
         fuzzy = {
             prebuilt_binaries = {
