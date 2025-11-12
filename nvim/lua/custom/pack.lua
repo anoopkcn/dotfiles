@@ -1,3 +1,5 @@
+-- A thin weapper around the built-in vim.pack
+
 local M = {}
 
 local ensured = {}
