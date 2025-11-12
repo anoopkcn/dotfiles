@@ -5,12 +5,8 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink.cmp": {
-      "rev": "40380e7",
+      "rev": "de57322",
       "src": "https://github.com/saghen/blink.cmp"
-    },
-    "context.vim": {
-      "rev": "82eb26d",
-      "src": "https://github.com/wellle/context.vim"
     },
     "copilot.vim": {
       "rev": "da369d9",
@@ -36,29 +32,9 @@
       "rev": "fbb93ea",
       "src": "https://github.com/nvim-mini/mini.diff"
     },
-    "nvim-dap": {
-      "rev": "4c0e3a9",
-      "src": "https://github.com/mfussenegger/nvim-dap"
-    },
-    "nvim-dap-python": {
-      "rev": "64652d1",
-      "src": "https://github.com/mfussenegger/nvim-dap-python"
-    },
-    "nvim-dap-ui": {
-      "rev": "cf91d5e",
-      "src": "https://github.com/rcarriga/nvim-dap-ui"
-    },
-    "nvim-nio": {
-      "rev": "21f5324",
-      "src": "https://github.com/nvim-neotest/nvim-nio"
-    },
     "nvim-treesitter": {
       "rev": "42fc28ba",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
-    },
-    "undotree": {
-      "rev": "0f1c981",
-      "src": "https://github.com/mbbill/undotree"
     },
     "vim-fugitive": {
       "rev": "61b51c0",
