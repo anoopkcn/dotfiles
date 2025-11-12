@@ -1,5 +1,3 @@
-local fzf = require "fzf-lua"
-
 local M = {}
 
 local function get_make_list_command()
@@ -47,6 +45,12 @@ local function make_picker(opts)
 
     if #targets == 0 then
         vim.notify("No make targets found in project root", vim.log.levels.INFO)
+        return
+    end
+
+    local ok_fzf, fzf = pcall(require, "fzf-lua")
+    if not ok_fzf then
+        vim.notify("fzf-lua is not available", vim.log.levels.WARN)
         return
     end
 

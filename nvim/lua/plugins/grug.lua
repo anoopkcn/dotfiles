@@ -10,14 +10,17 @@ pack.ensure_specs(M.specs)
 
 function M.setup()
     local ok_grug, grug = pcall(require, "grug-far")
-    if ok_grug then
-        grug.setup({
-            windowCreationCommand = "rightbelow vsplit",
-            helpLine = {
-                enabled = false,
-            },
-        })
+    if not ok_grug then
+        vim.notify("grug-far.nvim is not available", vim.log.levels.WARN)
+        return
     end
+
+    grug.setup({
+        windowCreationCommand = "rightbelow vsplit",
+        helpLine = {
+            enabled = false,
+        },
+    })
 
     vim.keymap.set({ "n", "v" }, "<leader>sr", function()
         local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")

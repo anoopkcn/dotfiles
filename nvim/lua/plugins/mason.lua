@@ -16,11 +16,20 @@ local function ensure_tools()
     local extra_tools = server_config.extra_tools or {}
 
     local ensure_installed = {}
+    local seen = {}
+    local function add(tool)
+        if not tool or tool == "" or seen[tool] then
+            return
+        end
+        table.insert(ensure_installed, tool)
+        seen[tool] = true
+    end
+
     for server_name in pairs(definitions) do
-        table.insert(ensure_installed, mason_aliases[server_name] or server_name)
+        add(mason_aliases[server_name] or server_name)
     end
     for _, tool in ipairs(extra_tools) do
-        table.insert(ensure_installed, tool)
+        add(tool)
     end
 
     local ok_installer, installer = pcall(require, "mason-tool-installer")

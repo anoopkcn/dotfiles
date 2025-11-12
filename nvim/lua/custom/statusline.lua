@@ -49,8 +49,9 @@ local function set_statusline_diagnostic_highlights()
     end
 end
 
+
 set_statusline_diagnostic_highlights()
-local statusline_hl_group = vim.api.nvim_create_augroup("StatuslineDiagnosticHighlights", { clear = true })
+local statusline_hl_group = vim.api.nvim_create_augroup("StatuslineHighlights", { clear = true })
 vim.api.nvim_create_autocmd("ColorScheme", {
     group = statusline_hl_group,
     callback = set_statusline_diagnostic_highlights,
@@ -70,26 +71,6 @@ end
 local function mode()
     local current_mode = vim.api.nvim_get_mode().mode
     return string.format(" %s ", modes[current_mode]):upper()
-end
-
-
-local function update_mode_colors()
-    local current_mode = vim.api.nvim_get_mode().mode
-    local mode_color = "%#StatusLineAccent#"
-    if current_mode == "n" then
-        mode_color = "%#StatuslineAccent#"
-    elseif current_mode == "i" or current_mode == "ic" then
-        mode_color = "%#StatuslineInsertAccent#"
-    elseif current_mode == "v" or current_mode == "V" or current_mode == "" then
-        mode_color = "%#StatuslineVisualAccent#"
-    elseif current_mode == "R" then
-        mode_color = "%#StatuslineReplaceAccent#"
-    elseif current_mode == "c" then
-        mode_color = "%#StatuslineCmdLineAccent#"
-    elseif current_mode == "t" then
-        mode_color = "%#StatuslineTerminalAccent#"
-    end
-    return mode_color
 end
 
 
@@ -195,12 +176,9 @@ local function lineinfo()
 end
 
 
-Statusline = {}
-
-Statusline.active = function()
+local function statusline_active()
     return table.concat {
         "%#Statusline#",
-        update_mode_colors(),
         mode(),
         -- "%#Normal# ",
         filepath(),
@@ -214,9 +192,14 @@ Statusline.active = function()
 end
 
 
-function Statusline.inactive()
+local function statusline_inactive()
     return " %F"
 end
+
+local Statusline = rawget(_G, "Statusline") or {}
+Statusline.active = statusline_active
+Statusline.inactive = statusline_inactive
+_G.Statusline = Statusline
 
 vim.api.nvim_exec2([[
   augroup Statusline

@@ -23,7 +23,7 @@ vim.api.nvim_create_autocmd("VimResized", {
 
 -- Enable spell check for git commits
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = "gitcommit,markdown",
+    pattern = { "gitcommit", "markdown" },
     callback = function()
         vim.opt_local.spell = true
         vim.opt_local.spelllang = "en_us"
@@ -98,8 +98,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
     desc = "Vim terminal configurations",
     group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
     callback = function()
-        vim.opt.number = false
-        vim.opt.relativenumber = false
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
     end,
 })
 
