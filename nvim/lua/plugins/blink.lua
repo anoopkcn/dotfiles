@@ -16,13 +16,23 @@ function M.setup()
     end
 
     blink.setup({
-        signature = { enabled = true },
+        signature = {
+            enabled = true,
+            window = {
+                border = "single",
+            },
+        },
         completion = {
             menu = {
                 auto_show = true,
+                border = "single",
             },
-            -- <ctrl-space> to manually trigger documentation
-            documentation = { auto_show = true},
+            documentation = {
+                auto_show = true,
+                window = {
+                    border = "single",
+                },
+            },
         },
         sources = {
             default = { "copilot", 'lsp', 'path', 'snippets', 'buffer' },
