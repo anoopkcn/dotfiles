@@ -1,9 +1,11 @@
 -- A thin wrapper around the built-in vim.pack
--- Plugin config scripts may have two optional objects 'specs' and 'setup'
--- 'specs' should be a table with package url's
--- 'setup' should contain safe-require plugin and it's setup call(if any)
--- and other settings like configuration and keymaps
--- Example:
+-- This module exports a function called `ensure_and_setup(a,b)`
+-- The first argument is a table of package URL's .
+-- The second argument is a table of `config modules` for each plugin.
+-- The `config module` are lua modules with optional objects 'specs' and 'setup'.
+-- Object 'specs' should be a table with package URL's.
+-- Object 'setup' should contain plugin configurations and keymaps (if any)
+-- Example of a config module:
 --          local M = {}
 --          M.specs = { "https://github.com/nvim-mini/mini.diff" }
 --          M.setup = function()
