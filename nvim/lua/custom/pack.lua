@@ -38,14 +38,14 @@ local function append_specs(target, specs)
     end
 end
 
-local function load_plugins(plugins)
+local function load_modules(modules)
     local loaded = {}
-    for _, plugin_name in ipairs(plugins or {}) do
-        local ok, plugin = pcall(require, plugin_name)
-        if ok and type(plugin) == "table" then
-            table.insert(loaded, { name = plugin_name, module = plugin })
+    for _, module_name in ipairs(modules or {}) do
+        local ok, module = pcall(require, module_name)
+        if ok and type(module) == "table" then
+            table.insert(loaded, { name = module_name, module = module })
         elseif not ok then
-            vim.notify(string.format("Failed to load %s: %s", plugin_name, plugin), vim.log.levels.WARN)
+            vim.notify(string.format("Failed to load %s: %s", module_name, module), vim.log.levels.WARN)
         end
     end
     return loaded
@@ -109,14 +109,14 @@ function M.setup(loaded_plugins)
     end
 end
 
-function M.ensure_and_setup(specs, plugins)
+function M.ensure_and_setup(specs, modules)
     local combined = {}
     if specs and type(specs) == "table" and #specs > 0 then
         append_specs(combined, specs)
     end
 
-    local plugin_list = (type(plugins) == "table" and plugins) or {}
-    local loaded = load_plugins(plugin_list)
+    local module_list = (type(modules) == "table" and modules) or {}
+    local loaded = load_modules(module_list)
     for _, entry in ipairs(loaded) do
         append_specs(combined, entry.module.specs)
     end
