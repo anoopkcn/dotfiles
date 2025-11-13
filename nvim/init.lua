@@ -11,14 +11,14 @@ require("custom.keymaps")
 require("custom.statusline")
 require("custom.pack").ensure_and_setup(
     {
-        -- plugins without a setup
+        -- plugins without setup
         "https://github.com/tpope/vim-surround",
         "https://github.com/tpope/vim-unimpaired",
         "https://github.com/tpope/vim-repeat",
         "https://github.com/tpope/vim-rhubarb",
     },
     {
-        -- plugins with a setup and configs
+        -- plugins with setup and configs
         "plugins.mason",
         "plugins.lsp",
         "plugins.fzf",
