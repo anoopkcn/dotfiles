@@ -1,7 +1,7 @@
 -- Author:  @anoopkcn
 -- License: MIT
 -- WARNING: Since vim/neovim can execute any shell command, 
--- It is the resposibility of the user to read/check 
+-- it is the resposibility of the user to read/check 
 -- the 3rd party plugins to make sure no malicious codes exist.
 -- NOTE: When removing a plugin also remove it from nvim-lock-file.json
 
