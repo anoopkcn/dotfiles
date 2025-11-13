@@ -14,7 +14,7 @@ pack.ensure_specs({
     "https://github.com/tpope/vim-surround",
     "https://github.com/tpope/vim-unimpaired",
     "https://github.com/tpope/vim-repeat",
-    "https://github.com/tpope/vim-rhubarb"
+    "https://github.com/tpope/vim-rhubarb" -- A fugitive companion
 })
 
 local plugins = {
