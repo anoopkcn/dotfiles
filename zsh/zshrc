@@ -52,7 +52,6 @@ alias tmi="tm -i"
 # alias imgcat="chafa -f kitty"
 alias imgcat="viu"
 alias fcat="fancy-cat"
-alias zenvx="zenv run ."
 # git aliases
 alias ga="git add"
 alias gs="git status --short"
