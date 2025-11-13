@@ -114,18 +114,16 @@ function M.ensure_and_setup(specs, plugins)
         append_specs(combined, specs)
     end
 
-    if plugins == nil or type(plugins) ~= "table" or #plugins == 0 then
-        M.ensure(combined)
-        return
-    end
-
-    local loaded = load_plugins(plugins)
+    local plugin_list = (type(plugins) == "table" and plugins) or {}
+    local loaded = load_plugins(plugin_list)
     for _, entry in ipairs(loaded) do
         append_specs(combined, entry.module.specs)
     end
 
     M.ensure(combined)
-    M.setup(loaded)
+    if #loaded > 0 then
+        M.setup(loaded)
+    end
 end
 
 return M
