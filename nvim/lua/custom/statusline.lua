@@ -24,7 +24,7 @@ end
 local function set_statusline_highlights()
     local statusline_hl = get_hl_def("StatusLine")
     local statusline_bg = statusline_hl.bg or "#313640"
-    local statusline_fg = statusline_hl.fg or "#d0d0d0"
+    local statusline_fg = "#56b6c2"
     for _, section in ipairs(diagnostic_sections) do
         local fg = get_hl_def(section.source).fg or section.fallback
         vim.api.nvim_set_hl(0, "StatuslineDiagnostic" .. section.key, {
