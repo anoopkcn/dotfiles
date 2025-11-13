@@ -125,9 +125,9 @@ if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
     fi
 
     # zoxide setup
-    if command -v zoxide >/dev/null 2>&1; then
-        eval "$(zoxide init --cmd cd "$(basename "$SHELL")")"
-    fi
+    # if command -v zoxide >/dev/null 2>&1; then
+    #     eval "$(zoxide init --cmd cd "$(basename "$SHELL")")"
+    # fi
 fi
 
 export FZF_DEFAULT_OPTS='
