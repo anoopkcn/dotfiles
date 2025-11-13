@@ -1,9 +1,9 @@
--- Author:  @anoopkcn
--- License: MIT
+-- AUTHOR:  @anoopkcn
+-- LICENSE: MIT
 -- WARNING: Since vim/neovim can execute any shell command,
 -- it is the resposibility of the user to read/check
--- the 3rd party plugins to make sure no malicious codes exist.
--- NOTE: When removing a plugin also remove it from nvim-lock-file.json
+-- the 3rd party plugins to make sure malicious codes doesn't exist.
+-- NOTE: When removing a plugin also remove it from nvim-pack-lock.json
 
 require("custom.options")
 require("custom.functions")
@@ -18,7 +18,7 @@ require("custom.pack").ensure_and_setup(
         "https://github.com/tpope/vim-rhubarb",
     },
     {
-        -- plugins with a setup and other configs
+        -- plugins with a setup and configs
         "plugins.mason",
         "plugins.lsp",
         "plugins.fzf",
