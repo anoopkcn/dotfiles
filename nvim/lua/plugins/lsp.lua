@@ -13,7 +13,14 @@ local function shared_capabilities()
     return vim.lsp.protocol.make_client_capabilities()
 end
 
+local servers_enabled = false
+
 local function configure_servers()
+    if servers_enabled then
+        return
+    end
+    servers_enabled = true
+
     if not (vim.lsp and vim.lsp.config and vim.lsp.enable) then
         vim.notify("vim.lsp config helpers are not available", vim.log.levels.ERROR)
         return
@@ -90,8 +97,8 @@ local function setup_lsp_autocmd()
 end
 
 function M.setup()
-    configure_servers()
     setup_lsp_autocmd()
+    vim.schedule(configure_servers)
 end
 
 return M
