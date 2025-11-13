@@ -49,23 +49,6 @@ local function load_plugins(plugins)
     return loaded
 end
 
-function M.ensure(specs)
-    if type(specs) ~= "table" then
-        return
-    end
-    if #specs == 0 then
-        return
-    end
-    if not has_pack() then
-        return
-    end
-    M.hooks()
-    -- Add specs to pack without confirmation and load them
-    -- loading is necessary for vim plugins to be available immediately
-    -- neovim plugins require them to be loaded using setup functions
-    vim.pack.add(specs, { confirm = false, load = true })
-end
-
 function M.hooks()
     -- Sets up autocommands to handle post-install/update actions for specific plugins
     -- Currently, it handles nvim-treesitter to run :TSUpdate after installation or update
@@ -98,6 +81,22 @@ function M.hooks()
             end)
         end,
     })
+end
+
+function M.ensure(specs)
+    if type(specs) ~= "table" or #specs == 0 then
+        return
+    end
+
+    if not has_pack() then
+        return
+    end
+
+    M.hooks()
+    -- Add specs to pack without confirmation and load them
+    -- loading is necessary for vim plugins to be available immediately
+    -- neovim plugins require them to be loaded using setup functions
+    vim.pack.add(specs, { confirm = false, load = true })
 end
 
 function M.setup(loaded_plugins)
