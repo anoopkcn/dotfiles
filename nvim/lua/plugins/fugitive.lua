@@ -11,7 +11,12 @@ M.setup = function()
         "<CMD>rightbelow vertical Git<CR>",
         { noremap = true, silent = true, desc = "Open Git interface" }
     )
-
+    vim.keymap.set(
+        "n",
+        "<leader>G",
+        "<CMD>Git<CR>",
+        { noremap = true, silent = true, desc = "Open Git interface" }
+    )
     vim.keymap.set(
         "n",
         "<leader>gl",
