@@ -6,9 +6,9 @@
 -- NOTE: When removing a plugin also remove it from nvim-pack-lock.json
 
 require("custom.options")
-require("custom.keymaps")
 require("custom.functions")
 require("custom.statusline")
+require("custom.keymaps")
 require("custom.pack").ensure_and_setup(
     {
         -- plugins without setup
