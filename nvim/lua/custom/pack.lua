@@ -5,48 +5,49 @@ local M = {}
 local ensured = {}
 local hooks_installed = false
 
-local has_pack = function()
+local function has_pack()
     return vim.pack and vim.pack.add
 end
 
-local flatten_specs = function(specs)
-    local items = {}
-    for _, spec in ipairs(specs or {}) do
-        if type(spec) == "string" and not ensured[spec] then
-            ensured[spec] = true
-            table.insert(items, spec)
-        end
-    end
-    return items
-end
-
-local append_specs = function(target, specs)
+local function append_specs(target, specs)
     if type(specs) ~= "table" then
         return
     end
     for _, spec in ipairs(specs) do
-        if type(spec) == "string" then
+        if type(spec) == "string" and not ensured[spec] then
+            ensured[spec] = true
             table.insert(target, spec)
         end
     end
 end
 
-M.ensure = function(specs)
-    if not has_pack() then
+local function load_plugins(plugins)
+    local loaded = {}
+    for _, plugin_name in ipairs(plugins or {}) do
+        local ok, plugin = pcall(require, plugin_name)
+        if ok and type(plugin) == "table" then
+            table.insert(loaded, { name = plugin_name, module = plugin })
+        elseif not ok then
+            vim.notify(string.format("Failed to load %s: %s", plugin_name, plugin), vim.log.levels.WARN)
+        end
+    end
+    return loaded
+end
+
+function M.ensure(specs)
+    if not has_pack() or type(specs) ~= "table" then
         return
     end
-    local items = flatten_specs(specs)
-    if #items == 0 then
+    if #specs == 0 then
         return
     end
     -- Add specs to pack without confirmation and load them
     -- loading is necessary for vim plugins to be available immediately
     -- neovim plugins require them to be loaded using setup functions
-    vim.pack.add(items, { confirm = false, load = true })
+    vim.pack.add(specs, { confirm = false, load = true })
 end
 
-
-M.hooks = function()
+function M.hooks()
     -- Sets up autocommands to handle post-install/update actions for specific plugins
     -- Currently, it handles nvim-treesitter to run :TSUpdate after installation or update
     if hooks_installed or not vim.api then
@@ -80,34 +81,26 @@ M.hooks = function()
     })
 end
 
-M.setup = function(plugins)
-    -- Load and setup plugins from the given list of plugin names
-    for _, plugin_name in ipairs(plugins) do
-        local ok, plugin = pcall(require, plugin_name)
-        if ok and type(plugin.setup) == "function" then
+function M.setup(loaded_plugins)
+    for _, entry in ipairs(loaded_plugins or {}) do
+        local plugin = entry.module
+        if type(plugin.setup) == "function" then
             plugin.setup()
-        elseif not ok then
-            vim.notify(string.format("Failed to load %s: %s", plugin_name, plugin), vim.log.levels.WARN)
         end
     end
 end
 
-
-M.ensure_specs = function(plugins, extra_specs)
+function M.ensure_specs(plugins, extra_specs)
+    local loaded = load_plugins(plugins)
     local combined = {}
     append_specs(combined, extra_specs)
 
-    for _, plugin_name in ipairs(plugins or {}) do
-        local ok, plugin = pcall(require, plugin_name)
-        if ok and type(plugin) == "table" then
-            append_specs(combined, plugin.specs)
-        elseif not ok then
-            vim.notify(string.format("Failed to load %s: %s", plugin_name, plugin), vim.log.levels.WARN)
-        end
+    for _, entry in ipairs(loaded) do
+        append_specs(combined, entry.module.specs)
     end
 
     M.ensure(combined)
-    M.setup(plugins)
+    M.setup(loaded)
 end
 
 return M
