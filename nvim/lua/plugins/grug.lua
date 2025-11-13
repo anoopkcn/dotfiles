@@ -11,12 +11,7 @@ function M.setup()
         return
     end
 
-    grug.setup({
-        windowCreationCommand = "rightbelow vsplit",
-        -- helpLine = {
-        --     enabled = false,
-        -- },
-    })
+    grug.setup({ windowCreationCommand = "rightbelow vsplit" })
 
     vim.keymap.set({ "n", "v" }, "<leader>sr", function()
         local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
