@@ -26,13 +26,13 @@ local plugins = {
     "plugins.mason",
     "plugins.lsp",
     "plugins.fzf",
-    "plugins.fugitive",
     "plugins.treesitter",
-    "plugins.copilot",
-    "plugins.makepicker",
+    "plugins.fugitive",
     "plugins.minidiff",
-    "plugins.blink",
+    "plugins.copilot",
     "plugins.grug",
+    "plugins.blink",
+    "plugins.makepicker",
     -- "plugins.dap",
 }
 
