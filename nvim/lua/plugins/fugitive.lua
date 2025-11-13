@@ -8,14 +8,14 @@ M.setup = function()
     vim.keymap.set(
         "n",
         "<leader>gg",
-        "<CMD>Git<CR>",
+        "<CMD>rightbelow vertical Git<CR>",
         { noremap = true, silent = true, desc = "Open Git interface" }
     )
 
     vim.keymap.set(
         "n",
         "<leader>gl",
-        "<CMD>Git log<CR>",
+        "<CMD>rightbelow vertical Git log<CR>",
         { noremap = true, silent = true, desc = "Git log" }
     )
 end
