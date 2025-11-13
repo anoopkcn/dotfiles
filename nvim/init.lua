@@ -9,7 +9,7 @@ vim.cmd.colorscheme("onehalfdark")
 
 local pack = require("custom.pack")
 pack.pack_hooks()
-
+-- NOTE: When removing a plugin also remove it from nvim-lock-file.json
 pack.ensure_specs({
     -- These plugins doesnt require a setup call since no additional
     -- customization are imposed on them
@@ -34,5 +34,3 @@ local plugins = {
 }
 
 pack.setup(plugins)
-
--- NOTE: When removing a plugin also remove it from the nvim-lock-file
