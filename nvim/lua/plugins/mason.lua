@@ -1,13 +1,9 @@
-local pack = require("custom.pack")
-
 local M = {}
 
 M.specs = {
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 }
-
-pack.ensure_specs(M.specs)
 
 local function load_server_config()
     local ok, config = pcall(require, "plugins.servers")

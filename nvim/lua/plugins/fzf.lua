@@ -1,12 +1,8 @@
-local pack = require("custom.pack")
-
 local M = {}
 
 M.specs = {
     "https://github.com/ibhagwan/fzf-lua",
 }
-
-pack.ensure_specs(M.specs)
 
 function M.setup()
     local ok, fzf = pcall(require, "fzf-lua")

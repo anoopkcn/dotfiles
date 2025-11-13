@@ -5,12 +5,11 @@ local M = {}
 local ensured = {}
 local hooks_installed = false
 
-local function has_pack()
+local has_pack = function()
     return vim.pack and vim.pack.add
 end
 
-local function flatten_specs(specs)
-    -- Flatten and deduplicate specs
+local flatten_specs = function(specs)
     local items = {}
     for _, spec in ipairs(specs or {}) do
         if type(spec) == "string" and not ensured[spec] then
@@ -21,8 +20,18 @@ local function flatten_specs(specs)
     return items
 end
 
-function M.ensure_specs(specs)
-    -- Ensure that pack functionality is available
+local append_specs = function(target, specs)
+    if type(specs) ~= "table" then
+        return
+    end
+    for _, spec in ipairs(specs) do
+        if type(spec) == "string" then
+            table.insert(target, spec)
+        end
+    end
+end
+
+M.ensure = function(specs)
     if not has_pack() then
         return
     end
@@ -36,7 +45,8 @@ function M.ensure_specs(specs)
     vim.pack.add(items, { confirm = false, load = true })
 end
 
-function M.pack_hooks()
+
+M.hooks = function()
     -- Sets up autocommands to handle post-install/update actions for specific plugins
     -- Currently, it handles nvim-treesitter to run :TSUpdate after installation or update
     if hooks_installed or not vim.api then
@@ -70,7 +80,7 @@ function M.pack_hooks()
     })
 end
 
-function M.setup(plugins)
+M.setup = function(plugins)
     -- Load and setup plugins from the given list of plugin names
     for _, plugin_name in ipairs(plugins) do
         local ok, plugin = pcall(require, plugin_name)
@@ -80,6 +90,24 @@ function M.setup(plugins)
             vim.notify(string.format("Failed to load %s: %s", plugin_name, plugin), vim.log.levels.WARN)
         end
     end
+end
+
+
+M.ensure_specs = function(plugins, extra_specs)
+    local combined = {}
+    append_specs(combined, extra_specs)
+
+    for _, plugin_name in ipairs(plugins or {}) do
+        local ok, plugin = pcall(require, plugin_name)
+        if ok and type(plugin) == "table" then
+            append_specs(combined, plugin.specs)
+        elseif not ok then
+            vim.notify(string.format("Failed to load %s: %s", plugin_name, plugin), vim.log.levels.WARN)
+        end
+    end
+
+    M.ensure(combined)
+    M.setup(plugins)
 end
 
 return M

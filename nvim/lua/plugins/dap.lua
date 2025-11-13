@@ -1,4 +1,3 @@
-local pack = require("custom.pack")
 local M = {}
 
 M.specs = {
@@ -7,8 +6,6 @@ M.specs = {
     "https://github.com/nvim-neotest/nvim-nio",
     "https://github.com/mfussenegger/nvim-dap-python",
 }
-
-pack.ensure_specs(M.specs)
 
 local function safe_require(name)
     local ok, mod = pcall(require, name)

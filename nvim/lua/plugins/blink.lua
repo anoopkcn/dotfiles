@@ -1,13 +1,9 @@
-local pack = require("custom.pack")
-
 local M = {}
 
 M.specs = {
     "https://github.com/saghen/blink.cmp",
     "https://github.com/fang2hou/blink-copilot"
 }
-
-pack.ensure_specs(M.specs)
 
 function M.setup()
     local ok, blink = pcall(require, "blink.cmp")

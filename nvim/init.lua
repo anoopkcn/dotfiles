@@ -12,15 +12,7 @@ require("custom.statusline")
 vim.cmd.colorscheme("onehalfdark")
 
 local pack = require("custom.pack")
-pack.pack_hooks()
-pack.ensure_specs({
-    -- These plugins doesnt require a setup call since no additional
-    -- customization are imposed on them
-    "https://github.com/tpope/vim-surround",
-    "https://github.com/tpope/vim-unimpaired",
-    "https://github.com/tpope/vim-repeat",
-    "https://github.com/tpope/vim-rhubarb" -- A fugitive companion
-})
+pack.hooks()
 
 local plugins = {
     "plugins.mason",
@@ -36,4 +28,9 @@ local plugins = {
     -- "plugins.dap",
 }
 
-pack.setup(plugins)
+pack.ensure_specs(plugins, {
+    "https://github.com/tpope/vim-surround",
+    "https://github.com/tpope/vim-unimpaired",
+    "https://github.com/tpope/vim-repeat",
+    "https://github.com/tpope/vim-rhubarb",
+})
