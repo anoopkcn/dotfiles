@@ -1,8 +1,6 @@
 local M = {}
 
-M.specs = {
-    "https://github.com/github/copilot.vim",
-}
+M.specs = { "https://github.com/github/copilot.vim" }
 
 function M.setup()
     -- Prevent copilot.vim from registering its inline suggestion autocommands

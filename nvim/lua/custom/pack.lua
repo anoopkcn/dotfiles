@@ -5,7 +5,7 @@
 -- The `config module` are lua modules with optional objects 'specs' and 'setup'.
 -- Object 'specs' should be a table with package URL's.
 -- Object 'setup' should contain plugin configurations and keymaps (if any)
--- Example of a config module:
+-- Example of a config module 'minidiff.lua':
 --          local M = {}
 --          M.specs = { "https://github.com/nvim-mini/mini.diff" }
 --          M.setup = function()

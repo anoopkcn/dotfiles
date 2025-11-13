@@ -1,8 +1,6 @@
 local M = {}
 
-M.specs = {
-    "https://github.com/MagicDuck/grug-far.nvim",
-}
+M.specs = { "https://github.com/MagicDuck/grug-far.nvim" }
 
 function M.setup()
     local ok_grug, grug = pcall(require, "grug-far")

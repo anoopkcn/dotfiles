@@ -1,8 +1,6 @@
 local M = {}
 
-M.specs = {
-    "https://github.com/nvim-treesitter/nvim-treesitter",
-}
+M.specs = { "https://github.com/nvim-treesitter/nvim-treesitter" }
 
 function M.setup()
     local ok, configs = pcall(require, "nvim-treesitter.configs")

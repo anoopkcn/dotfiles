@@ -1,8 +1,6 @@
 local M = {}
 
-M.specs = {
-    "https://github.com/tpope/vim-fugitive",
-}
+M.specs = { "https://github.com/tpope/vim-fugitive" }
 
 M.setup = function()
     vim.keymap.set(

@@ -1,8 +1,6 @@
 local M = {}
 
-M.specs = {
-    "https://github.com/nvim-mini/mini.diff",
-}
+M.specs = { "https://github.com/nvim-mini/mini.diff" }
 
 function M.setup()
     local ok_minidiff, minidiff = pcall(require, "mini.diff")

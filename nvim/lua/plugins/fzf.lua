@@ -1,8 +1,6 @@
 local M = {}
 
-M.specs = {
-    "https://github.com/ibhagwan/fzf-lua",
-}
+M.specs = { "https://github.com/ibhagwan/fzf-lua" }
 
 function M.setup()
     local ok, fzf = pcall(require, "fzf-lua")
