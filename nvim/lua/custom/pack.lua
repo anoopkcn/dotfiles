@@ -1,4 +1,19 @@
--- A thin weapper around the built-in vim.pack
+-- A thin wrapper around the built-in vim.pack
+-- Plugin config scripts may have two optional objects 'specs' and 'setup'
+-- 'specs' should be a table with package url's
+-- 'setup' should contain safe-require plugin and it's setup call(if any)
+-- and other settings like configuration and keymaps
+-- Example:
+--          local M = {}
+--          M.specs = { "https://github.com/nvim-mini/mini.diff" }
+--          M.setup = function()
+--              local ok, minidiff = pcall(require, "mini.diff")
+--              if ok then
+--                  minidiff.setup({...})
+--                  vim.kaymap.set(...)
+--              end
+--          end
+--          return M
 
 local M = {}
 
@@ -35,12 +50,16 @@ local function load_plugins(plugins)
 end
 
 function M.ensure(specs)
-    if not has_pack() or type(specs) ~= "table" then
+    if type(specs) ~= "table" then
         return
     end
     if #specs == 0 then
         return
     end
+    if not has_pack() then
+        return
+    end
+    M.hooks()
     -- Add specs to pack without confirmation and load them
     -- loading is necessary for vim plugins to be available immediately
     -- neovim plugins require them to be loaded using setup functions
@@ -90,11 +109,18 @@ function M.setup(loaded_plugins)
     end
 end
 
-function M.ensure_specs(plugins, extra_specs)
-    local loaded = load_plugins(plugins)
+function M.ensure_and_setup(specs, plugins)
     local combined = {}
-    append_specs(combined, extra_specs)
+    if specs and type(specs) == "table" and #specs > 0 then
+        append_specs(combined, specs)
+    end
 
+    if plugins == nil or type(plugins) ~= "table" or #plugins == 0 then
+        M.ensure(combined)
+        return
+    end
+
+    local loaded = load_plugins(plugins)
     for _, entry in ipairs(loaded) do
         append_specs(combined, entry.module.specs)
     end
