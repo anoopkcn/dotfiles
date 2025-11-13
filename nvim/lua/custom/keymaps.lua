@@ -83,5 +83,5 @@ vim.keymap.set("n", "<leader>'", function()
     end,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
 
-vim.keymap.set("n", "<leader>U", function() vim.pack.update() end,
-    { noremap = true, silent = true, desc = "Update plugins" })
+-- vim.keymap.set("n", "<leader>U", function() vim.pack.update() end,
+--     { noremap = true, silent = true, desc = "Update plugins" })

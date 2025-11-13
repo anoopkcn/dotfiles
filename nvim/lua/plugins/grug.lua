@@ -17,9 +17,9 @@ function M.setup()
 
     grug.setup({
         windowCreationCommand = "rightbelow vsplit",
-        helpLine = {
-            enabled = false,
-        },
+        -- helpLine = {
+        --     enabled = false,
+        -- },
     })
 
     vim.keymap.set({ "n", "v" }, "<leader>sr", function()

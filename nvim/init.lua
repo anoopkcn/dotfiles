@@ -31,3 +31,5 @@ local plugins = {
 }
 
 pack.setup(plugins)
+
+-- NOTE: When removing a plugin also remove it from the nvim-lock-file
