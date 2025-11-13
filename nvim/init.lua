@@ -26,6 +26,5 @@ require("custom.pack").ensure_and_setup(
         "plugins.fugitive",
         "plugins.minidiff",
         "plugins.treesitter",
-        "plugins.makepicker",
     }
 )
