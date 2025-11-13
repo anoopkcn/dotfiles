@@ -9,15 +9,16 @@ require("custom.options")
 require("custom.functions")
 require("custom.keymaps")
 require("custom.statusline")
-vim.cmd.colorscheme("onehalfdark")
 require("custom.pack").ensure_and_setup(
     {
+        -- plugins without a setup
         "https://github.com/tpope/vim-surround",
         "https://github.com/tpope/vim-unimpaired",
         "https://github.com/tpope/vim-repeat",
         "https://github.com/tpope/vim-rhubarb",
     },
     {
+        -- plugins with a setup and other configs
         "plugins.mason",
         "plugins.lsp",
         "plugins.fzf",
