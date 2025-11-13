@@ -6,7 +6,7 @@ Repository includes `config` and `rc` files for `zsh`, and `nvim`
 
 ## Dependencies
 
-- (optional) [`rg`](https://github.com/BurntSushi/ripgrep) for faster parallel grep  
+- (optional) [`rg`](https://github.com/BurntSushi/ripgrep) for parallel grep  
 - (optional) [`fzf`](https://github.com/junegunn/fzf) for fuzzy search 
 - [NeoVim](https://neovim.io) (>= 0.12) as editor
 
