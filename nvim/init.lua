@@ -1,8 +1,6 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
--- WARNING: Since vim/neovim can execute any shell command,
--- it is the resposibility of the user to read/check/inspect
--- the 3rd party plugins to make sure malicious codes doesn't exist.
+-- WARNING: (n)Vim can run shell commands; audit 3rd-party plugins for malicious code.
 -- NOTE: When removing a plugin also remove it from nvim-pack-lock.json
 
 require("custom.options")
