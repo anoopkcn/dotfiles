@@ -93,9 +93,8 @@ function M.ensure(specs)
     end
 
     M.hooks()
-    -- Add specs to pack without confirmation and load them
+    -- Add specs without confirmation and load them
     -- loading is necessary for vim plugins to be available immediately
-    -- neovim plugins require them to be loaded using setup functions
     vim.pack.add(specs, { confirm = false, load = true })
 end
 
