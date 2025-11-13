@@ -9,8 +9,20 @@ M.specs = {
 
 pack.ensure_specs(M.specs)
 
+local function load_server_config()
+    local ok, config = pcall(require, "plugins.servers")
+    if not ok then
+        vim.notify("plugins.servers is not available", vim.log.levels.WARN)
+        return nil
+    end
+    return config
+end
+
 local function ensure_tools()
-    local server_config = require("plugins.servers")
+    local server_config = load_server_config()
+    if not server_config then
+        return
+    end
     local definitions = server_config.definitions or {}
     local mason_aliases = server_config.mason_aliases or {}
     local extra_tools = server_config.extra_tools or {}

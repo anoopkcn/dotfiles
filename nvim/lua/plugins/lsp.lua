@@ -1,7 +1,13 @@
 local M = {}
 
-local server_config = require("plugins.servers")
-local servers = server_config.definitions
+local function load_server_config()
+    local ok, config = pcall(require, "plugins.servers")
+    if not ok then
+        vim.notify("plugins.servers is not available", vim.log.levels.ERROR)
+        return nil
+    end
+    return config
+end
 
 local function shared_capabilities()
     return vim.lsp.protocol.make_client_capabilities()
@@ -9,9 +15,15 @@ end
 
 local function configure_servers()
     if not (vim.lsp and vim.lsp.config and vim.lsp.enable) then
-        vim.notify("vim.lsp config helpers are not available in this build", vim.log.levels.ERROR)
+        vim.notify("vim.lsp config helpers are not available", vim.log.levels.ERROR)
         return
     end
+
+    local server_config = load_server_config()
+    if not server_config then
+        return
+    end
+    local servers = server_config.definitions or {}
 
     vim.lsp.config('*', {
         capabilities = shared_capabilities(),
