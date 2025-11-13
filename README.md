@@ -8,6 +8,7 @@ Repository includes `config` and `rc` files for `zsh`, and `nvim`
 
 - (optional) [`rg`](https://github.com/BurntSushi/ripgrep) for faster parallel grep  
 - (optional) [`fzf`](https://github.com/junegunn/fzf) for fuzzy search 
+- [NeoVim](https://neovim.io) (>= 0.12) as editor
 
 ## Installation
 
@@ -16,7 +17,3 @@ Set the `PATH_TO_DOTFILES` to the path inside the `setup.sh` file
 ```sh
 sh setup.sh
 ```
-
-## NeoVim setup
-- [NeoVim](https://neovim.io) (>= 0.12)
-- If it can't be explained, it needn't be used.
