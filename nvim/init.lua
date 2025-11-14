@@ -9,13 +9,11 @@ require("custom.statusline")
 require("custom.keymaps")
 require("custom.pack").ensure_and_setup(
     {
-        -- plugins without setup
         "https://github.com/tpope/vim-repeat",
         "https://github.com/tpope/vim-surround",
         "https://github.com/tpope/vim-unimpaired",
     },
     {
-        -- plugins with setup and configs
         "plugins.fzf",
         "plugins.grug",
         "plugins.blink",
