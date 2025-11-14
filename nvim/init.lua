@@ -11,20 +11,18 @@ require("custom.pack").ensure_and_setup(
     {
         -- plugins without setup
         "https://github.com/tpope/vim-repeat",
-        "https://github.com/tpope/vim-rhubarb",
         "https://github.com/tpope/vim-surround",
         "https://github.com/tpope/vim-unimpaired",
     },
     {
         -- plugins with setup and configs
-        "plugins.mason",
-        "plugins.lsp",
         "plugins.fzf",
         "plugins.grug",
         "plugins.blink",
-        "plugins.copilot",
         "plugins.fugitive",
         "plugins.minidiff",
         "plugins.treesitter",
     }
 )
+-- NOTE: LSP requires installation of language servers
+vim.lsp.enable({"lua_ls", "basedpyright", "marksman", "copilot"})

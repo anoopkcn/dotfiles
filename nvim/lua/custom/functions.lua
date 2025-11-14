@@ -119,3 +119,55 @@ ToggleQuickfixList = function()
         vim.cmd('copen')
     end
 end
+
+local function client_from_args(args)
+    if not args then
+        return nil
+    end
+    local data = args.data or {}
+    local client_id = data.client_id or args.client_id
+    if not client_id then
+        return nil
+    end
+    return vim.lsp.get_client_by_id(client_id)
+end
+
+local function disable_semantic_tokens(client)
+    if not client then
+        return
+    end
+    local provider = client.server_capabilities and client.server_capabilities.semanticTokensProvider
+    if not provider then
+        return
+    end
+    if provider.full or provider.range then
+        client.server_capabilities.semanticTokensProvider = nil
+    end
+end
+
+
+local group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = group,
+    callback = function(args)
+        local client = client_from_args(args)
+        -- stop LSP from relying on semantic tokens, which are very slow in some servers
+        disable_semantic_tokens(client)
+
+        local bufnr = args.buf
+        -- The following is replaced by blink.nvim
+        -- if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+        --     vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
+        --     vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+        --     vim.keymap.set('i', '<C-Space>', function()
+        --         vim.lsp.completion.get()
+        --     end)
+        -- end
+        local map_opts = { buffer = bufnr, noremap = true, silent = true }
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover { border = "single", max_height = 25, max_width = 120 }
+        end, map_opts)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+    end,
+})
