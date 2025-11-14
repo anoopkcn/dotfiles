@@ -20,5 +20,4 @@ require("custom.pack").ensure_and_setup(
         "plugins.treesitter",
     }
 )
--- NOTE: LSP requires installation of language servers
 vim.lsp.enable({"lua_ls", "basedpyright", "marksman", "copilot"})
