@@ -1,7 +1,5 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
--- WARNING: (n)vim can run shell commands; audit 3rd-party plugins for malicious code.
--- NOTE: When removing a plugin also remove it from nvim-pack-lock.json
 
 require("custom.options")
 require("custom.functions")
