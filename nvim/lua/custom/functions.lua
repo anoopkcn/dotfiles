@@ -1,21 +1,3 @@
---  show diagnostics with custom signs
-vim.diagnostic.config({
-    signs = false,
-    -- OR
-    -- virtual_lines = true,
-    -- OR
-    -- virtual_lines = { current_line = true},
-    -- OR
-    -- signs = {
-    --     text = {
-    --         [vim.diagnostic.severity.ERROR] = "",
-    --         [vim.diagnostic.severity.WARN] = "",
-    --         [vim.diagnostic.severity.INFO] = "",
-    --         [vim.diagnostic.severity.HINT] = "",
-    --     }
-    -- }
-})
-
 -- auto resize splits when the terminal's window is resized
 vim.api.nvim_create_autocmd("VimResized", {
     command = "wincmd =",
@@ -26,7 +8,7 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = { "gitcommit", "markdown" },
     callback = function()
         vim.opt_local.spell = true
-        vim.opt_local.spelllang = "en_us"
+        vim.opt_local.spelllang = "en_gb"
     end,
 })
 
@@ -54,12 +36,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         end
     end,
 })
-
--- open help in vertical split
--- vim.api.nvim_create_autocmd("FileType", {
---     pattern = "help",
---     command = "wincmd L",
--- })
 
 -- no auto continue comments on new line
 -- vim.api.nvim_create_autocmd("FileType", {
@@ -120,7 +96,7 @@ ToggleQuickfixList = function()
     end
 end
 
-local function client_from_args(args)
+local function _client_from_args(args)
     if not args then
         return nil
     end
@@ -132,7 +108,7 @@ local function client_from_args(args)
     return vim.lsp.get_client_by_id(client_id)
 end
 
-local function disable_semantic_tokens(client)
+local function _disable_semantic_tokens(client)
     if not client then
         return
     end
@@ -146,16 +122,14 @@ local function disable_semantic_tokens(client)
 end
 
 
-local group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
+local _group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
 vim.api.nvim_create_autocmd('LspAttach', {
-    group = group,
+    group = _group,
     callback = function(args)
-        local client = client_from_args(args)
-        -- stop LSP from relying on semantic tokens, which are very slow in some servers
-        disable_semantic_tokens(client)
+        local client = _client_from_args(args)
+        _disable_semantic_tokens(client)
 
         local bufnr = args.buf
-        -- The following is replaced by blink.nvim
         -- if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
         --     vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
         --     vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
@@ -170,4 +144,22 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
     end,
+})
+
+--  show diagnostics with custom signs
+vim.diagnostic.config({
+    signs = false,
+    -- OR
+    -- virtual_lines = true,
+    -- OR
+    -- virtual_lines = { current_line = true},
+    -- OR
+    -- signs = {
+    --     text = {
+    --         [vim.diagnostic.severity.ERROR] = "",
+    --         [vim.diagnostic.severity.WARN] = "",
+    --         [vim.diagnostic.severity.INFO] = "",
+    --         [vim.diagnostic.severity.HINT] = "",
+    --     }
+    -- }
 })
