@@ -1,11 +1,9 @@
 local enabled = {}
 
--- Which LSPs should always run (all filetypes)
 local always = {
     copilot = true,
 }
 
--- Which LSPs should only run for specific filetypes
 local ft_servers = {
     lua = { "lua_ls" },
     python = { "basedpyright" },
@@ -20,11 +18,11 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         if enabled[bufnr] then return end
         -- Check file size before enabling LSP
         local file = vim.api.nvim_buf_get_name(bufnr)
-        if file ~= "" then            -- avoid checking unnamed buffers
+        if file ~= "" then
             local size = vim.fn.getfsize(file)
             if size > 500 * 1024 then -- > 500KB
-                enabled[bufnr] = true -- mark as handled
-                return                -- skip LSP for large files
+                enabled[bufnr] = true
+                return
             end
         end
         enabled[bufnr] = true
@@ -51,34 +49,24 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 })
 
 
-local function get_client(args)
-    return vim.lsp.get_client_by_id(args.data and args.data.client_id or args.client_id)
-end
-
-local function _disable_semantic_tokens(client)
-    if not client then
-        return
-    end
-    local provider = client.server_capabilities and client.server_capabilities.semanticTokensProvider
-    if not provider then
-        return
-    end
-    if provider.full or provider.range then
-        client.server_capabilities.semanticTokensProvider = nil
-    end
-end
-
 local _group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
 vim.api.nvim_create_autocmd('LspAttach', {
     group = _group,
     callback = function(args)
-        local client = get_client(args)
-        _disable_semantic_tokens(client)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client then
+            local provider = client.server_capabilities and client.server_capabilities.semanticTokensProvider
+            if provider then
+                if provider.full or provider.range then
+                    client.server_capabilities.semanticTokensProvider = nil
+                end
+            end
+        end
 
         local bufnr = args.buf
         -- if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
         --     vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
-        --     vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+        --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
         --     vim.keymap.set('i', '<C-Space>', function()
         --         vim.lsp.completion.get()
         --     end)
