@@ -14,11 +14,11 @@ pack.ensure(
         "https://github.com/tpope/vim-unimpaired",
     },
     {
-        "plugins.fzf",
-        "plugins.blink",
-        "plugins.quicker",
-        "plugins.fugitive",
-        "plugins.minidiff",
-        "plugins.treesitter",
+        "modules.fzf",
+        "modules.blink",
+        "modules.quicker",
+        "modules.fugitive",
+        "modules.minidiff",
+        "modules.treesitter",
     }
 )
