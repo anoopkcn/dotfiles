@@ -21,9 +21,12 @@ require("core.pack").ensure(
         "modules.makepicker"
     }
 )
-vim.lsp.enable({
-    "lua_ls",
-    "pyright",
-    "copilot",
-    "marksman"
-})
+
+vim.lsp.enable(
+    {
+        "lua_ls",
+        "pyright",
+        "copilot",
+        "marksman"
+    }
+)
