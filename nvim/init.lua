@@ -5,6 +5,7 @@ require("custom.options")
 require("custom.functions")
 require("custom.statusline")
 require("custom.keymaps")
+require("custom.lsp_autostart")
 local pack = require("custom.pack")
 pack.ensure(
     {
@@ -21,13 +22,3 @@ pack.ensure(
         "plugins.treesitter",
     }
 )
-
-vim.lsp.enable(
-    {
-        "lua_ls",
-        "basedpyright",
-        "marksman",
-        "copilot"
-    }
-)
-
