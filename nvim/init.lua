@@ -4,6 +4,7 @@
 require("core.auto")
 require("core.options")
 require("core.keymaps")
+require("core.grep")
 require("core.statusline")
 require("core.pack").ensure(
     {
