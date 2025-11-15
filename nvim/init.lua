@@ -9,7 +9,7 @@ require("core.pack").ensure(
     {
         "https://github.com/tpope/vim-repeat",
         "https://github.com/tpope/vim-surround",
-        "https://github.com/tpope/vim-unimpaired",
+        "https://github.com/tpope/vim-unimpaired"
     },
     {
         "modules.fzf",
