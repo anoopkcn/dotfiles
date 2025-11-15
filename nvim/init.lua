@@ -15,6 +15,7 @@ pack.ensure(
     {
         "plugins.fzf",
         "plugins.blink",
+        "plugins.quicker",
         "plugins.fugitive",
         "plugins.minidiff",
         "plugins.treesitter",
