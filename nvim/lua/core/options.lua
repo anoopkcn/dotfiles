@@ -34,3 +34,4 @@ if vim.fn.executable("rg") == 1 then
 end
 
 vim.cmd.colorscheme("onehalfdark")
+vim.diagnostic.config({ signs = false, })

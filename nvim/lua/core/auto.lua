@@ -1,9 +1,6 @@
 -- auto resize splits when the terminal's window is resized
 vim.api.nvim_create_autocmd("VimResized", { command = "wincmd =", })
 
--- show diagnostics with custom signs
-vim.diagnostic.config({ signs = false, })
-
 -- enable spell check for git commits
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "gitcommit", "markdown" },
