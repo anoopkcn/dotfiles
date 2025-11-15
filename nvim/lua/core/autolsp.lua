@@ -6,7 +6,7 @@ local always = {
 
 local ft_servers = {
     lua = { "lua_ls" },
-    python = { "basedpyright" },
+    python = { "pyright" },
     markdown = { "marksman" },
 }
 
