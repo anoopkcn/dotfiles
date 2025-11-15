@@ -1,12 +1,12 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
 
-require("custom.options")
-require("custom.functions")
-require("custom.statusline")
-require("custom.keymaps")
-require("custom.autolsp")
-local pack = require("custom.pack")
+require("core.options")
+require("core.functions")
+require("core.statusline")
+require("core.keymaps")
+require("core.autolsp")
+local pack = require("core.pack")
 pack.ensure(
     {
         "https://github.com/tpope/vim-repeat",
