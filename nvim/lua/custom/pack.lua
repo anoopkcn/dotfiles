@@ -85,7 +85,7 @@ function M.hooks()
     })
 end
 
-function M.ensure(specs)
+function M.add(specs)
     if type(specs) ~= "table" or #specs == 0 then
         return
     end
@@ -109,7 +109,7 @@ function M.setup(loaded_plugins)
     end
 end
 
-function M.ensure_and_setup(specs, modules)
+function M.ensure(specs, modules)
     local combined = {}
     if specs and type(specs) == "table" and #specs > 0 then
         append_specs(combined, specs)
@@ -121,7 +121,7 @@ function M.ensure_and_setup(specs, modules)
         append_specs(combined, entry.module.specs)
     end
 
-    M.ensure(combined)
+    M.add(combined)
     if #loaded > 0 then
         M.setup(loaded)
     end
