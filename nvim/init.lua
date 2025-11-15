@@ -5,7 +5,6 @@ require("core.options")
 require("core.functions")
 require("core.statusline")
 require("core.keymaps")
-require("core.autolsp")
 local pack = require("core.pack")
 pack.ensure(
     {
@@ -23,3 +22,9 @@ pack.ensure(
         "modules.makepicker"
     }
 )
+vim.lsp.enable({
+    "lua_ls",
+    "pyright",
+    "marksman",
+    "copilot"
+})
