@@ -20,5 +20,6 @@ pack.ensure(
         "modules.fugitive",
         "modules.minidiff",
         "modules.treesitter",
+        "modules.makepicker"
     }
 )

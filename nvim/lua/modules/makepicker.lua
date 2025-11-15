@@ -1,35 +1,38 @@
 local M = {}
 
-local function get_make_list_command()
+local function get_make_targets()
     if vim.fn.executable("make") ~= 1 then
         vim.notify("Make executable not found in PATH", vim.log.levels.WARN)
         return nil
     end
 
-    return [[
-        grep -E '^[a-zA-Z0-9][a-zA-Z0-9_-]*:' Makefile 2>/dev/null |
-        sed 's/:.*//' | grep -v -E '^[A-Z]+$'
-    ]]
-end
+    local makefile_path = vim.fn.findfile("Makefile", ".;")
+    if makefile_path == "" then
+        vim.notify("Could not locate a Makefile", vim.log.levels.INFO)
+        return nil
+    end
 
--- Executes the make list command and returns a table of targets.
-local function get_make_targets()
-    local command = get_make_list_command()
-    if not command then return nil end
-
-    local ok, result = pcall(vim.fn.systemlist, command)
+    local ok, lines = pcall(vim.fn.readfile, makefile_path)
     if not ok then
-        vim.notify("Failed to extract make targets: " .. tostring(result), vim.log.levels.ERROR)
+        vim.notify("Failed to read Makefile: " .. tostring(lines), vim.log.levels.ERROR)
         return nil
     end
 
     local targets = {}
-    for _, target in ipairs(result) do
-        local trimmed = vim.trim(target)
-        if trimmed ~= "" and
-            not string.match(trimmed, "^/") and
-            not string.match(trimmed, "^%-%-") then
-            table.insert(targets, trimmed)
+    for _, line in ipairs(lines) do
+        local trimmed = vim.trim(line)
+
+        if trimmed ~= "" and not vim.startswith(trimmed, "#") then
+            local name, remainder = trimmed:match("^([%w][%w_-]*)%s*:(.*)$")
+            if name and not name:match("^[A-Z]+$") then
+                local description
+                if remainder then
+                    description = remainder:match("##%s*(.+)$")
+                    if description then description = vim.trim(description) end
+                end
+
+                table.insert(targets, { name = name, description = description })
+            end
         end
     end
 
@@ -43,7 +46,7 @@ local function make_picker(opts)
     local targets = get_make_targets()
     if not targets then return end
 
-    if #targets == 0 then
+    if vim.tbl_isempty(targets) then
         vim.notify("No make targets found in project root", vim.log.levels.INFO)
         return
     end
@@ -54,11 +57,20 @@ local function make_picker(opts)
         return
     end
 
+    local entries = {}
+    for _, item in ipairs(targets) do
+        if item.description and item.description ~= "" then
+            table.insert(entries, string.format("%-25s %s", item.name, item.description))
+        else
+            table.insert(entries, item.name)
+        end
+    end
+
     -- Execute selected make target
     local function execute_make_target(selected)
         if not selected or #selected == 0 then return end
 
-        local target = selected[1]
+        local target = selected[1]:match("^(%S+)")
         local escaped_target = vim.fn.shellescape(target)
         local command = string.format("make %s", escaped_target)
 
@@ -66,18 +78,17 @@ local function make_picker(opts)
         vim.cmd("startinsert")
     end
 
-    fzf.fzf_exec(targets, {
-        prompt = "Run> ",
+    fzf.fzf_exec(entries, {
+        prompt = "make> ",
         actions = {
             ['default'] = execute_make_target,
         },
-        winopts = {
-            backdrop = 100,
-        },
+        -- winopts = {
+        --     backdrop = 100,
+        -- },
     })
 end
 
--- Setup function to configure the make picker
 function M.setup()
     vim.keymap.set('n', '<leader>fm', make_picker, { desc = '[F]ind [M]ake Target' })
 end
