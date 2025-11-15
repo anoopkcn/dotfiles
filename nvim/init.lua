@@ -5,7 +5,7 @@ require("custom.options")
 require("custom.functions")
 require("custom.statusline")
 require("custom.keymaps")
-require("custom.lsp_autostart")
+require("custom.autolsp")
 local pack = require("custom.pack")
 pack.ensure(
     {
