@@ -101,7 +101,7 @@ call s:h("CmpDocumentation", s:fg, s:bg, "")
 call s:h("CmpDocumentationBorder", s:hoverborder, s:bg, "")
 call s:h("FloatTitle", s:fg, s:bg, "bold")
 
-" Blink (blink.cmp)
+" Blink (blink.cmp) {
 call s:h("BlinkCmpLabel", s:fg, "", "")
 call s:h("BlinkCmpLabelMatch", s:blue, "", "bold")
 call s:h("BlinkCmpLabelDeprecated", s:comment_fg, "", "strikethrough")
@@ -122,6 +122,7 @@ call s:h("BlinkCmpDocCursorLine", s:fg, s:selection, "")
 call s:h("BlinkCmpSignatureHelp", s:fg, s:bg, "")
 call s:h("BlinkCmpSignatureHelpBorder", s:hoverborder, s:bg, "")
 call s:h("BlinkCmpSignatureHelpActiveParameter", s:yellow, "", "bold")
+" }
 
 call s:h("SpellBad", s:red, "", "")
 call s:h("SpellCap", s:yellow, "", "")
@@ -238,6 +239,10 @@ hi link gitcommitSelected gitcommitComment
 hi link gitcommitDiscardedArrow gitcommitDiscardedFile
 hi link gitcommitSelectedArrow gitcommitSelectedFile
 hi link gitcommitUnmergedArrow gitcommitUnmergedFile
+
+" fzf-lua 
+hi link FzfLuaBorder FloatBorder
+
 
 if has('nvim')
     let g:terminal_color_0 = s:black.gui

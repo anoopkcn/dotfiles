@@ -14,7 +14,6 @@ pack.ensure(
     },
     {
         "plugins.fzf",
-        "plugins.grug",
         "plugins.blink",
         "plugins.fugitive",
         "plugins.minidiff",
