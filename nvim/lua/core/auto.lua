@@ -1,9 +1,10 @@
 -- auto resize splits when the terminal's window is resized
-vim.api.nvim_create_autocmd("VimResized", {
-    command = "wincmd =",
-})
+vim.api.nvim_create_autocmd("VimResized", { command = "wincmd =", })
 
--- Enable spell check for git commits
+-- show diagnostics with custom signs
+vim.diagnostic.config({ signs = false, })
+
+-- enable spell check for git commits
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "gitcommit", "markdown" },
     callback = function()
@@ -29,7 +30,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         local line_count = vim.api.nvim_buf_line_count(args.buf)
         if mark[1] > 0 and mark[1] <= line_count then
             vim.api.nvim_win_set_cursor(0, mark)
-            -- defer centering slightly so it's applied after render
             vim.schedule(function()
                 vim.cmd("normal! zz")
             end)
@@ -44,15 +44,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- 		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
 -- 	end,
 -- })
-
--- syntax highlighting for dotenv files
-vim.api.nvim_create_autocmd("BufRead", {
-    group = vim.api.nvim_create_augroup("dotenv_ft", { clear = true }),
-    pattern = { ".env", ".env.*" },
-    callback = function()
-        vim.bo.filetype = "dosini"
-    end,
-})
 
 -- show cursorline only in active window enable
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
@@ -70,52 +61,8 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     end,
 })
 
-vim.api.nvim_create_autocmd("TermOpen", {
-    desc = "Vim terminal configurations",
-    group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
-    callback = function()
-        vim.opt_local.number = false
-        vim.opt_local.relativenumber = false
-    end,
-})
 
-ToggleQuickfixList = function()
-    local list_win_found = false
-    for _, win in ipairs(vim.fn.getwininfo()) do
-        if win.quickfix == 1 then
-            list_win_found = true
-            break -- Exit loop once any list window is found
-        end
-    end
-
-    if list_win_found then
-        vim.cmd('cclose')
-        vim.cmd('lclose')
-    else
-        vim.cmd('copen')
-    end
-end
-
-
---  show diagnostics with custom signs
-vim.diagnostic.config({
-    signs = false,
-    -- OR
-    -- virtual_lines = true,
-    -- OR
-    -- virtual_lines = { current_line = true},
-    -- OR
-    -- signs = {
-    --     text = {
-    --         [vim.diagnostic.severity.ERROR] = "",
-    --         [vim.diagnostic.severity.WARN] = "",
-    --         [vim.diagnostic.severity.INFO] = "",
-    --         [vim.diagnostic.severity.HINT] = "",
-    --     }
-    -- }
-})
-
-
+-- custom LSP attach actions
 local _group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
 vim.api.nvim_create_autocmd('LspAttach', {
     group = _group,

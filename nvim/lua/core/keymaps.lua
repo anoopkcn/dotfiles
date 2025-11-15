@@ -55,6 +55,12 @@ vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>",
 vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
 
+-- toggle quickfix list
+ToggleQuickfixList = function()
+  local qf = vim.fn.getqflist({ winid = 1 }).winid
+  if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
+end
+
 vim.keymap.set("n", "<leader>qq", ToggleQuickfixList,
     { noremap = true, silent = true, desc = "Toggle quickfixlist" })
 

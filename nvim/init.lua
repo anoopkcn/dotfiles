@@ -1,10 +1,10 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
 
+require("core.auto")
 require("core.options")
-require("core.functions")
-require("core.statusline")
 require("core.keymaps")
+require("core.statusline")
 require("core.pack").ensure(
     {
         "https://github.com/tpope/vim-repeat",
@@ -24,6 +24,6 @@ require("core.pack").ensure(
 vim.lsp.enable({
     "lua_ls",
     "pyright",
-    "marksman",
-    "copilot"
+    "copilot",
+    "marksman"
 })
