@@ -5,8 +5,7 @@ require("core.options")
 require("core.functions")
 require("core.statusline")
 require("core.keymaps")
-local pack = require("core.pack")
-pack.ensure(
+require("core.pack").ensure(
     {
         "https://github.com/tpope/vim-repeat",
         "https://github.com/tpope/vim-surround",
