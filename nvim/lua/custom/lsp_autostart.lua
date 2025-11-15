@@ -18,26 +18,35 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         local ft = vim.bo[bufnr].filetype
 
         if enabled[bufnr] then return end
-        enabled[bufnr] = true
-
-    vim.defer_fn(function()
-        local to_enable = {}
-
-        for server in pairs(always) do
-            to_enable[#to_enable+1] = server
-        end
-
-        local fts = ft_servers[ft]
-        if fts then
-            for _, server in ipairs(fts) do
-                to_enable[#to_enable+1] = server
+        -- Check file size before enabling LSP
+        local file = vim.api.nvim_buf_get_name(bufnr)
+        if file ~= "" then            -- avoid checking unnamed buffers
+            local size = vim.fn.getfsize(file)
+            if size > 500 * 1024 then -- > 500KB
+                enabled[bufnr] = true -- mark as handled
+                return                -- skip LSP for large files
             end
         end
+        enabled[bufnr] = true
 
-        if #to_enable > 0 then
-            vim.lsp.enable(to_enable)
-        end
-    end, 100)
+        vim.defer_fn(function()
+            local to_enable = {}
+
+            for server in pairs(always) do
+                to_enable[#to_enable + 1] = server
+            end
+
+            local fts = ft_servers[ft]
+            if fts then
+                for _, server in ipairs(fts) do
+                    to_enable[#to_enable + 1] = server
+                end
+            end
+
+            if #to_enable > 0 then
+                vim.lsp.enable(to_enable)
+            end
+        end, 100)
     end,
 })
 
