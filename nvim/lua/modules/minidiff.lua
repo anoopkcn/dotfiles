@@ -3,8 +3,8 @@ local M = {}
 M.specs = { "https://github.com/nvim-mini/mini.diff" }
 
 function M.setup()
-    local ok_minidiff, minidiff = pcall(require, "mini.diff")
-    if ok_minidiff then
+    local ok, minidiff = pcall(require, "mini.diff")
+    if ok then
         minidiff.setup({
             view = {
                 style = "sign",
