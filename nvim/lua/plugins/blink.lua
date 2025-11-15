@@ -39,7 +39,7 @@ function M.setup()
                     score_offset = 100,
                     async = true,
                     opts = {
-                        max_completions = 3,
+                        max_completions = 2,
                     }
                 }
             },
