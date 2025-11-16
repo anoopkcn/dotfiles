@@ -164,7 +164,7 @@ local vcs = function()
         summary_string = " " .. summary_string
     end
 
-    return string.format(" %s%s ", label, summary_string)
+    return string.format("git:%s%s ", label, summary_string)
 end
 
 
@@ -190,7 +190,6 @@ local function statusline_active()
     return table.concat {
         "%#Statusline#",
         mode(),
-        -- "%#Normal# ",
         filepath(dir),
         filename(name),
         lsp(),
