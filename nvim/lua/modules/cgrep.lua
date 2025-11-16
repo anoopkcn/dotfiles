@@ -35,22 +35,23 @@ local function set_quickfix_from_lines(lines)
     return #items
 end
 
-local function run_rg(fargs)
-    local cmd = { "rg", "--vimgrep", "--smart-case", "--color=never" }
-    vim.list_extend(cmd, fargs)
-    local lines = vim.fn.systemlist(cmd)
+local function run_rg(raw_args)
+    local command = string.format("rg --vimgrep --smart-case --color=never %s 2>&1", raw_args)
+    local shell = vim.o.shell
+    local flag = vim.o.shellcmdflag
+    local lines = vim.fn.systemlist({ shell, flag, command })
     return lines, vim.v.shell_error
 end
 
 
 M.setup = function()
     vim.api.nvim_create_user_command("CGrep", function(opts)
-        if vim.tbl_isempty(opts.fargs) then
+        if opts.args == "" then
             vim.notify("CGrep expects ripgrep arguments (pattern first).", vim.log.levels.WARN)
             return
         end
 
-        local lines, status = run_rg(opts.fargs)
+        local lines, status = run_rg(opts.args)
         if status > 1 then
             local message = table.concat(lines, "\n")
             vim.notify(message ~= "" and message or "CGrep: ripgrep failed.", vim.log.levels.ERROR)
@@ -64,6 +65,7 @@ M.setup = function()
         complete = "file",
         desc = "Run ripgrep and open quickfix list with matches",
     })
+
     vim.keymap.set("n", "<leader>/", ":CGrep<Space>", { silent = false, desc = "CGrep" })
 end
 
