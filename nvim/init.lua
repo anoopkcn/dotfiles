@@ -23,6 +23,7 @@ local packages = {
 }
 local modules = {
     "modules.cgrep",
+    "modules.filemarks",
     "modules.makepicker"
 }
 local lsps = {
