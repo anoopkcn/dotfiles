@@ -14,6 +14,7 @@ local specs = {
 }
 local packages = {
     "modules.fzf",
+    "modules.oil",
     "modules.blink",
     "modules.quicker",
     "modules.fugitive",
