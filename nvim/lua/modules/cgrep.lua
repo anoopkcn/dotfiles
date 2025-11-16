@@ -72,7 +72,7 @@ M.setup = function()
         desc = "Run ripgrep and open quickfix list with matches",
     })
 
-    vim.keymap.set("n", "<leader>/", ":CGrep<Space>", { silent = false, desc = "CGrep" })
+    vim.keymap.set("n", "<leader>/", ":CGrep<Space>", { silent = false, desc = "CGrep - same as rg" })
 end
 
 return M

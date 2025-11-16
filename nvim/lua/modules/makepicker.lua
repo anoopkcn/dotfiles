@@ -89,9 +89,6 @@ local function make_picker(opts)
         actions = {
             ['default'] = execute_make_target,
         },
-        -- winopts = {
-        --     backdrop = 100,
-        -- },
     })
 end
 
