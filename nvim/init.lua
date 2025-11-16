@@ -11,14 +11,16 @@ local specs = {
     "https://github.com/tpope/vim-surround",
     "https://github.com/tpope/vim-unimpaired"
 }
-local modules = {
+local packages = {
     "modules.fzf",
     "modules.blink",
-    "modules.cgrep",
     "modules.quicker",
     "modules.fugitive",
     "modules.minidiff",
     "modules.treesitter",
+}
+local modules = {
+    "modules.cgrep",
     "modules.makepicker"
 }
 local lsps = {
@@ -27,6 +29,6 @@ local lsps = {
     "copilot",
     "marksman"
 }
-
+vim.list_extend(modules, packages)
 pack.ensure(specs, modules)
 vim.lsp.enable(lsps)
