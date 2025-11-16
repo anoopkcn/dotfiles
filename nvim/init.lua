@@ -1,6 +1,5 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
-
 require("core.auto")
 require("core.options")
 require("core.keymaps")
