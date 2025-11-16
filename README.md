@@ -8,7 +8,7 @@ Repository includes `config` and `rc` files for `zsh`, and `nvim`
 
 - (optional) [`rg`](https://github.com/BurntSushi/ripgrep) for parallel `grep`
 - (optional) [`fzf`](https://github.com/junegunn/fzf) for fuzzy search 
-- [`neonim`](https://neovim.io) (>= 0.12) as editor
+- [`neovim`](https://neovim.io) (>= 0.12) as editor
 
 ## Installation
 
