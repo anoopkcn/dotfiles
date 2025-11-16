@@ -5,6 +5,7 @@ require("core.auto")
 require("core.options")
 require("core.keymaps")
 require("core.statusline")
+
 local pack = require("core.pack")
 local specs = {
     "https://github.com/tpope/vim-repeat",
@@ -29,6 +30,7 @@ local lsps = {
     "copilot",
     "marksman"
 }
+
 vim.list_extend(packages, modules)
 pack.ensure(specs, packages)
 vim.lsp.enable(lsps)
