@@ -1,3 +1,9 @@
+---@brief
+--- LICENSE: MIT
+--- by @anoopkcn
+--- https://github.com/anoopkcn/dotfiles/blob/main/nvim/lua/modules/makepicker.lua
+--- describes a Neovim module that provides an FZF-based picker for Makefile targets.
+
 local M = {}
 
 local function get_make_targets()
