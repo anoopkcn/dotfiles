@@ -4,7 +4,6 @@
 require("core.auto")
 require("core.options")
 require("core.keymaps")
-require("core.grep")
 require("core.statusline")
 require("core.pack").ensure(
     {
@@ -15,6 +14,7 @@ require("core.pack").ensure(
     {
         "modules.fzf",
         "modules.blink",
+        "modules.cgrep",
         "modules.quicker",
         "modules.fugitive",
         "modules.minidiff",
