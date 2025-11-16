@@ -29,6 +29,6 @@ local lsps = {
     "copilot",
     "marksman"
 }
-vim.list_extend(modules, packages)
-pack.ensure(specs, modules)
+vim.list_extend(packages, modules)
+pack.ensure(specs, packages)
 vim.lsp.enable(lsps)
