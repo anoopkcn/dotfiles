@@ -1,3 +1,9 @@
+---@brief
+--- LICENSE: MIT
+--- by @anoopkcn
+--- https://github.com/anoopkcn/dotfiles/blob/main/nvim/lua/modules/cgrep.lua
+--- Description: A Neovim module to run ripgrep (rg) and populate the quickfix list with results.
+
 local M = {}
 
 local function open_quickfix_when_results(match_count)
