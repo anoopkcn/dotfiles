@@ -34,9 +34,6 @@ vim.keymap.set("n", "N", "Nzzzv",
 vim.keymap.set("n", "<leader><enter>", "!!zsh<CR>",
     { noremap = true, silent = true, desc = "Execute line in shell" })
 
--- vim.keymap.set("n", "<leader>e", ":Explore<CR>",
---     { noremap = true, silent = true, desc = "Open file explorer" })
---
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd,
     { noremap = true, silent = true, desc = "Buffer delete" })
 
