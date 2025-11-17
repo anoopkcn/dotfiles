@@ -73,164 +73,180 @@ local function set(group, opts)
     vim.api.nvim_set_hl(0, group, def)
 end
 
-set("Normal", { fg = c.fg, bg = c.bg })
-set("Cursor", { fg = c.bg, bg = c.blue })
-set("CursorColumn", { bg = c.cursor_line })
-set("CursorLine", { bg = c.cursor_line })
-set("LineNr", { fg = c.gutter_fg, bg = c.gutter_bg })
-set("CursorLineNr", { fg = c.cyan }) -- only takes effect if 'cursorline' is set
-set("DiffAdd", { fg = c.green })
-set("DiffChange", { fg = c.yellow })
-set("DiffDelete", { fg = c.red })
-set("DiffText", { fg = c.blue })
-set("IncSearch", { fg = c.bg, bg = c.yellow })
-set("Search", { fg = c.bg, bg = c.yellow })
-set("ErrorMsg", { fg = c.fg })
-set("ModeMsg", { fg = c.fg })
-set("MoreMsg", { fg = c.fg })
-set("WarningMsg", { fg = c.red })
-set("Question", { fg = c.purple })
-set("Pmenu", { fg = c.fg, bg = c.popup_bg })
-set("PmenuSel", { fg = c.bg, bg = c.blue })
-set("PmenuSbar", { bg = c.popup_selection })
-set("PmenuThumb", { bg = c.popup_border })
-set("PmenuBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("PmenuKind", { fg = c.cyan, bg = c.popup_bg })
-set("PmenuKindSel", { fg = c.popup_bg, bg = c.blue })
-set("PmenuExtra", { fg = c.comment_fg, bg = c.popup_bg })
-set("PmenuExtraSel", { fg = c.popup_bg, bg = c.blue })
-set("NormalFloat", { fg = c.fg, bg = c.popup_bg })
-set("FloatBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("FloatShadow", { bg = c.bg })
-set("FloatShadowThrough", { bg = c.bg })
-set("LspInfoBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("LspFloatWinNormal", { fg = c.fg, bg = c.popup_bg })
-set("LspFloatWinBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("DiagnosticFloatingError", { fg = c.red, bg = c.popup_bg })
-set("DiagnosticFloatingWarn", { fg = c.yellow, bg = c.popup_bg })
-set("DiagnosticFloatingInfo", { fg = c.blue, bg = c.popup_bg })
-set("DiagnosticFloatingHint", { fg = c.cyan, bg = c.popup_bg })
-set("CmpDocumentation", { fg = c.fg, bg = c.popup_bg })
-set("CmpDocumentationBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("FloatTitle", { fg = c.fg, bg = c.popup_bg, bold = true })
-set("BlinkCmpLabel", { fg = c.fg })
-set("BlinkCmpLabelMatch", { fg = c.blue, bold = true })
-set("BlinkCmpLabelDeprecated", { fg = c.comment_fg, strikethrough = true })
-set("BlinkCmpLabelDetail", { fg = c.comment_fg })
-set("BlinkCmpLabelDescription", { fg = c.comment_fg })
-set("BlinkCmpSource", { fg = c.purple })
-set("BlinkCmpKind", { fg = c.cyan })
-set("BlinkCmpGhostText", { fg = c.non_text, italic = true })
-set("BlinkCmpScrollBarThumb", { bg = c.popup_border })
-set("BlinkCmpScrollBarGutter", { bg = c.popup_selection })
-set("BlinkCmpMenu", { fg = c.fg, bg = c.popup_bg })
-set("BlinkCmpMenuBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("BlinkCmpMenuSelection", { fg = c.popup_bg, bg = c.blue })
-set("BlinkCmpDoc", { fg = c.fg, bg = c.popup_bg })
-set("BlinkCmpDocBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("BlinkCmpDocSeparator", { fg = c.popup_border, bg = c.popup_bg })
-set("BlinkCmpDocCursorLine", { fg = c.fg, bg = c.popup_selection })
-set("BlinkCmpSignatureHelp", { fg = c.fg, bg = c.popup_bg })
-set("BlinkCmpSignatureHelpBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("BlinkCmpSignatureHelpActiveParameter", { fg = c.yellow, bold = true })
-set("SpellBad", { fg = c.red, undercurl = true, sp = c.red.hex })
-set("SpellCap", { fg = c.yellow, undercurl = true, sp = c.blue.hex })
-set("SpellLocal", { fg = c.yellow, undercurl = true, sp = c.green.hex })
-set("SpellRare", { fg = c.yellow, undercurl = true, sp = c.purple.hex })
-set("StatusLine", { fg = c.fg, bg = c.cursor_line })
-set("StatusLineNC", { fg = c.comment_fg, bg = c.cursor_line })
-set("TabLine", { fg = c.comment_fg, bg = c.cursor_line })
-set("TabLineFill", { fg = c.comment_fg, bg = c.cursor_line })
-set("TabLineSel", { fg = c.fg, bg = c.bg })
-set("Visual", { bg = c.selection })
-set("VisualNOS", { bg = c.selection })
-set("ColorColumn", { bg = c.color_col })
-set("Conceal", { fg = c.fg })
-set("Directory", { fg = c.blue })
-set("VertSplit", { fg = c.vertsplit, bg = c.vertsplit })
-set("Folded", { fg = c.fg })
-set("FoldColumn", { fg = c.fg })
-set("SignColumn", { fg = c.fg })
-set("MatchParen", { fg = c.blue, underline = true })
-set("SpecialKey", { fg = c.fg })
-set("Title", { fg = c.green })
-set("WildMenu", { fg = c.fg })
-set("DiagnosticUnderlineError", { undercurl = true, sp = c.red.hex })
-set("DiagnosticUnderlineWarn", { undercurl = true, sp = c.yellow.hex })
-set("DiagnosticUnderlineInfo", { undercurl = true, sp = c.blue.hex })
-set("DiagnosticUnderlineHint", { undercurl = true, sp = c.cyan.hex })
-set("LspSignatureActiveParameter", { fg = c.yellow, bold = true })
-set("Whitespace", { fg = c.non_text })
-set("NonText", { fg = c.non_text })
-set("Comment", { fg = c.comment_fg })
-set("Constant", { fg = c.cyan })
-set("String", { fg = c.green })
-set("Character", { fg = c.green })
-set("Number", { fg = c.yellow })
-set("Boolean", { fg = c.yellow })
-set("Float", { fg = c.yellow })
-set("Identifier", { fg = c.red })
-set("Function", { fg = c.blue })
-set("Statement", { fg = c.purple })
-set("Conditional", { fg = c.purple })
-set("Repeat", { fg = c.purple })
-set("Label", { fg = c.purple })
-set("Operator", { fg = c.fg })
-set("Keyword", { fg = c.red })
-set("Exception", { fg = c.purple })
-set("PreProc", { fg = c.yellow })
-set("Include", { fg = c.purple })
-set("Define", { fg = c.purple })
-set("Macro", { fg = c.purple })
-set("PreCondit", { fg = c.yellow })
-set("Type", { fg = c.yellow })
-set("StorageClass", { fg = c.yellow })
-set("Structure", { fg = c.yellow })
-set("Typedef", { fg = c.yellow })
-set("Special", { fg = c.blue })
-set("SpecialChar", { fg = c.fg })
-set("Tag", { fg = c.fg })
-set("Delimiter", { fg = c.fg })
-set("SpecialComment", { fg = c.fg })
-set("Debug", { fg = c.fg })
-set("Underlined", { fg = c.fg })
-set("Ignore", { fg = c.fg })
-set("Error", { fg = c.red, bg = c.gutter_bg })
-set("Todo", { fg = c.purple })
-set("GitGutterAdd", { fg = c.green, bg = c.gutter_bg })
-set("GitGutterDelete", { fg = c.red, bg = c.gutter_bg })
-set("GitGutterChange", { fg = c.yellow, bg = c.gutter_bg })
-set("GitGutterChangeDelete", { fg = c.red, bg = c.gutter_bg })
-set("NetrwMarkFile", { fg = c.bg, bg = c.blue, bold = true })
-set("diffAdded", { fg = c.green })
-set("diffRemoved", { fg = c.red })
-set("gitcommitComment", { fg = c.comment_fg })
-set("gitcommitUnmerged", { fg = c.red })
-set("gitcommitOnBranch", { fg = c.fg })
-set("gitcommitBranch", { fg = c.purple })
-set("gitcommitDiscardedType", { fg = c.red })
-set("gitcommitSelectedType", { fg = c.green })
-set("gitcommitHeader", { fg = c.fg })
-set("gitcommitUntrackedFile", { fg = c.cyan })
-set("gitcommitDiscardedFile", { fg = c.red })
-set("gitcommitSelectedFile", { fg = c.green })
-set("gitcommitUnmergedFile", { fg = c.yellow })
-set("gitcommitFile", { fg = c.fg })
-set("FzfLuaBorder", { link = "FloatBorder" })
+-- Default highlight groups
+local default_highlights = {
+    { "Normal",                      { fg = c.fg, bg = c.bg } },
+    { "Cursor",                      { fg = c.bg, bg = c.blue } },
+    { "CursorColumn",                { bg = c.cursor_line } },
+    { "CursorLine",                  { bg = c.cursor_line } },
+    { "LineNr",                      { fg = c.gutter_fg, bg = c.gutter_bg } },
+    { "CursorLineNr",                { fg = c.cyan } },
+    { "DiffAdd",                     { fg = c.green } },
+    { "DiffChange",                  { fg = c.yellow } },
+    { "DiffDelete",                  { fg = c.red } },
+    { "DiffText",                    { fg = c.blue } },
+    { "IncSearch",                   { fg = c.bg, bg = c.yellow } },
+    { "Search",                      { fg = c.bg, bg = c.yellow } },
+    { "ErrorMsg",                    { fg = c.fg } },
+    { "ModeMsg",                     { fg = c.fg } },
+    { "MoreMsg",                     { fg = c.fg } },
+    { "WarningMsg",                  { fg = c.red } },
+    { "Question",                    { fg = c.purple } },
+    { "Pmenu",                       { fg = c.fg, bg = c.popup_bg } },
+    { "PmenuSel",                    { fg = c.bg, bg = c.blue } },
+    { "PmenuSbar",                   { bg = c.popup_selection } },
+    { "PmenuThumb",                  { bg = c.popup_border } },
+    { "PmenuBorder",                 { fg = c.popup_border, bg = c.popup_bg } },
+    { "PmenuKind",                   { fg = c.cyan, bg = c.popup_bg } },
+    { "PmenuKindSel",                { fg = c.popup_bg, bg = c.blue } },
+    { "PmenuExtra",                  { fg = c.comment_fg, bg = c.popup_bg } },
+    { "PmenuExtraSel",               { fg = c.popup_bg, bg = c.blue } },
+    { "NormalFloat",                 { fg = c.fg, bg = c.popup_bg } },
+    { "FloatBorder",                 { fg = c.popup_border, bg = c.popup_bg } },
+    { "FloatShadow",                 { bg = c.bg } },
+    { "FloatShadowThrough",          { bg = c.bg } },
+    { "FloatTitle",                  { fg = c.fg, bg = c.popup_bg, bold = true } },
+    { "LspInfoBorder",               { fg = c.popup_border, bg = c.popup_bg } },
+    { "LspFloatWinNormal",           { fg = c.fg, bg = c.popup_bg } },
+    { "LspFloatWinBorder",           { fg = c.popup_border, bg = c.popup_bg } },
+    { "DiagnosticFloatingError",     { fg = c.red, bg = c.popup_bg } },
+    { "DiagnosticFloatingWarn",      { fg = c.yellow, bg = c.popup_bg } },
+    { "DiagnosticFloatingInfo",      { fg = c.blue, bg = c.popup_bg } },
+    { "DiagnosticFloatingHint",      { fg = c.cyan, bg = c.popup_bg } },
+    { "SpellBad",                    { fg = c.red, undercurl = true, sp = c.red.hex } },
+    { "SpellCap",                    { fg = c.yellow, undercurl = true, sp = c.blue.hex } },
+    { "SpellLocal",                  { fg = c.yellow, undercurl = true, sp = c.green.hex } },
+    { "SpellRare",                   { fg = c.yellow, undercurl = true, sp = c.purple.hex } },
+    { "StatusLine",                  { fg = c.fg, bg = c.cursor_line } },
+    { "StatusLineNC",                { fg = c.comment_fg, bg = c.cursor_line } },
+    { "TabLine",                     { fg = c.comment_fg, bg = c.cursor_line } },
+    { "TabLineFill",                 { fg = c.comment_fg, bg = c.cursor_line } },
+    { "TabLineSel",                  { fg = c.fg, bg = c.bg } },
+    { "Visual",                      { bg = c.selection } },
+    { "VisualNOS",                   { bg = c.selection } },
+    { "ColorColumn",                 { bg = c.color_col } },
+    { "Conceal",                     { fg = c.fg } },
+    { "Directory",                   { fg = c.blue } },
+    { "VertSplit",                   { fg = c.vertsplit, bg = c.vertsplit } },
+    { "Folded",                      { fg = c.fg } },
+    { "FoldColumn",                  { fg = c.fg } },
+    { "SignColumn",                  { fg = c.fg } },
+    { "MatchParen",                  { fg = c.blue, underline = true } },
+    { "SpecialKey",                  { fg = c.fg } },
+    { "Title",                       { fg = c.green } },
+    { "WildMenu",                    { fg = c.fg } },
+    { "DiagnosticUnderlineError",    { undercurl = true, sp = c.red.hex } },
+    { "DiagnosticUnderlineWarn",     { undercurl = true, sp = c.yellow.hex } },
+    { "DiagnosticUnderlineInfo",     { undercurl = true, sp = c.blue.hex } },
+    { "DiagnosticUnderlineHint",     { undercurl = true, sp = c.cyan.hex } },
+    { "LspSignatureActiveParameter", { fg = c.yellow, bold = true } },
+    { "Whitespace",                  { fg = c.non_text } },
+    { "NonText",                     { fg = c.non_text } },
+    { "Comment",                     { fg = c.comment_fg } },
+    { "Constant",                    { fg = c.cyan } },
+    { "String",                      { fg = c.green } },
+    { "Character",                   { fg = c.green } },
+    { "Number",                      { fg = c.yellow } },
+    { "Boolean",                     { fg = c.yellow } },
+    { "Float",                       { fg = c.yellow } },
+    { "Identifier",                  { fg = c.red } },
+    { "Function",                    { fg = c.blue } },
+    { "Statement",                   { fg = c.purple } },
+    { "Conditional",                 { fg = c.purple } },
+    { "Repeat",                      { fg = c.purple } },
+    { "Label",                       { fg = c.purple } },
+    { "Operator",                    { fg = c.fg } },
+    { "Keyword",                     { fg = c.red } },
+    { "Exception",                   { fg = c.purple } },
+    { "PreProc",                     { fg = c.yellow } },
+    { "Include",                     { fg = c.purple } },
+    { "Define",                      { fg = c.purple } },
+    { "Macro",                       { fg = c.purple } },
+    { "PreCondit",                   { fg = c.yellow } },
+    { "Type",                        { fg = c.yellow } },
+    { "StorageClass",                { fg = c.yellow } },
+    { "Structure",                   { fg = c.yellow } },
+    { "Typedef",                     { fg = c.yellow } },
+    { "Special",                     { fg = c.blue } },
+    { "SpecialChar",                 { fg = c.fg } },
+    { "Tag",                         { fg = c.fg } },
+    { "Delimiter",                   { fg = c.fg } },
+    { "SpecialComment",              { fg = c.fg } },
+    { "Debug",                       { fg = c.fg } },
+    { "Underlined",                  { fg = c.fg } },
+    { "Ignore",                      { fg = c.fg } },
+    { "Error",                       { fg = c.red, bg = c.gutter_bg } },
+    { "Todo",                        { fg = c.purple } },
+    { "diffAdded",                   { fg = c.green } },
+    { "diffRemoved",                 { fg = c.red } },
+    { "gitcommitComment",            { fg = c.comment_fg } },
+    { "gitcommitUnmerged",           { fg = c.red } },
+    { "gitcommitOnBranch",           { fg = c.fg } },
+    { "gitcommitBranch",             { fg = c.purple } },
+    { "gitcommitDiscardedType",      { fg = c.red } },
+    { "gitcommitSelectedType",       { fg = c.green } },
+    { "gitcommitHeader",             { fg = c.fg } },
+    { "gitcommitUntrackedFile",      { fg = c.cyan } },
+    { "gitcommitDiscardedFile",      { fg = c.red } },
+    { "gitcommitSelectedFile",       { fg = c.green } },
+    { "gitcommitUnmergedFile",       { fg = c.yellow } },
+    { "gitcommitFile",               { fg = c.fg } },
+    { "gitcommitNoBranch",           { link = "gitcommitBranch" } },
+    { "gitcommitUntracked",          { link = "gitcommitComment" } },
+    { "gitcommitDiscarded",          { link = "gitcommitComment" } },
+    { "gitcommitSelected",           { link = "gitcommitComment" } },
+    { "gitcommitDiscardedArrow",     { link = "gitcommitDiscardedFile" } },
+    { "gitcommitSelectedArrow",      { link = "gitcommitSelectedFile" } },
+    { "gitcommitUnmergedArrow",      { link = "gitcommitUnmergedFile" } },
+    { "WinSeparator",                { fg = c.comment_fg } },
+}
+
+-- Plugin highlight groups
+local plugin_highlights = {
+    { "CmpDocumentation",                     { fg = c.fg, bg = c.popup_bg } },
+    { "CmpDocumentationBorder",               { fg = c.popup_border, bg = c.popup_bg } },
+    { "BlinkCmpLabel",                        { fg = c.fg } },
+    { "BlinkCmpLabelMatch",                   { fg = c.blue, bold = true } },
+    { "BlinkCmpLabelDeprecated",              { fg = c.comment_fg, strikethrough = true } },
+    { "BlinkCmpLabelDetail",                  { fg = c.comment_fg } },
+    { "BlinkCmpLabelDescription",             { fg = c.comment_fg } },
+    { "BlinkCmpSource",                       { fg = c.purple } },
+    { "BlinkCmpKind",                         { fg = c.cyan } },
+    { "BlinkCmpGhostText",                    { fg = c.non_text, italic = true } },
+    { "BlinkCmpScrollBarThumb",               { bg = c.popup_border } },
+    { "BlinkCmpScrollBarGutter",              { bg = c.popup_selection } },
+    { "BlinkCmpMenu",                         { fg = c.fg, bg = c.popup_bg } },
+    { "BlinkCmpMenuBorder",                   { fg = c.popup_border, bg = c.popup_bg } },
+    { "BlinkCmpMenuSelection",                { fg = c.popup_bg, bg = c.blue } },
+    { "BlinkCmpDoc",                          { fg = c.fg, bg = c.popup_bg } },
+    { "BlinkCmpDocBorder",                    { fg = c.popup_border, bg = c.popup_bg } },
+    { "BlinkCmpDocSeparator",                 { fg = c.popup_border, bg = c.popup_bg } },
+    { "BlinkCmpDocCursorLine",                { fg = c.fg, bg = c.popup_selection } },
+    { "BlinkCmpSignatureHelp",                { fg = c.fg, bg = c.popup_bg } },
+    { "BlinkCmpSignatureHelpBorder",          { fg = c.popup_border, bg = c.popup_bg } },
+    { "BlinkCmpSignatureHelpActiveParameter", { fg = c.yellow, bold = true } },
+    { "GitGutterAdd",                         { fg = c.green, bg = c.gutter_bg } },
+    { "GitGutterDelete",                      { fg = c.red, bg = c.gutter_bg } },
+    { "GitGutterChange",                      { fg = c.yellow, bg = c.gutter_bg } },
+    { "GitGutterChangeDelete",                { fg = c.red, bg = c.gutter_bg } },
+    { "NetrwMarkFile",                        { fg = c.bg, bg = c.blue, bold = true } },
+    { "FzfLuaBorder",                         { link = "FloatBorder" } },
+    { "TreesitterContext",                    { fg = c.gutter_fg, bg = c.gutter_bg } },
+    { "TreesitterContextBottom",              { underline = true } },
+    { "TreesitterContextLineNumber",          { fg = c.fg, bg = c.gutter_bg } },
+    { "TreesitterContextLineNumberBottom",    { underline = true } },
+}
+
+for _, spec in ipairs(default_highlights) do
+    set(spec[1], spec[2])
+end
+
+for _, spec in ipairs(plugin_highlights) do
+    set(spec[1], spec[2])
+end
+
 -- set("ComplHint", { link = "Comment" })
 -- set("ComplHintMore", { link = "Comment" })
-set("gitcommitNoBranch", { link = "gitcommitBranch" })
-set("gitcommitUntracked", { link = "gitcommitComment" })
-set("gitcommitDiscarded", { link = "gitcommitComment" })
-set("gitcommitSelected", { link = "gitcommitComment" })
-set("gitcommitDiscardedArrow", { link = "gitcommitDiscardedFile" })
-set("gitcommitSelectedArrow", { link = "gitcommitSelectedFile" })
-set("gitcommitUnmergedArrow", { link = "gitcommitUnmergedFile" })
-set("WinSeparator", { fg = c.comment_fg })
-set("TreesitterContext", { fg = c.gutter_fg, bg = c.gutter_bg })
-set("TreesitterContextBottom", { underline = true })
-set("TreesitterContextLineNumber", { fg = c.fg, bg = c.gutter_bg })
-set("TreesitterContextLineNumberBottom", { underline = true })
 
 -- vim.g.terminal_color_0 = c.black.hex
 -- vim.g.terminal_color_1 = c.red.hex
