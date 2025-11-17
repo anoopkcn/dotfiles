@@ -78,7 +78,7 @@ set("Cursor", { fg = c.bg, bg = c.blue })
 set("CursorColumn", { bg = c.cursor_line })
 set("CursorLine", { bg = c.cursor_line })
 set("LineNr", { fg = c.gutter_fg, bg = c.gutter_bg })
-set("CursorLineNr", { fg = c.fg, bold = true })
+set("CursorLineNr", { fg = c.cyan }) -- only takes effect if 'cursorline' is set
 set("DiffAdd", { fg = c.green })
 set("DiffChange", { fg = c.yellow })
 set("DiffDelete", { fg = c.red })
