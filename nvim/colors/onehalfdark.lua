@@ -10,82 +10,68 @@
 vim.o.background = "dark"
 vim.cmd("highlight clear")
 if vim.fn.exists("syntax_on") == 1 then
-  vim.cmd("syntax reset")
+    vim.cmd("syntax reset")
 end
 
 vim.g.colors_name = "onehalfdark"
 
 local function color(hex, cterm)
-  return { hex = hex, cterm = tonumber(cterm) }
+    return { hex = hex, cterm = tonumber(cterm) }
 end
 
 local c = {
-  black = color("#282c34", 236),
-  red = color("#e06c75", 168),
-  green = color("#98c379", 114),
-  yellow = color("#e5c07b", 180),
-  blue = color("#61afef", 75),
-  purple = color("#c678dd", 176),
-  cyan = color("#56b6c2", 73),
-  white = color("#dcdfe4", 188),
-  comment_fg = color("#5c6370", 241),
-  gutter_bg = color("#282c34", 236),
-  gutter_fg = color("#919baa", 247),
-  non_text = color("#373C45", 239),
-  cursor_line = color("#313640", 237),
-  color_col = color("#313640", 237),
-  selection = color("#474e5d", 239),
-  vertsplit = color("#313640", 237),
-  hovercolor = color("#303030", 236),
-  hoverborder = color("#585858", 242),
-  popup_bg = color("#282c34", 236),
-  popup_border = color("#5c6370", 241),
-  popup_selection = color("#414753", 239),
+    black = color("#282c34", 236),
+    red = color("#e06c75", 168),
+    green = color("#98c379", 114),
+    yellow = color("#e5c07b", 180),
+    blue = color("#61afef", 75),
+    purple = color("#c678dd", 176),
+    cyan = color("#56b6c2", 73),
+    white = color("#dcdfe4", 188),
+    comment_fg = color("#5c6370", 241),
+    gutter_bg = color("#282c34", 236),
+    gutter_fg = color("#919baa", 247),
+    non_text = color("#373C45", 239),
+    cursor_line = color("#313640", 237),
+    color_col = color("#313640", 237),
+    selection = color("#474e5d", 239),
+    vertsplit = color("#313640", 237),
+    hovercolor = color("#303030", 236),
+    hoverborder = color("#585858", 242),
+    popup_bg = color("#282c34", 236),
+    popup_border = color("#5c6370", 241),
+    popup_selection = color("#414753", 239),
 }
 
 c.fg = c.white
 c.bg = c.black
 
 local function set(group, opts)
-  if opts.link then
-    vim.api.nvim_set_hl(0, group, { link = opts.link })
-    return
-  end
+    if opts.link then
+        vim.api.nvim_set_hl(0, group, { link = opts.link })
+        return
+    end
 
-  local def = {}
+    local def = {}
 
-  if opts.fg then
-    def.fg = opts.fg.hex
-    def.ctermfg = opts.fg.cterm
-  end
-  if opts.bg then
-    def.bg = opts.bg.hex
-    def.ctermbg = opts.bg.cterm
-  end
-  if opts.sp then
-    def.sp = opts.sp
-  end
-  if opts.blend then
-    def.blend = opts.blend
-  end
+    if opts.fg then
+        def.fg = opts.fg.hex
+        def.ctermfg = opts.fg.cterm
+    end
+    if opts.bg then
+        def.bg = opts.bg.hex
+        def.ctermbg = opts.bg.cterm
+    end
+    if opts.sp then def.sp = opts.sp end
+    if opts.blend then def.blend = opts.blend end
 
-  if opts.bold ~= nil then
-    def.bold = opts.bold
-  end
-  if opts.italic ~= nil then
-    def.italic = opts.italic
-  end
-  if opts.underline ~= nil then
-    def.underline = opts.underline
-  end
-  if opts.undercurl ~= nil then
-    def.undercurl = opts.undercurl
-  end
-  if opts.strikethrough ~= nil then
-    def.strikethrough = opts.strikethrough
-  end
+    if opts.bold ~= nil then def.bold = opts.bold end
+    if opts.italic ~= nil then def.italic = opts.italic end
+    if opts.underline ~= nil then def.underline = opts.underline end
+    if opts.undercurl ~= nil then def.undercurl = opts.undercurl end
+    if opts.strikethrough ~= nil then def.strikethrough = opts.strikethrough end
 
-  vim.api.nvim_set_hl(0, group, def)
+    vim.api.nvim_set_hl(0, group, def)
 end
 
 set("Normal", { fg = c.fg, bg = c.bg })
