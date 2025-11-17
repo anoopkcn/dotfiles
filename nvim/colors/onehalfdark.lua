@@ -1,10 +1,10 @@
 -- Name:        One Half Dark
--- Author:      @anoopkcn
+-- Authors:     @sonph, @mitchellh, @anoopkcn
 -- URL:         https://github.com/anoopkcn/dotfiles/blob/main/nvim/colors/onehalfdark.lua
 -- License:     The MIT License (MIT)
 --
 -- A dark vim color scheme based on Atom's One Dark theme
--- Original implementaion in vimL by github.com/sonph/onehalf and modified by @mitchellh
+-- Original implementaion in vimL by github.com/sonph/onehalf
 -- @anookcn - Converted to Lua and further modified for Neovim
 
 vim.o.background = "dark"
@@ -232,8 +232,8 @@ set("gitcommitSelectedFile", { fg = c.green })
 set("gitcommitUnmergedFile", { fg = c.yellow })
 set("gitcommitFile", { fg = c.fg })
 set("FzfLuaBorder", { link = "FloatBorder" })
-set("ComplHint", { link = "Comment" })
-set("ComplHintMore", { link = "Comment" })
+-- set("ComplHint", { link = "Comment" })
+-- set("ComplHintMore", { link = "Comment" })
 set("gitcommitNoBranch", { link = "gitcommitBranch" })
 set("gitcommitUntracked", { link = "gitcommitComment" })
 set("gitcommitDiscarded", { link = "gitcommitComment" })
