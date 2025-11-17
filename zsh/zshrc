@@ -13,7 +13,7 @@ path=($^path(N-/))
 export PATH
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export CONDA_CHANGEPS1=no
-export EDITOR='nvim'
+
 # INPUTRC
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
@@ -48,13 +48,7 @@ alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
 alias tree="eza --color=always --tree"
 alias tkill="tmux kill-server"
 alias tmi="tm -i"
-# alias icat="chafa -f kitty"
-# alias imgcat="chafa -f kitty"
 alias imgcat="viu"
 alias fcat="fancy-cat"
-# git aliases
-alias ga="git add"
-alias gs="git status --short"
-alias gco="git checkout"
-alias gcm="git commit -m"
-alias gb="git branch --show-current"
+
+export EDITOR='nvim'
