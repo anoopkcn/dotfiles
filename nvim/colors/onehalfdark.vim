@@ -67,7 +67,6 @@ endfun
 
 
 call s:h("Normal", s:fg, s:bg, "")
-
 call s:h("Cursor", s:bg, s:blue, "")
 call s:h("CursorColumn", "", s:cursor_line, "")
 call s:h("CursorLine", "", s:cursor_line, "")
