@@ -7,12 +7,9 @@
 -- Original implementaion in vimL by github.com/sonph/onehalf and modified by @mitchellh
 -- @anookcn - Converted to Lua and further modified for Neovim
 
-local api = vim.api
-local fn = vim.fn
-
 vim.o.background = "dark"
 vim.cmd("highlight clear")
-if fn.exists("syntax_on") == 1 then
+if vim.fn.exists("syntax_on") == 1 then
   vim.cmd("syntax reset")
 end
 
@@ -51,7 +48,7 @@ c.bg = c.black
 
 local function set(group, opts)
   if opts.link then
-    api.nvim_set_hl(0, group, { link = opts.link })
+    vim.api.nvim_set_hl(0, group, { link = opts.link })
     return
   end
 
@@ -88,7 +85,7 @@ local function set(group, opts)
     def.strikethrough = opts.strikethrough
   end
 
-  api.nvim_set_hl(0, group, def)
+  vim.api.nvim_set_hl(0, group, def)
 end
 
 set("Normal", { fg = c.fg, bg = c.bg })
@@ -96,7 +93,7 @@ set("Cursor", { fg = c.bg, bg = c.blue })
 set("CursorColumn", { bg = c.cursor_line })
 set("CursorLine", { bg = c.cursor_line })
 set("LineNr", { fg = c.gutter_fg, bg = c.gutter_bg })
-set("CursorLineNr", { fg = c.fg })
+set("CursorLineNr", { fg = c.fg, bold = true })
 set("DiffAdd", { fg = c.green })
 set("DiffChange", { fg = c.yellow })
 set("DiffDelete", { fg = c.red })
