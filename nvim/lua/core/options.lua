@@ -1,8 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
--- vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 3
-
+-- vim.opt.clipboard = "unnamedplus"
 vim.opt.swapfile = false
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -11,11 +9,10 @@ vim.opt.showtabline = 0
 vim.opt.laststatus = 2
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
--- vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
-vim.opt.scrolloff = 5
-vim.opt.sidescrolloff = 5
+vim.opt.scrolloff = 6
+vim.opt.sidescrolloff = 6
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -28,10 +25,10 @@ vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.wildmenu = true
 
-if vim.fn.executable("rg") == 1 then
-    vim.opt.grepprg = "rg --vimgrep --smart-case"
-    vim.opt.grepformat = "%f:%l:%c:%m"
-end
+-- if vim.fn.executable("rg") == 1 then
+--     vim.opt.grepprg = "rg --vimgrep --smart-case"
+--     vim.opt.grepformat = "%f:%l:%c:%m"
+-- end
 
 vim.cmd.colorscheme("onehalfdark")
 vim.diagnostic.config({ signs = false, })
