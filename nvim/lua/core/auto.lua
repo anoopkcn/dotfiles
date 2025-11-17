@@ -20,22 +20,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
--- show cursorline only in active window enable
-vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-    group = vim.api.nvim_create_augroup("active_cursorline", { clear = true }),
-    callback = function()
-        vim.opt_local.cursorline = true
-    end,
-})
-
--- show cursorline only in active window disable
-vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-    group = "active_cursorline",
-    callback = function()
-        vim.opt_local.cursorline = false
-    end,
-})
-
 -- no auto continue comments on new line
 -- vim.api.nvim_create_autocmd("FileType", {
 --     group = vim.api.nvim_create_augroup("no_auto_comment", {}),
@@ -63,7 +47,8 @@ local _group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
 vim.api.nvim_create_autocmd('LspAttach', {
     group = _group,
     callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local bufnr = args.buf
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
         if client then
             local provider = client.server_capabilities and client.server_capabilities.semanticTokensProvider
             if provider then
@@ -71,9 +56,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
                     client.server_capabilities.semanticTokensProvider = nil
                 end
             end
-        end
+            -- copilot inline suggestions
+            if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
+                vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
 
-        local bufnr = args.buf
+                vim.keymap.set("i", "<Tab>", function()
+                    return vim.lsp.inline_completion.get() and "" or "<Tab>"
+                end, { desc = "LSP: accept inline completion", buffer = bufnr, expr = true, }
+                )
+                vim.keymap.set("i", "<C-G>", vim.lsp.inline_completion.select,
+                    { desc = "LSP: switch inline completion", buffer = bufnr }
+                )
+            end
+        end
         -- if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
         --     vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
         --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })

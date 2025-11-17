@@ -2,7 +2,6 @@ local M = {}
 
 M.specs = {
     "https://github.com/saghen/blink.cmp",
-    "https://github.com/fang2hou/blink-copilot"
 }
 
 function M.setup()
@@ -31,18 +30,7 @@ function M.setup()
             },
         },
         sources = {
-            default = { "copilot", 'lsp', 'path', 'snippets', 'buffer' },
-            providers = {
-                copilot = {
-                    name = "copilot",
-                    module = "blink-copilot",
-                    score_offset = 100,
-                    async = true,
-                    opts = {
-                        max_completions = 2,
-                    }
-                }
-            },
+            default = { 'lsp', 'path', 'snippets', 'buffer' },
         },
         fuzzy = {
             prebuilt_binaries = {

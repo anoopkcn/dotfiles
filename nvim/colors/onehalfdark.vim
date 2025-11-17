@@ -253,8 +253,14 @@ hi link gitcommitDiscardedArrow gitcommitDiscardedFile
 hi link gitcommitSelectedArrow gitcommitSelectedFile
 hi link gitcommitUnmergedArrow gitcommitUnmergedFile
 
-" fzf-lua 
+" fzf-lua {
 hi link FzfLuaBorder FloatBorder
+" }
+
+" COPILOT inline ghost-text {
+hi! link ComplHint Comment
+hi! link ComplHintMore Comment
+" }
 
 
 if has('nvim')
