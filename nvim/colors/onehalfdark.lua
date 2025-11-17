@@ -64,7 +64,6 @@ local function set(group, opts)
     end
     if opts.sp then def.sp = opts.sp end
     if opts.blend then def.blend = opts.blend end
-
     if opts.bold ~= nil then def.bold = opts.bold end
     if opts.italic ~= nil then def.italic = opts.italic end
     if opts.underline ~= nil then def.underline = opts.underline end
