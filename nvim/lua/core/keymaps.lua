@@ -55,10 +55,9 @@ vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>",
 vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
 
--- toggle quickfix list
 ToggleQuickfixList = function()
-  local qf = vim.fn.getqflist({ winid = 1 }).winid
-  if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
+    local qf = vim.fn.getqflist({ winid = 1 }).winid
+    if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
 end
 
 vim.keymap.set("n", "<leader>qq", ToggleQuickfixList,
@@ -82,12 +81,11 @@ vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true })
 vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<cr>",
     { noremap = true, silent = true, desc = "Open DEVLOG.md" })
 
-vim.keymap.set("n", "<leader>'", function()
-        local raw_timestamp = os.date("%FT%T")
-        local timestamp_str = string.format("%s", raw_timestamp or "")
-        vim.api.nvim_put({ timestamp_str }, "c", true, true)
-    end,
-    { noremap = true, silent = true, desc = "Insert current timestamp" })
+TimestampInsert = function()
+    local raw_timestamp = os.date("%FT%T")
+    local timestamp_str = string.format("%s", raw_timestamp or "")
+    vim.api.nvim_put({ timestamp_str }, "c", true, true)
+end
 
--- vim.keymap.set("n", "<leader>U", function() vim.pack.update() end,
---     { noremap = true, silent = true, desc = "Update plugins" })
+vim.keymap.set("n", "<leader>'", TimestampInsert,
+    { noremap = true, silent = true, desc = "Insert current timestamp" })
