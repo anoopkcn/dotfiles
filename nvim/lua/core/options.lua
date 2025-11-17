@@ -35,3 +35,8 @@ end
 
 vim.cmd.colorscheme("onehalfdark")
 vim.diagnostic.config({ signs = false, })
+vim.filetype.add({
+    extension = {
+        smd = "markdown",
+    }
+})
