@@ -10,10 +10,11 @@ M.config = function()
 
     configs.setup {
         ensure_installed = {
-            "c", "cpp", "zig", "rust", "go", "fortran",
-            "python", "bash", "lua", "vim", "vimdoc",
-            "query", "markdown", "markdown_inline", "html",
-            "toml", "yaml", "json", "xml",
+            "c", "cpp", "zig",
+            "python", "bash", "lua",
+            "vim", "vimdoc", "markdown", -- "markdown_inline", "query",
+            "toml", "yaml", "json", "xml", "html",
+            -- "rust", "go", "fortran",
         },
         sync_install = false,
         auto_install = false,
