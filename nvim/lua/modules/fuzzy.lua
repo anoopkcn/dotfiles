@@ -5,6 +5,32 @@
 --- Description: Neovim fuzzy helpers for grep and files that feed the quickfix list.
 
 local M = {}
+local FILE_MATCH_LIMIT = 400
+
+local function split_lines(output)
+    if not output or output == "" then
+        return {}
+    end
+    return vim.split(output, "\n", { trimempty = true })
+end
+
+local function system_lines(command, callback)
+    local shell = vim.o.shell
+    local flag = vim.o.shellcmdflag
+    local handle, err = vim.system({ shell, flag, command }, { text = true }, function(obj)
+        local code = obj.code or 0
+        local lines = split_lines(obj.stdout)
+        vim.schedule(function()
+            callback(lines, code)
+        end)
+    end)
+    if not handle then
+        vim.schedule(function()
+            vim.notify(string.format("Fuzzy: failed to start command: %s", err or "unknown"), vim.log.levels.ERROR)
+            callback({ err or "failed to execute command" }, 1)
+        end)
+    end
+end
 
 local function open_quickfix_when_results(match_count, empty_message)
     if match_count == 0 then
@@ -41,12 +67,9 @@ local function set_quickfix_from_lines(lines)
     return #items
 end
 
-local function run_rg(raw_args)
+local function run_rg(raw_args, callback)
     local command = string.format("rg --vimgrep --smart-case --color=never %s 2>&1", raw_args)
-    local shell = vim.o.shell
-    local flag = vim.o.shellcmdflag
-    local lines = vim.fn.systemlist({ shell, flag, command })
-    return lines, vim.v.shell_error
+    system_lines(command, callback)
 end
 
 local function prompt_input(prompt, default)
@@ -59,17 +82,16 @@ local function prompt_input(prompt, default)
     return vim.trim(result)
 end
 
-local function list_project_files()
+local function list_project_files(callback)
     local command = "rg --files --hidden --follow --color=never --glob '!.git/*' 2>&1"
-    local shell = vim.o.shell
-    local flag = vim.o.shellcmdflag
-    local lines = vim.fn.systemlist({ shell, flag, command })
-    return lines, vim.v.shell_error
+    system_lines(command, callback)
 end
 
-local function set_quickfix_files(files)
+local function set_quickfix_files(files, limit)
+    local max_items = math.min(limit or #files, #files)
     local items = {}
-    for _, file in ipairs(files) do
+    for idx = 1, max_items do
+        local file = files[idx]
         if file ~= "" then
             table.insert(items, {
                 filename = file,
@@ -94,15 +116,16 @@ M.config = function()
             end
         end
 
-        local lines, status = run_rg(opts.args)
-        if status > 1 then
-            local message = table.concat(lines, "\n")
-            vim.notify(message ~= "" and message or "FuzzyGrep: ripgrep failed.", vim.log.levels.ERROR)
-            return
-        end
+        run_rg(opts.args, function(lines, status)
+            if status > 1 then
+                local message = table.concat(lines, "\n")
+                vim.notify(message ~= "" and message or "FuzzyGrep: ripgrep failed.", vim.log.levels.ERROR)
+                return
+            end
 
-        local count = set_quickfix_from_lines(lines)
-        open_quickfix_when_results(count, "FuzzyGrep: no matches found.")
+            local count = set_quickfix_from_lines(lines)
+            open_quickfix_when_results(count, "FuzzyGrep: no matches found.")
+        end)
     end, {
         nargs = "*",
         complete = "file",
@@ -119,16 +142,25 @@ M.config = function()
             end
         end
 
-        local files, status = list_project_files()
-        if status > 1 then
-            local message = table.concat(files, "\n")
-            vim.notify(message ~= "" and message or "FuzzyFiles: failed to list files.", vim.log.levels.ERROR)
-            return
-        end
+        list_project_files(function(files, status)
+            if status > 1 then
+                local message = table.concat(files, "\n")
+                vim.notify(message ~= "" and message or "FuzzyFiles: failed to list files.", vim.log.levels.ERROR)
+                return
+            end
 
-        local candidates = vim.fn.matchfuzzy(files, query)
-        local count = set_quickfix_files(candidates)
-        open_quickfix_when_results(count, " FuzzyFiles: nothing matched the pattern.")
+            local limit = FILE_MATCH_LIMIT + 1
+            local candidates = vim.fn.matchfuzzy(files, query, { limit = limit })
+            local truncated = #candidates == limit
+            if truncated then
+                table.remove(candidates) -- drop the extra sentinel entry
+            end
+            local count = set_quickfix_files(candidates, FILE_MATCH_LIMIT)
+            if truncated then
+                vim.notify(string.format("FuzzyFiles: showing first %d matches.", FILE_MATCH_LIMIT), vim.log.levels.INFO)
+            end
+            open_quickfix_when_results(count, "FuzzyFiles: nothing matched the pattern.")
+        end)
     end, {
         nargs = "*",
         desc = "Fuzzy find tracked files using ripgrep --files",
