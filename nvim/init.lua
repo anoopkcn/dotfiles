@@ -1,8 +1,8 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
-require("core.auto")
 require("core.options")
 require("core.keymaps")
+require("core.autocmds")
 require("core.statusline")
 
 local pack = require("core.pack")
