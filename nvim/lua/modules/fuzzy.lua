@@ -17,6 +17,8 @@ M.config = function()
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
     vim.keymap.set("n", "<leader>?", "<CMD>FuzzyFiles<CR>",
         { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
+    vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers<CR>",
+        { noremap = true, silent = true, desc = "Fuzzy buffer list" })
 end
 
 return M
