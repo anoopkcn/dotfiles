@@ -2,7 +2,7 @@ local M = {}
 
 M.specs = { "https://github.com/ibhagwan/fzf-lua" }
 
-function M.setup()
+M.config = function()
     local ok, fzf = pcall(require, "fzf-lua")
     if not ok then
         return

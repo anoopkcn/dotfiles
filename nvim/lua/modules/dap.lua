@@ -15,7 +15,7 @@ local function safe_require(name)
     return nil
 end
 
-function M.setup()
+M.config = function()
     local dap = safe_require("dap")
     local dapui = safe_require("dapui")
     if not dap or not dapui then

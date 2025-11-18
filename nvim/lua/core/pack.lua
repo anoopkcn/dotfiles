@@ -8,7 +8,7 @@
 -- Example of a config module 'minidiff.lua':
 --          local M = {}
 --          M.specs = { "https://github.com/nvim-mini/mini.diff" }
---          M.setup = function()
+--          M.config = function()
 --              local ok, minidiff = pcall(require, "mini.diff")
 --              if ok then
 --                  minidiff.setup({...})
@@ -100,11 +100,11 @@ function M.add(specs)
     vim.pack.add(specs, { confirm = false, load = true })
 end
 
-function M.setup(loaded_plugins)
+function M.config(loaded_plugins)
     for _, entry in ipairs(loaded_plugins or {}) do
-        local plugin = entry.module
-        if type(plugin.setup) == "function" then
-            plugin.setup()
+        local module = entry.module
+        if type(module.config) == "function" then
+            module.config()
         end
     end
 end
@@ -123,7 +123,7 @@ function M.ensure(specs, modules)
 
     M.add(combined)
     if #loaded > 0 then
-        M.setup(loaded)
+        M.config(loaded)
     end
 end
 

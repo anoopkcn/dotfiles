@@ -50,7 +50,7 @@ local function run_rg(raw_args)
 end
 
 
-M.setup = function()
+M.config = function()
     vim.api.nvim_create_user_command("CGrep", function(opts)
         if opts.args == "" then
             vim.notify("CGrep expects ripgrep arguments (pattern first).", vim.log.levels.WARN)

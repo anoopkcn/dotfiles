@@ -1,6 +1,6 @@
 local M = {}
 
-function M.setup()
+M.config = function()
     local ok, filemarks = pcall(require, "filemarks")
     if not ok then
         return

@@ -4,7 +4,7 @@ M.specs = {
     "https://github.com/saghen/blink.cmp",
 }
 
-function M.setup()
+M.config = function()
     local ok, blink = pcall(require, "blink.cmp")
     if not ok then
         return

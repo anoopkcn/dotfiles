@@ -2,7 +2,7 @@ local M = {}
 
 M.specs = { "https://github.com/stevearc/quicker.nvim" }
 
-M.setup = function()
+M.config = function()
     local ok, quicker = pcall(require, "quicker")
     if ok then
         ---@diagnostic disable-next-line

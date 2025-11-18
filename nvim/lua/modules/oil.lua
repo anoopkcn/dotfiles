@@ -2,7 +2,7 @@ local M = {}
 
 M.specs = { "https://github.com/stevearc/oil.nvim" }
 
-M.setup = function()
+M.config = function()
     local ok, oil = pcall(require, "oil")
     if not ok then
         return

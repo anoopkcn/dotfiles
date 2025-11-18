@@ -92,7 +92,7 @@ local function make_picker(opts)
     })
 end
 
-function M.setup()
+M.config = function()
     vim.keymap.set('n', '<leader>fm', make_picker, { desc = '[F]ind [M]ake Target' })
 end
 

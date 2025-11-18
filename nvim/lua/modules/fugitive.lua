@@ -2,7 +2,7 @@ local M = {}
 
 M.specs = { "https://github.com/tpope/vim-fugitive" }
 
-M.setup = function()
+M.config = function()
     vim.keymap.set(
         "n",
         "<leader>gg",

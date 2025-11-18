@@ -2,7 +2,7 @@ local M = {}
 
 M.specs = { "https://github.com/nvim-mini/mini.diff" }
 
-function M.setup()
+M.config = function()
     local ok, minidiff = pcall(require, "mini.diff")
     if ok then
         minidiff.setup({
