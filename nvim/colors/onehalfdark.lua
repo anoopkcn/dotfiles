@@ -42,6 +42,7 @@ local c = {
     popup_selection = color("#44688e", 239),
     popup_scrollbar = color("#3b4252", 237),
     popup_thumb = color("#4b5266", 239),
+    popup_border = color("#5c6370", 242),
 }
 
 local function set(group, opts)
