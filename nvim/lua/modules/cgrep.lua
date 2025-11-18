@@ -6,9 +6,9 @@
 
 local M = {}
 
-local function open_quickfix_when_results(match_count)
+local function open_quickfix_when_results(match_count, empty_message)
     if match_count == 0 then
-        vim.notify("CGrep: no matches found.", vim.log.levels.INFO)
+        vim.notify(empty_message or "No matches found.", vim.log.levels.INFO)
         return
     end
 
@@ -49,12 +49,49 @@ local function run_rg(raw_args)
     return lines, vim.v.shell_error
 end
 
+local function prompt_input(prompt, default)
+    vim.fn.inputsave()
+    local ok, result = pcall(vim.fn.input, prompt, default or "")
+    vim.fn.inputrestore()
+    if not ok then
+        return ""
+    end
+    return vim.trim(result)
+end
+
+local function list_project_files()
+    local command = "rg --files --hidden --follow --color=never --glob '!.git/*' 2>&1"
+    local shell = vim.o.shell
+    local flag = vim.o.shellcmdflag
+    local lines = vim.fn.systemlist({ shell, flag, command })
+    return lines, vim.v.shell_error
+end
+
+local function set_quickfix_files(files)
+    local items = {}
+    for _, file in ipairs(files) do
+        if file ~= "" then
+            table.insert(items, {
+                filename = file,
+                lnum = 1,
+                col = 1,
+                text = file,
+            })
+        end
+    end
+    vim.fn.setqflist({}, " ", { title = "CFiles (rg --files)", items = items })
+    return #items
+end
+
 
 M.config = function()
     vim.api.nvim_create_user_command("CGrep", function(opts)
         if opts.args == "" then
-            vim.notify("CGrep expects ripgrep arguments (pattern first).", vim.log.levels.WARN)
-            return
+            opts.args = prompt_input("CGrep args (pattern first): ", "")
+            if opts.args == "" then
+                vim.notify("CGrep cancelled.", vim.log.levels.INFO)
+                return
+            end
         end
 
         local lines, status = run_rg(opts.args)
@@ -65,14 +102,38 @@ M.config = function()
         end
 
         local count = set_quickfix_from_lines(lines)
-        open_quickfix_when_results(count)
+        open_quickfix_when_results(count, "CGrep: no matches found.")
     end, {
-        nargs = "+",
+        nargs = "*",
         complete = "file",
         desc = "Run ripgrep and open quickfix list with matches",
     })
 
-    vim.keymap.set("n", "<leader>/", ":CGrep<Space>", { silent = false, desc = "CGrep - same as rg" })
+    vim.api.nvim_create_user_command("CFiles", function(opts)
+        local files, status = list_project_files()
+        if status > 1 then
+            local message = table.concat(files, "\n")
+            vim.notify(message ~= "" and message or "CFiles: failed to list files.", vim.log.levels.ERROR)
+            return
+        end
+
+        local query = opts.args ~= "" and opts.args or prompt_input("CFiles fuzzy pattern: ", "")
+        local candidates = files
+        if query ~= "" then
+            candidates = vim.fn.matchfuzzy(files, query)
+        end
+        local count = set_quickfix_files(candidates)
+        open_quickfix_when_results(count, "CFiles: nothing matched the pattern.")
+    end, {
+        nargs = "?",
+        desc = "Fuzzy find tracked files using ripgrep --files",
+    })
+
+    -- Keymaps
+    vim.keymap.set("n", "<leader>/", ":CGrep<CR>",
+        { silent = false, desc = "CGrep - same as rg" })
+    vim.keymap.set("n", "<leader>?", ":CFiles<CR>",
+        { noremap = true, silent = true, desc = "Fuzzy find files (CFiles)" })
 end
 
 return M

@@ -13,7 +13,6 @@ local specs = {
     "https://github.com/tpope/vim-unimpaired"
 }
 local packages = {
-    "modules.fzf",
     "modules.quicker",
     "modules.fugitive",
     "modules.minidiff",
