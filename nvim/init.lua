@@ -14,7 +14,6 @@ local specs = {
 }
 local packages = {
     "modules.fzf",
-    "modules.blink",
     "modules.quicker",
     "modules.fugitive",
     "modules.minidiff",
