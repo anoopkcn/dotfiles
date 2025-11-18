@@ -1,11 +1,11 @@
+---@brief
 -- Name:        One Half Dark
--- Authors:     @sonph, @mitchellh, @anoopkcn
+-- Authors:     @anoopkcn
 -- URL:         https://github.com/anoopkcn/dotfiles/blob/main/nvim/colors/onehalfdark.lua
 -- License:     The MIT License (MIT)
 --
 -- A dark vim color scheme based on Atom's One Dark theme
--- Original implementaion in vimL by github.com/sonph/onehalf
--- @anookcn - Converted to Lua and further modified for Neovim
+-- Inspierd by @sonph's (github.com/sonph/onehalf) a vimL version of the same theme
 
 vim.o.background = "dark"
 vim.cmd("highlight clear")
