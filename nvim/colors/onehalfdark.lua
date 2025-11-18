@@ -5,7 +5,7 @@
 -- License:     The MIT License (MIT)
 --
 -- A dark vim color scheme based on Atom's One Dark theme
--- Inspierd by @sonph's (github.com/sonph/onehalf) vimL version of the same theme
+-- Inspierd by @sonph's (github.com/sonph/onehalf) vimscript version of the same theme
 
 vim.o.background = "dark"
 vim.cmd("highlight clear")
