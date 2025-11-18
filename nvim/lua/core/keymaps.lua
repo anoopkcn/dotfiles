@@ -86,3 +86,5 @@ end
 
 vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
+
+vim.keymap.set("n", "<leader>fe", "<CMD>Ex<CR>", { desc = "Open parent directory" })

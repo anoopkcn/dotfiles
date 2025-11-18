@@ -14,9 +14,7 @@ local specs = {
 }
 local packages = {
     "modules.fzf",
-    "modules.oil",
     "modules.blink",
-    "modules.fidget",
     "modules.quicker",
     "modules.fugitive",
     "modules.minidiff",
@@ -25,7 +23,7 @@ local packages = {
 local modules = {
     "modules.cgrep",
     "modules.filemarks",
-    "modules.makepicker"
+    -- "modules.makepicker"
 }
 local lsps = { "lua_ls", "pyright", "copilot", "marksman" }
 
