@@ -63,7 +63,7 @@ local function set_quickfix_from_lines(lines)
             table.insert(items, entry)
         end
     end
-    vim.fn.setqflist({}, " ", { title = "FuzzyGrep (rg)", items = items })
+    vim.fn.setqflist({}, " ", { title = "FuzzyGrep", items = items })
     return #items
 end
 
@@ -101,7 +101,7 @@ local function set_quickfix_files(files, limit)
             })
         end
     end
-    vim.fn.setqflist({}, " ", { title = "FuzzyFiles (rg --files)", items = items })
+    vim.fn.setqflist({}, " ", { title = "FuzzyFiles", items = items })
     return #items
 end
 
