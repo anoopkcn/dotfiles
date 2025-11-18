@@ -97,7 +97,7 @@ function M.add(specs)
     M.hooks()
     -- Add specs without confirmation and load them
     -- loading is necessary for vim plugins to be available immediately
-    vim.pack.add(specs, { confirm = false, load = true })
+    vim.pack.add(specs, { confirm = false, load = false })
 end
 
 function M.config(loaded_plugins)
