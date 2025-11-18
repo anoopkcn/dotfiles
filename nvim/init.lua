@@ -27,12 +27,7 @@ local modules = {
     "modules.filemarks",
     "modules.makepicker"
 }
-local lsps = {
-    "lua_ls",
-    "pyright",
-    "copilot",
-    "marksman"
-}
+local lsps = { "lua_ls", "pyright", "copilot", "marksman" }
 
 vim.list_extend(packages, modules)
 pack.ensure(specs, packages)
