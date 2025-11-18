@@ -110,6 +110,15 @@ M.config = function()
     })
 
     vim.api.nvim_create_user_command("FuzzyFiles", function(opts)
+        local query = vim.trim(opts.args or "")
+        if query == "" then
+            query = prompt_input("FuzzyFiles: ", "")
+            if query == "" then
+                vim.notify("FuzzyFiles cancelled.", vim.log.levels.INFO)
+                return
+            end
+        end
+
         local files, status = list_project_files()
         if status > 1 then
             local message = table.concat(files, "\n")
@@ -117,21 +126,17 @@ M.config = function()
             return
         end
 
-        local query = opts.args ~= "" and opts.args or prompt_input("FuzzyFiles: ", "")
-        local candidates = files
-        if query ~= "" then
-            candidates = vim.fn.matchfuzzy(files, query)
-        end
+        local candidates = vim.fn.matchfuzzy(files, query)
         local count = set_quickfix_files(candidates)
-        open_quickfix_when_results(count, "FuzzyFiles: nothing matched the pattern.")
+        open_quickfix_when_results(count, " FuzzyFiles: nothing matched the pattern.")
     end, {
-        nargs = "?",
+        nargs = "*",
         desc = "Fuzzy find tracked files using ripgrep --files",
     })
 
     -- Keymaps
     vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
-        { silent = false, desc = "FuzzyGrep - same as rg" })
+        { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
     vim.keymap.set("n", "<leader>?", "<CMD>FuzzyFiles<CR>",
         { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
 end
