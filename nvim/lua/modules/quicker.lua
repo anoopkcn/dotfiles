@@ -15,6 +15,11 @@ M.config = function()
                 winfixheight = false,
                 wrap = false,
             },
+            highlight = {
+                treesitter = true,
+                lsp = false,
+                load_buffers = false,
+            },
             borders = {
                 vert = " "
             }
