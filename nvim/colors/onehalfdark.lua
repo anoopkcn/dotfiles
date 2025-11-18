@@ -20,14 +20,14 @@ local function color(hex, cterm)
 end
 
 local c = {
-    black = color("#282c34", 236),
+    fg = color("#dcdfe4", 188), -- white
+    bg = color("#282c34", 236), -- black
     red = color("#e06c75", 168),
     green = color("#98c379", 114),
     yellow = color("#e5c07b", 180),
     blue = color("#61afef", 75),
     purple = color("#c678dd", 176),
     cyan = color("#56b6c2", 73),
-    white = color("#dcdfe4", 188),
     comment_fg = color("#5c6370", 241),
     gutter_bg = color("#282c34", 236),
     gutter_fg = color("#919baa", 247),
@@ -37,14 +37,11 @@ local c = {
     selection = color("#474e5d", 239),
     vertsplit = color("#313640", 237),
     hovercolor = color("#303030", 236),
-    hoverborder = color("#585858", 242),
+    hoverborder = color("#5c6370", 242),
     popup_bg = color("#282c34", 236),
     popup_border = color("#5c6370", 241),
     popup_selection = color("#414753", 239),
 }
-
-c.fg = c.white
-c.bg = c.black
 
 local function set(group, opts)
     if opts.link then
@@ -78,7 +75,7 @@ set("Cursor", { fg = c.bg, bg = c.blue })
 set("CursorColumn", { bg = c.cursor_line })
 set("CursorLine", { bg = c.cursor_line })
 set("LineNr", { fg = c.gutter_fg, bg = c.gutter_bg })
-set("CursorLineNr", { fg = c.cyan }) -- only takes effect if 'cursorline' is set
+set("CursorLineNr", { fg = c.cyan })
 set("DiffAdd", { fg = c.green })
 set("DiffChange", { fg = c.yellow })
 set("DiffDelete", { fg = c.red })
@@ -236,23 +233,3 @@ set("gitcommitSelected", { link = "gitcommitComment" })
 set("gitcommitDiscardedArrow", { link = "gitcommitDiscardedFile" })
 set("gitcommitSelectedArrow", { link = "gitcommitSelectedFile" })
 set("gitcommitUnmergedArrow", { link = "gitcommitUnmergedFile" })
-
--- Terminal colors
--- vim.g.terminal_color_0 = c.black.hex
--- vim.g.terminal_color_1 = c.red.hex
--- vim.g.terminal_color_2 = c.green.hex
--- vim.g.terminal_color_3 = c.yellow.hex
--- vim.g.terminal_color_4 = c.blue.hex
--- vim.g.terminal_color_5 = c.purple.hex
--- vim.g.terminal_color_6 = c.cyan.hex
--- vim.g.terminal_color_7 = c.white.hex
--- vim.g.terminal_color_8 = c.black.hex
--- vim.g.terminal_color_9 = c.red.hex
--- vim.g.terminal_color_10 = c.green.hex
--- vim.g.terminal_color_11 = c.yellow.hex
--- vim.g.terminal_color_12 = c.blue.hex
--- vim.g.terminal_color_13 = c.purple.hex
--- vim.g.terminal_color_14 = c.cyan.hex
--- vim.g.terminal_color_15 = c.white.hex
--- vim.g.terminal_color_background = c.bg.hex
--- vim.g.terminal_color_foreground = c.fg.hex
