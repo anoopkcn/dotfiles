@@ -16,6 +16,7 @@ local packages = {
     "modules.fzf",
     "modules.oil",
     "modules.blink",
+    "modules.fidget",
     "modules.quicker",
     "modules.fugitive",
     "modules.minidiff",
