@@ -78,7 +78,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- end
         local map_opts = { buffer = bufnr, noremap = true, silent = true }
         vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover { border = "single", max_height = 25, max_width = 120 }
+            vim.lsp.buf.hover { max_height = 25, max_width = 100 }
         end, map_opts)
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)

@@ -38,9 +38,10 @@ local c = {
     vertsplit = color("#313640", 237),
     hovercolor = color("#303030", 236),
     hoverborder = color("#5c6370", 242),
-    popup_bg = color("#282c34", 236),
-    popup_border = color("#5c6370", 241),
-    popup_selection = color("#414753", 239),
+    popup_bg = color("#343847", 236),
+    popup_selection = color("#44688e", 239),
+    popup_scrollbar = color("#3b4252", 237),
+    popup_thumb = color("#4b5266", 239),
 }
 
 local function set(group, opts)
@@ -88,14 +89,9 @@ set("MoreMsg", { fg = c.fg })
 set("WarningMsg", { fg = c.red })
 set("Question", { fg = c.purple })
 set("Pmenu", { fg = c.fg, bg = c.popup_bg })
-set("PmenuSel", { fg = c.bg, bg = c.blue })
-set("PmenuSbar", { bg = c.popup_selection })
-set("PmenuThumb", { bg = c.popup_border })
-set("PmenuBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("PmenuKind", { fg = c.cyan, bg = c.popup_bg })
-set("PmenuKindSel", { fg = c.popup_bg, bg = c.blue })
-set("PmenuExtra", { fg = c.comment_fg, bg = c.popup_bg })
-set("PmenuExtraSel", { fg = c.popup_bg, bg = c.blue })
+set("PmenuSel", { fg = c.bg, bg = c.popup_selection })
+set("PmenuSbar", { bg = c.popup_scrollbar })
+set("PmenuThumb", { bg = c.popup_thumb })
 set("NormalFloat", { fg = c.fg, bg = c.popup_bg })
 set("FloatBorder", { fg = c.popup_border, bg = c.popup_bg })
 set("FloatShadow", { bg = c.bg })
