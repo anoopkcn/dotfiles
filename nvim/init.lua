@@ -19,7 +19,7 @@ local packages = {
     "modules.treesitter",
 }
 local modules = {
-    "modules.cgrep",
+    "modules.fuzzy",
     "modules.filemarks",
     -- "modules.makepicker"
 }

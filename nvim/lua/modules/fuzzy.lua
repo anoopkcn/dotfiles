@@ -1,8 +1,8 @@
 ---@brief
 --- LICENSE: MIT
 --- by @anoopkcn
---- https://github.com/anoopkcn/dotfiles/blob/main/nvim/lua/modules/cgrep.lua
---- Description: A Neovim module to run ripgrep (rg) and populate the quickfix list with results.
+--- https://github.com/anoopkcn/dotfiles/blob/main/nvim/lua/modules/fuzzy.lua
+--- Description: Neovim fuzzy helpers for grep and files that feed the quickfix list.
 
 local M = {}
 
@@ -37,7 +37,7 @@ local function set_quickfix_from_lines(lines)
             table.insert(items, entry)
         end
     end
-    vim.fn.setqflist({}, " ", { title = "CGrep (rg)", items = items })
+    vim.fn.setqflist({}, " ", { title = "FuzzyGrep (rg)", items = items })
     return #items
 end
 
@@ -79,17 +79,17 @@ local function set_quickfix_files(files)
             })
         end
     end
-    vim.fn.setqflist({}, " ", { title = "CFiles (rg --files)", items = items })
+    vim.fn.setqflist({}, " ", { title = "FuzzyFiles (rg --files)", items = items })
     return #items
 end
 
 
 M.config = function()
-    vim.api.nvim_create_user_command("CGrep", function(opts)
+    vim.api.nvim_create_user_command("FuzzyGrep", function(opts)
         if opts.args == "" then
-            opts.args = prompt_input("CGrep args (pattern first): ", "")
+            opts.args = prompt_input("FuzzyGrep: ", "")
             if opts.args == "" then
-                vim.notify("CGrep cancelled.", vim.log.levels.INFO)
+                vim.notify("FuzzyGrep cancelled.", vim.log.levels.INFO)
                 return
             end
         end
@@ -97,43 +97,43 @@ M.config = function()
         local lines, status = run_rg(opts.args)
         if status > 1 then
             local message = table.concat(lines, "\n")
-            vim.notify(message ~= "" and message or "CGrep: ripgrep failed.", vim.log.levels.ERROR)
+            vim.notify(message ~= "" and message or "FuzzyGrep: ripgrep failed.", vim.log.levels.ERROR)
             return
         end
 
         local count = set_quickfix_from_lines(lines)
-        open_quickfix_when_results(count, "CGrep: no matches found.")
+        open_quickfix_when_results(count, "FuzzyGrep: no matches found.")
     end, {
         nargs = "*",
         complete = "file",
         desc = "Run ripgrep and open quickfix list with matches",
     })
 
-    vim.api.nvim_create_user_command("CFiles", function(opts)
+    vim.api.nvim_create_user_command("FuzzyFiles", function(opts)
         local files, status = list_project_files()
         if status > 1 then
             local message = table.concat(files, "\n")
-            vim.notify(message ~= "" and message or "CFiles: failed to list files.", vim.log.levels.ERROR)
+            vim.notify(message ~= "" and message or "FuzzyFiles: failed to list files.", vim.log.levels.ERROR)
             return
         end
 
-        local query = opts.args ~= "" and opts.args or prompt_input("CFiles fuzzy pattern: ", "")
+        local query = opts.args ~= "" and opts.args or prompt_input("FuzzyFiles: ", "")
         local candidates = files
         if query ~= "" then
             candidates = vim.fn.matchfuzzy(files, query)
         end
         local count = set_quickfix_files(candidates)
-        open_quickfix_when_results(count, "CFiles: nothing matched the pattern.")
+        open_quickfix_when_results(count, "FuzzyFiles: nothing matched the pattern.")
     end, {
         nargs = "?",
         desc = "Fuzzy find tracked files using ripgrep --files",
     })
 
     -- Keymaps
-    vim.keymap.set("n", "<leader>/", ":CGrep<CR>",
-        { silent = false, desc = "CGrep - same as rg" })
-    vim.keymap.set("n", "<leader>?", ":CFiles<CR>",
-        { noremap = true, silent = true, desc = "Fuzzy find files (CFiles)" })
+    vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
+        { silent = false, desc = "FuzzyGrep - same as rg" })
+    vim.keymap.set("n", "<leader>?", "<CMD>FuzzyFiles<CR>",
+        { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
 end
 
 return M
