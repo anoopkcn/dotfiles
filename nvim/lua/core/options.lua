@@ -25,6 +25,7 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.wildmenu = true
+vim.opt.pumborder = "rounded"
 
 -- if vim.fn.executable("rg") == 1 then
 --     vim.opt.grepprg = "rg --vimgrep --smart-case"

@@ -41,7 +41,7 @@ local c = {
     popup_bg = color("#343847", 236),
     popup_selection = color("#44688e", 239),
     popup_scrollbar = color("#3b4252", 237),
-    popup_thumb = color("#4b5266", 239),
+    popup_thumb = color("#44688e", 239),
     popup_border = color("#5c6370", 242),
 }
 
@@ -93,17 +93,18 @@ set("Question", { fg = c.purple })
 set("PmenuSel", { fg = c.fg, bg = c.selection })
 set("PmenuSbar", { bg = c.popup_scrollbar })
 set("PmenuThumb", { bg = c.popup_thumb })
+set("PmenuBorder" , { fg = c.popup_border, bg = c.bg })
 set("NormalFloat", { fg = c.fg, bg = c.bg })
 set("FloatBorder", { fg = c.popup_border, bg = c.bg })
 set("FloatShadow", { bg = c.bg })
 set("FloatShadowThrough", { bg = c.bg })
-set("LspInfoBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("LspFloatWinNormal", { fg = c.fg, bg = c.popup_bg })
-set("LspFloatWinBorder", { fg = c.popup_border, bg = c.popup_bg })
-set("DiagnosticFloatingError", { fg = c.red, bg = c.popup_bg })
-set("DiagnosticFloatingWarn", { fg = c.yellow, bg = c.popup_bg })
-set("DiagnosticFloatingInfo", { fg = c.blue, bg = c.popup_bg })
-set("DiagnosticFloatingHint", { fg = c.cyan, bg = c.popup_bg })
+set("LspInfoBorder", { fg = c.popup_border, bg = c.bg })
+set("LspFloatWinNormal", { fg = c.fg, bg = c.bg })
+set("LspFloatWinBorder", { fg = c.popup_border, bg = c.bg })
+set("DiagnosticFloatingError", { fg = c.red, bg = c.bg })
+set("DiagnosticFloatingWarn", { fg = c.yellow, bg = c.bg })
+set("DiagnosticFloatingInfo", { fg = c.blue, bg = c.bg })
+set("DiagnosticFloatingHint", { fg = c.cyan, bg = c.bg })
 set("FloatTitle", { fg = c.fg, bg = c.popup_bg, bold = true })
 set("SpellBad", { fg = c.red, undercurl = true, sp = c.red.hex })
 set("SpellCap", { fg = c.yellow, undercurl = true, sp = c.blue.hex })
