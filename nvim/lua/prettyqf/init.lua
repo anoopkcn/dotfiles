@@ -27,7 +27,11 @@ function M.qfdraw(info)
         if e.valid == 1 then
             if e.bufnr > 0 then
                 fname = vim.fn.bufname(e.bufnr)
-                if fname == "" then fname = "[No Name]" end
+                if fname == "" then
+                    fname = "[No Name]"
+                else
+                    fname = vim.fn.fnamemodify(fname, ":.")
+                end
                 if #fname <= limit then
                     fname = string.format(fname_fmt1, fname)
                 else
