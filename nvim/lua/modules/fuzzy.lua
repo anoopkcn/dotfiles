@@ -15,6 +15,16 @@ M.config = function()
 
     vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
+    vim.keymap.set("n", "<leader>fw", function()
+            local word = vim.fn.expand("<cword>")
+            vim.cmd("FuzzyGrep " .. word)
+        end,
+        { silent = false, desc = "Fuzzy grep current word" })
+    vim.keymap.set("n", "<leader>fW", function()
+            local word = vim.fn.expand("<cWORD>")
+            vim.cmd("FuzzyGrep -F" .. word)
+        end,
+        { silent = false, desc = "Fuzzy grep current WORD" })
     vim.keymap.set("n", "<leader>?", "<CMD>FuzzyFiles<CR>",
         { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
     vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers<CR>",
