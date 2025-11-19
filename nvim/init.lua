@@ -26,7 +26,5 @@ local lsps = { "lua_ls", "pyright", "copilot", "marksman" }
 
 vim.list_extend(packages, modules)
 pack.ensure(specs, packages)
--- vim.cmd("packadd! nvim.difftool")
--- vim.cmd("packadd! nvim.undotree")
 vim.cmd("packadd! cfilter")
 vim.lsp.enable(lsps)
