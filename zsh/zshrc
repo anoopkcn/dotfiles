@@ -13,10 +13,13 @@ path=($^path(N-/))
 export PATH
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export CONDA_CHANGEPS1=no
+export EDITOR='nvim'
 
 # INPUTRC
-bindkey '\e[A' history-search-backward
-bindkey '\e[B' history-search-forward
+# bindkey '\e[A' history-search-backward
+# bindkey '\e[B' history-search-forward
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
 bindkey '^y' autosuggest-accept
 # bindkey -v
 
@@ -50,5 +53,3 @@ alias tkill="tmux kill-server"
 alias tmi="tm -i"
 alias imgcat="viu"
 alias fcat="fancy-cat"
-
-export EDITOR='nvim'
