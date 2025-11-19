@@ -123,60 +123,6 @@ function M.setup_syntax()
     ]])
 end
 
-function M.replace(cmd_args)
-    local initial_bufs = {}
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(buf) then
-            initial_bufs[buf] = true
-        end
-    end
-
-    local cmd = string.format("silent! cfdo %s | update", cmd_args)
-
-    local success, err = pcall(function()
-        vim.cmd(cmd)
-    end)
-
-    if not success then
-        print("Error executing: " .. cmd)
-        print(err)
-        return
-    end
-
-    local qf_list = vim.fn.getqflist()
-    local changed_count = 0
-
-    for _, item in ipairs(qf_list) do
-        if item.valid == 1 and item.bufnr > 0 then
-            -- Grab the line from the buffer (which is now updated in memory)
-            local lines = vim.api.nvim_buf_get_lines(item.bufnr, item.lnum - 1, item.lnum, false)
-            if #lines > 0 then
-                -- If the text looks different than what's in the list, update the list
-                -- We sanitize newlines just like in the draw function
-                local new_text = lines[1]:gsub("[\r\n]", " ")
-                if new_text ~= item.text then
-                    item.text = new_text
-                    changed_count = changed_count + 1
-                end
-            end
-        end
-    end
-
-    if changed_count > 0 then
-        vim.fn.setqflist(qf_list, 'r') -- 'r' = Replace items, keep context
-    end
-
-    local closed_count = 0
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(buf) and not initial_bufs[buf] then
-            vim.api.nvim_buf_delete(buf, { force = false })
-            closed_count = closed_count + 1
-        end
-    end
-
-    print(string.format("Processed files. Refreshed %d lines. Cleaned up %d buffers.", changed_count, closed_count))
-end
-
 function M.setup()
     vim.o.quickfixtextfunc = "v:lua.require'prettyqf'.qfdraw"
 
@@ -189,10 +135,6 @@ function M.setup()
             end)
         end,
     })
-
-    vim.api.nvim_create_user_command("Qfdo", function(opts)
-        M.replace(opts.args)
-    end, { nargs = "+" })
 end
 
 return M
