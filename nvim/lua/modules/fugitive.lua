@@ -5,7 +5,7 @@ M.specs = { "https://github.com/tpope/vim-fugitive" }
 M.config = function()
     vim.keymap.set(
         "n",
-        "<leader>gg",
+        "<leader>G",
         "<CMD>Git<CR>",
         { noremap = true, silent = true, desc = "Open Git interface" }
     )
