@@ -21,7 +21,6 @@ local packages = {
 local modules = {
     "modules.fuzzy",
     "modules.filemarks",
-    -- "modules.makepicker"
 }
 local lsps = { "lua_ls", "pyright", "copilot", "marksman" }
 
