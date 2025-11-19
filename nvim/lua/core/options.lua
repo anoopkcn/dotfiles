@@ -4,16 +4,13 @@ vim.g.maplocalleader = " "
 vim.opt.swapfile = false
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
+vim.opt.cursorline = false
 vim.opt.showtabline = 0
 vim.opt.laststatus = 2
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.mouse = "a"
 vim.opt.signcolumn = "yes"
-vim.opt.scrolloff = 6
-vim.opt.sidescrolloff = 6
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -26,12 +23,6 @@ vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
-
--- if vim.fn.executable("rg") == 1 then
---     vim.opt.grepprg = "rg --vimgrep --smart-case"
---     vim.opt.grepformat = "%f:%l:%c:%m"
--- end
-
 vim.cmd.colorscheme("onehalfdark")
 vim.diagnostic.config({ signs = false, })
 vim.filetype.add({
