@@ -5,17 +5,15 @@ M.config = function()
     if not ok then
         return
     end
-    local is_rg = vim.fn.executable("rg") == 1
-    if not is_rg then
+    if vim.fn.executable("rg") ~= 1 then
         vim.notify("[fuzzy] 'rg' (ripgrep) is not installed or not found in PATH", vim.log.levels.WARN)
         return
     end
-
-    fuzzy.setup()
-
     if vim.fn.executable("fd") ~= 1 then
         vim.notify("[fuzzy] 'fd' is not installed; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
     end
+
+    fuzzy.setup()
 
     local function run_fuzzy_grep(term, literal)
         term = vim.trim(term or "")
