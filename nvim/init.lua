@@ -29,5 +29,4 @@ pack.ensure(specs, packages)
 -- vim.cmd("packadd! nvim.difftool")
 -- vim.cmd("packadd! nvim.undotree")
 vim.cmd("packadd! cfilter")
--- vim.cmd[["packadd nvim.cfilter"]]
 vim.lsp.enable(lsps)
