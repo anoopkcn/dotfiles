@@ -22,7 +22,8 @@ M.config = function()
             },
             borders = {
                 vert = " "
-            }
+            },
+            constrain_cursor = false,
         })
     end
 end
