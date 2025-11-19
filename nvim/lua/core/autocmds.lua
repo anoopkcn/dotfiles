@@ -65,7 +65,8 @@ vim.api.nvim_create_autocmd("FileType", {
     group = vim.api.nvim_create_augroup("QuickfixNoLsp", { clear = true }),
     pattern = "qf",
     callback = function(args)
-        detach_lsp_from_quickfix(args.buf)
+        local bufnr = args.buf
+        detach_lsp_from_quickfix(bufnr)
     end,
 })
 
@@ -87,6 +88,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
                     client.server_capabilities.semanticTokensProvider = nil
                 end
             end
+
             -- copilot inline suggestions
             if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
                 vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
@@ -99,14 +101,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
                     { desc = "LSP: switch inline completion", buffer = bufnr }
                 )
             end
+
+            -- lsp autotriggered completion
+            if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+                vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
+                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+                vim.keymap.set('i', '<C-Space>', function() vim.lsp.completion.get() end)
+            end
         end
-        -- if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
-        --     vim.opt.completeopt = { 'menu', 'menuone', 'noinsert', 'fuzzy', 'popup' }
-        --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-        --     vim.keymap.set('i', '<C-Space>', function()
-        --         vim.lsp.completion.get()
-        --     end)
-        -- end
         local map_opts = { buffer = bufnr, noremap = true, silent = true }
         vim.keymap.set("n", "K", function()
             vim.lsp.buf.hover { max_height = 25, max_width = 100, border = "rounded" }
