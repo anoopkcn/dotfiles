@@ -13,6 +13,10 @@ M.config = function()
 
     fuzzy.setup()
 
+    if vim.fn.executable("fd") ~= 1 then
+        vim.notify("[fuzzy] 'fd' is not installed; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
+    end
+
     local function run_fuzzy_grep(term, literal)
         term = vim.trim(term or "")
         if term == "" then
