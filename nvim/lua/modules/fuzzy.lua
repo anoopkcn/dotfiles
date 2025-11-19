@@ -13,16 +13,26 @@ M.config = function()
 
     fuzzy.setup()
 
+    local function run_fuzzy_grep(term, literal)
+        term = vim.trim(term or "")
+        if term == "" then
+            return
+        end
+        local args = { term }
+        if literal then
+            table.insert(args, 1, "-F")
+        end
+        fuzzy.grep(args)
+    end
+
     vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
     vim.keymap.set("n", "<leader>fw", function()
-            local word = vim.fn.expand("<cword>")
-            vim.cmd("FuzzyGrep " .. word)
+            run_fuzzy_grep(vim.fn.expand("<cword>"), false)
         end,
         { silent = false, desc = "Fuzzy grep current word" })
     vim.keymap.set("n", "<leader>fW", function()
-            local word = vim.fn.expand("<cWORD>")
-            vim.cmd("FuzzyGrep -F" .. word)
+            run_fuzzy_grep(vim.fn.expand("<cWORD>"), true)
         end,
         { silent = false, desc = "Fuzzy grep current WORD" })
     vim.keymap.set("n", "<leader>?", "<CMD>FuzzyFiles<CR>",
