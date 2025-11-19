@@ -6,7 +6,8 @@ M.config = function()
         return
     end
     if vim.fn.executable("rg") ~= 1 then
-        vim.notify("[fuzzy] 'rg' (ripgrep) is not installed or not found in PATH; :FuzzyGrep will be unavailable", vim.log.levels.WARN)
+        vim.notify("[fuzzy] 'rg' (ripgrep) is not installed or not found in PATH; :FuzzyGrep will be unavailable",
+            vim.log.levels.WARN)
     end
     if vim.fn.executable("fd") ~= 1 then
         vim.notify("[fuzzy] 'fd' is not installed; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
@@ -40,6 +41,8 @@ M.config = function()
         { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
     vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers<CR>",
         { noremap = true, silent = true, desc = "Fuzzy buffer list" })
+    vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<cr>",
+        { noremap = true, silent = true, desc = "Open DEVLOG.md" })
 end
 
 return M

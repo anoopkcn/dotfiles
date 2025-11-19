@@ -78,9 +78,6 @@ vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border =
 vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { noremap = true, silent = true, desc = "Format buffer" })
 
-vim.keymap.set("n", "<leader>dl", ":edit DEVLOG.md<cr>",
-    { noremap = true, silent = true, desc = "Open DEVLOG.md" })
-
 TimestampInsert = function()
     local raw_timestamp = os.date("%FT%T")
     local timestamp_str = string.format("%s", raw_timestamp or "")
