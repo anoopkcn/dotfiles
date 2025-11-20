@@ -1,4 +1,4 @@
-local  M = {}
+local M = {}
 
 local diagnostic_symbol = ""
 local diagnostic_sections = {
@@ -9,6 +9,7 @@ local diagnostic_sections = {
 }
 
 local uv = vim.uv or vim.loop
+local empty_dict = vim.empty_dict()
 
 local severity_lookup = {}
 for _, section in ipairs(diagnostic_sections) do
@@ -133,8 +134,9 @@ local function mode()
 end
 
 
-local function get_buffer_paths()
-    local bufname = vim.api.nvim_buf_get_name(0)
+local function get_buffer_paths(bufnr)
+    local target = (bufnr and vim.api.nvim_buf_is_valid(bufnr)) and bufnr or vim.api.nvim_get_current_buf()
+    local bufname = vim.api.nvim_buf_get_name(target)
     if bufname == "" then
         local cwd = (uv and uv.cwd and uv.cwd()) or vim.fn.getcwd()
         return vim.fn.fnamemodify(cwd, ":~"), ""
@@ -142,6 +144,13 @@ local function get_buffer_paths()
     local display_dir = vim.fn.fnamemodify(bufname, ":~:.:h")
     local display_name = vim.fs.basename(bufname)
     return display_dir, display_name
+end
+
+local function get_buf_vars(bufnr)
+    if bufnr and bufnr > 0 and vim.api.nvim_buf_is_valid(bufnr) then
+        return vim.b[bufnr]
+    end
+    return empty_dict
 end
 
 local function filepath(dir)
@@ -161,16 +170,18 @@ local function filename(name)
 end
 
 
-local function lsp()
-    return diagnostic_cache[vim.api.nvim_get_current_buf()] or ""
+local function lsp(bufnr)
+    local target = (bufnr and bufnr > 0) and bufnr or vim.api.nvim_get_current_buf()
+    return diagnostic_cache[target] or ""
 end
 
 
-local vcs = function()
-    local summary = vim.b.minidiff_summary
+local function vcs(bufnr)
+    local buf_vars = get_buf_vars(bufnr)
+    local summary = buf_vars.minidiff_summary
     local summary_string = ""
     if summary and summary.source_name then
-        summary_string = vim.b.minidiff_summary_string or ""
+        summary_string = buf_vars.minidiff_summary_string or ""
         if summary_string == "" then
             local segments = {}
             if summary.add and summary.add > 0 then
@@ -223,17 +234,19 @@ local function lineinfo(buf_ft)
 end
 
 
-local function statusline_active()
-    local dir, name = get_buffer_paths()
-    local buf_ft = vim.bo.filetype
+local function statusline_active(bufnr)
+    local target = (bufnr and vim.api.nvim_buf_is_valid(bufnr)) and bufnr or vim.api.nvim_get_current_buf()
+    local dir, name = get_buffer_paths(target)
+    local ok, buf_ft = pcall(vim.api.nvim_get_option_value, "filetype", { buf = target })
+    buf_ft = ok and buf_ft or ""
     return table.concat {
         "%#Statusline#",
         mode(),
         filepath(dir),
         filename(name),
-        lsp(),
+        lsp(target),
         "%=",
-        vcs(),
+        vcs(target),
         filetype(buf_ft),
         lineinfo(buf_ft),
     }
@@ -241,22 +254,27 @@ end
 
 
 local function statusline_inactive()
-    return " %F"
+    return " %f"
 end
 
-local Statusline = rawget(_G, "Statusline") or {}
-Statusline.active = statusline_active
-Statusline.inactive = statusline_inactive
-_G.Statusline = Statusline
+local function render()
+    local winid = vim.g.statusline_winid or 0
+    if winid == 0 or not vim.api.nvim_win_is_valid(winid) then
+        return ""
+    end
+
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+    if winid ~= vim.api.nvim_get_current_win() then
+        return statusline_inactive()
+    end
+
+    return statusline_active(bufnr)
+end
+
+M.render = render
 
 M.config = function()
-    vim.api.nvim_exec2([[
-      augroup Statusline
-      au!
-      au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
-      au WinLeave,BufLeave * setlocal statusline=%!v:lua.Statusline.inactive()
-      augroup END
-    ]], {})
+    vim.o.statusline = "%!v:lua.require'modules.statusline'.render()"
 end
 
 return M
