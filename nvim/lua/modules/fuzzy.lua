@@ -21,6 +21,8 @@ if ok then
         fuzzy.grep(args)
     end
 
+    vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>",
+        { silent = false, desc = "Fuzzy list" })
     vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
     vim.keymap.set("n", "<leader>fw", function()
