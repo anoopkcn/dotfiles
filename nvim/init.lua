@@ -13,9 +13,9 @@ vim.pack.add({
 require("core.options")
 require("core.keymaps")
 require("core.autocmds")
-require("modules.fuzzy")
-require("modules.filemarks")
-require("modules.statusline")
+require("core.fuzzy")
+require("core.filemarks")
+require("core.statusline")
 
 require("modules.quicker")
 require("modules.minidiff")
