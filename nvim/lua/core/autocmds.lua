@@ -1,17 +1,3 @@
--- auto resize splits when the terminal's window is resized
-vim.api.nvim_create_autocmd("VimResized", { command = "wincmd =", })
-
--- vim.api.nvim_create_autocmd("FileType", {
---     pattern = {"qf"},
---     callback = function(args)
---         local max_height = math.floor(vim.o.lines * 0.3)
---         local winnr = args.buf and vim.fn.bufwinid(args.buf) or 0
---         if winnr > 0 and max_height > 0 then
---             vim.api.nvim_win_set_height(winnr, max_height)
---         end
---     end,
--- })
-
 -- enable spell check for git commits
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "gitcommit", "markdown", "rmd" },
