@@ -19,4 +19,9 @@ require("modules.statusline")
 require("modules.quicker")
 require("modules.minidiff")
 require("modules.treesitter")
-vim.lsp.enable({ "lua_ls", "pyright", "copilot", "marksman" })
+vim.lsp.enable({
+    "lua_ls",
+    "pyright",
+    "copilot",
+    "marksman"
+})
