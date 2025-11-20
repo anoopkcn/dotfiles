@@ -18,7 +18,6 @@ local packages = {
 }
 local modules = {
     "modules.fuzzy",
-    "modules.cfdofix",
     "modules.prettyqf",
     "modules.filemarks",
     "modules.statusline",
