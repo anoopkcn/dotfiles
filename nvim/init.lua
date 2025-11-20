@@ -20,6 +20,7 @@ require("core.statusline")
 require("modules.quicker")
 require("modules.minidiff")
 require("modules.treesitter")
+
 vim.lsp.enable({
     "lua_ls",
     "pyright",
