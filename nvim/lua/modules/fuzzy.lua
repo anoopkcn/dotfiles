@@ -1,15 +1,12 @@
-local M = {}
+if vim.fn.executable("rg") ~= 1 then
+    vim.notify("[fuzzy] 'rg' is not found in PATH; :FuzzyGrep will be unavailable", vim.log.levels.WARN)
+end
+if vim.fn.executable("fd") ~= 1 then
+    vim.notify("[fuzzy] 'fd' is not found in PATH; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
+end
 
-M.config = function()
-    local ok, fuzzy = pcall(require, "fuzzy")
-    if not ok then return end
-    if vim.fn.executable("rg") ~= 1 then
-        vim.notify("[fuzzy] 'rg' is not found in PATH; :FuzzyGrep will be unavailable", vim.log.levels.WARN)
-    end
-    if vim.fn.executable("fd") ~= 1 then
-        vim.notify("[fuzzy] 'fd' is not found in PATH; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
-    end
-
+local ok, fuzzy = pcall(require, "fuzzy")
+if ok then
     fuzzy.setup()
 
     local function run_fuzzy_grep(term, literal)
@@ -43,5 +40,3 @@ M.config = function()
     vim.keymap.set("n", "<leader>dl", "<CMD>FuzzyFiles --noignore DEVLOG<CR>",
         { noremap = true, silent = true, desc = "Open DEVLOG.md" })
 end
-
-return M

@@ -70,3 +70,11 @@ vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
 
 vim.keymap.set("n", "<leader>fe", "<CMD>Ex<CR>", { desc = "Open parent directory" })
+
+-- plugin keymaps
+vim.keymap.set("n", "<leader>G", "<CMD>Git<CR>",
+    { noremap = true, silent = true, desc = "Open Git interface" }
+)
+vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
+    { noremap = true, silent = true, desc = "Git log" }
+)

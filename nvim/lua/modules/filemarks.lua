@@ -1,12 +1,4 @@
-local M = {}
-
-M.config = function()
-    local ok, filemarks = pcall(require, "filemarks")
-    if not ok then
-        return
-    end
-
+local ok, filemarks = pcall(require, "filemarks")
+if ok then
     filemarks.setup()
 end
-
-return M

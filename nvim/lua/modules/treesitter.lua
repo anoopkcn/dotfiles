@@ -1,13 +1,5 @@
-local M = {}
-
-M.specs = { "https://github.com/nvim-treesitter/nvim-treesitter" }
-
-M.config = function()
-    local ok, configs = pcall(require, "nvim-treesitter.configs")
-    if not ok then
-        return
-    end
-
+local ok, configs = pcall(require, "nvim-treesitter.configs")
+if ok then
     configs.setup {
         ensure_installed = {
             "c", "cpp", "zig",
@@ -35,5 +27,3 @@ M.config = function()
         },
     }
 end
-
-return M
