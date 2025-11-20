@@ -18,7 +18,6 @@ local packages = {
 }
 local modules = {
     "modules.fuzzy",
-    "modules.prettyqf",
     "modules.filemarks",
     "modules.statusline",
 }
@@ -26,5 +25,4 @@ local lsps = { "lua_ls", "pyright", "copilot", "marksman" }
 
 vim.list_extend(packages, modules)
 pack.ensure(specs, packages)
-vim.cmd("packadd! cfilter")
 vim.lsp.enable(lsps)
