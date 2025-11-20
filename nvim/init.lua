@@ -4,7 +4,6 @@
 require("core.options")
 require("core.keymaps")
 require("core.autocmds")
-require("core.statusline")
 
 local pack = require("core.pack")
 local specs = {
@@ -19,8 +18,8 @@ local packages = {
 }
 local modules = {
     "modules.fuzzy",
-    "modules.filemarks",
     "modules.prettyqf",
+    "modules.filemarks",
 }
 local lsps = { "lua_ls", "pyright", "copilot", "marksman" }
 

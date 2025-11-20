@@ -1,3 +1,5 @@
+local  M = {}
+
 local diagnostic_symbol = ""
 local diagnostic_sections = {
     { key = "Error", severity = vim.diagnostic.severity.ERROR, source = "DiagnosticError", fallback = "#e06c75" },
@@ -12,6 +14,8 @@ local severity_lookup = {}
 for _, section in ipairs(diagnostic_sections) do
     severity_lookup[section.severity] = section
 end
+
+local diagnostic_cache = {}
 
 local function get_hl_def(group)
     local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
@@ -43,10 +47,68 @@ end
 
 set_statusline_highlights()
 local statusline_hl_group = vim.api.nvim_create_augroup("StatuslineHighlights", { clear = true })
+local diagnostics_group = vim.api.nvim_create_augroup("StatuslineDiagnostics", { clear = true })
 vim.api.nvim_create_autocmd("ColorScheme", {
     group = statusline_hl_group,
     callback = set_statusline_highlights,
 })
+
+local function update_diagnostic_cache(bufnr)
+    if type(bufnr) ~= "number" or bufnr <= 0 then
+        bufnr = vim.api.nvim_get_current_buf()
+    end
+    if not vim.api.nvim_buf_is_valid(bufnr) then
+        return
+    end
+
+    local diagnostics = vim.diagnostic.get(bufnr)
+    if not diagnostics or vim.tbl_isempty(diagnostics) then
+        diagnostic_cache[bufnr] = ""
+        return
+    end
+
+    local counts = {}
+    for _, diagnostic in ipairs(diagnostics) do
+        local section = severity_lookup[diagnostic.severity]
+        if section then
+            counts[section.key] = (counts[section.key] or 0) + 1
+        end
+    end
+
+    local segments = {}
+    for _, section in ipairs(diagnostic_sections) do
+        local count = counts[section.key]
+        if count and count > 0 then
+            table.insert(segments,
+                string.format("%%#StatuslineDiagnostic%s# %s %d ", section.key, diagnostic_symbol, count))
+        end
+    end
+
+    if #segments == 0 then
+        diagnostic_cache[bufnr] = ""
+        return
+    end
+
+    table.insert(segments, "%#Statusline#")
+    diagnostic_cache[bufnr] = table.concat(segments)
+end
+
+vim.api.nvim_create_autocmd({ "DiagnosticChanged", "BufEnter" }, {
+    group = diagnostics_group,
+    callback = function(args)
+        local bufnr = args.buf or (args.data and args.data.buf) or vim.api.nvim_get_current_buf()
+        update_diagnostic_cache(bufnr or 0)
+    end,
+})
+
+vim.api.nvim_create_autocmd("BufDelete", {
+    group = diagnostics_group,
+    callback = function(args)
+        diagnostic_cache[args.buf] = nil
+    end,
+})
+
+update_diagnostic_cache(0)
 
 local function get_git_branch()
     if vim.fn.exists("*FugitiveHead") == 1 then
@@ -100,34 +162,7 @@ end
 
 
 local function lsp()
-    local diagnostics = vim.diagnostic.get(0)
-    if not diagnostics or vim.tbl_isempty(diagnostics) then
-        return ""
-    end
-
-    local counts = {}
-    for _, diagnostic in ipairs(diagnostics) do
-        local section = severity_lookup[diagnostic.severity]
-        if section then
-            counts[section.key] = (counts[section.key] or 0) + 1
-        end
-    end
-
-    local segments = {}
-    for _, section in ipairs(diagnostic_sections) do
-        local count = counts[section.key]
-        if count and count > 0 then
-            table.insert(segments,
-                string.format("%%#StatuslineDiagnostic%s# %s %d ", section.key, diagnostic_symbol, count))
-        end
-    end
-
-    if #segments == 0 then
-        return ""
-    end
-
-    table.insert(segments, "%#Statusline#")
-    return table.concat(segments)
+    return diagnostic_cache[vim.api.nvim_get_current_buf()] or ""
 end
 
 
@@ -151,20 +186,28 @@ local vcs = function()
         end
     end
 
-    local label = get_git_branch()
-    if label == "" and summary and summary.source_name then
-        label = summary.source_name
+    local branch_segment = ""
+    if vim.fn.exists("*FugitiveStatusline") == 1 then
+        branch_segment = " %{FugitiveStatusline()} "
+    else
+        local label = get_git_branch()
+        if label == "" and summary and summary.source_name then
+            label = summary.source_name
+        end
+        if label ~= "" then
+            branch_segment = string.format(" git:%s ", label)
+        end
     end
 
-    if label == "" and summary_string == "" then
+    if branch_segment == "" and summary_string == "" then
         return ""
     end
 
     if summary_string ~= "" then
-        summary_string = " " .. summary_string
+        summary_string = summary_string .. " "
     end
 
-    return string.format("git:%s%s ", label, summary_string)
+    return branch_segment .. summary_string
 end
 
 
@@ -210,10 +253,14 @@ Statusline.active = statusline_active
 Statusline.inactive = statusline_inactive
 _G.Statusline = Statusline
 
-vim.api.nvim_exec2([[
-  augroup Statusline
-  au!
-  au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
-  au WinLeave,BufLeave * setlocal statusline=%!v:lua.Statusline.inactive()
-  augroup END
-]], {})
+M.config = function()
+    vim.api.nvim_exec2([[
+      augroup Statusline
+      au!
+      au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
+      au WinLeave,BufLeave * setlocal statusline=%!v:lua.Statusline.inactive()
+      augroup END
+    ]], {})
+end
+
+return M
