@@ -34,7 +34,7 @@ M.config = function()
             run_fuzzy_grep(vim.fn.expand("<cWORD>"), true)
         end,
         { silent = false, desc = "Fuzzy grep current WORD" })
-    vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles<CR>",
+    vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>",
         { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
     vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers<CR>",
         { noremap = true, silent = true, desc = "Fuzzy buffer list" })
