@@ -15,6 +15,7 @@ local packages = {
     "modules.fugitive",
     "modules.minidiff",
     "modules.treesitter",
+    "modules.quicker",
 }
 local modules = {
     "modules.fuzzy",
