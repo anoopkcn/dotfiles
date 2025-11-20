@@ -16,24 +16,6 @@ vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]],
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]],
     { noremap = true, silent = true, desc = "Yank to system clipboard" })
 
-vim.keymap.set("n", "J", "mzJ`z",
-    { noremap = true, silent = true, desc = "Join lines without moving cursor" })
-
-vim.keymap.set("n", "<C-d>", "<C-d>zz",
-    { noremap = true, silent = true, desc = "Scroll down and center" })
-
-vim.keymap.set("n", "<C-u>", "<C-u>zz",
-    { noremap = true, silent = true, desc = "Scroll up and center" })
-
-vim.keymap.set("n", "n", "nzzzv",
-    { noremap = true, silent = true, desc = "Search next and center" })
-
-vim.keymap.set("n", "N", "Nzzzv",
-    { noremap = true, silent = true, desc = "Search next and center" })
-
-vim.keymap.set("n", "<leader><enter>", "!!zsh<CR>",
-    { noremap = true, silent = true, desc = "Execute line in shell" })
-
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd,
     { noremap = true, silent = true, desc = "Buffer delete" })
 
