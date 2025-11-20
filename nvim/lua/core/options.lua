@@ -24,7 +24,6 @@ vim.opt.path:append("**")
 vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.cmd.colorscheme("onehalfdark")
--- vim.diagnostic.config({ signs = false, })
 vim.filetype.add({
     extension = {
         smd = "markdown",
