@@ -24,7 +24,7 @@ M.config = function()
         fuzzy.grep(args)
     end
 
-    vim.keymap.set("n", "<leader>ql", "<CMD>FuzzyQf<CR>",
+    vim.keymap.set("n", "<leader>ql", "<CMD>FuzzyQf!<CR>",
         { silent = false, desc = "Fuzzy Quickfixlist list" })
     vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
