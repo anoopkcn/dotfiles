@@ -3,7 +3,6 @@ local M = {}
 local config = {
     separator = "|",
     filename_max_width = 30,
-    text_max_width = 80,
     max_highlight_items = 1000,
 }
 
@@ -11,22 +10,6 @@ local highlight_cache = {
     lang_supported = {},
     lang_query = {},
 }
-
-local function truncate_text(text, max_width)
-    if not max_width then
-        return text
-    end
-    if max_width <= 0 then
-        return text
-    end
-    local display_width = vim.fn.strdisplaywidth(text)
-    if display_width <= max_width then
-        return text
-    end
-    local limit = math.max(max_width - 3, 1)
-    local truncated = vim.fn.strcharpart(text, 0, limit)
-    return truncated .. "..."
-end
 
 function M.qfdraw(info)
     local items
@@ -66,7 +49,6 @@ function M.qfdraw(info)
                 end
             end
             local text = e.text:gsub("[\r\n]", " ")
-            text = truncate_text(text, config.text_max_width)
             str = string.format(valid_fmt, fname, e.lnum, e.col, text)
         else
             str = e.text
