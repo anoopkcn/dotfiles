@@ -20,6 +20,7 @@ local modules = {
     "modules.fuzzy",
     "modules.prettyqf",
     "modules.filemarks",
+    "modules.statusline",
 }
 local lsps = { "lua_ls", "pyright", "copilot", "marksman" }
 

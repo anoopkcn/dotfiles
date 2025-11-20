@@ -187,16 +187,12 @@ local vcs = function()
     end
 
     local branch_segment = ""
-    if vim.fn.exists("*FugitiveStatusline") == 1 then
-        branch_segment = " %{FugitiveStatusline()} "
-    else
-        local label = get_git_branch()
-        if label == "" and summary and summary.source_name then
-            label = summary.source_name
-        end
-        if label ~= "" then
-            branch_segment = string.format(" git:%s ", label)
-        end
+    local label = get_git_branch()
+    if label == "" and summary and summary.source_name then
+        label = summary.source_name
+    end
+    if label ~= "" then
+        branch_segment = string.format(" git:%s ", label)
     end
 
     if branch_segment == "" and summary_string == "" then
