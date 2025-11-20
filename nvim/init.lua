@@ -3,11 +3,11 @@
 vim.pack.add({
     { src = "https://github.com/tpope/vim-repeat" },
     { src = "https://github.com/tpope/vim-surround" },
-    { src = "https://github.com/tpope/vim-unimpaired" },
     { src = "https://github.com/tpope/vim-fugitive" },
+    { src = "https://github.com/tpope/vim-unimpaired" },
     { src = "https://github.com/nvim-mini/mini.diff" },
+    { src = "https://github.com/stevearc/quicker.nvim" },
     { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-    { src = "https://github.com/stevearc/quicker.nvim", },
 })
 
 require("core.options")
