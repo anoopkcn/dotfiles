@@ -37,6 +37,8 @@ if ok then
         { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
     vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers<CR>",
         { noremap = true, silent = true, desc = "Fuzzy buffer list" })
+    vim.keymap.set("n", "<leader>fB", "<CMD>FuzzyBuffers!<CR>",
+        { noremap = true, silent = true, desc = "Fuzzy buffer list (live)" })
     vim.keymap.set("n", "<leader>dl", "<CMD>FuzzyFiles --noignore DEVLOG<CR>",
         { noremap = true, silent = true, desc = "Open DEVLOG.md" })
 end
