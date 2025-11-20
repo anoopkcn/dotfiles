@@ -55,32 +55,11 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- custom LSP attach actions
 local _group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true })
--- local function detach_lsp_from_quickfix(bufnr)
---     for _, client in pairs(vim.lsp.get_clients({ bufnr = bufnr })) do
---         vim.lsp.buf_detach_client(bufnr, client.id)
---     end
--- end
-
--- vim.api.nvim_create_autocmd("FileType", {
---     group = vim.api.nvim_create_augroup("QuickfixNoLsp", { clear = true }),
---     pattern = "qf",
---     callback = function(args)
---         local bufnr = args.buf
---         detach_lsp_from_quickfix(bufnr)
---     end,
--- })
-
 vim.api.nvim_create_autocmd('LspAttach', {
     group = _group,
     callback = function(args)
         local bufnr = args.buf
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        -- if vim.bo[bufnr].buftype == "quickfix" then
-        --     vim.schedule(function()
-        --         detach_lsp_from_quickfix(bufnr)
-        --     end)
-        --     return
-        -- end
         if client then
             local provider = client.server_capabilities and client.server_capabilities.semanticTokensProvider
             if provider then
