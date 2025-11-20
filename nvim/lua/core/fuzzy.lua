@@ -9,7 +9,7 @@ local ok, fuzzy = pcall(require, "fuzzy")
 if ok then
     fuzzy.setup()
 
-    local function run_fuzzy_grep(term, literal)
+    local function _fuzzy_grep(term, literal)
         term = vim.trim(term or "")
         if term == "" then
             return
@@ -23,15 +23,13 @@ if ok then
 
     vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>",
         { silent = false, desc = "Fuzzy list" })
+    vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>",
+        { silent = false, desc = "Fuzzy search vim help tags" })
     vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
-    vim.keymap.set("n", "<leader>fw", function()
-            run_fuzzy_grep(vim.fn.expand("<cword>"), false)
-        end,
+    vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
         { silent = false, desc = "Fuzzy grep current word" })
-    vim.keymap.set("n", "<leader>fW", function()
-            run_fuzzy_grep(vim.fn.expand("<cWORD>"), true)
-        end,
+    vim.keymap.set("n", "<leader>fW", function() _fuzzy_grep(vim.fn.expand("<cWORD>"), true) end,
         { silent = false, desc = "Fuzzy grep current WORD" })
     vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>",
         { noremap = true, silent = true, desc = "Fuzzy find files (FuzzyFiles)" })
