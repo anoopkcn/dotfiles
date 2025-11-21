@@ -1,9 +1,9 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
-    { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
-    { src = "https://github.com/anoopkcn/statusline.nvim", name = "statusline" },
+    { src = "/Users/akc/develop/fuzzy.nvim", name = "fuzzy" },
+    { src = "/Users/akc/develop/filemarks.nvim", name = "filemarks" },
+    { src = "/Users/akc/develop/statusline.nvim", name = "statusline" },
     { src = "https://github.com/tpope/vim-repeat", name = "vim-repeat" },
     { src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
     { src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
