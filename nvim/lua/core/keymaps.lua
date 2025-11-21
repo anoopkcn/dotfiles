@@ -45,7 +45,7 @@ vim.keymap.set("n", "<leader>qq", ToggleQuickfixList,
 vim.keymap.set("n", "fq", "<CMD>cclose<CR>",
     { noremap = true, silent = true, desc = "Close quickfixlist" })
 
-vim.keymap.set("n", "<leader>tt", vim.diagnostic.setqflist,
+vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
     { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
 
 vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end,
