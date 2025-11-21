@@ -48,8 +48,7 @@ alias ls="ls --color=auto"
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
-alias tree="eza --color=always --tree"
 alias tkill="tmux kill-server"
 alias tmi="tm -i"
-alias imgcat="viu"
-alias fcat="fancy-cat"
+alias imgcat="viu" # show images in terminal
+alias fcat="fancy-cat" # show pdf in terminal
