@@ -21,10 +21,25 @@ if ok then
         fuzzy.grep(args)
     end
 
+    local function _fuzzy_help()
+        local pattern = vim.fn.input("FuzzyHelp: ")
+        if vim.trim(pattern) == "" then
+            return
+        end
+        local help_dirs = vim.api.nvim_get_runtime_file("doc/", true)
+        if #help_dirs == 0 then
+            vim.notify("No help directories found.", vim.log.levels.WARN)
+            return
+        end
+        local args = { pattern, "--type", "txt" }
+        vim.list_extend(args, help_dirs)
+        fuzzy.grep(args)
+    end
+
     vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>",
         { silent = false, desc = "Fuzzy list" })
-    vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>",
-        { silent = false, desc = "Fuzzy search vim help tags" })
+    vim.keymap.set("n", "<leader>fh", _fuzzy_help,
+        { silent = false, desc = "Fuzzy grep vim help docs" })
     vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
     vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
