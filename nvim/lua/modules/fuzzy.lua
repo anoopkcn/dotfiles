@@ -1,12 +1,12 @@
-if vim.fn.executable("rg") ~= 1 then
-    vim.notify("[fuzzy] 'rg' is not found in PATH; :FuzzyGrep will be unavailable", vim.log.levels.WARN)
-end
-if vim.fn.executable("fd") ~= 1 then
-    vim.notify("[fuzzy] 'fd' is not found in PATH; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
-end
-
 local ok, fuzzy = pcall(require, "fuzzy")
 if ok then
+    if vim.fn.executable("rg") ~= 1 then
+        vim.notify("[fuzzy] 'rg' is not found in PATH; :FuzzyGrep will be unavailable", vim.log.levels.WARN)
+    end
+    if vim.fn.executable("fd") ~= 1 then
+        vim.notify("[fuzzy] 'fd' is not found in PATH; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
+    end
+
     fuzzy.setup()
 
     local function _fuzzy_grep(term, literal)
