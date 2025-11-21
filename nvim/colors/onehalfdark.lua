@@ -174,7 +174,7 @@ set("diffAdded", { fg = c.green })
 set("diffRemoved", { fg = c.red })
 set("WinSeparator", { fg = c.comment_fg })
 set("NetrwMarkFile", { fg = c.bg, bg = c.blue, bold = true })
-
+-- set("QuickFixLine", { bg = c.selection })
 -- Plugin highlights
 set("TreesitterContext", { fg = c.gutter_fg, bg = c.gutter_bg })
 set("TreesitterContextBottom", { underline = true })
