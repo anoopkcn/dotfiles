@@ -33,11 +33,6 @@ vim.pack.add({
         version = "main"
     },
     {
-        src = "https://github.com/stevearc/quicker.nvim",
-        name = "quicker",
-        version = "master"
-    },
-    {
         src = "https://github.com/nvim-treesitter/nvim-treesitter",
         name = "treesitter",
         version = "main"
