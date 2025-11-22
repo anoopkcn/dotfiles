@@ -12,20 +12,12 @@ vim.pack.add({
         name = "statusline"
     },
     {
-        src = "https://github.com/tpope/vim-repeat",
-        name = "vim-repeat"
-    },
-    {
         src = "https://github.com/tpope/vim-surround",
         name = "vim-surround"
     },
     {
         src = "https://github.com/tpope/vim-fugitive",
         name = "vim-fugitive"
-    },
-    {
-        src = "https://github.com/tpope/vim-unimpaired",
-        name = "vim-unimpaired"
     },
     {
         src = "https://github.com/nvim-mini/mini.diff",
