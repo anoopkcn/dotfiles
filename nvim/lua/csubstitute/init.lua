@@ -13,9 +13,19 @@ local function chomp(str)
     return without_cr
 end
 
+local function silence_modified(bufnr)
+    if vim.api.nvim_buf_is_valid(bufnr) then
+        vim.bo[bufnr].modified = false
+    end
+end
+
 local function set_metadata(bufnr, qf_entries)
+    local line_count = vim.api.nvim_buf_line_count(bufnr)
     vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
     for idx, entry in ipairs(qf_entries) do
+        if idx > line_count then
+            break
+        end
         local meta = fmt.format_meta(entry, { width = fmt.META_WIDTH })
         vim.api.nvim_buf_set_extmark(bufnr, ns, idx - 1, 0, {
             virt_text = { { meta, "Comment" } },
@@ -23,6 +33,30 @@ local function set_metadata(bufnr, qf_entries)
             hl_mode = "combine",
         })
     end
+end
+
+local function on_changed(bufnr)
+    local qf_entries = vim.b[bufnr].csubstitute_orig_qflist or {}
+    local target = #qf_entries
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local previous = vim.b[bufnr].csubstitute_lines or lines
+
+    if #lines ~= target then
+        vim.schedule(function()
+            if not vim.api.nvim_buf_is_valid(bufnr) then
+                return
+            end
+            vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, previous)
+            set_metadata(bufnr, qf_entries)
+            silence_modified(bufnr)
+            vim.notify("[csubstitute] Line count must remain unchanged.", vim.log.levels.WARN)
+        end)
+        return
+    end
+
+    vim.b[bufnr].csubstitute_lines = lines
+    set_metadata(bufnr, qf_entries)
+    silence_modified(bufnr)
 end
 
 local function echoerr(msg)
@@ -46,6 +80,7 @@ local function populate_buffer(bufnr, qflist)
     vim.bo[bufnr].modifiable = true
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
     set_metadata(bufnr, qflist or {})
+    vim.b[bufnr].csubstitute_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
     vim.bo[bufnr].modified = false
 end
 
@@ -142,6 +177,12 @@ local function open_replace_window(cmd, close_lists)
             nested = true,
             callback = function()
                 do_replace(bufnr)
+            end,
+        })
+        vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP" }, {
+            buffer = bufnr,
+            callback = function()
+                on_changed(bufnr)
             end,
         })
     end
