@@ -164,7 +164,7 @@ local function open_replace_window(cmd, close_lists)
         return
     end
 
-    local open_cmd = (cmd and cmd ~= "") and cmd or "split"
+    local open_cmd = (cmd and cmd ~= "") and cmd or "new"
     local bufnr = state.bufnr
     if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
         local wins = vim.fn.win_findbuf(bufnr)
