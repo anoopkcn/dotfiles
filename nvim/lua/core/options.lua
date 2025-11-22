@@ -1,12 +1,12 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
--- vim.opt.clipboard = "unnamedplus"
 vim.opt.swapfile = false
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = false
 vim.opt.showtabline = 0
-vim.opt.laststatus = 2
+vim.opt.laststatus = 3
+vim.opt.winbar = "%f%m"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.mouse = "a"
