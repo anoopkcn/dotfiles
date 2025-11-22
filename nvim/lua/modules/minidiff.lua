@@ -3,7 +3,7 @@ if ok then
     minidiff.setup({
         view = {
             style = "sign",
-            signs = { add = "░", change = "░", delete = "░" },
+            signs = { add = "│", change = "│", delete = "-" },
         }
     })
 
