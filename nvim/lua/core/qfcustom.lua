@@ -2,7 +2,7 @@ local M = {}
 
 local config = {
     separator = "│",
-    filename_max_width = 30,
+    filename_max_width = 32,
     max_highlight_items = 1000,
 }
 
