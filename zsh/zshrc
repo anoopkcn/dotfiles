@@ -18,8 +18,8 @@ export EDITOR='nvim'
 # INPUTRC
 # bindkey '\e[A' history-search-backward
 # bindkey '\e[B' history-search-forward
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
+bindkey "^[[A" history-search-backward
+bindkey "^[[B" history-search-forward
 bindkey '^y' autosuggest-accept
 # bindkey -v
 
@@ -28,8 +28,8 @@ source_file() {  [ -f "$1" ] && source "$1"  }
 path() { echo -e ${PATH//:/\\n} }
 
 # SOURCE
-source_file $HOME/.config/zsh/plugins.sh
 source_file $HOME/.privaterc
+source_file $HOME/.config/zsh/plugin-manager.sh
 source_file $HOME/.config/zsh/minimal-prompt.sh
 # export TM_SEARCH_DIRS="$HOME $HOME/work $HOME/develop $HOME/Dropbox $HOME/Dropbox/projects"
 # source_file $HOME/.config/tmux/tools.sh
@@ -43,12 +43,30 @@ setopt HIST_IGNORE_SPACE
 setopt SHARE_HISTORY
 
 # ALIAS
-# requires: nvim, rsync, git
 alias ls="ls --color=auto"
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
-alias tkill="tmux kill-server"
-alias tmi="tm -i"
 alias imgcat="viu" # show images in terminal
 alias fcat="fancy-cat" # show pdf in terminal
+
+# TOOLS
+if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
+    # Homebrew environment setup
+    if command -v brew >/dev/null 2>&1; then
+        eval "$(brew shellenv)"
+    fi
+fi
+
+# PLUGINS
+plugin add "zshzoo/macos"
+plugin add "zsh-users/zsh-syntax-highlighting"
+plugin add "zsh-users/zsh-autosuggestions"
+plugin add "zsh-users/zsh-completions"
+plugin add "anoopkcn/zig-shell-completions"
+
+# plugin settings
+autoload -Uz compinit && compinit
+if [ -n "$ZSH_VERSION" ]; then
+    zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+fi
