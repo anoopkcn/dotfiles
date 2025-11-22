@@ -37,36 +37,25 @@ local function close_list_windows()
     end
 end
 
-local function get_effectual_lines(qf)
-    local effectual = {}
-    for _, entry in ipairs(qf or {}) do
-        if entry.bufnr and entry.bufnr ~= 0 then
-            table.insert(effectual, entry)
-        end
-    end
-    return effectual
-end
-
 local function populate_buffer(bufnr, qflist)
     vim.b[bufnr].csubstitute_orig_qflist = qflist
-    local effectual = get_effectual_lines(qflist)
     local lines = {}
-    for _, entry in ipairs(effectual) do
+    for _, entry in ipairs(qflist or {}) do
         table.insert(lines, chomp(entry.text))
     end
     vim.bo[bufnr].modifiable = true
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-    set_metadata(bufnr, effectual)
+    set_metadata(bufnr, qflist or {})
     vim.bo[bufnr].modified = false
 end
 
 local function do_replace(bufnr)
     local qf_orig = vim.b[bufnr].csubstitute_orig_qflist or {}
-    local qf = get_effectual_lines(qf_orig)
     local new_text_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-    if #new_text_lines ~= #qf then
-        echoerr(string.format("csubstitute: Illegal edit: line number was changed from %d to %d.", #qf, #new_text_lines))
+    if #new_text_lines ~= #qf_orig then
+        echoerr(string.format("csubstitute: Illegal edit: line number was changed from %d to %d.", #qf_orig,
+            #new_text_lines))
         return
     end
 
@@ -82,9 +71,14 @@ local function do_replace(bufnr)
     local prev_bufnr = -1
     local qf_bufnr = bufnr
 
-    for i, entry in ipairs(qf) do
+    for i, entry in ipairs(qf_orig) do
         local new_text = new_text_lines[i]
         if entry.text == new_text then
+            goto continue
+        end
+
+        if not (entry.bufnr and entry.bufnr ~= 0) then
+            entry.text = new_text
             goto continue
         end
 
