@@ -1,10 +1,11 @@
+local fmt = require("csubstitute.format")
+
 local M = {}
 
 local state = {
     bufnr = nil,
 }
 local ns = vim.api.nvim_create_namespace("csubstitute_meta")
-local META_WIDTH = 50
 
 local function chomp(str)
     local s = str or ""
@@ -12,31 +13,10 @@ local function chomp(str)
     return without_cr
 end
 
-local function format_meta(entry)
-    local name = vim.fn.fnamemodify(vim.fn.bufname(entry.bufnr), ":.")
-    local lnum = entry.lnum or 0
-    local col = entry.col or 0
-    local suffix = string.format("| %4d:%-4d | ", lnum, col)
-    local name_width = META_WIDTH - #suffix
-    if name_width < 1 then
-        name_width = 1
-    end
-
-    local display_name = name
-    if #display_name > name_width then
-        display_name = vim.fn.pathshorten(display_name)
-    end
-    if #display_name > name_width then
-        display_name = vim.fn.strcharpart(display_name, #display_name - name_width, name_width)
-    end
-
-    return string.format("%-" .. name_width .. "s%s", display_name, suffix)
-end
-
 local function set_metadata(bufnr, qf_entries)
     vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
     for idx, entry in ipairs(qf_entries) do
-        local meta = format_meta(entry)
+        local meta = fmt.format_meta(entry, { width = fmt.META_WIDTH })
         vim.api.nvim_buf_set_extmark(bufnr, ns, idx - 1, 0, {
             virt_text = { { meta, "Comment" } },
             virt_text_pos = "inline",
@@ -178,6 +158,11 @@ function M.start(cmd, close_lists)
 end
 
 function M.setup()
+    _G.CsubstituteQftf = function(info)
+        return require("csubstitute.format").quickfix_text(info)
+    end
+    vim.o.quickfixtextfunc = "v:lua.CsubstituteQftf"
+
     vim.api.nvim_create_user_command("Csubstitute", function(opts)
         M.start(opts.args, opts.bang)
     end, { nargs = "?", bang = true })
