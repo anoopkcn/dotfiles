@@ -167,15 +167,20 @@ set("Todo", { fg = c.purple })
 set("WinSeparator", { fg = c.muted })
 set("NetrwMarkFile", { fg = c.background, bg = c.blue, bold = true })
 set("QuickFixLine", { bg = c.surface })
+
 -- Plugin highlights
+-- Treesittter {
 set("TreesitterContext", { fg = c.line, bg = c.background })
 set("TreesitterContextBottom", { underline = true })
 set("TreesitterContextLineNumber", { fg = c.text, bg = c.background })
 set("TreesitterContextLineNumberBottom", { underline = true })
--- copilot highlights
+-- }
+-- Copilot {
 set("ComplHint", { fg = c.selection, italic = true })
 set("ComplHintMore", { fg = c.selection })
--- minidiff highlights
+-- }
+-- Minidiff {
 set("MiniDiffSignAdd", { fg = c.green })
 set("MiniDiffSignChange", { fg = c.yellow })
 set("MiniDiffSignDelete", { fg = c.red })
+-- }
