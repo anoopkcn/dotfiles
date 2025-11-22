@@ -82,7 +82,8 @@ local function do_replace(bufnr)
         local original_text = chomp(entry.text)
         if current_line ~= original_text then
             if current_line ~= new_text then
-                echoerr(string.format("csubstitute: Original text has changed: %s:%d", vim.fn.bufname(entry.bufnr), entry.lnum))
+                echoerr(string.format("csubstitute: Original text has changed: %s:%d", vim.fn.bufname(entry.bufnr),
+                    entry.lnum))
             end
         else
             vim.api.nvim_buf_set_lines(entry.bufnr, entry.lnum - 1, entry.lnum, false, { new_text })
@@ -141,6 +142,10 @@ end
 
 function M.setup()
     vim.api.nvim_create_user_command("Csubstitute", function(opts)
+        M.start(opts.args, opts.bang)
+    end, { nargs = "?", bang = true })
+
+    vim.api.nvim_create_user_command("Csub", function(opts)
         M.start(opts.args, opts.bang)
     end, { nargs = "?", bang = true })
 end
