@@ -20,29 +20,21 @@ local function color(hex, cterm)
 end
 
 local c = {
-    fg = color("#dcdfe4", 188), -- white
-    bg = color("#282c34", 236), -- black
+    text = color("#dcdfe4", 188),
+    background = color("#282c34", 236),
+    surface = color("#313640", 237), -- subtle surfaces like cursor line or tabline
+    -- panel = color("#343847", 236),   -- floating/popup panels
+    selection = color("#474e5d", 239),
+    muted = color("#5c6370", 241), -- comments, borders
+    line = color("#919baa", 247),  -- gutters and line numbers
+    dim = color("#373C45", 239),   -- whitespace / non-text
+    scrollbar = color("#3b4252", 237),
     red = color("#e06c75", 168),
     green = color("#98c379", 114),
     yellow = color("#e5c07b", 180),
     blue = color("#61afef", 75),
     purple = color("#c678dd", 176),
     cyan = color("#56b6c2", 73),
-    comment_fg = color("#5c6370", 241),
-    gutter_bg = color("#282c34", 236),
-    gutter_fg = color("#919baa", 247),
-    non_text = color("#373C45", 239),
-    cursor_line = color("#313640", 237),
-    color_col = color("#313640", 237),
-    selection = color("#474e5d", 239),
-    vertsplit = color("#5c6370", 237),
-    hovercolor = color("#303030", 236),
-    hoverborder = color("#5c6370", 242),
-    popup_bg = color("#343847", 236),
-    popup_selection = color("#44688e", 239),
-    popup_scrollbar = color("#3b4252", 237),
-    popup_thumb = color("#44688e", 239),
-    popup_border = color("#5c6370", 242),
 }
 
 local function set(group, opts)
@@ -72,72 +64,72 @@ local function set(group, opts)
     vim.api.nvim_set_hl(0, group, def)
 end
 
-set("Normal", { fg = c.fg, bg = c.bg })
-set("Cursor", { fg = c.bg, bg = c.blue })
-set("CursorColumn", { bg = c.cursor_line })
-set("CursorLine", { bg = c.cursor_line })
-set("LineNr", { fg = c.gutter_fg, bg = c.gutter_bg })
+set("Normal", { fg = c.text, bg = c.background })
+set("Cursor", { fg = c.background, bg = c.blue })
+set("CursorColumn", { bg = c.surface })
+set("CursorLine", { bg = c.surface })
+set("LineNr", { fg = c.line, bg = c.background })
 set("CursorLineNr", { fg = c.cyan })
 set("DiffAdd", { fg = c.green })
 set("DiffChange", { fg = c.yellow })
 set("DiffDelete", { fg = c.red })
 set("DiffText", { fg = c.blue })
-set("IncSearch", { fg = c.bg, bg = c.yellow })
-set("Search", { fg = c.bg, bg = c.yellow })
-set("ErrorMsg", { fg = c.fg })
-set("ModeMsg", { fg = c.fg })
-set("MoreMsg", { fg = c.fg })
+set("IncSearch", { fg = c.background, bg = c.yellow })
+set("Search", { fg = c.background, bg = c.yellow })
+set("ErrorMsg", { fg = c.text })
+set("ModeMsg", { fg = c.text })
+set("MoreMsg", { fg = c.text })
 set("WarningMsg", { fg = c.red })
 set("Question", { fg = c.purple })
--- set("Pmenu", { fg = c.gutter_fg , bg = c.popup_bg })
-set("PmenuSel", { fg = c.fg, bg = c.selection })
-set("PmenuSbar", { bg = c.popup_scrollbar })
-set("PmenuThumb", { bg = c.popup_thumb })
-set("PmenuBorder" , { fg = c.popup_border, bg = c.bg })
-set("NormalFloat", { fg = c.fg, bg = c.bg })
-set("FloatBorder", { fg = c.popup_border, bg = c.bg })
-set("FloatShadow", { bg = c.bg })
-set("FloatShadowThrough", { bg = c.bg })
-set("LspInfoBorder", { fg = c.popup_border, bg = c.bg })
-set("LspFloatWinNormal", { fg = c.fg, bg = c.bg })
-set("LspFloatWinBorder", { fg = c.popup_border, bg = c.bg })
-set("DiagnosticFloatingError", { fg = c.red, bg = c.bg })
-set("DiagnosticFloatingWarn", { fg = c.yellow, bg = c.bg })
-set("DiagnosticFloatingInfo", { fg = c.blue, bg = c.bg })
-set("DiagnosticFloatingHint", { fg = c.cyan, bg = c.bg })
-set("FloatTitle", { fg = c.fg, bg = c.popup_bg, bold = true })
+-- set("Pmenu", { fg = c.line , bg = c.background })
+set("PmenuSel", { fg = c.text, bg = c.selection })
+set("PmenuSbar", { bg = c.scrollbar })
+set("PmenuThumb", { bg = c.selection })
+set("PmenuBorder", { fg = c.muted, bg = c.background })
+set("NormalFloat", { fg = c.text, bg = c.background })
+set("FloatBorder", { fg = c.muted, bg = c.background })
+set("FloatShadow", { bg = c.background })
+set("FloatShadowThrough", { bg = c.background })
+set("LspInfoBorder", { fg = c.muted, bg = c.background })
+set("LspFloatWinNormal", { fg = c.text, bg = c.background })
+set("LspFloatWinBorder", { fg = c.muted, bg = c.background })
+set("DiagnosticFloatingError", { fg = c.red, bg = c.background })
+set("DiagnosticFloatingWarn", { fg = c.yellow, bg = c.background })
+set("DiagnosticFloatingInfo", { fg = c.blue, bg = c.background })
+set("DiagnosticFloatingHint", { fg = c.cyan, bg = c.background })
+set("FloatTitle", { fg = c.text, bg = c.background, bold = true })
 set("SpellBad", { fg = c.red, undercurl = true, sp = c.red.hex })
 set("SpellCap", { fg = c.yellow, undercurl = true, sp = c.blue.hex })
 set("SpellLocal", { fg = c.yellow, undercurl = true, sp = c.green.hex })
 set("SpellRare", { fg = c.yellow, undercurl = true, sp = c.purple.hex })
-set("StatusLine", { fg = c.fg, bg = c.cursor_line })
-set("StatusLineNC", { fg = c.comment_fg, bg = c.cursor_line })
-set("WinBar", { fg = c.cyan, bg = c.bg })
-set("WinBarNC", { fg = c.comment_fg, bg = c.bg })
-set("TabLine", { fg = c.comment_fg, bg = c.cursor_line })
-set("TabLineFill", { fg = c.comment_fg, bg = c.cursor_line })
-set("TabLineSel", { fg = c.fg, bg = c.bg })
+set("StatusLine", { fg = c.text, bg = c.surface })
+set("StatusLineNC", { fg = c.muted, bg = c.surface })
+set("WinBar", { fg = c.cyan, bg = c.background })
+set("WinBarNC", { fg = c.muted, bg = c.background })
+set("TabLine", { fg = c.muted, bg = c.surface })
+set("TabLineFill", { fg = c.muted, bg = c.surface })
+set("TabLineSel", { fg = c.text, bg = c.background })
 set("Visual", { bg = c.selection })
 set("VisualNOS", { bg = c.selection })
-set("ColorColumn", { bg = c.color_col })
-set("Conceal", { fg = c.fg })
+set("ColorColumn", { bg = c.surface })
+set("Conceal", { fg = c.text })
 set("Directory", { fg = c.blue })
-set("VertSplit", { fg = c.vertsplit, bg = c.bg })
-set("Folded", { fg = c.fg })
-set("FoldColumn", { fg = c.fg })
-set("SignColumn", { fg = c.fg })
+set("VertSplit", { fg = c.muted, bg = c.background })
+set("Folded", { fg = c.text })
+set("FoldColumn", { fg = c.text })
+set("SignColumn", { fg = c.text })
 set("MatchParen", { fg = c.blue, underline = true })
-set("SpecialKey", { fg = c.fg })
+set("SpecialKey", { fg = c.text })
 set("Title", { fg = c.green })
-set("WildMenu", { fg = c.fg })
+set("WildMenu", { fg = c.text })
 set("DiagnosticUnderlineError", { undercurl = true, sp = c.red.hex })
 set("DiagnosticUnderlineWarn", { undercurl = true, sp = c.yellow.hex })
 set("DiagnosticUnderlineInfo", { undercurl = true, sp = c.blue.hex })
 set("DiagnosticUnderlineHint", { undercurl = true, sp = c.cyan.hex })
 set("LspSignatureActiveParameter", { fg = c.yellow, bold = true })
-set("Whitespace", { fg = c.non_text })
-set("NonText", { fg = c.non_text })
-set("Comment", { fg = c.comment_fg })
+set("Whitespace", { fg = c.dim })
+set("NonText", { fg = c.dim })
+set("Comment", { fg = c.muted })
 set("Constant", { fg = c.cyan })
 set("String", { fg = c.green })
 set("Character", { fg = c.green })
@@ -150,7 +142,7 @@ set("Statement", { fg = c.purple })
 set("Conditional", { fg = c.purple })
 set("Repeat", { fg = c.purple })
 set("Label", { fg = c.purple })
-set("Operator", { fg = c.fg })
+set("Operator", { fg = c.text })
 set("Keyword", { fg = c.red })
 set("Exception", { fg = c.purple })
 set("PreProc", { fg = c.yellow })
@@ -163,24 +155,22 @@ set("StorageClass", { fg = c.yellow })
 set("Structure", { fg = c.yellow })
 set("Typedef", { fg = c.yellow })
 set("Special", { fg = c.blue })
-set("SpecialChar", { fg = c.fg })
-set("Tag", { fg = c.fg })
-set("Delimiter", { fg = c.fg })
-set("SpecialComment", { fg = c.fg })
-set("Debug", { fg = c.fg })
-set("Underlined", { fg = c.fg })
-set("Ignore", { fg = c.fg })
-set("Error", { fg = c.red, bg = c.gutter_bg })
+set("SpecialChar", { fg = c.text })
+set("Tag", { fg = c.text })
+set("Delimiter", { fg = c.text })
+set("SpecialComment", { fg = c.text })
+set("Debug", { fg = c.text })
+set("Underlined", { fg = c.text })
+set("Ignore", { fg = c.text })
+set("Error", { fg = c.red, bg = c.background })
 set("Todo", { fg = c.purple })
--- set("diffAdded", { fg = c.green })
--- set("diffRemoved", { fg = c.red })
-set("WinSeparator", { fg = c.comment_fg })
-set("NetrwMarkFile", { fg = c.bg, bg = c.blue, bold = true })
-set("QuickFixLine", { bg = c.cursor_line})
+set("WinSeparator", { fg = c.muted })
+set("NetrwMarkFile", { fg = c.background, bg = c.blue, bold = true })
+set("QuickFixLine", { bg = c.surface })
 -- Plugin highlights
-set("TreesitterContext", { fg = c.gutter_fg, bg = c.gutter_bg })
+set("TreesitterContext", { fg = c.line, bg = c.background })
 set("TreesitterContextBottom", { underline = true })
-set("TreesitterContextLineNumber", { fg = c.fg, bg = c.gutter_bg })
+set("TreesitterContextLineNumber", { fg = c.text, bg = c.background })
 set("TreesitterContextLineNumberBottom", { underline = true })
 -- copilot highlights
 set("ComplHint", { fg = c.selection, italic = true })
