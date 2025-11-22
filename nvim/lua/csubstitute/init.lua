@@ -13,9 +13,21 @@ local function chomp(str)
     return without_cr
 end
 
+local function with_buf(bufnr, fn)
+    if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+        fn(bufnr)
+    end
+end
+
 local function silence_modified(bufnr)
-    if vim.api.nvim_buf_is_valid(bufnr) then
-        vim.bo[bufnr].modified = false
+    with_buf(bufnr, function(b)
+        vim.bo[b].modified = false
+    end)
+end
+
+local function apply_window_opts(winid)
+    if winid and vim.api.nvim_win_is_valid(winid) then
+        vim.api.nvim_set_option_value("wrap", false, { scope = "local", win = winid })
     end
 end
 
@@ -158,9 +170,11 @@ local function open_replace_window(cmd, close_lists)
         local wins = vim.fn.win_findbuf(bufnr)
         if wins[1] then
             vim.api.nvim_set_current_win(wins[1])
+            apply_window_opts(wins[1])
         else
             vim.cmd(open_cmd)
             vim.api.nvim_set_current_buf(bufnr)
+            apply_window_opts(vim.api.nvim_get_current_win())
         end
     else
         vim.cmd(open_cmd)
@@ -185,6 +199,12 @@ local function open_replace_window(cmd, close_lists)
                 on_changed(bufnr)
             end,
         })
+        vim.api.nvim_create_autocmd("BufWinEnter", {
+            buffer = bufnr,
+            callback = function()
+                apply_window_opts(vim.api.nvim_get_current_win())
+            end,
+        })
     end
 
     if close_lists then
@@ -192,6 +212,7 @@ local function open_replace_window(cmd, close_lists)
     end
 
     populate_buffer(bufnr, current_qflist)
+    apply_window_opts(vim.api.nvim_get_current_win())
 end
 
 function M.start(cmd, close_lists)
