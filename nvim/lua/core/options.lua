@@ -25,4 +25,3 @@ vim.opt.path:append("**")
 vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
-vim.diagnostic.config({ signs = false })
