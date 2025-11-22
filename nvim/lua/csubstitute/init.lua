@@ -14,6 +14,14 @@ local function echoerr(msg)
     vim.api.nvim_echo({ { msg, "ErrorMsg" } }, true, {})
 end
 
+local function close_list_windows()
+    for _, win in ipairs(vim.fn.getwininfo()) do
+        if win.quickfix == 1 then
+            pcall(vim.api.nvim_win_close, win.winid, false)
+        end
+    end
+end
+
 local function get_effectual_lines(qf)
     local effectual = {}
     for _, entry in ipairs(qf or {}) do
@@ -90,7 +98,7 @@ local function do_replace(bufnr)
     vim.fn.setqflist(qf_orig, "r")
 end
 
-local function open_replace_window(cmd)
+local function open_replace_window(cmd, close_lists)
     local open_cmd = (cmd and cmd ~= "") and cmd or "split"
     local bufnr = state.bufnr
     if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
@@ -120,17 +128,21 @@ local function open_replace_window(cmd)
         })
     end
 
+    if close_lists then
+        close_list_windows()
+    end
+
     populate_buffer(bufnr, vim.fn.getqflist())
 end
 
-function M.start(cmd)
-    open_replace_window(cmd)
+function M.start(cmd, close_lists)
+    open_replace_window(cmd, close_lists)
 end
 
 function M.setup()
     vim.api.nvim_create_user_command("Csubstitute", function(opts)
-        M.start(opts.args)
-    end, { nargs = "?" })
+        M.start(opts.args, opts.bang)
+    end, { nargs = "?", bang = true })
 end
 
 return M
