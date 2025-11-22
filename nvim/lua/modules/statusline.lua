@@ -3,7 +3,7 @@ if ok then
     statusline.setup({
         sections = {
             left = { 'mode', 'filetype',  'vcs'},
-            middle = { 'filepath', 'filename' },
+            middle = { 'bufnr', 'filepath', 'filename' },
             right = { 'diagnostics', 'position' },
         }
     })
