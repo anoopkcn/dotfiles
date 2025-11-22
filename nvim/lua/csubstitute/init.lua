@@ -111,6 +111,12 @@ local function do_replace(bufnr)
 end
 
 local function open_replace_window(cmd, close_lists)
+    local current_qflist = vim.fn.getqflist()
+    if not current_qflist or vim.tbl_isempty(current_qflist) then
+        vim.notify("[csubstitute] No quickfix list available.", vim.log.levels.INFO)
+        return
+    end
+
     local open_cmd = (cmd and cmd ~= "") and cmd or "split"
     local bufnr = state.bufnr
     if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
