@@ -175,3 +175,7 @@ set("TreesitterContextLineNumberBottom", { underline = true })
 -- copilot highlights
 set("ComplHint", { fg = c.selection, italic = true })
 set("ComplHintMore", { fg = c.selection })
+-- minidiff highlights
+set("MiniDiffSignAdd", { fg = c.green })
+set("MiniDiffSignChange", { fg = c.yellow })
+set("MiniDiffSignDelete", { fg = c.red })

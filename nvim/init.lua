@@ -10,10 +10,6 @@ require("modules.minidiff")
 require("modules.filemarks")
 require("modules.treesitter")
 require("modules.statusline")
-
-vim.lsp.enable({
-    "lua_ls",
-    "pyright",
-    "copilot",
-    "marksman"
-})
+vim.cmd.packadd("cfilter")
+vim.cmd.colorscheme("onehalfdark")
+vim.lsp.enable({ "lua_ls", "pyright", "copilot", "marksman" })
