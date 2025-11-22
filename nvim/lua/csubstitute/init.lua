@@ -25,7 +25,7 @@ local function get_effectual_lines(qf)
 end
 
 local function populate_buffer(bufnr, qflist)
-    vim.b[bufnr].qfreplace_orig_qflist = qflist
+    vim.b[bufnr].csubstitute_orig_qflist = qflist
     local lines = {}
     for _, entry in ipairs(get_effectual_lines(qflist)) do
         table.insert(lines, chomp(entry.text))
@@ -36,19 +36,19 @@ local function populate_buffer(bufnr, qflist)
 end
 
 local function do_replace(bufnr)
-    local qf_orig = vim.b[bufnr].qfreplace_orig_qflist or {}
+    local qf_orig = vim.b[bufnr].csubstitute_orig_qflist or {}
     local qf = get_effectual_lines(qf_orig)
     local new_text_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
     if #new_text_lines ~= #qf then
-        echoerr(string.format("qfreplace: Illegal edit: line number was changed from %d to %d.", #qf, #new_text_lines))
+        echoerr(string.format("csubstitute: Illegal edit: line number was changed from %d to %d.", #qf, #new_text_lines))
         return
     end
 
     vim.bo[bufnr].modified = false
 
     local after_cmd
-    if vim.o.hidden and (vim.g.qfreplace_no_save or 0) ~= 0 then
+    if vim.o.hidden and (vim.g.csubstitute_no_save or 0) ~= 0 then
         after_cmd = "if &modified | setlocal buflisted | endif"
     else
         after_cmd = "update" .. (vim.v.cmdbang == 1 and "!" or "")
@@ -74,8 +74,7 @@ local function do_replace(bufnr)
         local original_text = chomp(entry.text)
         if current_line ~= original_text then
             if current_line ~= new_text then
-                echoerr(string.format("qfreplace: Original text has changed: %s:%d", vim.fn.bufname(entry.bufnr),
-                    entry.lnum))
+                echoerr(string.format("csubstitute: Original text has changed: %s:%d", vim.fn.bufname(entry.bufnr), entry.lnum))
             end
         else
             vim.api.nvim_buf_set_lines(entry.bufnr, entry.lnum - 1, entry.lnum, false, { new_text })
@@ -110,8 +109,8 @@ local function open_replace_window(cmd)
         vim.bo[bufnr].swapfile = false
         vim.bo[bufnr].bufhidden = "hide"
         vim.bo[bufnr].buftype = "acwrite"
-        vim.bo[bufnr].filetype = "qfreplace"
-        vim.api.nvim_buf_set_name(bufnr, "[qfreplace]")
+        vim.bo[bufnr].filetype = "csubstitute"
+        vim.api.nvim_buf_set_name(bufnr, "[csubstitute]")
         vim.api.nvim_create_autocmd("BufWriteCmd", {
             buffer = bufnr,
             nested = true,
@@ -129,7 +128,7 @@ function M.start(cmd)
 end
 
 function M.setup()
-    vim.api.nvim_create_user_command("Qfreplace", function(opts)
+    vim.api.nvim_create_user_command("Csubstitute", function(opts)
         M.start(opts.args)
     end, { nargs = "?" })
 end
