@@ -3,11 +3,46 @@ local M = {}
 local state = {
     bufnr = nil,
 }
+local ns = vim.api.nvim_create_namespace("csubstitute_meta")
+local META_WIDTH = 50
 
 local function chomp(str)
     local s = str or ""
     local without_cr = s:gsub("\r$", "")
     return without_cr
+end
+
+local function format_meta(entry)
+    local name = vim.fn.fnamemodify(vim.fn.bufname(entry.bufnr), ":.")
+    local lnum = entry.lnum or 0
+    local col = entry.col or 0
+    local suffix = string.format("| %4d:%-4d | ", lnum, col)
+    local name_width = META_WIDTH - #suffix
+    if name_width < 1 then
+        name_width = 1
+    end
+
+    local display_name = name
+    if #display_name > name_width then
+        display_name = vim.fn.pathshorten(display_name)
+    end
+    if #display_name > name_width then
+        display_name = vim.fn.strcharpart(display_name, #display_name - name_width, name_width)
+    end
+
+    return string.format("%-" .. name_width .. "s%s", display_name, suffix)
+end
+
+local function set_metadata(bufnr, qf_entries)
+    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+    for idx, entry in ipairs(qf_entries) do
+        local meta = format_meta(entry)
+        vim.api.nvim_buf_set_extmark(bufnr, ns, idx - 1, 0, {
+            virt_text = { { meta, "Comment" } },
+            virt_text_pos = "inline",
+            hl_mode = "combine",
+        })
+    end
 end
 
 local function echoerr(msg)
@@ -34,12 +69,14 @@ end
 
 local function populate_buffer(bufnr, qflist)
     vim.b[bufnr].csubstitute_orig_qflist = qflist
+    local effectual = get_effectual_lines(qflist)
     local lines = {}
-    for _, entry in ipairs(get_effectual_lines(qflist)) do
+    for _, entry in ipairs(effectual) do
         table.insert(lines, chomp(entry.text))
     end
     vim.bo[bufnr].modifiable = true
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+    set_metadata(bufnr, effectual)
     vim.bo[bufnr].modified = false
 end
 
