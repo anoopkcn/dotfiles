@@ -191,18 +191,19 @@ local function open_replace_window(cmd, close_lists)
         close_list_windows()
     end
 
-    populate_buffer(bufnr, vim.fn.getqflist())
+    populate_buffer(bufnr, current_qflist)
 end
 
 function M.start(cmd, close_lists)
     open_replace_window(cmd, close_lists)
 end
 
+function M.quickfix_text(info)
+    return require("csubstitute.format").quickfix_text(info)
+end
+
 function M.setup()
-    _G.CsubstituteQftf = function(info)
-        return require("csubstitute.format").quickfix_text(info)
-    end
-    vim.o.quickfixtextfunc = "v:lua.CsubstituteQftf"
+    vim.o.quickfixtextfunc = "v:lua.require'csubstitute'.quickfix_text"
 
     vim.api.nvim_create_user_command("Csubstitute", function(opts)
         M.start(opts.args, opts.bang)
