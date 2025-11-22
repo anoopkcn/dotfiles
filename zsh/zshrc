@@ -16,23 +16,17 @@ export CONDA_CHANGEPS1=no
 export EDITOR='nvim'
 
 # INPUTRC
-# bindkey '\e[A' history-search-backward
-# bindkey '\e[B' history-search-forward
 bindkey "^[[A" history-search-backward
 bindkey "^[[B" history-search-forward
 bindkey '^y' autosuggest-accept
-# bindkey -v
 
 # FUNCTIONS
 source_file() {  [ -f "$1" ] && source "$1"  }
 path() { echo -e ${PATH//:/\\n} }
 
-# SOURCE
 source_file $HOME/.privaterc
 source_file $HOME/.config/zsh/plugin-manager.sh
 source_file $HOME/.config/zsh/minimal-prompt.sh
-# export TM_SEARCH_DIRS="$HOME $HOME/work $HOME/develop $HOME/Dropbox $HOME/Dropbox/projects"
-# source_file $HOME/.config/tmux/tools.sh
 
 # HISTORY OPTIONS
 HISTFILE=$HOME/.zsh_history
