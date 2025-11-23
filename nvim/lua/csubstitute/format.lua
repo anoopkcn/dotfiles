@@ -20,7 +20,7 @@ function M.format_meta(entry, opts)
     local name = normalize_name(entry)
     local lnum = entry.lnum or 0
     local col = entry.col or 0
-    local suffix = string.format("|%4d:%-4d| ", lnum, col)
+    local suffix = string.format("|%5d:%-4d| ", lnum, col)
     local name_width = math.max(width - #suffix, 1)
 
     local display_name = name
