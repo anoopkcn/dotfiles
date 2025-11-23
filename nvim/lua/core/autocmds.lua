@@ -46,12 +46,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
         local bufnr = args.buf
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-
-        -- Disable semantic tokens if supported
-        local semantic_provider = client.server_capabilities and client.server_capabilities.semanticTokensProvider
-        if semantic_provider and (semantic_provider.full or semantic_provider.range) then
-            client.server_capabilities.semanticTokensProvider = nil
-        end
+        client.server_capabilities.semanticTokensProvider = nil
 
         -- Copilot inline suggestions
         if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
