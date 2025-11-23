@@ -1,14 +1,6 @@
 local ok, fuzzy = pcall(require, "fuzzy")
 if ok then
-    if vim.fn.executable("rg") ~= 1 then
-        vim.notify("[fuzzy] 'rg' is not found in PATH; :FuzzyGrep will be unavailable", vim.log.levels.WARN)
-    end
-    if vim.fn.executable("fd") ~= 1 then
-        vim.notify("[fuzzy] 'fd' is not found in PATH; :FuzzyFiles will be unavailable", vim.log.levels.WARN)
-    end
-
     fuzzy.setup()
-
     local function _fuzzy_grep(term, literal)
         term = vim.trim(term or "")
         if term == "" then
@@ -40,7 +32,7 @@ if ok then
         { silent = false, desc = "Fuzzy list" })
     vim.keymap.set("n", "<leader>fh", _fuzzy_help,
         { silent = false, desc = "Fuzzy grep vim help docs" })
-    vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
+    vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep!<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
     vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
         { silent = false, desc = "Fuzzy grep current word" })
@@ -52,6 +44,4 @@ if ok then
         { noremap = true, silent = true, desc = "Fuzzy buffer list" })
     vim.keymap.set("n", "<leader>fB", "<CMD>FuzzyBuffers!<CR>",
         { noremap = true, silent = true, desc = "Fuzzy buffer list (live)" })
-    vim.keymap.set("n", "<leader>dl", "<CMD>FuzzyFiles --noignore DEVLOG<CR>",
-        { noremap = true, silent = true, desc = "Open DEVLOG.md" })
 end
