@@ -42,7 +42,6 @@ alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
 alias imgcat="viu" # show images in terminal
-alias fcat="fancy-cat" # show pdf in terminal
 
 # TOOLS
 if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
