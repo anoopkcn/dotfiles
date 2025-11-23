@@ -12,6 +12,10 @@ vim.pack.add({
         name = "statusline"
     },
     {
+        src = "/Users/akc/develop/csub.nvim",
+        name = "csub"
+    },
+    {
         src = "https://github.com/tpope/vim-surround",
         name = "vim-surround"
     },
