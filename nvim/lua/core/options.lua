@@ -1,8 +1,8 @@
 vim.opt.swapfile = false
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true
-vim.o.cursorlineopt = "number"
+-- vim.opt.cursorline = true
+-- vim.o.cursorlineopt = "number"
 vim.opt.showtabline = 0
 vim.opt.laststatus = 3
 vim.opt.winbar = "%f%m"
