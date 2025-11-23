@@ -20,7 +20,7 @@ if ok then
         end
         local help_dirs = vim.api.nvim_get_runtime_file("doc/", true)
         if #help_dirs == 0 then
-            vim.notify("No help directories found.", vim.log.levels.WARN)
+            vim.notify("Nvim runtime doc/ directories not found.", vim.log.levels.INFO)
             return
         end
         local args = { pattern, "--type", "txt" }
