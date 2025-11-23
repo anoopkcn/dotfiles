@@ -14,7 +14,7 @@ if ok then
     end
 
     local function _fuzzy_help()
-        local pattern = vim.fn.input("FuzzyHelp: ")
+        local pattern = vim.fn.input("FH: ")
         if vim.trim(pattern) == "" then
             return
         end
