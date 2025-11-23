@@ -32,8 +32,10 @@ if ok then
         { silent = false, desc = "Fuzzy list" })
     vim.keymap.set("n", "<leader>fh", _fuzzy_help,
         { silent = false, desc = "Fuzzy grep vim help docs" })
-    vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep!<CR>",
+    vim.keymap.set("n", "<leader>/", "<CMD>FuzzyGrep<CR>",
         { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
+    vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>",
+        { silent = false, desc = "Fuzzy grep deduplicated - same as rg (FuzzyGrep)" })
     vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
         { silent = false, desc = "Fuzzy grep current word" })
     vim.keymap.set("n", "<leader>fW", function() _fuzzy_grep(vim.fn.expand("<cWORD>"), true) end,

@@ -33,7 +33,7 @@ local c = {
     green = color("#98c379", 114),
     yellow = color("#e5c07b", 180),
     blue = color("#61afef", 75),
-    purple = color("#c678dd", 176),
+    purple = color("#a66fc1", 176),
     cyan = color("#56b6c2", 73),
 }
 
@@ -69,7 +69,7 @@ set("Cursor", { fg = c.background, bg = c.blue })
 set("CursorColumn", { bg = c.surface })
 set("CursorLine", { bg = c.surface })
 set("LineNr", { fg = c.line, bg = c.background })
-set("CursorLineNr", { fg = c.cyan })
+set("CursorLineNr", { fg = c.cyan, bold = true })
 set("DiffAdd", { fg = c.green })
 set("DiffChange", { fg = c.yellow })
 set("DiffDelete", { fg = c.red })
@@ -165,7 +165,7 @@ set("Ignore", { fg = c.text })
 set("Error", { fg = c.red, bg = c.background })
 set("Todo", { fg = c.purple })
 set("WinSeparator", { fg = c.muted })
-set("NetrwMarkFile", { fg = c.background, bg = c.blue, bold = true })
+set("NetrwMarkFile", { fg = c.background, bg = c.selection, bold = true })
 set("QuickFixLine", { bg = c.surface })
 
 -- Plugin highlights
