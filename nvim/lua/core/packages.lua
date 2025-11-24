@@ -20,6 +20,11 @@ vim.pack.add({
         name = "vim-fugitive"
     },
     {
+        src = "https://github.com/stevearc/oil.nvim",
+        name = "oil",
+        version = "master"
+    },
+    {
         src = "https://github.com/nvim-mini/mini.diff",
         name = "minidiff",
         version = "main"

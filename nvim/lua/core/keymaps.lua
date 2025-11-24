@@ -66,8 +66,6 @@ end
 vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
 
-vim.keymap.set("n", "<leader>fe", "<CMD>Ex<CR>", { desc = "Open parent directory" })
-
 vim.keymap.set("n", "<leader>z", ":!", { desc = "Execute external command" })
 
 -- move_lines.lua (single file)
