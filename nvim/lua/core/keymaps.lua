@@ -68,6 +68,8 @@ vim.keymap.set("n", "<leader>'", TimestampInsert,
 
 vim.keymap.set("n", "<leader>fe", "<CMD>Ex<CR>", { desc = "Open parent directory" })
 
+vim.keymap.set("n", "<leader>z", ":!", { desc = "Execute external command" })
+
 -- plugin keymaps
 vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
     { noremap = true, silent = true, desc = "Open Git interface" }
