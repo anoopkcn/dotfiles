@@ -39,7 +39,7 @@ ToggleQuickfixList = function()
     if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
 end
 
-vim.keymap.set("n", "<leader>fq", ToggleQuickfixList,
+vim.keymap.set("n", "<leader>q", ToggleQuickfixList,
     { noremap = true, silent = true, desc = "Toggle quickfixlist" })
 
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
@@ -70,10 +70,46 @@ vim.keymap.set("n", "<leader>fe", "<CMD>Ex<CR>", { desc = "Open parent directory
 
 vim.keymap.set("n", "<leader>z", ":!", { desc = "Execute external command" })
 
--- plugin keymaps
-vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
-    { noremap = true, silent = true, desc = "Open Git interface" }
-)
-vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
-    { noremap = true, silent = true, desc = "Git log" }
-)
+-- move_lines.lua (single file)
+
+-- Execute a :move command while preserving fold state
+local function exec_move(cmd)
+    local old_fdm = vim.wo.foldmethod
+    if old_fdm ~= "manual" then
+        vim.wo.foldmethod = "manual"
+    end
+
+    vim.cmd("normal! m`")    -- save cursor position
+    vim.cmd("silent! " .. cmd) -- execute movement
+    vim.cmd("normal! ``")    -- restore cursor
+
+    if old_fdm ~= "manual" then
+        vim.wo.foldmethod = old_fdm
+    end
+end
+
+-- Move a single line up or down
+local function move_line(direction)
+    local count = vim.v.count1
+    if direction == "up" then
+        exec_move("move --" .. count)
+    else
+        exec_move("move +" .. count)
+    end
+end
+
+-- Move selected block up or down
+local function move_visual(direction)
+    local count = vim.v.count1
+    if direction == "up" then
+        exec_move("'<,'>move '<--" .. count)
+    else
+        exec_move("'<,'>move '>+" .. count)
+    end
+end
+
+-- Keymaps (normal & visual)
+vim.keymap.set("n", "[e", function() move_line("up") end, { silent = true })
+vim.keymap.set("n", "]e", function() move_line("down") end, { silent = true })
+vim.keymap.set("x", "[e", function() move_visual("up") end, { silent = true })
+vim.keymap.set("x", "]e", function() move_visual("down") end, { silent = true })

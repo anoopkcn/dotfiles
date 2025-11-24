@@ -8,7 +8,7 @@ if ok then
     })
 
     vim.keymap.set("n", "<leader>fc", function()
-        local hunks = minidiff.export('qf')
+        local hunks = minidiff.export("qf", { scope = "all" })
         if #hunks == 0 then
             vim.notify("No changes to show", vim.log.levels.INFO)
             return
