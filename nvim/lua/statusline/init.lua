@@ -7,9 +7,9 @@ local M = {}
 
 local default_config = {
     sections = {
-        left = { "mode", "filepath", "filename", "diagnostics" },
+        left = { "mode", "filepath", "filename", "spacer", "diagnostics" },
         middle = {},
-        right = { "vcs", "filetype", "position" },
+        right = { "vcs", "spacer", "filetype", "spacer", "position", "spacer", "cursor" },
     },
 }
 
@@ -188,7 +188,7 @@ local function vcs(bufnr)
         label = summary.source_name
     end
     if label ~= "" then
-        branch_segment = "git:" .. label .. " "
+        branch_segment = "git:" .. label .. ""
     end
 
     -- Return combined VCS info
@@ -197,7 +197,7 @@ local function vcs(bufnr)
     end
 
     if summary_string ~= "" then
-        summary_string = summary_string .. " "
+        summary_string = " " .. summary_string .. " "
     end
 
     return branch_segment .. summary_string
@@ -207,7 +207,7 @@ local component_renderers = {
     bufnr = function(context)
         local bufnr = context.bufnr
         if bufnr and bufnr > 0 and vim.api.nvim_buf_is_valid(bufnr) then
-            return string.format("@%d ", bufnr)
+            return string.format("@%d", bufnr)
         end
         return ""
     end,
@@ -216,7 +216,7 @@ local component_renderers = {
     end,
     filepath = function(context)
         if context.dir ~= "" then
-            return string.format(" %%<%s/", context.dir)
+            return string.format("%%<%s/", context.dir)
         end
         return " "
     end,
@@ -234,15 +234,24 @@ local component_renderers = {
     end,
     filetype = function(context)
         if context.filetype ~= "" then
-            return " " .. context.filetype:upper() .. " "
+            return context.filetype:upper()
+        end
+        return ""
+    end,
+    cursor = function(context)
+        if context.filetype ~= "alpha" then
+            return "%l:%c"
         end
         return ""
     end,
     position = function(context)
         if context.filetype ~= "alpha" then
-            return " %P %l:%c "
+            return "%P"
         end
         return ""
+    end,
+    spacer = function()
+        return " "
     end,
 }
 
@@ -304,7 +313,7 @@ local function statusline_active(bufnr)
 end
 
 local function statusline_inactive()
-    return " %f"
+    return "%f"
 end
 
 local function render()

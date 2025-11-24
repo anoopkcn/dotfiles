@@ -1,3 +1,5 @@
+-- netrw_liststyle set to long view
+vim.g.netrw_liststyle = 1
 vim.opt.swapfile = false
 vim.opt.number = true
 vim.opt.relativenumber = true
