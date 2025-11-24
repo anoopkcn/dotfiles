@@ -17,7 +17,7 @@ if ok then
         },
         keymaps = {
             ["<C-c>"] = false,
-            ["q"] = "actions.close",
+            ["gq"] = "actions.close",
         },
     })
     vim.keymap.set("n", "<leader>fe", function() oil.open() end, { desc = "Open parent directory" })
