@@ -1,5 +1,6 @@
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 require("core.options")
