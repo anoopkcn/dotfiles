@@ -29,4 +29,9 @@ vim.pack.add({
         name = "treesitter",
         version = "main"
     },
+    {
+        src = "https://github.com/github/copilot.vim",
+        name = "copilot",
+        version = "release"
+    },
 })

@@ -48,24 +48,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
         client.server_capabilities.semanticTokensProvider = nil
 
-        -- Copilot inline suggestions
-        if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
-            vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
-
-            vim.keymap.set("i", "<Tab>", function()
-                return vim.lsp.inline_completion.get() and "" or "<Tab>"
-            end, {
-                desc = "LSP: accept inline completion",
-                buffer = bufnr,
-                expr = true,
-            })
-
-            vim.keymap.set("i", "<C-G>", vim.lsp.inline_completion.select, {
-                desc = "LSP: switch inline completion",
-                buffer = bufnr,
-            })
-        end
-
         -- LSP autotriggered completion
         -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
         --     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
