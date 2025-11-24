@@ -1,7 +1,11 @@
-local ok, showdelta  = pcall(require, "showdelta")
+local ok, showdelta = pcall(require, "showdelta")
 if ok then
     showdelta.setup({
-        view = { style = "sign" },
-        source = "git", --if none given it will use the file on the disc as source
+        view = {
+            style = "sign",
+            -- signs = { add = '+', change = '~', delete = '-' },
+            signs = { add = '┃', change = '┃', delete = '_' },
+        },
+        source = "git",
     })
 end
