@@ -54,4 +54,4 @@ precmd(){
       print -P "%F{cyan}%~%f ${env_segment}${vcs_info_msg_0_}"
   }
 
-PROMPT="%(?.%F{cyan}%f.%F{red}%f) "
+PROMPT="%(?.%F{cyan}󰘧%f.%F{red}󰘧%f) "
