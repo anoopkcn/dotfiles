@@ -79,9 +79,9 @@ local function exec_move(cmd)
         vim.wo.foldmethod = "manual"
     end
 
-    vim.cmd("normal! m`")    -- save cursor position
+    vim.cmd("normal! m`")      -- save cursor position
     vim.cmd("silent! " .. cmd) -- execute movement
-    vim.cmd("normal! ``")    -- restore cursor
+    vim.cmd("normal! ``")      -- restore cursor
 
     if old_fdm ~= "manual" then
         vim.wo.foldmethod = old_fdm
@@ -113,3 +113,25 @@ vim.keymap.set("n", "[e", function() move_line("up") end, { silent = true })
 vim.keymap.set("n", "]e", function() move_line("down") end, { silent = true })
 vim.keymap.set("x", "[e", function() move_visual("up") end, { silent = true })
 vim.keymap.set("x", "]e", function() move_visual("down") end, { silent = true })
+
+
+-- Cursor-preserving version of p and P
+local function paste_preserve(which)
+    local orig_pos = vim.api.nvim_win_get_cursor(0)
+
+    if which == "p" then
+        vim.cmd("normal! p")
+    else
+        vim.cmd("normal! P")
+    end
+
+    vim.api.nvim_win_set_cursor(0, orig_pos)
+end
+
+vim.keymap.set("n", "p", function()
+    paste_preserve("p")
+end, { silent = true })
+
+vim.keymap.set("n", "P", function()
+    paste_preserve("P")
+end, { silent = true })
