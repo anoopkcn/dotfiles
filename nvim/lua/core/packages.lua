@@ -24,6 +24,11 @@ vim.pack.add({
         name = "vim-fugitive"
     },
     {
+        src = "https://github.com/nvim-mini/mini.diff",
+        name = "minidiff",
+        version = "main"
+    },
+    {
         src = "https://github.com/nvim-treesitter/nvim-treesitter",
         name = "treesitter",
         version = "main"
