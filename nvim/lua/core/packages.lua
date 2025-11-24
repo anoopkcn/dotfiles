@@ -8,10 +8,6 @@ vim.pack.add({
         name = "filemarks"
     },
     {
-        src = "/Users/akc/develop/statusline.nvim",
-        name = "statusline"
-    },
-    {
         src = "/Users/akc/develop/csub.nvim",
         name = "csub"
     },
