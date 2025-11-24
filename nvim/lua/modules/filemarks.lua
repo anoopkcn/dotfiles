@@ -1,6 +1,8 @@
 local ok, filemarks = pcall(require, "filemarks")
 if ok then
-    filemarks.setup()
+    filemarks.setup({
+        dir_open_cmd = "Oil %s"
+    })
     local function open_filemarks_list()
         vim.cmd("split")
         vim.cmd("FilemarksList")
