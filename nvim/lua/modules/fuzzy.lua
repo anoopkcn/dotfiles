@@ -13,11 +13,11 @@ if ok then
         fuzzy.grep(args)
     end
 
-    vim.keymap.set("n", "<leader>/", ":FG! ",
-        { silent = false, desc = "Fuzzy grep - same as rg (FuzzyGrep)" })
+    vim.keymap.set("n", "<leader>/", ":FG ",
+        { silent = false, desc = "Fuzzy grep" })
 
     vim.keymap.set("n", "<leader>?", ":FF! ",
-        { silent = false, desc = "Fuzzy grep deduplicated - same as rg (FuzzyGrep)" })
+        { silent = false, desc = "Fuzzy grep files" })
 
     vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
         { silent = false, desc = "Fuzzy grep current word" })
