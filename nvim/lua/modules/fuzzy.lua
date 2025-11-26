@@ -19,6 +19,12 @@ if ok then
     vim.keymap.set("n", "<leader>?", ":FF! ",
         { silent = false, desc = "Fuzzy grep files" })
 
+    vim.keymap.set("n", "<leader>ff", ":FF ",
+        { silent = false, desc = "Fuzzy grep files" })
+
+    vim.keymap.set("n", "<leader>fb", ":FB! ",
+        { silent = false, desc = "Fuzzy buffer list" })
+
     vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
         { silent = false, desc = "Fuzzy grep current word" })
 
@@ -28,9 +34,4 @@ if ok then
     vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>",
         { silent = false, desc = "Fuzzy list" })
 
-    vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers<CR>",
-        { noremap = true, silent = true, desc = "Fuzzy buffer list" })
-
-    vim.keymap.set("n", "<leader>fB", "<CMD>FuzzyBuffers!<CR>",
-        { noremap = true, silent = true, desc = "Fuzzy buffer list (live)" })
 end
