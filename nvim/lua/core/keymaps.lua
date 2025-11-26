@@ -39,7 +39,7 @@ ToggleQuickfixList = function()
     if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
 end
 
-vim.keymap.set("n", "<leader>q", ToggleQuickfixList,
+vim.keymap.set("n", "<leader>fq", ToggleQuickfixList,
     { noremap = true, silent = true, desc = "Toggle quickfixlist" })
 
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
