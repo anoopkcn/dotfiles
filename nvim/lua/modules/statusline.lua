@@ -3,7 +3,8 @@ if ok then
     statusline.setup({
         sections = {
             left = { 'mode', 'bufnr', "spacer", 'vcs' },
-            right = { 'diagnostics', "spacer", "cursor", "spacer", 'position', "spacer", 'filetype' }
+            right = { "cursor", "spacer", 'position', "spacer", 'filetype' }
+            -- right = { 'diagnostics', "spacer", "cursor", "spacer", 'position', "spacer", 'filetype' }
         }
     })
 end
