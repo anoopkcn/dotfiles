@@ -64,6 +64,8 @@ local function set(group, opts)
     vim.api.nvim_set_hl(0, group, def)
 end
 
+-- General highlights 
+-- UI{
 set("Normal", { fg = c.text, bg = c.background })
 set("Cursor", { fg = c.background, bg = c.blue })
 set("CursorColumn", { bg = c.surface })
@@ -104,7 +106,7 @@ set("SpellLocal", { fg = c.yellow, undercurl = true, sp = c.green.hex })
 set("SpellRare", { fg = c.yellow, undercurl = true, sp = c.purple.hex })
 set("StatusLine", { fg = c.text, bg = c.surface })
 set("StatusLineNC", { fg = c.muted, bg = c.surface })
-set("WinBar", { fg = c.text, bg = c.background })
+set("WinBar", { fg = c.text, bg = c.background, bold = true })
 set("WinBarNC", { fg = c.muted, bg = c.background })
 set("TabLine", { fg = c.muted, bg = c.surface })
 set("TabLineFill", { fg = c.muted, bg = c.surface })
@@ -127,6 +129,12 @@ set("DiagnosticUnderlineWarn", { undercurl = true, sp = c.yellow.hex })
 set("DiagnosticUnderlineInfo", { undercurl = true, sp = c.blue.hex })
 set("DiagnosticUnderlineHint", { undercurl = true, sp = c.cyan.hex })
 set("LspSignatureActiveParameter", { fg = c.yellow, bold = true })
+set("WinSeparator", { fg = c.muted })
+set("NetrwMarkFile", { fg = c.background, bg = c.selection, bold = true })
+set("QuickFixLine", { bg = c.surface })
+-- }
+
+-- Syntax highlights {
 set("Whitespace", { fg = c.dim })
 set("NonText", { fg = c.dim })
 set("Comment", { fg = c.muted })
@@ -164,9 +172,7 @@ set("Underlined", { fg = c.text })
 set("Ignore", { fg = c.text })
 set("Error", { fg = c.red, bg = c.background })
 set("Todo", { fg = c.purple })
-set("WinSeparator", { fg = c.muted })
-set("NetrwMarkFile", { fg = c.background, bg = c.selection, bold = true })
-set("QuickFixLine", { bg = c.surface })
+-- }
 
 -- Plugin highlights
 -- Treesittter {
