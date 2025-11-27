@@ -25,13 +25,16 @@ if ok then
     vim.keymap.set("n", "<leader>fb", ":Buffers! ",
         { silent = false, desc = "Fuzzy buffer list" })
 
-    vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
+    vim.keymap.set("n", "<leader>fw", function()
+            _fuzzy_grep(vim.fn.expand("<cword>"), false)
+        end,
         { silent = false, desc = "Fuzzy grep current word" })
 
-    vim.keymap.set("n", "<leader>fW", function() _fuzzy_grep(vim.fn.expand("<cWORD>"), true) end,
+    vim.keymap.set("n", "<leader>fW", function()
+            _fuzzy_grep(vim.fn.expand("<cWORD>"), true)
+        end,
         { silent = false, desc = "Fuzzy grep current WORD" })
 
     vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>",
         { silent = false, desc = "Fuzzy list" })
-
 end
