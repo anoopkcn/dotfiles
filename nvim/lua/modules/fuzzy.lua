@@ -13,16 +13,16 @@ if ok then
         fuzzy.grep(args)
     end
 
-    vim.keymap.set("n", "<leader>/", ":FG ",
+    vim.keymap.set("n", "<leader>/", ":Grep ",
         { silent = false, desc = "Fuzzy grep" })
 
-    vim.keymap.set("n", "<leader>?", ":FF! ",
+    vim.keymap.set("n", "<leader>?", ":Files! ",
         { silent = false, desc = "Fuzzy grep files" })
 
-    vim.keymap.set("n", "<leader>ff", ":FF ",
+    vim.keymap.set("n", "<leader>ff", ":Files ",
         { silent = false, desc = "Fuzzy grep files" })
 
-    vim.keymap.set("n", "<leader>fb", ":FB! ",
+    vim.keymap.set("n", "<leader>fb", ":Buffers! ",
         { silent = false, desc = "Fuzzy buffer list" })
 
     vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,

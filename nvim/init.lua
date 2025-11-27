@@ -15,4 +15,9 @@ require("modules.fugitive")
 require("modules.minidiff")
 require("modules.oil")
 require("modules.treesitter")
-vim.lsp.enable({ "lua_ls", "pyright", "marksman" })
+vim.lsp.enable({
+    "clangd",
+    "lua_ls",
+    "pyright",
+    "marksman",
+})
