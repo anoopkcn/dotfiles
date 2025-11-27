@@ -16,7 +16,7 @@ if ok then
     vim.keymap.set("n", "<leader>/", ":Grep ",
         { silent = false, desc = "Fuzzy grep" })
 
-    vim.keymap.set("n", "<leader>?", ":Files! ",
+    vim.keymap.set("n", "<leader>?", ":Files! --type f ",
         { silent = false, desc = "Fuzzy grep files" })
 
     vim.keymap.set("n", "<leader>ff", ":Files ",
