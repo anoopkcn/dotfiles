@@ -11,22 +11,14 @@ path=(
 typeset -U path
 path=($^path(N-/))
 export PATH
+export EDITOR='nvim'
 # export VIRTUAL_ENV_DISABLE_PROMPT=1
 # export CONDA_CHANGEPS1=no
-export EDITOR='nvim'
 
 # INPUTRC
 bindkey "^[[A" history-search-backward
 bindkey "^[[B" history-search-forward
 bindkey '^y' autosuggest-accept
-
-# FUNCTIONS
-source_file() {  [ -f "$1" ] && source "$1"  }
-path() { echo -e ${PATH//:/\\n} }
-
-source_file $HOME/.privaterc
-source_file $HOME/.config/zsh/plugin-manager.sh
-source_file $HOME/.config/zsh/minimal-prompt.sh
 
 # HISTORY OPTIONS
 HISTFILE=$HOME/.zsh_history
@@ -35,6 +27,14 @@ SAVEHIST=$HISTSIZE
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt SHARE_HISTORY
+
+# FUNCTIONS
+source_file() {  [ -f "$1" ] && source "$1"  }
+path() { echo -e ${PATH//:/\\n} }
+
+source_file $HOME/.privaterc
+source_file $HOME/.config/zsh/plugin-manager.sh
+source_file $HOME/.config/zsh/minimal-prompt.sh
 
 # ALIAS
 alias ls="ls --color=auto"

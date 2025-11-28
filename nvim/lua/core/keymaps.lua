@@ -71,22 +71,23 @@ vim.keymap.set("n", "<leader>z", ":!", { desc = "Execute external command" })
 -- move_lines.lua (single file)
 
 -- Execute a :move command while preserving fold state
+-- Execute a :move command while preserving fold state
 local function exec_move(cmd)
     local old_fdm = vim.wo.foldmethod
     if old_fdm ~= "manual" then
         vim.wo.foldmethod = "manual"
     end
 
-    vim.cmd("normal! m`")      -- save cursor position
-    vim.cmd("silent! " .. cmd) -- execute movement
-    vim.cmd("normal! ``")      -- restore cursor
+    vim.cmd("normal! m`")         -- save cursor position
+    vim.cmd("silent! " .. cmd)    -- execute movement
+    vim.cmd("normal! ``")         -- restore cursor
 
     if old_fdm ~= "manual" then
         vim.wo.foldmethod = old_fdm
     end
 end
 
--- Move a single line up or down
+-- Move a single line up or down (normal mode)
 local function move_line(direction)
     local count = vim.v.count1
     if direction == "up" then
@@ -96,14 +97,21 @@ local function move_line(direction)
     end
 end
 
--- Move selected block up or down
+-- Move a selected block up or down (visual mode)
 local function move_visual(direction)
     local count = vim.v.count1
+
+    -- Reselect visual area because Lua mappings exit visual mode
+    vim.cmd("normal! gv")
+
     if direction == "up" then
         exec_move("'<,'>move '<--" .. count)
     else
         exec_move("'<,'>move '>+" .. count)
     end
+
+    -- Restore visual selection after move
+    vim.cmd("normal! gv")
 end
 
 -- Keymaps (normal & visual)
@@ -111,7 +119,6 @@ vim.keymap.set("n", "[e", function() move_line("up") end, { silent = true })
 vim.keymap.set("n", "]e", function() move_line("down") end, { silent = true })
 vim.keymap.set("x", "[e", function() move_visual("up") end, { silent = true })
 vim.keymap.set("x", "]e", function() move_visual("down") end, { silent = true })
-
 
 -- Cursor-preserving version of p and P
 local function paste_preserve(which)
