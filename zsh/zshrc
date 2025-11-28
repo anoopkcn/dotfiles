@@ -43,14 +43,6 @@ alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
 alias imgcat="viu" # show images in terminal
 
-# TOOLS
-if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
-    # Homebrew environment setup
-    if command -v brew >/dev/null 2>&1; then
-        eval "$(brew shellenv)"
-    fi
-fi
-
 # PLUGINS
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
@@ -62,4 +54,13 @@ plugin add "anoopkcn/zig-shell-completions"
 autoload -Uz compinit && compinit
 if [ -n "$ZSH_VERSION" ]; then
     zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+
 fi
+# TOOLS
+if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
+    # Homebrew environment setup
+    if command -v brew >/dev/null 2>&1; then
+        eval "$(brew shellenv)"
+    fi
+fi
+
