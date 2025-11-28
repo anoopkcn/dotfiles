@@ -129,7 +129,7 @@ end
 
 local function mode()
     local current_mode = vim.api.nvim_get_mode().mode
-    return "%#StatuslineMode# " .. current_mode:upper() .. " %#Statusline#"
+    return "%#StatuslineMode#" .. current_mode:upper() .. "%#Statusline#"
 end
 
 local function get_buffer_paths(bufnr)

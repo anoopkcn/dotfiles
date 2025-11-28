@@ -1,8 +1,9 @@
-vim.opt.swapfile = false
-vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.number = true
+-- vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
 -- vim.o.cursorlineopt = "number"
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrw = 1
 vim.opt.showtabline = 0
 vim.opt.laststatus = 3
 vim.opt.winbar = "%f%m"
@@ -21,6 +22,7 @@ vim.opt.showmode = false
 vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.path:append("**")
+vim.opt.swapfile = false
 vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
