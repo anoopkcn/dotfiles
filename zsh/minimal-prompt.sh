@@ -20,20 +20,6 @@ precmd(){
       vcs_info
 
       print ""
-      # local full_path="${PWD/#$HOME/~}"
-      # local short_path=""
-      #
-      # if [[ "$full_path" == "~" ]]; then
-      #     short_path="~"
-      # else
-      #     local parts=("${(@s:/:)full_path}")
-      #     for i in {1..$((${#parts[@]} - 1))}; do
-      #         if [[ -n "${parts[$i]}" ]]; then
-      #             short_path+="${parts[$i]:0:1}/"
-      #         fi
-      #     done
-      #     short_path+="${parts[-1]}"
-      # fi
 
       local env_text=""
       if [[ -n ${VIRTUAL_ENV_PROMPT:-} ]]; then
@@ -49,7 +35,6 @@ precmd(){
           env_segment="env:%F{magenta}${env_text//\%/%%}%f"
       fi
 
-      # print -P "%F{cyan}${short_path}%f ${env_segment}${vcs_info_msg_0_}"
       # One with default path
       print -P "%F{cyan}%~%f ${env_segment}${vcs_info_msg_0_}"
   }
