@@ -9,11 +9,11 @@ require("core.autocmds")
 require("core.packages")
 require("modules.csub")
 require("modules.fuzzy")
+-- require("modules.every10")
 require("modules.filemarks")
 require("modules.statusline")
 require("modules.fugitive")
 require("modules.minidiff")
-require("modules.oil")
 require("modules.treesitter")
 -- vim.lsp.enable({
 --     "clangd",
