@@ -1,3 +1,8 @@
+-- LICENSE: MIT
+-- Author:  @anoopkcn
+-- General neovim settings
+
+vim.cmd.colorscheme("onehalfdark")
 -- vim.opt.number = true
 -- vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
@@ -27,4 +32,3 @@ vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
-vim.cmd.colorscheme("onehalfdark")
