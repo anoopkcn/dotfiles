@@ -15,9 +15,9 @@ require("modules.statusline")
 require("modules.fugitive")
 require("modules.minidiff")
 require("modules.treesitter")
--- vim.lsp.enable({
---     "clangd",
---     "lua_ls",
---     "pyright",
---     "marksman",
--- })
+vim.lsp.enable({
+    "clangd",
+    "lua_ls",
+    "pyright",
+    "marksman",
+})

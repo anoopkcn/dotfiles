@@ -3,7 +3,7 @@
 -- General neovim settings
 
 vim.cmd.colorscheme("onehalfdark")
-vim.g.netrw_liststyle = 1 
+vim.g.netrw_liststyle = 1
 -- vim.opt.number = true
 -- vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
@@ -21,7 +21,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.linebreak = true
-vim.opt.showbreak = "↪ "
+vim.opt.showbreak = "⤷ "
 vim.opt.showmode = false
 vim.opt.termguicolors = true
 vim.opt.undofile = true

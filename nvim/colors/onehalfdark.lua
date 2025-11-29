@@ -64,7 +64,7 @@ local function set(group, opts)
     vim.api.nvim_set_hl(0, group, def)
 end
 
--- General highlights 
+-- General highlights
 -- UI{
 set("Normal", { fg = c.text, bg = c.background })
 set("Cursor", { fg = c.background, bg = c.blue })
@@ -83,7 +83,7 @@ set("ModeMsg", { fg = c.text })
 set("MoreMsg", { fg = c.text })
 set("WarningMsg", { fg = c.red })
 set("Question", { fg = c.purple })
-set("Pmenu", { fg = c.text , bg = c.background })
+set("Pmenu", { fg = c.text, bg = c.background })
 set("PmenuSel", { fg = c.text, bg = c.selection })
 set("PmenuSbar", { bg = c.scrollbar })
 set("PmenuThumb", { bg = c.selection })
@@ -106,7 +106,7 @@ set("SpellLocal", { fg = c.yellow, undercurl = true, sp = c.green.hex })
 set("SpellRare", { fg = c.yellow, undercurl = true, sp = c.purple.hex })
 set("StatusLine", { fg = c.text, bg = c.background })
 set("StatusLineNC", { fg = c.muted, bg = c.background })
-set("WinBar", { fg = c.text, bg = c.background})
+set("WinBar", { fg = c.text, bg = c.background })
 set("WinBarNC", { fg = c.muted, bg = c.background })
 set("TabLine", { fg = c.muted, bg = c.surface })
 set("TabLineFill", { fg = c.muted, bg = c.surface })
