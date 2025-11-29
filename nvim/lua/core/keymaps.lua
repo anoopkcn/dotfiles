@@ -1,3 +1,8 @@
+-- LICENSE: MIT
+-- Author: @anoopkcn
+-- General neovim keymaps
+-- Do not put plugin specific keymaps here
+
 vim.keymap.set("i", "<C-c>", "<Esc>",
     { noremap = true, silent = true, desc = "Exit insert mode" })
 
