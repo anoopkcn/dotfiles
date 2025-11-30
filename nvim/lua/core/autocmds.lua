@@ -17,14 +17,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
--- no auto continue comments on new line
-vim.api.nvim_create_autocmd("FileType", {
-    group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
-    callback = function()
-        vim.opt_local.formatoptions:remove({ "c", "r", "o" })
-    end,
-})
-
 -- restore cursor to file position in previous editing session
 vim.api.nvim_create_autocmd("BufReadPost", {
     group = vim.api.nvim_create_augroup("restore_cursor", { clear = true }),
