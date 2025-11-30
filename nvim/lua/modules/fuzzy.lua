@@ -12,6 +12,8 @@ if ok then
         end
         fuzzy.grep(args)
     end
+    vim.keymap.set('n', ']q', '<CMD>FuzzyNext<CR>')
+    vim.keymap.set('n', '[q', '<CMD>FuzzyPrev<CR>')
 
     vim.keymap.set("n", "<leader>/", ":Grep ",
         { silent = false, desc = "Fuzzy grep" })

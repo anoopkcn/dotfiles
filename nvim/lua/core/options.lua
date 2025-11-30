@@ -4,8 +4,8 @@
 
 vim.cmd.colorscheme("onehalfdark")
 vim.g.netrw_liststyle = 1
--- vim.opt.number = true
--- vim.opt.relativenumber = true
+vim.opt.number = true
+vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
 -- vim.o.cursorlineopt = "number"
 vim.opt.showtabline = 0
