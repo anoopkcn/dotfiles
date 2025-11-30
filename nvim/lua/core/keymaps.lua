@@ -73,7 +73,7 @@ end
 vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
 
-vim.keymap.set("n", "<leader>z", ":!", { desc = "Execute external command" })
+vim.keymap.set("n", "<leader>z", ":bot term ",{ desc = "Open terminal" })
 
 -- Execute a :move command while preserving fold state
 local function exec_move(cmd)
