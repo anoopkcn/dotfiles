@@ -12,8 +12,8 @@ typeset -U path
 path=($^path(N-/))
 export PATH
 export EDITOR='nvim'
-# export VIRTUAL_ENV_DISABLE_PROMPT=1
-# export CONDA_CHANGEPS1=no
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+export CONDA_CHANGEPS1=no
 
 # INPUTRC
 bindkey "^[[A" history-search-backward
