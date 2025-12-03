@@ -188,7 +188,7 @@ local function vcs(bufnr)
         label = summary.source_name
     end
     if label ~= "" then
-        branch_segment = "git:" .. label .. ""
+        branch_segment = " " .. label .. ""
     end
 
     -- Return combined VCS info

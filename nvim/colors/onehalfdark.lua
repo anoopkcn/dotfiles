@@ -28,6 +28,7 @@ local c = {
     muted = color("#5c6370", 241), -- comments, borders
     line = color("#919baa", 247),  -- gutters and line numbers
     dim = color("#373C45", 239),   -- whitespace / non-text
+    statusline = color("#2c3038", 234),
     scrollbar = color("#3b4252", 237),
     red = color("#e06c75", 168),
     green = color("#98c379", 114),
@@ -104,8 +105,8 @@ set("SpellBad", { fg = c.red, undercurl = true, sp = c.red.hex })
 set("SpellCap", { fg = c.yellow, undercurl = true, sp = c.blue.hex })
 set("SpellLocal", { fg = c.yellow, undercurl = true, sp = c.green.hex })
 set("SpellRare", { fg = c.yellow, undercurl = true, sp = c.purple.hex })
-set("StatusLine", { fg = c.text, bg = c.background })
-set("StatusLineNC", { fg = c.muted, bg = c.background })
+set("StatusLine", { fg = c.text, bg = c.statusline })
+set("StatusLineNC", { fg = c.muted, bg = c.statusline })
 set("WinBar", { fg = c.text, bg = c.background })
 set("WinBarNC", { fg = c.muted, bg = c.background })
 set("TabLine", { fg = c.muted, bg = c.surface })

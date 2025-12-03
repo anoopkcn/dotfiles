@@ -18,10 +18,13 @@ if ok then
     vim.keymap.set("n", "<leader>/", ":Grep ",
         { silent = false, desc = "Fuzzy grep" })
 
+    vim.keymap.set("n", "<leader>fg", "<cmd>GrepI<cr>",
+        { silent = false, desc = "Fuzzy grep" })
+
     vim.keymap.set("n", "<leader>?", ":Files! --type f ",
         { silent = false, desc = "Fuzzy grep files" })
 
-    vim.keymap.set("n", "<leader>ff", ":Files ",
+    vim.keymap.set("n", "<leader>ff", "<cmd>FilesI<cr>",
         { silent = false, desc = "Fuzzy grep files" })
 
     vim.keymap.set("n", "<leader>fb", ":Buffers! ",

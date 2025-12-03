@@ -42,6 +42,7 @@ alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
 alias imgcat="viu" # show images in terminal
+alias lman="MANPATH=/Users/akc/programming/linux-man gman"
 
 # PLUGINS
 plugin add "zshzoo/macos"
