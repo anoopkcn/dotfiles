@@ -5,6 +5,8 @@ font-feature = -calt
 adjust-cell-height=35%
 window-padding-balance=true
 #theme = GitHub Dark Default
+theme = Nvim Dark
+background = #22282f
 
 #window-theme=auto
 macos-option-as-alt = true

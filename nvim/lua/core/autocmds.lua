@@ -37,8 +37,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
     callback = function(args)
         local bufnr = args.buf
-        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        client.server_capabilities.semanticTokensProvider = nil
+        -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+        -- client.server_capabilities.semanticTokensProvider = nil
 
         -- LSP autotriggered completion
         -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then

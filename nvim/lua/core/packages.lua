@@ -16,6 +16,11 @@ vim.pack.add({
         name = "vim-surround"
     },
     {
+        src ="https://github.com/tpope/vim-unimpaired",
+        name = "vim-unimpaired",
+        version = "master"
+    },
+    {
         src = "https://github.com/tpope/vim-fugitive",
         name = "vim-fugitive"
     },
