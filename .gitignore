@@ -15,3 +15,4 @@ btop
 Session.vim
 nvim-pack-lock.json
 notes.md
+tmp/*
