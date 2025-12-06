@@ -5,9 +5,10 @@ vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 -- vim.opt.relativenumber = true
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
+-- vim.opt.cursorline = true
+-- vim.opt.cursorlineopt = "number"
 vim.opt.laststatus = 3
+vim.opt.winbar = "%f%m"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
@@ -28,15 +29,21 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 
-local text, background, dim = "#dcdfe4", "#22282f", "#3f444c"
+local text, background = "#dcdfe4", "#22282f"
+local dim_text, dim_background = "#3f444c", "#292f37"
 vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
-vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = dim })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = dim, bg = background })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim, bg = background })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim})
-vim.api.nvim_set_hl(0, "StatusLine", { bg = background })
+vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = dim_text })
+vim.api.nvim_set_hl(0, "PmenuBorder", { fg = dim_text, bg = background })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim_text, bg = background })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim_text})
+vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = dim_background })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_text, bg = dim_background })
+vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background })
+vim.api.nvim_set_hl(0, "WinBarNC", { fg = dim_text, bg = background })
+-- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim_background })
+
 
 -- keymaps {
 vim.keymap.set("i", "<C-c>", "<Esc>",
@@ -92,6 +99,8 @@ end
 vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
 -- } keymaps
+
+-- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
 
 -- auto commands {
 -- enable spell check for git commits
@@ -266,8 +275,6 @@ if ok then
             "c", "cpp", "zig",
             "python", "bash", "lua",
             "vim", "vimdoc", "markdown",
-            "toml", "yaml", "json", "xml", "html",
-            -- "rust", "go", "fortran",
         },
         sync_install = false,
         auto_install = false,
@@ -289,10 +296,3 @@ if ok then
     }
 end
 -- } nvim-treesitter
-
--- filetype {
--- for zine smd files
-vim.filetype.add({
-    extension = { smd = "markdown" },
-})
--- } filetype
