@@ -34,78 +34,60 @@ vim.api.nvim_set_hl(0, "PmenuBorder", { fg = dim, bg = background })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim, bg = background })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim})
 vim.api.nvim_set_hl(0, "StatusLine", { bg = background })
+
+-- keymaps {
 vim.keymap.set("i", "<C-c>", "<Esc>",
     { noremap = true, silent = true, desc = "Exit insert mode" })
-
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
     { noremap = true, silent = true, desc = "Disable Space" })
-
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>",
     { noremap = true, silent = true, desc = "Disable Ctrl-Space" })
-
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>",
     { noremap = true, silent = true, desc = "Clear search highlight" })
-
 vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]],
     { noremap = true, silent = true, desc = "Paste from system clipboard" })
-
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]],
     { noremap = true, silent = true, desc = "Yank to system clipboard" })
-
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd,
     { noremap = true, silent = true, desc = "Buffer delete" })
-
 vim.keymap.set("n", "<leader>on", vim.cmd.only,
     { noremap = true, silent = true, desc = "Close other buffers" })
-
 vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<CR>",
     { noremap = true, silent = true, desc = "Vertical split" })
-
 vim.keymap.set("n", "<leader>-", ":rightbelow split<CR>",
     { noremap = true, silent = true, desc = "Horizontal split" })
-
 vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>",
     { noremap = true, silent = true, desc = "Next item in quickfixlist" })
-
 vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
-
 ToggleQuickfixList = function()
     local qf = vim.fn.getqflist({ winid = 1 }).winid
     if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
 end
-
 vim.keymap.set("n", "<leader>fq", ToggleQuickfixList,
     { noremap = true, silent = true, desc = "Toggle quickfixlist" })
-
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
     { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
-
 vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end,
     { noremap = true, silent = true, desc = "Next diagnostic" })
-
 vim.keymap.set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end,
     { noremap = true, silent = true, desc = "Previous diagnostic" })
-
 vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'single' }) end,
     { noremap = true, silent = true, desc = "Open diagnostic float" })
-
 vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { noremap = true, silent = true, desc = "Format buffer" })
-
 vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>", { desc = "Open parent directory" })
-
 TimestampInsert = function()
     local raw_timestamp = os.date("%FT%T")
     local timestamp_str = string.format("%s", raw_timestamp or "")
     vim.api.nvim_put({ timestamp_str }, "c", true, true)
 end
-
 vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
-
 vim.keymap.set("n", "<leader>z", ":bot term ",{ desc = "Open terminal" })
+-- } keymaps
 
+-- auto commands {
 -- enable spell check for git commits
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "gitcommit", "markdown", "rmd" },
@@ -121,7 +103,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     pattern = "*",
     desc = "highlight selection on yank",
     callback = function()
-        vim.highlight.on_yank({ timeout = 200, visual = true })
+        vim.highlight.on_yank({ timeout = 150, visual = true })
     end,
 })
 
@@ -163,49 +145,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
     end,
 })
+-- } auto commands
 
 -- packages {
 vim.pack.add({
-    {
-        src = "/Users/akc/develop/fuzzy.nvim",
-        name = "fuzzy"
-    },
-    {
-        src = "/Users/akc/develop/filemarks.nvim",
-        name = "filemarks"
-    },
-    {
-        src = "/Users/akc/develop/csub.nvim",
-        name = "csub"
-    },
-    {
-        src = "https://github.com/tpope/vim-surround",
-        name = "vim-surround"
-    },
-    {
-        src ="https://github.com/tpope/vim-unimpaired",
-        name = "vim-unimpaired",
-        version = "master"
-    },
-    {
-        src = "https://github.com/tpope/vim-fugitive",
-        name = "vim-fugitive"
-    },
-    {
-        src = "https://github.com/nvim-mini/mini.diff",
-        name = "minidiff",
-        version = "main"
-    },
-    {
-        src = "https://github.com/nvim-treesitter/nvim-treesitter",
-        name = "treesitter",
-        version = "main"
-    },
-    {
-        src = "https://github.com/github/copilot.vim",
-        name = "copilot",
-        version = "release"
-    },
+    { src = "/Users/akc/develop/fuzzy.nvim", name = "fuzzy" },
+    { src = "/Users/akc/develop/filemarks.nvim", name = "filemarks" },
+    { src = "/Users/akc/develop/csub.nvim", name = "csub" },
+    { src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
+    { src = "https://github.com/tpope/vim-unimpaired", name = "vim-unimpaired", version = "master" },
+    { src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
+    { src = "https://github.com/nvim-mini/mini.diff", name = "minidiff", version = "main" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter", version = "main" },
+    { src = "https://github.com/github/copilot.vim", name = "copilot", version = "release" },
 })
 -- } packages
 
@@ -227,7 +179,7 @@ if ok then
     })
     vim.keymap.set("n", "<leader>s", "<cmd>Csub<cr>", { desc = "Open Csub buffer for current active quickfix list" })
 end
--- }
+-- } csub
 
 -- fuzzy {
 local ok, fuzzy = pcall(require, "fuzzy")
@@ -235,48 +187,26 @@ if ok then
     fuzzy.setup()
     local function _fuzzy_grep(term, literal)
         term = vim.trim(term or "")
-        if term == "" then
-            return
-        end
+        if term == "" then return end
         local args = { term }
-        if literal then
-            table.insert(args, 1, "-F")
-        end
+        if literal then table.insert(args, 1, "-F") end
         fuzzy.grep(args)
     end
 
     -- vim.keymap.set('n', ']q', '<CMD>FuzzyNext<CR>')
     -- vim.keymap.set('n', '[q', '<CMD>FuzzyPrev<CR>')
-
-    vim.keymap.set("n", "<leader>/", ":Grep ",
-        { silent = false, desc = "Fuzzy grep" })
-
-    vim.keymap.set("n", "<leader>fg", "<cmd>GrepI<cr>",
-        { silent = false, desc = "Fuzzy grep" })
-
-    vim.keymap.set("n", "<leader>?", ":Files! --type f ",
-        { silent = false, desc = "Fuzzy grep files" })
-
-    vim.keymap.set("n", "<leader>ff", "<cmd>FilesI<cr>",
-        { silent = false, desc = "Fuzzy grep files" })
-
-    vim.keymap.set("n", "<leader>fb", ":Buffers! ",
-        { silent = false, desc = "Fuzzy buffer list" })
-
-    vim.keymap.set("n", "<leader>fw", function()
-            _fuzzy_grep(vim.fn.expand("<cword>"), false)
-        end,
+    vim.keymap.set("n", "<leader>/", ":Grep ", { silent = false, desc = "Fuzzy grep" })
+    vim.keymap.set("n", "<leader>fg", "<cmd>GrepI<cr>", { silent = false, desc = "Fuzzy grep" })
+    vim.keymap.set("n", "<leader>?", ":Files! --type f ", { silent = false, desc = "Fuzzy grep files" })
+    vim.keymap.set("n", "<leader>ff", "<cmd>FilesI<cr>", { silent = false, desc = "Fuzzy grep files" })
+    vim.keymap.set("n", "<leader>fb", ":Buffers! ", { silent = false, desc = "Fuzzy buffer list" })
+    vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
         { silent = false, desc = "Fuzzy grep current word" })
-
-    vim.keymap.set("n", "<leader>fW", function()
-            _fuzzy_grep(vim.fn.expand("<cWORD>"), true)
-        end,
+    vim.keymap.set("n", "<leader>fW", function() _fuzzy_grep(vim.fn.expand("<cWORD>"), true) end,
         { silent = false, desc = "Fuzzy grep current WORD" })
-
-    vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>",
-        { silent = false, desc = "Fuzzy list" })
+    vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false, desc = "Fuzzy list" })
 end
--- }
+-- } fuzzy
 
 -- filemarks {
 local ok, filemarks = pcall(require, "filemarks")
@@ -292,7 +222,7 @@ if ok then
     vim.keymap.set("n", "<leader>l", open_filemarks_list,
         { noremap = true, silent = true, desc = "show file marks list" })
 end
--- }
+-- } filemarks
 
 -- fugitive {
 vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
@@ -301,16 +231,13 @@ vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
 vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
     { noremap = true, silent = true, desc = "Git log" }
 )
--- }
+-- } fugitive
 
 -- mini.diff {
 local ok, minidiff = pcall(require, "mini.diff")
 if ok then
     minidiff.setup({
-        view = {
-            style = "sign",
-            signs = { add = '┃', change = '┃', delete = '_' },
-        }
+        view = { style = "sign", signs = { add = '┃', change = '┃', delete = '_' }, }
     })
 
     vim.keymap.set("n", "<leader>fc", function()
@@ -323,7 +250,7 @@ if ok then
         vim.cmd("copen")
     end, { desc = "Diff: Open quickfix with all hunks" })
 end
--- }
+-- } mini.diff
 
 -- nvim-treesitter {
 local ok, configs = pcall(require, "nvim-treesitter.configs")
@@ -355,4 +282,4 @@ if ok then
         },
     }
 end
--- }
+-- } nvim-treesitter
