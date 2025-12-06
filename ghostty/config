@@ -2,9 +2,8 @@ font-family = Berkeley Mono Variable
 font-thicken = true
 font-size = 14
 font-feature = -calt
-adjust-cell-height=35%
+adjust-cell-height=38%
 window-padding-balance=true
-#theme = GitHub Dark Default
 theme = Nvim Dark
 background = #22282f
 
