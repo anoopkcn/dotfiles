@@ -34,10 +34,183 @@ vim.api.nvim_set_hl(0, "PmenuBorder", { fg = dim, bg = background })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim, bg = background })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim})
 vim.api.nvim_set_hl(0, "StatusLine", { bg = background })
-require("keymaps")
-require("autocmds")
-require("packages")
+vim.keymap.set("i", "<C-c>", "<Esc>",
+    { noremap = true, silent = true, desc = "Exit insert mode" })
+
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
+    { noremap = true, silent = true, desc = "Disable Space" })
+
+vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>",
+    { noremap = true, silent = true, desc = "Disable Ctrl-Space" })
+
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>",
+    { noremap = true, silent = true, desc = "Clear search highlight" })
+
+vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]],
+    { noremap = true, silent = true, desc = "Paste from system clipboard" })
+
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]],
+    { noremap = true, silent = true, desc = "Yank to system clipboard" })
+
+vim.keymap.set("n", "<leader>bd", vim.cmd.bd,
+    { noremap = true, silent = true, desc = "Buffer delete" })
+
+vim.keymap.set("n", "<leader>on", vim.cmd.only,
+    { noremap = true, silent = true, desc = "Close other buffers" })
+
+vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<CR>",
+    { noremap = true, silent = true, desc = "Vertical split" })
+
+vim.keymap.set("n", "<leader>-", ":rightbelow split<CR>",
+    { noremap = true, silent = true, desc = "Horizontal split" })
+
+vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>",
+    { noremap = true, silent = true, desc = "Next item in quickfixlist" })
+
+vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
+    { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
+
+ToggleQuickfixList = function()
+    local qf = vim.fn.getqflist({ winid = 1 }).winid
+    if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
+end
+
+vim.keymap.set("n", "<leader>fq", ToggleQuickfixList,
+    { noremap = true, silent = true, desc = "Toggle quickfixlist" })
+
+vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
+    { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
+
+vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end,
+    { noremap = true, silent = true, desc = "Next diagnostic" })
+
+vim.keymap.set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end,
+    { noremap = true, silent = true, desc = "Previous diagnostic" })
+
+vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'single' }) end,
+    { noremap = true, silent = true, desc = "Open diagnostic float" })
+
+vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
+    { noremap = true, silent = true, desc = "Format buffer" })
+
+vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>", { desc = "Open parent directory" })
+
+TimestampInsert = function()
+    local raw_timestamp = os.date("%FT%T")
+    local timestamp_str = string.format("%s", raw_timestamp or "")
+    vim.api.nvim_put({ timestamp_str }, "c", true, true)
+end
+
+vim.keymap.set("n", "<leader>'", TimestampInsert,
+    { noremap = true, silent = true, desc = "Insert current timestamp" })
+
+vim.keymap.set("n", "<leader>z", ":bot term ",{ desc = "Open terminal" })
+
+-- enable spell check for git commits
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "gitcommit", "markdown", "rmd" },
+    callback = function()
+        vim.opt_local.spell = true
+        vim.opt_local.spelllang = "en_gb"
+    end,
+})
+
+-- highlight yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+    pattern = "*",
+    desc = "highlight selection on yank",
+    callback = function()
+        vim.highlight.on_yank({ timeout = 200, visual = true })
+    end,
+})
+
+-- restore cursor to file position in previous editing session
+vim.api.nvim_create_autocmd("BufReadPost", {
+    group = vim.api.nvim_create_augroup("restore_cursor", { clear = true }),
+    callback = function(args)
+        local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
+        local line_count = vim.api.nvim_buf_line_count(args.buf)
+        if mark[1] > 0 and mark[1] <= line_count then
+            vim.api.nvim_win_set_cursor(0, mark)
+            vim.schedule(function()
+                vim.cmd("normal! zz")
+            end)
+        end
+    end,
+})
+
+-- custom LSP attach actions
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+    callback = function(args)
+        local bufnr = args.buf
+        -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+        -- client.server_capabilities.semanticTokensProvider = nil
+
+        -- LSP autotriggered completion
+        -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+        --     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
+        --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+        --     vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get)
+        -- end
+
+        local map_opts = { buffer = bufnr, noremap = true, silent = true }
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover({ max_height = 25, max_width = 100, border = "rounded" })
+        end, map_opts)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+    end,
+})
+
+-- packages {
+vim.pack.add({
+    {
+        src = "/Users/akc/develop/fuzzy.nvim",
+        name = "fuzzy"
+    },
+    {
+        src = "/Users/akc/develop/filemarks.nvim",
+        name = "filemarks"
+    },
+    {
+        src = "/Users/akc/develop/csub.nvim",
+        name = "csub"
+    },
+    {
+        src = "https://github.com/tpope/vim-surround",
+        name = "vim-surround"
+    },
+    {
+        src ="https://github.com/tpope/vim-unimpaired",
+        name = "vim-unimpaired",
+        version = "master"
+    },
+    {
+        src = "https://github.com/tpope/vim-fugitive",
+        name = "vim-fugitive"
+    },
+    {
+        src = "https://github.com/nvim-mini/mini.diff",
+        name = "minidiff",
+        version = "main"
+    },
+    {
+        src = "https://github.com/nvim-treesitter/nvim-treesitter",
+        name = "treesitter",
+        version = "main"
+    },
+    {
+        src = "https://github.com/github/copilot.vim",
+        name = "copilot",
+        version = "release"
+    },
+})
+-- } packages
+
 -- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
+
 -- csub {
 local ok, csub = pcall(require, "csub")
 if ok then
