@@ -61,12 +61,10 @@ vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>",
     { noremap = true, silent = true, desc = "Next item in quickfixlist" })
 vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
-ToggleQuickfixList = function()
-    local qf = vim.fn.getqflist({ winid = 1 }).winid
-    if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
-end
-vim.keymap.set("n", "<leader>fq", ToggleQuickfixList,
-    { noremap = true, silent = true, desc = "Toggle quickfixlist" })
+vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>",
+    { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>z", ":bot term ",
+    { desc = "Open terminal" })
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
     { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
 vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end,
@@ -77,7 +75,13 @@ vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border =
     { noremap = true, silent = true, desc = "Open diagnostic float" })
 vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { noremap = true, silent = true, desc = "Format buffer" })
-vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>", { desc = "Open parent directory" })
+
+ToggleQuickfixList = function()
+    local qf = vim.fn.getqflist({ winid = 1 }).winid
+    if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
+end
+vim.keymap.set("n", "<leader>fq", ToggleQuickfixList,
+    { noremap = true, silent = true, desc = "Toggle quickfixlist" })
 TimestampInsert = function()
     local raw_timestamp = os.date("%FT%T")
     local timestamp_str = string.format("%s", raw_timestamp or "")
@@ -85,7 +89,6 @@ TimestampInsert = function()
 end
 vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
-vim.keymap.set("n", "<leader>z", ":bot term ",{ desc = "Open terminal" })
 -- } keymaps
 
 -- auto commands {
