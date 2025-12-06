@@ -25,6 +25,7 @@ vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
+
 local text, background, dim = "#dcdfe4", "#22282f", "#3f444c"
 vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text, bg = background })
