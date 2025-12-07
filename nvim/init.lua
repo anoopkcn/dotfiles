@@ -7,7 +7,7 @@ vim.opt.winbar = "%f%m"
 vim.opt.laststatus = 0
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
@@ -29,21 +29,23 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.scrolloff = 5
 
-local text, background = "#d8dae1", "#292c32"
-local dim_text, dim_background = "#3f444c", "#2f333c"
+local text, background = "#ADB2BD", "#292C32"
+local dim = "#32353D"
+local faded = "#3d414b"
+local faint = "#555963"
 vim.api.nvim_set_hl(0, "Normal", { bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
-vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = dim_text })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = dim_text, bg = background })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim_text, bg = background })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim_text})
+vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = dim })
+vim.api.nvim_set_hl(0, "PmenuBorder", { fg = faint, bg = background })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = faint, bg = background })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim})
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background })
-vim.api.nvim_set_hl(0, "WinBarNC", { fg = dim_text, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = dim_background, bg = dim_background })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_background, bg = dim_background })
--- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim_background })
-vim.api.nvim_set_hl(0, "CursorLine", { bg = dim_background })
+vim.api.nvim_set_hl(0, "WinBarNC", { fg = faint, bg = background })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = dim, bg = dim })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim, bg = dim })
+-- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim })
+vim.api.nvim_set_hl(0, "CursorLine", { bg = dim })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text })
 
 -- keymaps {
@@ -217,11 +219,9 @@ end
 
 -- fugitive {
 vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
-    { noremap = true, silent = true, desc = "Open Git interface" }
-)
+    { noremap = true, silent = true, desc = "Open Git interface" })
 vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
-    { noremap = true, silent = true, desc = "Git log" }
-)
+    { noremap = true, silent = true, desc = "Git log" })
 -- } fugitive
 
 -- mini.diff {
