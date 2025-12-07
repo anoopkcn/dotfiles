@@ -71,10 +71,6 @@ vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>",
     { noremap = true, silent = true, desc = "Next item in quickfixlist" })
 vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
-vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>",
-    { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>z", ":!",
-    { desc = "Open terminal" })
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
     { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
 vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end,
@@ -87,6 +83,8 @@ vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true })
     { noremap = true, silent = true, desc = "Format buffer" })
 vim.keymap.set("n", "<C-s>", "<cmd>mksession!<cr>",
     { noremap = true, silent = true, desc = "Save session" })
+vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>z", ":!", { desc = "Open terminal" })
 
 ToggleQuickfixList = function()
     local qf = vim.fn.getqflist({ winid = 1 }).winid
