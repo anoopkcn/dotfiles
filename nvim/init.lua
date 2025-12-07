@@ -102,15 +102,6 @@ vim.keymap.set("n", "<leader>'", TimestampInsert,
 -- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
 
 -- auto commands {
--- enable spell check for git commits
--- vim.api.nvim_create_autocmd("FileType", {
---     pattern = { "gitcommit", "markdown", "rmd" },
---     callback = function()
---         vim.opt_local.spell = true
---         vim.opt_local.spelllang = "en_gb"
---     end,
--- })
-
 -- highlight yank
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
