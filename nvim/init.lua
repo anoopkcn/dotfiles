@@ -49,8 +49,6 @@ vim.api.nvim_set_hl(0, "CursorLine", { bg = dim_background })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text })
 
 -- keymaps {
-vim.keymap.set("i", "<C-c>", "<Esc>",
-    { noremap = true, silent = true, desc = "Exit insert mode" })
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
     { noremap = true, silent = true, desc = "Disable Space" })
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>",
