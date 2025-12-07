@@ -7,7 +7,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
 -- vim.opt.cursorlineopt = "number"
-vim.opt.laststatus = 0
+vim.opt.laststatus = 3
 vim.opt.winbar = "%f%m"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
@@ -40,8 +40,8 @@ vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim_text, bg = background })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim_text})
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = dim_text, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = dim_background, bg = dim_background })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_background, bg = dim_background })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = dim_background })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_text, bg = dim_background })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim_background })
 
 -- keymaps {
@@ -71,7 +71,7 @@ vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
 vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>",
     { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>z", ":bot term ",
+vim.keymap.set("n", "<leader>z", ":! ",
     { desc = "Open terminal" })
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
     { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
