@@ -47,6 +47,7 @@ vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim, bg = dim })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim })
 vim.api.nvim_set_hl(0, "CursorLine", { bg = dim })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text, bold = true })
+vim.api.nvim_set_hl(0, "Visual", { bg = "#414B5E" })
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
