@@ -7,7 +7,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
 -- vim.opt.cursorlineopt = "number"
-vim.opt.laststatus = 3
+vim.opt.laststatus = 0
 vim.opt.winbar = "%f%m"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
@@ -40,8 +40,8 @@ vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim_text, bg = background })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim_text})
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = dim_text, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = dim_background })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_text, bg = dim_background })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = dim_background, bg = dim_background })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_background, bg = dim_background })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim_background })
 
 -- keymaps {
@@ -71,7 +71,7 @@ vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
 vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>",
     { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>z", ":! ",
+vim.keymap.set("n", "<leader>z", ":!",
     { desc = "Open terminal" })
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
     { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
@@ -83,6 +83,8 @@ vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border =
     { noremap = true, silent = true, desc = "Open diagnostic float" })
 vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { noremap = true, silent = true, desc = "Format buffer" })
+vim.keymap.set("n", "<C-s>", "<cmd>mksession!<cr>",
+    { noremap = true, silent = true, desc = "Save session" })
 
 ToggleQuickfixList = function()
     local qf = vim.fn.getqflist({ winid = 1 }).winid
@@ -203,14 +205,11 @@ end
 local ok, filemarks = pcall(require, "filemarks")
 if ok then
     filemarks.setup({
+        show_help = false,
         dir_open_cmd = "Explore"
         -- dir_open_cmd = "Oil %s"
     })
-    local function open_filemarks_list()
-        vim.cmd("split")
-        vim.cmd("FilemarksList")
-    end
-    vim.keymap.set("n", "<leader>l", open_filemarks_list,
+    vim.keymap.set("n", "<leader>l","<cmd>bot FilemarksList<cr>",
         { noremap = true, silent = true, desc = "show file marks list" })
 end
 -- } filemarks
