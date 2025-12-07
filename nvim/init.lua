@@ -8,6 +8,8 @@ vim.opt.laststatus = 0
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 -- vim.opt.relativenumber = true
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
@@ -30,23 +32,21 @@ vim.opt.splitbelow = true
 vim.opt.scrolloff = 5
 
 local text, background = "#ADB2BD", "#292C32"
-local dim = "#32353D"
-local faded = "#3d414b"
-local faint = "#555963"
+local dim, faded, faint = "#32353D", "#3d414b", "#555963"
 vim.api.nvim_set_hl(0, "Normal", { bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = dim })
 vim.api.nvim_set_hl(0, "PmenuBorder", { fg = faint, bg = background })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = faint, bg = background })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim})
-vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim, bg = dim })
+vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background, bold = true })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = faint, bg = background })
 vim.api.nvim_set_hl(0, "StatusLine", { fg = dim, bg = dim })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim, bg = dim })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim })
 vim.api.nvim_set_hl(0, "CursorLine", { bg = dim })
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text, bold = true })
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
