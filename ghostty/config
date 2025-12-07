@@ -5,7 +5,7 @@ font-feature = -calt
 adjust-cell-height=32%
 window-padding-balance=true
 theme = Nvim Dark
-background = #22282f
+background = #292c33
 
 #window-theme=auto
 macos-option-as-alt = true

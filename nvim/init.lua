@@ -4,10 +4,10 @@
 vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
 -- vim.opt.cursorlineopt = "number"
-vim.opt.laststatus = 3
+vim.opt.laststatus = 0
 vim.opt.winbar = "%f%m"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
@@ -29,8 +29,8 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 
-local text, background = "#dcdfe4", "#22282f"
-local dim_text, dim_background = "#3f444c", "#292f37"
+local text, background = "#abb2bf", "#282c34"
+local dim_text, dim_background = "#3f444c", "#2f333c"
 vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
@@ -38,12 +38,11 @@ vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = dim_text })
 vim.api.nvim_set_hl(0, "PmenuBorder", { fg = dim_text, bg = background })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim_text, bg = background })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim_text})
-vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = dim_background })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_text, bg = dim_background })
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = dim_text, bg = background })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = dim_background, bg = dim_background })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_background, bg = dim_background })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim_background })
-
 
 -- keymaps {
 vim.keymap.set("i", "<C-c>", "<Esc>",
