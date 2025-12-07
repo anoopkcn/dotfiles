@@ -2,13 +2,14 @@
 -- AUTHOR:  @anoopkcn
 
 vim.g.mapleader = " "
+vim.opt.showtabline = 0
+vim.opt.winbar = "%f%m"
+vim.opt.laststatus = 0
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
 -- vim.opt.cursorline = true
 -- vim.opt.cursorlineopt = "number"
-vim.opt.laststatus = 0
-vim.opt.winbar = "%f%m"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
