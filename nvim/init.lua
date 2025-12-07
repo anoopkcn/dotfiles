@@ -8,8 +8,8 @@ vim.opt.laststatus = 0
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
--- vim.opt.cursorline = true
--- vim.opt.cursorlineopt = "number"
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
@@ -29,6 +29,7 @@ vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
+vim.opt.scrolloff = 5
 
 local text, background = "#abb2bf", "#282c34"
 local dim_text, dim_background = "#3f444c", "#2f333c"
@@ -44,6 +45,8 @@ vim.api.nvim_set_hl(0, "WinBarNC", { fg = dim_text, bg = background })
 vim.api.nvim_set_hl(0, "StatusLine", { fg = dim_background, bg = dim_background })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim_background, bg = dim_background })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim_background })
+vim.api.nvim_set_hl(0, "CursorLine", { bg = dim_background })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text })
 
 -- keymaps {
 vim.keymap.set("i", "<C-c>", "<Esc>",

@@ -3,9 +3,12 @@ font-thicken = true
 font-size = 14
 font-feature = -calt
 adjust-cell-height=32%
+adjust-cursor-thickness=3
 window-padding-balance=true
 theme = Nvim Dark
+foreground = #abb2bf
 background = #292c33
+cursor-text = cell-foreground
 
 #window-theme=auto
 macos-option-as-alt = true
