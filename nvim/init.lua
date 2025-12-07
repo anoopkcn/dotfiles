@@ -102,16 +102,6 @@ vim.keymap.set("n", "<leader>'", TimestampInsert,
 -- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
 
 -- auto commands {
--- highlight yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
-    pattern = "*",
-    desc = "highlight selection on yank",
-    callback = function()
-        vim.highlight.on_yank({ timeout = 200, visual = true })
-    end,
-})
-
 -- custom LSP attach actions
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
@@ -135,6 +125,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
     end,
 })
+
+-- highlight yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+    pattern = "*",
+    desc = "highlight selection on yank",
+    callback = function()
+        vim.highlight.on_yank({ timeout = 200, visual = true })
+    end,
+})
+
 -- } auto commands
 
 -- packages {
