@@ -6,8 +6,8 @@ adjust-cell-height=32%
 adjust-cursor-thickness=3
 window-padding-balance=true
 theme = Nvim Dark
-foreground = #abb2bf
-background = #292c33
+foreground = #d8dae1
+background = #292c32
 cursor-text = cell-foreground
 
 #window-theme=auto

@@ -31,9 +31,9 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.scrolloff = 5
 
-local text, background = "#abb2bf", "#282c34"
+local text, background = "#d8dae1", "#292c32"
 local dim_text, dim_background = "#3f444c", "#2f333c"
-vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
+vim.api.nvim_set_hl(0, "Normal", { bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = dim_text })
