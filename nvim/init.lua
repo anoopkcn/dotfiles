@@ -4,7 +4,7 @@
 vim.g.mapleader = " "
 vim.opt.showtabline = 0
 vim.opt.winbar = "%f%m"
-vim.opt.laststatus = 0
+vim.opt.laststatus = 3
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -43,8 +43,8 @@ vim.api.nvim_set_hl(0, "FloatBorder", { fg = faint, bg = background })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim })
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background, bold = true })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = faint, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = dim, bg = dim })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg = dim, bg = dim })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = dim })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = faint, bg = dim })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim })
 vim.api.nvim_set_hl(0, "CursorLine", { bg = dim })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text, bold = true })
