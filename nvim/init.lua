@@ -191,9 +191,7 @@ if ok then
     -- vim.keymap.set('n', ']q', '<CMD>FuzzyNext<CR>')
     -- vim.keymap.set('n', '[q', '<CMD>FuzzyPrev<CR>')
     vim.keymap.set("n", "<leader>/", ":Grep ", { silent = false, desc = "Fuzzy grep" })
-    vim.keymap.set("n", "<leader>fg", "<cmd>GrepI<cr>", { silent = false, desc = "Fuzzy grep" })
     vim.keymap.set("n", "<leader>?", ":Files! --type f ", { silent = false, desc = "Fuzzy grep files" })
-    vim.keymap.set("n", "<leader>ff", "<cmd>FilesI<cr>", { silent = false, desc = "Fuzzy grep files" })
     vim.keymap.set("n", "<leader>fb", ":Buffers! ", { silent = false, desc = "Fuzzy buffer list" })
     vim.keymap.set("n", "<leader>fw", function() _fuzzy_grep(vim.fn.expand("<cword>"), false) end,
         { silent = false, desc = "Fuzzy grep current word" })
