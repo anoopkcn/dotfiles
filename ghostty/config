@@ -10,6 +10,8 @@ foreground = #ADB2BD
 background = #292C32
 cursor-color = #80ABE3
 cursor-text = cell-foreground
+selection-foreground = cell-foreground
+selection-background = #414B5E
 
 #window-theme=auto
 macos-option-as-alt = true
