@@ -43,7 +43,7 @@ vim.api.nvim_set_hl(0, "WinSeparator", { fg = dim })
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = background, bold = true })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = faint, bg = background })
 vim.api.nvim_set_hl(0, "StatusLine", { fg = dim, bg = dim })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg= dim, bg = dim })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = dim, bg = dim })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim })
 vim.api.nvim_set_hl(0, "CursorLine", { bg = dim })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text, bold = true })
@@ -108,42 +108,42 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- LSP settings {
--- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
--- vim.api.nvim_create_autocmd("LspAttach", {
---     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
---     callback = function(args)
---         local bufnr = args.buf
---         -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
---         -- client.server_capabilities.semanticTokensProvider = nil
---
---         -- LSP autotriggered completion
---         -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
---         --     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
---         --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
---         --     vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get)
---         -- end
---
---         local map_opts = { buffer = bufnr, noremap = true, silent = true }
---         vim.keymap.set("n", "K", function()
---             vim.lsp.buf.hover({ max_height = 25, max_width = 100, border = "rounded" })
---         end, map_opts)
---         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
---         vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
---     end,
--- })
+vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+    callback = function(args)
+        local bufnr = args.buf
+        -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+        -- client.server_capabilities.semanticTokensProvider = nil
+
+        -- LSP autotriggered completion
+        -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+        --     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
+        --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+        --     vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get)
+        -- end
+
+        local map_opts = { buffer = bufnr, noremap = true, silent = true }
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
+        end, map_opts)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+    end,
+})
 -- } LSP settings
 
 -- packages {
 vim.pack.add({
-    { src = "/Users/akc/develop/fuzzy.nvim", name = "fuzzy" },
-    { src = "/Users/akc/develop/filemarks.nvim", name = "filemarks" },
-    { src = "/Users/akc/develop/csub.nvim", name = "csub" },
-    { src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
-    { src = "https://github.com/tpope/vim-unimpaired", name = "vim-unimpaired", version = "master" },
-    { src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
-    { src = "https://github.com/nvim-mini/mini.diff", name = "minidiff", version = "main" },
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter", version = "main" },
-    { src = "https://github.com/github/copilot.vim", name = "copilot", version = "release" },
+    { src = "/Users/akc/develop/fuzzy.nvim",                      name = "fuzzy" },
+    { src = "/Users/akc/develop/filemarks.nvim",                  name = "filemarks" },
+    { src = "/Users/akc/develop/csub.nvim",                       name = "csub" },
+    { src = "https://github.com/tpope/vim-surround",              name = "vim-surround" },
+    { src = "https://github.com/tpope/vim-unimpaired",            name = "vim-unimpaired", version = "master" },
+    { src = "https://github.com/tpope/vim-fugitive",              name = "vim-fugitive" },
+    { src = "https://github.com/nvim-mini/mini.diff",             name = "minidiff",       version = "main" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter",     version = "main" },
+    { src = "https://github.com/github/copilot.vim",              name = "copilot",        version = "release" },
 })
 -- } packages
 
@@ -163,7 +163,7 @@ if ok then
             { match = "make",         mode = nil }, -- disabled
         },
     })
-    vim.keymap.set("n", "<leader>s", "<cmd>Csub<cr>", 
+    vim.keymap.set("n", "<leader>s", "<cmd>Csub<cr>",
         { desc = "Open Csub buffer for current active quickfix list" })
 end
 -- } csub
@@ -201,7 +201,7 @@ if ok then
         dir_open_cmd = "Explore"
         -- dir_open_cmd = "Oil %s"
     })
-    vim.keymap.set("n", "<leader>l","<cmd>bot FilemarksList<cr>",
+    vim.keymap.set("n", "<leader>l", "<cmd>bot FilemarksList<cr>",
         { noremap = true, silent = true, desc = "show file marks list" })
 end
 -- } filemarks
