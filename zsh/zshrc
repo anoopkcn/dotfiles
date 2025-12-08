@@ -14,7 +14,7 @@ export PATH
 export EDITOR='nvim'
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export CONDA_CHANGEPS1=no
-export MANPATH="$MANPATH:${HOME}/programming/linux-man:${HOME}/programming/python-man"
+export MANPATH="$MANPATH:${HOME}/programming/c-man:${HOME}/programming/python-man"
 
 # INPUTRC
 bindkey "^[[A" history-search-backward
