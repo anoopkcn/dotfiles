@@ -225,7 +225,7 @@ vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
 local ok, minidiff = pcall(require, "mini.diff")
 if ok then
     minidiff.setup({
-        view = { style = "sign", signs = { add = '┃', change = '┃', delete = '_' }, }
+        view = { style = "sign", signs = { add = '│', change = '│', delete = '_' }, }
     })
 
     vim.keymap.set("n", "<leader>fc", function()
