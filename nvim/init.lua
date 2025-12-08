@@ -102,44 +102,36 @@ vim.keymap.set("n", "<leader>'", TimestampInsert,
     { noremap = true, silent = true, desc = "Insert current timestamp" })
 -- } keymaps
 
--- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
-
--- auto commands {
--- custom LSP attach actions
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
-    callback = function(args)
-        local bufnr = args.buf
-        -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        -- client.server_capabilities.semanticTokensProvider = nil
-
-        -- LSP autotriggered completion
-        -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
-        --     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
-        --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-        --     vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get)
-        -- end
-
-        local map_opts = { buffer = bufnr, noremap = true, silent = true }
-        vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover({ max_height = 25, max_width = 100, border = "rounded" })
-        end, map_opts)
-        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
-    end,
-})
-
--- highlight yank
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
-    pattern = "*",
-    desc = "highlight selection on yank",
-    callback = function()
-        vim.highlight.on_yank({ timeout = 200, visual = true })
-    end,
+    callback = function() vim.highlight.on_yank() end,
 })
 
--- } auto commands
+-- LSP settings {
+-- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+--     callback = function(args)
+--         local bufnr = args.buf
+--         -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+--         -- client.server_capabilities.semanticTokensProvider = nil
+--
+--         -- LSP autotriggered completion
+--         -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
+--         --     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
+--         --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+--         --     vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get)
+--         -- end
+--
+--         local map_opts = { buffer = bufnr, noremap = true, silent = true }
+--         vim.keymap.set("n", "K", function()
+--             vim.lsp.buf.hover({ max_height = 25, max_width = 100, border = "rounded" })
+--         end, map_opts)
+--         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+--         vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+--     end,
+-- })
+-- } LSP settings
 
 -- packages {
 vim.pack.add({
