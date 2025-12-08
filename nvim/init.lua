@@ -32,7 +32,8 @@ vim.opt.splitbelow = true
 vim.opt.scrolloff = 5
 
 local text, background = "#ADB2BD", "#292C32"
-local dim, faded, faint = "#32353D", "#3d414b", "#555963"
+local dim, faint = "#32353D", "#555963"
+local selection_bg = "#414B5E"
 vim.api.nvim_set_hl(0, "Normal", { bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
@@ -47,7 +48,7 @@ vim.api.nvim_set_hl(0, "StatusLineNC", { fg = dim, bg = dim })
 -- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = dim })
 vim.api.nvim_set_hl(0, "CursorLine", { bg = dim })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = text, bold = true })
-vim.api.nvim_set_hl(0, "Visual", { bg = "#414B5E" })
+vim.api.nvim_set_hl(0, "Visual", { bg = selection_bg })
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
