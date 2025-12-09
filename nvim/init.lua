@@ -31,7 +31,7 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.scrolloff = 5
 
-local text = "#ADB2BD"
+local text = "#bdc3d0"
 local text_faint = "#555963"
 local background = "#1E222A"
 local cmdline_bg = "#292d36"
@@ -49,7 +49,7 @@ vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg })
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bold = true })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg =  text_faint })
 vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
--- vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = cmdline_bg })
+vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = cmdline_bg })
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
