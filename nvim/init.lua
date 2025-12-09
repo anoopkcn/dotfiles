@@ -149,8 +149,6 @@ vim.pack.add({
 })
 -- } packages
 
--- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
-
 -- csub {
 local ok, csub = pcall(require, "csub")
 if ok then
