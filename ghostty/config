@@ -14,7 +14,6 @@ cursor-text = cell-foreground
 selection-foreground = cell-foreground
 selection-background = #414B5E
 
-#window-theme=auto
 macos-option-as-alt = true
 macos-titlebar-style = tabs
 window-save-state=always
