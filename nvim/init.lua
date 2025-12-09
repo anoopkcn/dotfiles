@@ -4,7 +4,7 @@
 vim.g.mapleader = " "
 vim.opt.showtabline = 0
 vim.opt.winbar = "%f%m"
-vim.opt.laststatus = 3
+vim.opt.laststatus = 0
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
