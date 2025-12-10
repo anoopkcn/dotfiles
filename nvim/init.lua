@@ -20,7 +20,7 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showbreak = "⤷ "
--- vim.opt.showmode = false
+vim.opt.showmode = true
 vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.swapfile = false
@@ -135,9 +135,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- packages {
 vim.pack.add({
-    { src = "/Users/akc/develop/fuzzy.nvim", name = "fuzzy" },
-    { src = "/Users/akc/develop/filemarks.nvim", name = "filemarks" },
-    { src = "/Users/akc/develop/csub.nvim", name = "csub" },
+    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
+    { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
+    { src = "https://github.com/anoopkcn/csub.nvim", name = "csub" },
     { src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
     { src = "https://github.com/tpope/vim-unimpaired", name = "vim-unimpaired", version = "master" },
     { src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
