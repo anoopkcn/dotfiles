@@ -20,16 +20,14 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showbreak = "⤷ "
-vim.opt.showmode = false
-vim.opt.termguicolors = true
+-- vim.opt.showmode = false
 vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.swapfile = false
 vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
-vim.opt.splitbelow = true
-vim.opt.scrolloff = 5
+-- vim.opt.splitbelow = true
 
 local text = "#bdc3d0"
 local text_faint = "#555963"
