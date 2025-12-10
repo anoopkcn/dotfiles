@@ -27,7 +27,7 @@ vim.opt.swapfile = false
 vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
--- vim.opt.splitbelow = true
+vim.opt.splitbelow = true
 
 local text = "#bdc3d0"
 local text_faint = "#555963"
