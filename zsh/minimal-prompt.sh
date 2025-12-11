@@ -2,11 +2,14 @@
 autoload -Uz vcs_info
 setopt prompt_subst
 
-zstyle ':vcs_info:git:*' formats ' git:%F{blue}(%b) %f%F{yellow}%u%f%F{green}%c%f'
-zstyle ':vcs_info:git:*' actionformats ' git:%F{blue}(%b|%a) %f%F{yellow}%u%f%F{green}%c%f'
+# Git segment
+zstyle ':vcs_info:git:*' formats ' git:%F{blue}(%b)%f%F{yellow}%u%f%F{green}%c%f'
+zstyle ':vcs_info:git:*' actionformats ' git:%F{blue}(%b|%a)%f%F{yellow}%u%f%F{green}%c%f'
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' unstagedstr '󱐌' # 󱐌 ●
-zstyle ':vcs_info:*' stagedstr ' '  # ✚
+
+# Put the space *inside* the markers, so it only appears when they do
+zstyle ':vcs_info:*' unstagedstr ' 󱐌'  # leading space before icon
+zstyle ':vcs_info:*' stagedstr  ' '   # leading space before icon
 
 precmd() {
     vcs_info
@@ -27,6 +30,5 @@ precmd() {
     fi
 }
 
-# Single-line prompt:
-# <cwd> <env> <git> <status-arrow>
+# Single-line prompt: [cwd env git]$ with colored status
 PROMPT='[%F{cyan}%~%f${PROMPT_ENV_SEGMENT}${vcs_info_msg_0_}]%(?.%F{cyan}$%f.%F{red}$%f) '
