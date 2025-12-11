@@ -48,6 +48,7 @@ vim.api.nvim_set_hl(0, "WinBar", { fg = text, bold = true })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg =  text_faint })
 vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
 vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = cmdline_bg })
+vim.api.nvim_set_hl(0, "NetrwMarkFile", { fg = text, bg = visual_bg, bold = true })
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
