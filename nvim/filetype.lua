@@ -1,6 +1,7 @@
 vim.filetype.add({
     extension = { 
         smd = "markdown",
-        h = "c"
+        h = "c",
+        shtml = "html",
     },
 })
