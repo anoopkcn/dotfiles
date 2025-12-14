@@ -28,6 +28,7 @@ vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
+vim.opt.switchbuf:append("useopen")
 
 local text = "#bdc3d0"
 local text_faint = "#555963"
@@ -86,7 +87,9 @@ vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true })
 vim.keymap.set("n", "<C-s>", "<cmd>mksession!<cr>",
     { noremap = true, silent = true, desc = "Save session" })
 vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>", { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>z", ":!", { desc = "Open terminal" })
+vim.keymap.set("n", "<leader>z", "<cmd>terminal<cr>", { desc = "Open terminal" })
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true, silent = true })
+
 
 ToggleQuickfixList = function()
     local qf = vim.fn.getqflist({ winid = 1 }).winid
@@ -145,6 +148,7 @@ vim.pack.add({
     { src = "https://github.com/lewis6991/gitsigns.nvim", version = "main" },
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter", version = "main" },
     { src = "https://github.com/github/copilot.vim", name = "copilot", version = "release" },
+    { src ="https://github.com/mfussenegger/nvim-dap", name = "nvim-dap", version = "master" },
 })
 -- } packages
 
@@ -152,7 +156,6 @@ vim.pack.add({
 local ok, csub = pcall(require, "csub")
 if ok then
     csub.setup({
-        separator = "│",
         default_mode = nil,
         handlers = {
             { match = "FuzzyGrep",    mode = "replace" },
@@ -241,3 +244,5 @@ if ok then
     }
 end
 -- } nvim-treesitter
+--
+require("dap-config")

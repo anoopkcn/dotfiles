@@ -20,6 +20,7 @@ export MANPATH="$MANPATH:${HOME}/programming/c-man:${HOME}/programming/python-ma
 bindkey "^[[A" history-search-backward
 bindkey "^[[B" history-search-forward
 bindkey '^y' autosuggest-accept
+bindkey -e
 
 # HISTORY OPTIONS
 HISTFILE=$HOME/.zsh_history
