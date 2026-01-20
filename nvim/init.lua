@@ -3,7 +3,6 @@
 
 vim.g.mapleader = " "
 vim.opt.showtabline = 0
-vim.opt.winbar = "%f%m"
 vim.opt.laststatus = 0
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
@@ -18,7 +17,7 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
-vim.opt.linebreak = true
+vim.opt.wrap = false
 vim.opt.showbreak = "⤷ "
 vim.opt.showmode = true
 vim.opt.undofile = true
@@ -29,26 +28,23 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
+vim.cmd("colorscheme onehalfdark")
 
-local text = "#bdc3d0"
-local text_faint = "#555963"
-local background = "#1E222A"
-local cmdline_bg = "#292d36"
+local text = "#dcdfe4"
+-- local text_faint = "#555963"
+local background = "#292c33"
+local cmdline_bg = "#31353e"
 local visual_bg = "#414B5E"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
-vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
+-- vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
 vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg = text_faint, bg = cmdline_bg })
+-- vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
+-- vim.api.nvim_set_hl(0, "StatusLineNC", { fg = text_faint, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "WinBar", { fg = text, bold = true })
-vim.api.nvim_set_hl(0, "WinBarNC", { fg = text_faint })
-vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
-vim.api.nvim_set_hl(0, "MsgArea", { fg = text, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "NetrwMarkFile", { fg = text, bg = visual_bg, bold = true })
 
 -- keymaps {
@@ -149,6 +145,7 @@ vim.pack.add({
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter", version = "main" },
     { src = "https://github.com/github/copilot.vim", name = "copilot", version = "release" },
     { src ="https://github.com/mfussenegger/nvim-dap", name = "nvim-dap", version = "master" },
+    { src = "https://github.com/ibhagwan/fzf-lua", name = "fzf-lua", version = "main" },
 })
 -- } packages
 
@@ -180,7 +177,7 @@ if ok then
     vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false, desc = "Fuzzy list" })
     vim.keymap.set("n", "<leader>/", ":Grep ", { silent = false, desc = "Fuzzy grep" })
     vim.keymap.set("n", "<leader>?", ":Files! --type f ", { silent = false, desc = "Fuzzy grep files" })
-    vim.keymap.set("n", "<leader>ff", ":Files ", { silent = false, desc = "Fuzzy grep files" })
+    -- vim.keymap.set("n", "<leader>ff", ":Files ", { silent = false, desc = "Fuzzy grep files" })
     vim.keymap.set("n", "<leader>fb", ":Buffers! ", { silent = false, desc = "Fuzzy buffer list" })
 
     vim.keymap.set('n', '<leader>fw', function()
@@ -199,7 +196,6 @@ end
 local ok, filemarks = pcall(require, "filemarks")
 if ok then
     filemarks.setup({
-        show_help = false,
         dir_open_cmd = "Explore"
         -- dir_open_cmd = "Oil %s"
     })
@@ -246,3 +242,18 @@ end
 -- } nvim-treesitter
 --
 require("dap-config")
+
+-- fzf-lua {
+local ok, fzf = pcall(require, "fzf-lua")
+if ok then
+    fzf.setup({
+        winopts = {
+            split = "belowright new",
+        }
+    })
+    vim.api.nvim_set_hl(0, "FzfLuaPreviewBorder", { link = "WinSeparator" })
+    vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "FZF Files" })
+    vim.keymap.set("n", "<leader>fg", fzf.live_grep, { desc = "FZF grep" })
+    vim.keymap.set("n", "<leader>fh", fzf.helptags, { desc = "FZF helptags" })
+end
+-- } fzf-lua

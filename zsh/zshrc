@@ -49,8 +49,8 @@ alias notes="nvim ~/Dropbox/notes/"
 # PLUGINS
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
-plugin add "zsh-users/zsh-autosuggestions"
-plugin add "zsh-users/zsh-completions"
+# plugin add "zsh-users/zsh-autosuggestions"
+# plugin add "zsh-users/zsh-completions"
 plugin add "anoopkcn/zig-shell-completions"
 
 # plugin settings

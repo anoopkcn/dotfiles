@@ -6,13 +6,9 @@ font-feature = -calt
 adjust-cell-height=32%
 adjust-cursor-thickness=3
 window-padding-balance=true
-theme = Nvim Dark
-foreground = #bdc3d0
-background = #1E222A
 cursor-color = #80ABE3
 cursor-text = cell-foreground
 selection-foreground = cell-foreground
-selection-background = #414B5E
 
 macos-option-as-alt = true
 macos-titlebar-style = tabs
