@@ -17,7 +17,7 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
-vim.opt.wrap = false
+vim.opt.wrap = true
 vim.opt.showbreak = "⤷ "
 vim.opt.showmode = true
 vim.opt.undofile = true
@@ -113,16 +113,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 --     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
 --     callback = function(args)
 --         local bufnr = args.buf
---         -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
---         -- client.server_capabilities.semanticTokensProvider = nil
---
---         -- LSP autotriggered completion
---         -- if client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
---         --     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
---         --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
---         --     vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get)
---         -- end
---
 --         local map_opts = { buffer = bufnr, noremap = true, silent = true }
 --         vim.keymap.set("n", "K", function()
 --             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
@@ -135,19 +125,21 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- packages {
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
-    { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
-    { src = "https://github.com/anoopkcn/csub.nvim", name = "csub" },
-    { src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
-    { src = "https://github.com/tpope/vim-unimpaired", name = "vim-unimpaired", version = "master" },
-    { src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
-    { src = "https://github.com/lewis6991/gitsigns.nvim", version = "main" },
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter", version = "main" },
-    { src = "https://github.com/github/copilot.vim", name = "copilot", version = "release" },
-    { src ="https://github.com/mfussenegger/nvim-dap", name = "nvim-dap", version = "master" },
-    { src = "https://github.com/ibhagwan/fzf-lua", name = "fzf-lua", version = "main" },
+    { src = "https://github.com/anoopkcn/fuzzy.nvim",             name = "fuzzy" },
+    { src = "https://github.com/anoopkcn/filemarks.nvim",         name = "filemarks" },
+    { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
+    { src = "https://github.com/tpope/vim-surround",              name = "vim-surround" },
+    { src = "https://github.com/tpope/vim-unimpaired",            name = "vim-unimpaired", version = "master" },
+    { src = "https://github.com/tpope/vim-fugitive",              name = "vim-fugitive" },
+    { src = "https://github.com/lewis6991/gitsigns.nvim",         version = "main" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter",     version = "main" },
+    { src = "https://github.com/Exafunction/windsurf.vim",        name = "windsurf",       version = "main" },
+    { src = "https://github.com/mfussenegger/nvim-dap",           name = "nvim-dap",       version = "master" },
+    { src = "https://github.com/ibhagwan/fzf-lua",                name = "fzf-lua",        version = "main" },
 })
 -- } packages
+
+-- require("dap-config")
 
 -- csub {
 local ok, csub = pcall(require, "csub")
@@ -241,11 +233,10 @@ if ok then
 end
 -- } nvim-treesitter
 --
-require("dap-config")
 
 -- fzf-lua {
-local ok, fzf = pcall(require, "fzf-lua")
-if ok then
+local ok_fzf, fzf = pcall(require, "fzf-lua")
+if ok_fzf then
     fzf.setup({
         winopts = {
             split = "belowright new",
@@ -257,3 +248,16 @@ if ok then
     vim.keymap.set("n", "<leader>fh", fzf.helptags, { desc = "FZF helptags" })
 end
 -- } fzf-lua
+
+local ok_windsurf, windsurf = pcall(require, "windsurf")
+if ok_windsurf then
+    windsurf.setup()
+    vim.g.codeium_no_map_tab = 1
+
+    vim.keymap.set("i", "<Tab>", function()
+        return vim.fn["codeium#Accept"]()
+    end, { expr = true, silent = true })
+    vim.keymap.set("i", "<M-]>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true, silent = true })
+    vim.keymap.set("i", "<M-[>", function() return vim.fn["codeium#CycleCompletions"](-1) end, { expr = true, silent = true })
+    vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true, silent = true })
+end
