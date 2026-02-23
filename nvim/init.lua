@@ -4,6 +4,7 @@
 vim.g.mapleader = " "
 vim.opt.showtabline = 0
 vim.opt.laststatus = 0
+vim.opt.winbar = "%f %m"
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -28,24 +29,41 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-vim.cmd("colorscheme onehalfdark")
+-- vim.cmd("colorscheme onehalfdark")
+vim.cmd("colorscheme habamax")
 
-local text = "#dcdfe4"
--- local text_faint = "#555963"
-local background = "#292c33"
-local cmdline_bg = "#31353e"
-local visual_bg = "#414B5E"
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
+-- local text = "#dcdfe4"
+-- local background = "#292c33"
+local text_faint = "#767676"
+local cmdline_bg = "#303030"
+-- local visual_bg = "#414B5E"
+-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
 -- vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
-vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
-vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
-vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
--- vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
--- vim.api.nvim_set_hl(0, "StatusLineNC", { fg = text_faint, bg = cmdline_bg })
+-- vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
+-- vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
+-- vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
+-- vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
+-- vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg =  cmdline_bg})
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "NetrwMarkFile", { fg = text, bg = visual_bg, bold = true })
+-- vim.api.nvim_set_hl(0, "NetrwMarkFile", { fg = text, bg = visual_bg, bold = true })
+
+-- set winbar bg and fg
+vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = none })
+vim.api.nvim_set_hl(0, "WinBarNC", { fg = text_faint, bg = none })
+
+-- local function set_transparent()
+-- 	local groups = {
+--         "WinBar",
+--         "StatusLine",
+-- 	}
+-- 	for _, g in ipairs(groups) do
+-- 		vim.api.nvim_set_hl(0, g, { bg = "none" })
+-- 	end
+-- end
+--
+-- set_transparent()
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
@@ -125,17 +143,38 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- packages {
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/fuzzy.nvim",             name = "fuzzy" },
-    { src = "https://github.com/anoopkcn/filemarks.nvim",         name = "filemarks" },
-    { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
-    { src = "https://github.com/tpope/vim-surround",              name = "vim-surround" },
-    { src = "https://github.com/tpope/vim-unimpaired",            name = "vim-unimpaired", version = "master" },
-    { src = "https://github.com/tpope/vim-fugitive",              name = "vim-fugitive" },
-    { src = "https://github.com/lewis6991/gitsigns.nvim",         version = "main" },
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter",     version = "main" },
-    { src = "https://github.com/Exafunction/windsurf.vim",        name = "windsurf",       version = "main" },
-    { src = "https://github.com/mfussenegger/nvim-dap",           name = "nvim-dap",       version = "master" },
-    { src = "https://github.com/ibhagwan/fzf-lua",                name = "fzf-lua",        version = "main" },
+    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
+    { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
+    { src = "https://github.com/anoopkcn/csub.nvim", name = "csub" },
+    { src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
+    { 
+        src = "https://github.com/tpope/vim-unimpaired",    
+        name = "vim-unimpaired", 
+        version = "master" 
+    },
+    { src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
+    { src = "https://github.com/lewis6991/gitsigns.nvim", version = "main" },
+    {
+        src = "https://github.com/nvim-treesitter/nvim-treesitter",
+        name = "treesitter",
+        branch = "main",
+        build = ":TSUpdate",
+    },
+    { 
+        src = "https://github.com/Exafunction/windsurf.vim", 
+        name = "windsurf", 
+        version = "main" 
+    },
+    { 
+        src = "https://github.com/ibhagwan/fzf-lua", 
+        name = "fzf-lua",  
+        version = "main" 
+    },
+    -- { 
+    --     src = "https://github.com/mfussenegger/nvim-dap",  
+    --     name = "nvim-dap", 
+    --     version = "master" 
+    -- },
 })
 -- } packages
 
@@ -204,35 +243,36 @@ vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
 -- } fugitive
 
 -- nvim-treesitter {
-local ok, configs = pcall(require, "nvim-treesitter.configs")
-if ok then
-    configs.setup {
-        ensure_installed = {
-            "c", "cpp", "zig",
-            "python", "bash", "lua",
-            "vim", "vimdoc", "markdown",
-        },
-        sync_install = false,
-        auto_install = false,
-
-        modules = {},
-        ignore_install = {},
-
-        highlight = {
-            enable = true,
-            disable = function(_, buf)
-                local max_filesize = 100 * 1024 -- 100 KB
-                local ok_stat, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                if ok_stat and stats and stats.size > max_filesize then
-                    return true
-                end
-            end,
-            additional_vim_regex_highlighting = false,
-        },
-    }
-end
+-- local ok, configs = pcall(require, "nvim-treesitter.configs")
+-- if ok then
+--     configs.setup {
+--         ensure_installed = {
+--             "c", "cpp", "zig",
+--             "python", "bash", "lua",
+--             "vim", "vimdoc", "markdown",
+--         },
+--         sync_install = false,
+--         auto_install = false,
+--
+--         modules = {},
+--         ignore_install = {},
+--
+--         highlight = {
+--             enable = true,
+--             disable = function(_, buf)
+--                 local max_filesize = 100 * 1024 -- 100 KB
+--                 local ok_stat, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+--                 if ok_stat and stats and stats.size > max_filesize then
+--                     return true
+--                 end
+--             end,
+--             additional_vim_regex_highlighting = false,
+--         },
+--     }
+-- end
 -- } nvim-treesitter
 --
+
 
 -- fzf-lua {
 local ok_fzf, fzf = pcall(require, "fzf-lua")
@@ -257,7 +297,60 @@ if ok_windsurf then
     vim.keymap.set("i", "<Tab>", function()
         return vim.fn["codeium#Accept"]()
     end, { expr = true, silent = true })
-    vim.keymap.set("i", "<M-]>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true, silent = true })
-    vim.keymap.set("i", "<M-[>", function() return vim.fn["codeium#CycleCompletions"](-1) end, { expr = true, silent = true })
+    vim.keymap.set("i", "<M-]>", function() return vim.fn["codeium#CycleCompletions"](1) end,
+        { expr = true, silent = true })
+    vim.keymap.set("i", "<M-[>", function() return vim.fn["codeium#CycleCompletions"](-1) end,
+        { expr = true, silent = true })
     vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true, silent = true })
 end
+
+
+local setup_treesitter = function()
+	local treesitter = require("nvim-treesitter")
+	treesitter.setup({})
+	local ensure_installed = {
+		"vim",
+		"vimdoc",
+		"rust",
+		"c",
+		"cpp",
+		"go",
+		"html",
+		"css",
+		"javascript",
+		"json",
+		"lua",
+		"markdown",
+		"typescript",
+		"bash",
+		"lua",
+		"python",
+	}
+
+	local config = require("nvim-treesitter.config")
+
+	local already_installed = config.get_installed()
+	local parsers_to_install = {}
+
+	for _, parser in ipairs(ensure_installed) do
+		if not vim.tbl_contains(already_installed, parser) then
+			table.insert(parsers_to_install, parser)
+		end
+	end
+
+	if #parsers_to_install > 0 then
+		treesitter.install(parsers_to_install)
+	end
+
+	local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
+	vim.api.nvim_create_autocmd("FileType", {
+		group = group,
+		callback = function(args)
+			if vim.list_contains(treesitter.get_installed(), vim.treesitter.language.get_lang(args.match)) then
+				vim.treesitter.start(args.buf)
+			end
+		end,
+	})
+end
+
+setup_treesitter()
