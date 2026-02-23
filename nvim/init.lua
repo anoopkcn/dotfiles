@@ -43,7 +43,7 @@ local cmdline_bg = "#303030"
 -- vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
 -- vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
 -- vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg =  cmdline_bg})
+vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = cmdline_bg })
 -- vim.api.nvim_set_hl(0, "NetrwMarkFile", { fg = text, bg = visual_bg, bold = true })
@@ -112,33 +112,33 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- LSP settings {
--- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
--- vim.api.nvim_create_autocmd("LspAttach", {
---     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
---     callback = function(args)
---         local bufnr = args.buf
---         local map_opts = { buffer = bufnr, noremap = true, silent = true }
---         vim.keymap.set("n", "K", function()
---             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
---         end, map_opts)
---         vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
---         vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
---     end,
--- })
+vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+    callback = function(args)
+        local bufnr = args.buf
+        local map_opts = { buffer = bufnr, noremap = true, silent = true }
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
+        end, map_opts)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+    end,
+})
 -- } LSP settings
 
 -- packages {
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
+    { src = "https://github.com/anoopkcn/fuzzy.nvim",     name = "fuzzy" },
     { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
-    { src = "https://github.com/anoopkcn/csub.nvim", name = "csub" },
-    { src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
-    { 
-        src = "https://github.com/tpope/vim-unimpaired",    
-        name = "vim-unimpaired", 
-        version = "master" 
+    { src = "https://github.com/anoopkcn/csub.nvim",      name = "csub" },
+    { src = "https://github.com/tpope/vim-surround",      name = "vim-surround" },
+    {
+        src = "https://github.com/tpope/vim-unimpaired",
+        name = "vim-unimpaired",
+        version = "master"
     },
-    { src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
+    { src = "https://github.com/tpope/vim-fugitive",      name = "vim-fugitive" },
     { src = "https://github.com/lewis6991/gitsigns.nvim", version = "main" },
     {
         src = "https://github.com/nvim-treesitter/nvim-treesitter",
@@ -146,20 +146,20 @@ vim.pack.add({
         branch = "main",
         build = ":TSUpdate",
     },
-    { 
-        src = "https://github.com/Exafunction/windsurf.vim", 
-        name = "windsurf", 
-        version = "main" 
+    {
+        src = "https://github.com/Exafunction/windsurf.vim",
+        name = "windsurf",
+        version = "main"
     },
-    { 
-        src = "https://github.com/ibhagwan/fzf-lua", 
-        name = "fzf-lua",  
-        version = "main" 
+    {
+        src = "https://github.com/ibhagwan/fzf-lua",
+        name = "fzf-lua",
+        version = "main"
     },
-    -- { 
-    --     src = "https://github.com/mfussenegger/nvim-dap",  
-    --     name = "nvim-dap", 
-    --     version = "master" 
+    -- {
+    --     src = "https://github.com/mfussenegger/nvim-dap",
+    --     name = "nvim-dap",
+    --     version = "master"
     -- },
 })
 -- } packages
@@ -265,14 +265,14 @@ local ok_fzf, fzf = pcall(require, "fzf-lua")
 if ok_fzf then
     local actions = require("fzf-lua.actions")
     fzf.setup({
-      actions = {
-        files = {
-          true,
-          ["alt-q"] = actions.file_sel_to_qf,
-          ["alt-Q"] = actions.file_sel_to_ll,
-          ["ctrl-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all" },
+        actions = {
+            files = {
+                true,
+                ["alt-q"] = actions.file_sel_to_qf,
+                ["alt-Q"] = actions.file_sel_to_ll,
+                ["ctrl-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all" },
+            },
         },
-      },
         winopts = {
             split = "belowright new",
         }
@@ -302,51 +302,51 @@ end
 
 
 local setup_treesitter = function()
-	local treesitter = require("nvim-treesitter")
-	treesitter.setup({})
-	local ensure_installed = {
-		"vim",
-		"vimdoc",
-		"rust",
-		"c",
-		"cpp",
-		"go",
-		"html",
-		"css",
-		"javascript",
-		"json",
-		"lua",
-		"markdown",
-		"typescript",
-		"bash",
-		"lua",
-		"python",
-	}
+    local treesitter = require("nvim-treesitter")
+    treesitter.setup({})
+    local ensure_installed = {
+        "vim",
+        "vimdoc",
+        "rust",
+        "c",
+        "cpp",
+        "go",
+        "html",
+        "css",
+        "javascript",
+        "json",
+        "lua",
+        "markdown",
+        "typescript",
+        "bash",
+        "lua",
+        "python",
+    }
 
-	local config = require("nvim-treesitter.config")
+    local config = require("nvim-treesitter.config")
 
-	local already_installed = config.get_installed()
-	local parsers_to_install = {}
+    local already_installed = config.get_installed()
+    local parsers_to_install = {}
 
-	for _, parser in ipairs(ensure_installed) do
-		if not vim.tbl_contains(already_installed, parser) then
-			table.insert(parsers_to_install, parser)
-		end
-	end
+    for _, parser in ipairs(ensure_installed) do
+        if not vim.tbl_contains(already_installed, parser) then
+            table.insert(parsers_to_install, parser)
+        end
+    end
 
-	if #parsers_to_install > 0 then
-		treesitter.install(parsers_to_install)
-	end
+    if #parsers_to_install > 0 then
+        treesitter.install(parsers_to_install)
+    end
 
-	local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
-	vim.api.nvim_create_autocmd("FileType", {
-		group = group,
-		callback = function(args)
-			if vim.list_contains(treesitter.get_installed(), vim.treesitter.language.get_lang(args.match)) then
-				vim.treesitter.start(args.buf)
-			end
-		end,
-	})
+    local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
+    vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        callback = function(args)
+            if vim.list_contains(treesitter.get_installed(), vim.treesitter.language.get_lang(args.match)) then
+                vim.treesitter.start(args.buf)
+            end
+        end,
+    })
 end
 
 setup_treesitter()
