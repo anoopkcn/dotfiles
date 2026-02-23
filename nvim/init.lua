@@ -29,7 +29,6 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
--- vim.cmd("colorscheme onehalfdark")
 vim.cmd("colorscheme habamax")
 
 -- local text = "#dcdfe4"
@@ -49,21 +48,8 @@ vim.api.nvim_set_hl(0, "StatusLineNC", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = cmdline_bg })
 -- vim.api.nvim_set_hl(0, "NetrwMarkFile", { fg = text, bg = visual_bg, bold = true })
 
--- set winbar bg and fg
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = none })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = text_faint, bg = none })
-
--- local function set_transparent()
--- 	local groups = {
---         "WinBar",
---         "StatusLine",
--- 	}
--- 	for _, g in ipairs(groups) do
--- 		vim.api.nvim_set_hl(0, g, { bg = "none" })
--- 	end
--- end
---
--- set_transparent()
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
@@ -277,7 +263,16 @@ vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
 -- fzf-lua {
 local ok_fzf, fzf = pcall(require, "fzf-lua")
 if ok_fzf then
+    local actions = require("fzf-lua.actions")
     fzf.setup({
+      actions = {
+        files = {
+          true,
+          ["alt-q"] = actions.file_sel_to_qf,
+          ["alt-Q"] = actions.file_sel_to_ll,
+          ["ctrl-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all" },
+        },
+      },
         winopts = {
             split = "belowright new",
         }
@@ -287,6 +282,7 @@ if ok_fzf then
     vim.keymap.set("n", "<leader>fg", fzf.live_grep, { desc = "FZF grep" })
     vim.keymap.set("n", "<leader>fh", fzf.helptags, { desc = "FZF helptags" })
 end
+
 -- } fzf-lua
 
 local ok_windsurf, windsurf = pcall(require, "windsurf")
