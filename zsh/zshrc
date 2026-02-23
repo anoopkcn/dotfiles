@@ -44,7 +44,7 @@ alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
 alias imgcat="viu" # show images in terminal
-alias notes="nvim ~/Dropbox/notes/"
+alias notes="cd ~/Dropbox/notes/ && nvim ."
 
 # PLUGINS
 plugin add "zshzoo/macos"
