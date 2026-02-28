@@ -9,10 +9,11 @@ adjust-cursor-thickness=3
 window-padding-balance=true
 selection-foreground = cell-foreground
 selection-background = #1a3456
+split-divider-color = #1a3456
 
 macos-option-as-alt = true
 macos-titlebar-style = tabs
-window-save-state=always
+# window-save-state=always
 macos-titlebar-proxy-icon=hidden
 
 keybind = super+s>r=reload_config

@@ -31,25 +31,19 @@ vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.cmd("colorscheme habamax")
 
--- local text = "#dcdfe4"
--- local background = "#292c33"
+local text = "#bcbcbc"
 local text_faint = "#767676"
 local cmdline_bg = "#303030"
--- local visual_bg = "#414B5E"
--- vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
--- vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
--- vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
--- vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
--- vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
--- vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
--- vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
+vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
+vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = "NONE" })
+vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
+vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = "NONE"})
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = "NONE"})
 vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = cmdline_bg, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = cmdline_bg })
--- vim.api.nvim_set_hl(0, "NetrwMarkFile", { fg = text, bg = visual_bg, bold = true })
-
-vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = none })
-vim.api.nvim_set_hl(0, "WinBarNC", { fg = text_faint, bg = none })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = "NONE" })
+vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = "NONE" })
+vim.api.nvim_set_hl(0, "WinBarNC", { fg = text_faint, bg = "NONE" })
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
@@ -161,10 +155,32 @@ vim.pack.add({
     --     name = "nvim-dap",
     --     version = "master"
     -- },
+    -- {
+    --     src = "https://github.com/stevearc/oil.nvim",
+    --     name = "oil",
+    --     version = "master"
+    -- },
 })
 -- } packages
 
 -- require("dap-config")
+
+-- oil {
+-- local ok_oil, oil = pcall(require, "oil")
+-- if ok_oil then
+--     oil.setup({
+--         default_file_explorer = true,
+--         columns = {
+--             "permissions",
+--             "size",
+--             "mtime",
+--         },
+--         delete_to_trash = true,
+--         skip_confirm_for_simple_edits = true,
+--     })
+--     vim.keymap.set("n", "<leader>fe", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+-- end
+-- }
 
 -- csub {
 local ok, csub = pcall(require, "csub")
@@ -227,38 +243,6 @@ vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
 vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
     { noremap = true, silent = true, desc = "Git log" })
 -- } fugitive
-
--- nvim-treesitter {
--- local ok, configs = pcall(require, "nvim-treesitter.configs")
--- if ok then
---     configs.setup {
---         ensure_installed = {
---             "c", "cpp", "zig",
---             "python", "bash", "lua",
---             "vim", "vimdoc", "markdown",
---         },
---         sync_install = false,
---         auto_install = false,
---
---         modules = {},
---         ignore_install = {},
---
---         highlight = {
---             enable = true,
---             disable = function(_, buf)
---                 local max_filesize = 100 * 1024 -- 100 KB
---                 local ok_stat, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
---                 if ok_stat and stats and stats.size > max_filesize then
---                     return true
---                 end
---             end,
---             additional_vim_regex_highlighting = false,
---         },
---     }
--- end
--- } nvim-treesitter
---
-
 
 -- fzf-lua {
 local ok_fzf, fzf = pcall(require, "fzf-lua")
