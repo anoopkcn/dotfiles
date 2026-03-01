@@ -4,7 +4,6 @@
 vim.g.mapleader = " "
 vim.opt.showtabline = 0
 vim.opt.laststatus = 0
-vim.opt.winbar = "%f %m"
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -30,6 +29,8 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.cmd("colorscheme habamax")
+vim.opt.title = true
+vim.opt.titlestring = "%t%m%r"
 
 local text = "#bcbcbc"
 local text_faint = "#767676"
@@ -39,11 +40,23 @@ vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = "NONE" })
 vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = "NONE"})
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = "NONE"})
-vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = "NONE" })
 vim.api.nvim_set_hl(0, "WinBar", { fg = text, bg = "NONE" })
 vim.api.nvim_set_hl(0, "WinBarNC", { fg = text_faint, bg = "NONE" })
+
+local function set_habamax_tabline()
+    vim.api.nvim_set_hl(0, "TabLine", { fg = "#9e9e9e", bg = "#262626" })
+    vim.api.nvim_set_hl(0, "TabLineFill", { fg = "#767676", bg = "#262626" })
+    vim.api.nvim_set_hl(0, "TabLineSel", { fg = "#e4e4e4", bg = "#1a3456", bold = true })
+end
+
+set_habamax_tabline()
+vim.api.nvim_create_autocmd("ColorScheme", {
+    pattern = "habamax",
+    callback = set_habamax_tabline,
+})
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
@@ -70,9 +83,13 @@ vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
     { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
     { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
-vim.keymap.set("n", "]t", function() vim.diagnostic.jump({ count = 1 }) end,
+vim.keymap.set("n", "]x", function() vim.diagnostic.jump({ count = 1 }) end,
     { noremap = true, silent = true, desc = "Next diagnostic" })
-vim.keymap.set("n", "[t", function() vim.diagnostic.jump({ count = -1 }) end,
+vim.keymap.set("n", "[x", function() vim.diagnostic.jump({ count = -1 }) end,
+    { noremap = true, silent = true, desc = "Previous diagnostic" })
+vim.keymap.set("n", "]t","<cmd>tabnext<cr>",
+    { noremap = true, silent = true, desc = "Next diagnostic" })
+vim.keymap.set("n", "[t", "<cmd>tabprevious<cr>",
     { noremap = true, silent = true, desc = "Previous diagnostic" })
 vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'single' }) end,
     { noremap = true, silent = true, desc = "Open diagnostic float" })
@@ -201,8 +218,8 @@ end
 -- } csub
 
 -- fuzzy {
-local ok, fuzzy = pcall(require, "fuzzy")
-if ok then
+local ok_fuzzy, fuzzy = pcall(require, "fuzzy")
+if ok_fuzzy then
     fuzzy.setup()
 
     -- vim.keymap.set('n', ']q', '<CMD>FuzzyNext<CR>')
@@ -226,8 +243,8 @@ end
 -- } fuzzy
 
 -- filemarks {
-local ok, filemarks = pcall(require, "filemarks")
-if ok then
+local ok_filemarks, filemarks = pcall(require, "filemarks")
+if ok_filemarks then
     filemarks.setup({
         dir_open_cmd = "Explore"
         -- dir_open_cmd = "Oil %s"
@@ -259,6 +276,13 @@ if ok_fzf then
         },
         winopts = {
             split = "belowright new",
+            on_create = function(e)
+                vim.schedule(function()
+                    if e and e.winid and vim.api.nvim_win_is_valid(e.winid) then
+                        vim.wo[e.winid].statusline = " "
+                    end
+                end)
+            end,
         }
     })
     vim.api.nvim_set_hl(0, "FzfLuaPreviewBorder", { link = "WinSeparator" })
