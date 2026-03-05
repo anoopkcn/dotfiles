@@ -1,3 +1,4 @@
+-- Neovim Configuration (init.lua)
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
 
@@ -38,8 +39,8 @@ local cmdline_bg = "#303030"
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = "NONE" })
 vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = "NONE"})
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = "NONE"})
+vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = "NONE" })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = "NONE" })
 vim.api.nvim_set_hl(0, "StatusLine", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = "NONE" })
@@ -57,6 +58,14 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     pattern = "habamax",
     callback = set_habamax_tabline,
 })
+
+-- make background transparent
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
+vim.api.nvim_set_hl(0, "FoldColumn", { bg = "none" })
 
 -- keymaps {
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
@@ -87,7 +96,7 @@ vim.keymap.set("n", "]x", function() vim.diagnostic.jump({ count = 1 }) end,
     { noremap = true, silent = true, desc = "Next diagnostic" })
 vim.keymap.set("n", "[x", function() vim.diagnostic.jump({ count = -1 }) end,
     { noremap = true, silent = true, desc = "Previous diagnostic" })
-vim.keymap.set("n", "]t","<cmd>tabnext<cr>",
+vim.keymap.set("n", "]t", "<cmd>tabnext<cr>",
     { noremap = true, silent = true, desc = "Next diagnostic" })
 vim.keymap.set("n", "[t", "<cmd>tabprevious<cr>",
     { noremap = true, silent = true, desc = "Previous diagnostic" })
@@ -157,11 +166,11 @@ vim.pack.add({
         branch = "main",
         build = ":TSUpdate",
     },
-    {
-        src = "https://github.com/Exafunction/windsurf.vim",
-        name = "windsurf",
-        version = "main"
-    },
+    -- {
+    --     src = "https://github.com/Exafunction/windsurf.vim",
+    --     name = "windsurf",
+    --     version = "main"
+    -- },
     {
         src = "https://github.com/ibhagwan/fzf-lua",
         name = "fzf-lua",
@@ -293,20 +302,20 @@ end
 
 -- } fzf-lua
 
-local ok_windsurf, windsurf = pcall(require, "windsurf")
-if ok_windsurf then
-    windsurf.setup()
-    vim.g.codeium_no_map_tab = 1
-
-    vim.keymap.set("i", "<Tab>", function()
-        return vim.fn["codeium#Accept"]()
-    end, { expr = true, silent = true })
-    vim.keymap.set("i", "<M-]>", function() return vim.fn["codeium#CycleCompletions"](1) end,
-        { expr = true, silent = true })
-    vim.keymap.set("i", "<M-[>", function() return vim.fn["codeium#CycleCompletions"](-1) end,
-        { expr = true, silent = true })
-    vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true, silent = true })
-end
+-- local ok_windsurf, windsurf = pcall(require, "windsurf")
+-- if ok_windsurf then
+--     windsurf.setup()
+--     vim.g.codeium_no_map_tab = 1
+--
+--     vim.keymap.set("i", "<Tab>", function()
+--         return vim.fn["codeium#Accept"]()
+--     end, { expr = true, silent = true })
+--     vim.keymap.set("i", "<M-]>", function() return vim.fn["codeium#CycleCompletions"](1) end,
+--         { expr = true, silent = true })
+--     vim.keymap.set("i", "<M-[>", function() return vim.fn["codeium#CycleCompletions"](-1) end,
+--         { expr = true, silent = true })
+--     vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true, silent = true })
+-- end
 
 
 local setup_treesitter = function()
@@ -358,3 +367,18 @@ local setup_treesitter = function()
 end
 
 setup_treesitter()
+
+
+-- autofill {
+vim.pack.add({ { src = "/users/akc/develop/autofill.nvim", name = "autofill" } })
+local ok_autofill, autofill = pcall(require, "autofill")
+if ok_autofill then
+    autofill.setup({
+        keymaps = {
+            accept = '<Tab>',
+        },
+        backend = 'gemini',
+        log_level = 'debug'
+    })
+end
+-- } autofill
