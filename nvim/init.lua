@@ -32,6 +32,7 @@ vim.opt.switchbuf:append("useopen")
 vim.cmd("colorscheme habamax")
 vim.opt.title = true
 vim.opt.titlestring = "%t%m%r"
+vim.opt.termguicolors = true
 
 local text = "#bcbcbc"
 local text_faint = "#767676"
@@ -149,66 +150,38 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- packages {
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/fuzzy.nvim",     name = "fuzzy" },
-    { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
-    { src = "https://github.com/anoopkcn/csub.nvim",      name = "csub" },
-    { src = "https://github.com/tpope/vim-surround",      name = "vim-surround" },
+    {
+        src = "https://github.com/lewis6991/gitsigns.nvim",
+        version = "main"
+    },
+    {
+        src = "https://github.com/tpope/vim-surround",
+        name = "vim-surround"
+    },
     {
         src = "https://github.com/tpope/vim-unimpaired",
         name = "vim-unimpaired",
         version = "master"
     },
-    { src = "https://github.com/tpope/vim-fugitive",      name = "vim-fugitive" },
-    { src = "https://github.com/lewis6991/gitsigns.nvim", version = "main" },
-    {
-        src = "https://github.com/nvim-treesitter/nvim-treesitter",
-        name = "treesitter",
-        branch = "main",
-        build = ":TSUpdate",
-    },
-    -- {
-    --     src = "https://github.com/Exafunction/windsurf.vim",
-    --     name = "windsurf",
-    --     version = "main"
-    -- },
-    {
-        src = "https://github.com/ibhagwan/fzf-lua",
-        name = "fzf-lua",
-        version = "main"
-    },
-    -- {
-    --     src = "https://github.com/mfussenegger/nvim-dap",
-    --     name = "nvim-dap",
-    --     version = "master"
-    -- },
-    -- {
-    --     src = "https://github.com/stevearc/oil.nvim",
-    --     name = "oil",
-    --     version = "master"
-    -- },
 })
 -- } packages
 
+-- vim.pack.add({
+-- {
+--     src = "https://github.com/mfussenegger/nvim-dap",
+--     name = "nvim-dap",
+--     version = "master"
+-- },
+-- })
 -- require("dap-config")
 
--- oil {
--- local ok_oil, oil = pcall(require, "oil")
--- if ok_oil then
---     oil.setup({
---         default_file_explorer = true,
---         columns = {
---             "permissions",
---             "size",
---             "mtime",
---         },
---         delete_to_trash = true,
---         skip_confirm_for_simple_edits = true,
---     })
---     vim.keymap.set("n", "<leader>fe", "<CMD>Oil<CR>", { desc = "Open parent directory" })
--- end
--- }
-
 -- csub {
+vim.pack.add({
+    {
+        src = "https://github.com/anoopkcn/csub.nvim",
+        name = "csub"
+    },
+})
 local ok, csub = pcall(require, "csub")
 if ok then
     csub.setup({
@@ -227,6 +200,12 @@ end
 -- } csub
 
 -- fuzzy {
+vim.pack.add({
+    {
+        src = "https://github.com/anoopkcn/fuzzy.nvim",
+        name = "fuzzy"
+    },
+})
 local ok_fuzzy, fuzzy = pcall(require, "fuzzy")
 if ok_fuzzy then
     fuzzy.setup()
@@ -252,6 +231,12 @@ end
 -- } fuzzy
 
 -- filemarks {
+vim.pack.add({
+    {
+        src = "https://github.com/anoopkcn/filemarks.nvim",
+        name = "filemarks"
+    },
+})
 local ok_filemarks, filemarks = pcall(require, "filemarks")
 if ok_filemarks then
     filemarks.setup({
@@ -264,6 +249,12 @@ end
 -- } filemarks
 
 -- fugitive {
+vim.pack.add({
+    {
+        src = "https://github.com/tpope/vim-fugitive",
+        name = "vim-fugitive"
+    },
+})
 vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
     { noremap = true, silent = true, desc = "Open Git interface" })
 vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
@@ -271,6 +262,13 @@ vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
 -- } fugitive
 
 -- fzf-lua {
+vim.pack.add({
+    {
+        src = "https://github.com/ibhagwan/fzf-lua",
+        name = "fzf-lua",
+        version = "main"
+    },
+})
 local ok_fzf, fzf = pcall(require, "fzf-lua")
 if ok_fzf then
     local actions = require("fzf-lua.actions")
@@ -302,22 +300,16 @@ end
 
 -- } fzf-lua
 
--- local ok_windsurf, windsurf = pcall(require, "windsurf")
--- if ok_windsurf then
---     windsurf.setup()
---     vim.g.codeium_no_map_tab = 1
---
---     vim.keymap.set("i", "<Tab>", function()
---         return vim.fn["codeium#Accept"]()
---     end, { expr = true, silent = true })
---     vim.keymap.set("i", "<M-]>", function() return vim.fn["codeium#CycleCompletions"](1) end,
---         { expr = true, silent = true })
---     vim.keymap.set("i", "<M-[>", function() return vim.fn["codeium#CycleCompletions"](-1) end,
---         { expr = true, silent = true })
---     vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true, silent = true })
--- end
 
-
+-- treesitter {
+vim.pack.add({
+    {
+        src = "https://github.com/nvim-treesitter/nvim-treesitter",
+        name = "treesitter",
+        branch = "main",
+        build = ":TSUpdate",
+    },
+})
 local setup_treesitter = function()
     local treesitter = require("nvim-treesitter")
     treesitter.setup({})
@@ -367,7 +359,7 @@ local setup_treesitter = function()
 end
 
 setup_treesitter()
-
+-- } treesitter
 
 -- autofill {
 vim.pack.add({ { src = "/users/akc/develop/autofill.nvim", name = "autofill" } })

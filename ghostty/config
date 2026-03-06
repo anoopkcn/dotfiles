@@ -3,7 +3,7 @@
 theme = habamax
 font-family = Berkeley Mono Variable
 window-title-font-family = Berkeley Mono Variable
-background-opacity = 0.99
+background-opacity = 0.98
 background-blur = true
 
 font-thicken = true
