@@ -17,3 +17,6 @@ Set the `PATH_TO_DOTFILES` to the path inside the `setup.sh` file
 ```sh
 sh setup.sh
 ```
+
+## Licenses
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

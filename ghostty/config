@@ -1,4 +1,5 @@
 # Ghostty Terminal Configuration
+# Ref: https://ghostty.org/docs/config/reference
 
 theme = habamax
 font-family = Berkeley Mono Variable
