@@ -1,3 +1,7 @@
+-- Plugins for neovim
+-- LICENSE: MIT
+-- AUTHOR:  @anoopkcn
+
 -- packages {
 vim.pack.add({
     {
@@ -216,8 +220,11 @@ vim.pack.add({ { src = "/users/akc/develop/autofill.nvim", name = "autofill" } }
 local ok_autofill, autofill = pcall(require, "autofill")
 if ok_autofill then
     autofill.setup({
+        lsp = { enabled = false },
+        treesitter = { enabled = false },
         keymaps = {
             accept = '<Tab>',
+            accept_word = "<C-l>",
         },
         backend = 'gemini',
         -- log_level = 'debug'
