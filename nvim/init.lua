@@ -6,8 +6,6 @@ vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
@@ -29,7 +27,6 @@ vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.title = true
 vim.opt.titlestring = "%t%m%r"
-vim.opt.termguicolors = true
 
 vim.cmd([[colorscheme habamax]])
 local text = "#bcbcbc"
@@ -42,7 +39,7 @@ vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = "NONE" })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = "NONE" })
 vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = text_faint, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = "NONE" })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
@@ -146,7 +143,6 @@ vim.pack.add({
         name = "copilot"
     },
 })
--- } packages
 
 -- csub {
 vim.pack.add({
@@ -182,14 +178,13 @@ vim.pack.add({
 local ok_fuzzy, fuzzy = pcall(require, "fuzzy")
 if ok_fuzzy then
     fuzzy.setup()
-
-    -- vim.keymap.set('n', ']q', '<CMD>FuzzyNext<CR>')
-    -- vim.keymap.set('n', '[q', '<CMD>FuzzyPrev<CR>')
+    vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false, desc = "Fuzzy grep" })
+    vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false, desc = "Fuzzy grep files" })
+    vim.keymap.set("n", "<leader>,", "<CMD>FuzzyBuffers .<CR>", { silent = false, desc = "Fuzzy grep Buffers" })
+    vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false, desc = "Fuzzy grep files" })
+    vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false, desc = "Fuzzy live grep" })
+    vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false, desc = "Fuzzy buffer list" })
     vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false, desc = "Fuzzy list" })
-    vim.keymap.set("n", "<leader>/", ":Grep ", { silent = false, desc = "Fuzzy grep" })
-    vim.keymap.set("n", "<leader>?", ":Files! --type f ", { silent = false, desc = "Fuzzy grep files" })
-    vim.keymap.set("n", "<leader>ff", ":Files ", { silent = false, desc = "Fuzzy grep files" })
-    vim.keymap.set("n", "<leader>fb", ":Buffers! ", { silent = false, desc = "Fuzzy buffer list" })
 
     vim.keymap.set('n', '<leader>fw', function()
         local word = vim.fn.expand('<cword>')
@@ -243,13 +238,15 @@ vim.pack.add({
     },
 })
 
-vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
-  local name, kind = ev.data.spec.name, ev.data.kind
-  if name == 'nvim-treesitter' and kind == 'update' then
-    if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
-    vim.cmd('TSUpdate')
-  end
-end })
+vim.api.nvim_create_autocmd('PackChanged', {
+    callback = function(ev)
+        local name, kind = ev.data.spec.name, ev.data.kind
+        if name == 'nvim-treesitter' and kind == 'update' then
+            if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+            vim.cmd('TSUpdate')
+        end
+    end
+})
 
 local setup_treesitter = function()
     local treesitter = require("nvim-treesitter")
