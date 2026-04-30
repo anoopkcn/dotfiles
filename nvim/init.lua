@@ -28,7 +28,7 @@ vim.opt.switchbuf:append("useopen")
 vim.opt.title = true
 vim.opt.titlestring = "%t%m%r"
 
-vim.cmd([[colorscheme habamax]])
+vim.cmd("colorscheme habamax")
 local text = "#bcbcbc"
 local text_faint = "#767676"
 local cmdline_bg = "#303030"
@@ -46,7 +46,7 @@ vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
 vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
 vim.api.nvim_set_hl(0, "FoldColumn", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = text_faint, bg = "none" })
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
     { noremap = true, silent = true, desc = "Disable Space" })
@@ -180,7 +180,8 @@ if ok_fuzzy then
     fuzzy.setup()
     vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false, desc = "Fuzzy grep" })
     vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false, desc = "Fuzzy grep files" })
-    vim.keymap.set("n", "<leader>,", "<CMD>FuzzyBuffers .<CR>", { silent = false, desc = "Fuzzy grep Buffers" })
+    vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { silent = false, desc = "Fuzzy grep Buffers" })
+    vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>", { silent = false, desc = "Fuzzy search neovim helptags" })
     vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false, desc = "Fuzzy grep files" })
     vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false, desc = "Fuzzy live grep" })
     vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false, desc = "Fuzzy buffer list" })
