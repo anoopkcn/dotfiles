@@ -100,6 +100,9 @@ call s:h("SpellRare", s:yellow, "", "")
 
 call s:h("StatusLine", s:blue, s:cursor_line, "")
 call s:h("StatusLineNC", s:comment_fg, s:cursor_line, "")
+
+call s:h("WinBar", s:fg, "", "bold")
+call s:h("WinBarNC", s:comment_fg, "", "")
 call s:h("TabLine", s:comment_fg, s:cursor_line, "")
 call s:h("TabLineFill", s:comment_fg, s:cursor_line, "")
 call s:h("TabLineSel", s:fg, s:bg, "")
@@ -127,7 +130,7 @@ call s:h("WildMenu", s:fg, "", "")
 " See :help hl-Whitespace and :help hl-SpecialKey
 call s:h("Whitespace", s:non_text, "", "")
 call s:h("NonText", s:non_text, "", "")
-call s:h("Comment", s:comment_fg, "", "italic")
+call s:h("Comment", s:comment_fg, "", "")
 call s:h("Constant", s:cyan, "", "")
 call s:h("String", s:green, "", "")
 call s:h("Character", s:green, "", "")
