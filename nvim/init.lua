@@ -38,8 +38,8 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 
-vim.opt.title = true
-vim.opt.titlestring = "%t%m%r"
+-- vim.opt.title = true
+-- vim.opt.titlestring = "%t%m%r"
 vim.opt.winbar = "%t%m%r "
     .. "%{get(b:,'gitsigns_head','') != ''"
     .. " ? '('.b:gitsigns_head.') '.get(b:,'gitsigns_status','')"
