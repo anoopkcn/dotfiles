@@ -5,7 +5,7 @@
 require("vim._core.ui2").enable({})
 vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
-vim.opt.laststatus = 3
+vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.incsearch = true
@@ -18,7 +18,7 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.wrap = true
 vim.opt.showbreak = "⤷ "
-vim.opt.showmode = false
+vim.opt.showmode = true
 vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.swapfile = false
@@ -132,57 +132,6 @@ vim.pack.add({
         name = "copilot"
     },
 })
-
--- lualine {
-vim.pack.add({
-    {
-        src = "https://github.com/nvim-lualine/lualine.nvim",
-        name = "lualine"
-    },
-})
-local ok_lualine, lualine = pcall(require, "lualine")
-if ok_lualine then
-    local sl_bg = "#363942"
-    local onehalf_static = {
-        normal = {
-            a = { fg = "#919baa", bg = sl_bg },
-            b = { fg = "#dcdfe4", bg = sl_bg },
-            c = { fg = "#dcdfe4", bg = sl_bg },
-            x = { fg = "#919baa", bg = sl_bg },
-            y = { fg = "#919baa", bg = sl_bg },
-            z = { fg = "#919baa", bg = sl_bg },
-        },
-        inactive = {
-            a = { fg = "#5c6370", bg = sl_bg },
-            b = { fg = "#5c6370", bg = sl_bg },
-            c = { fg = "#5c6370", bg = sl_bg },
-        },
-    }
-    onehalf_static.insert  = onehalf_static.normal
-    onehalf_static.visual  = onehalf_static.normal
-    onehalf_static.replace = onehalf_static.normal
-    onehalf_static.command = onehalf_static.normal
-    onehalf_static.terminal = onehalf_static.normal
-
-    lualine.setup({
-        options = {
-            theme = onehalf_static,
-            globalstatus = true,
-            section_separators = "",
-            component_separators = "",
-            icons_enabled = false,
-        },
-        sections = {
-            lualine_a = { "mode" },
-            lualine_b = { "branch", "diff", "diagnostics" },
-            lualine_c = { { "filename", path = 1 } },
-            lualine_x = { "filetype" },
-            lualine_y = { "progress" },
-            lualine_z = { "location" },
-        },
-    })
-end
--- } lualine
 
 -- csub {
 vim.pack.add({
