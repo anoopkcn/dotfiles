@@ -10,7 +10,6 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
-vim.opt.cursorline = true
 vim.opt.signcolumn = "yes"
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
@@ -103,6 +102,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
     callback = function(args)
         local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client then client.server_capabilities.semanticTokensProvider = nil end
         local map_opts = { buffer = bufnr, noremap = true, silent = true }
         vim.keymap.set("n", "K", function()
             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
@@ -141,9 +142,31 @@ vim.pack.add({
 })
 local ok_lualine, lualine = pcall(require, "lualine")
 if ok_lualine then
+    local sl_bg = "#363942"
+    local onehalf_static = {
+        normal = {
+            a = { fg = "#919baa", bg = sl_bg },
+            b = { fg = "#dcdfe4", bg = sl_bg },
+            c = { fg = "#dcdfe4", bg = sl_bg },
+            x = { fg = "#919baa", bg = sl_bg },
+            y = { fg = "#919baa", bg = sl_bg },
+            z = { fg = "#919baa", bg = sl_bg },
+        },
+        inactive = {
+            a = { fg = "#5c6370", bg = sl_bg },
+            b = { fg = "#5c6370", bg = sl_bg },
+            c = { fg = "#5c6370", bg = sl_bg },
+        },
+    }
+    onehalf_static.insert  = onehalf_static.normal
+    onehalf_static.visual  = onehalf_static.normal
+    onehalf_static.replace = onehalf_static.normal
+    onehalf_static.command = onehalf_static.normal
+    onehalf_static.terminal = onehalf_static.normal
+
     lualine.setup({
         options = {
-            theme = "auto",
+            theme = onehalf_static,
             globalstatus = true,
             section_separators = "",
             component_separators = "",
@@ -270,7 +293,6 @@ vim.api.nvim_create_autocmd('PackChanged', {
 
 local setup_treesitter = function()
     local treesitter = require("nvim-treesitter")
-    treesitter.setup({})
     local ensure_installed = {
         "vim",
         "vimdoc",
@@ -284,9 +306,10 @@ local setup_treesitter = function()
         "json",
         "lua",
         "markdown",
+        "markdown_inline",
         "typescript",
+        "tsx",
         "bash",
-        "lua",
         "python",
     }
 
