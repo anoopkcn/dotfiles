@@ -10,7 +10,7 @@ vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
 
 vim.opt.laststatus = 0
-vim.opt.cursorline = true
+-- vim.opt.cursorline = true
 vim.opt.number = true
 -- vim.opt.relativenumber = true
 vim.opt.incsearch = true
@@ -127,15 +127,15 @@ vim.api.nvim_create_autocmd("User", {
     callback = function() vim.cmd("redrawstatus") end,
 })
 
-local cursorline_group = vim.api.nvim_create_augroup("cursorline_active_only", { clear = true })
-vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-    group = cursorline_group,
-    callback = function() vim.wo.cursorline = true end,
-})
-vim.api.nvim_create_autocmd("WinLeave", {
-    group = cursorline_group,
-    callback = function() vim.wo.cursorline = false end,
-})
+-- local cursorline_group = vim.api.nvim_create_augroup("cursorline_active_only", { clear = true })
+-- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+--     group = cursorline_group,
+--     callback = function() vim.wo.cursorline = true end,
+-- })
+-- vim.api.nvim_create_autocmd("WinLeave", {
+--     group = cursorline_group,
+--     callback = function() vim.wo.cursorline = false end,
+-- })
 
 local winbar_group = vim.api.nvim_create_augroup("winbar", { clear = true })
 vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew", "TermOpen" }, {
@@ -292,10 +292,14 @@ vim.pack.add({
         name = "vim-fugitive"
     },
 })
-vim.keymap.set("n", "<leader>G", "<CMD>Git<CR>",
-    { noremap = true, silent = true, desc = "Open Git interface" })
-vim.keymap.set("n", "<leader>gl", "<CMD>Git log<CR>",
-    { noremap = true, silent = true, desc = "Git log" })
+
+local ok_fugitive, _ = pcall(require, "fugitive")
+if ok_fugitive then
+    vim.keymap.set("n", "<leader>G", "<CMD>Git<CR>",
+        { noremap = true, silent = true, desc = "Open Git interface" })
+    -- vim.keymap.set("n", "<leader>gl", "<CMD>Git log<CR>",
+    --     { noremap = true, silent = true, desc = "Git log" })
+end
 -- } fugitive
 
 -- jj.nvim {
@@ -305,9 +309,12 @@ vim.pack.add({
         name = "jj.nvim"
     },
 })
+
 local ok_jj, jj = pcall(require, "jj")
 if ok_jj then
     jj.setup({})
+    vim.keymap.set("n", "<leader>J", "<CMD>J<CR>",
+        { noremap = true, silent = true, desc = "Open Git interface" })
 end
 -- }
 
