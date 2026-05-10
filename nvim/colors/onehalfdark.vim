@@ -61,13 +61,13 @@ endfun
 
 
 " User interface colors {
-call s:h("Normal", s:fg, s:bg, "")
+call s:h("Normal", s:fg, "", "")
 
 call s:h("Cursor", s:bg, s:blue, "")
 call s:h("CursorColumn", "", s:cursor_line, "")
 call s:h("CursorLine", "", s:cursor_line, "")
 
-call s:h("LineNr", s:gutter_fg, s:gutter_bg, "")
+call s:h("LineNr", s:gutter_fg, "", "")
 call s:h("CursorLineNr", s:fg, "", "")
 
 call s:h("DiffAdd", s:green, "", "")
@@ -84,10 +84,14 @@ call s:h("MoreMsg", s:fg, "", "")
 call s:h("WarningMsg", s:red, "", "")
 call s:h("Question", s:purple, "", "")
 
-call s:h("Pmenu", s:bg, s:fg, "")
-call s:h("PmenuSel", s:fg, s:blue, "")
+call s:h("Pmenu", s:fg, s:cursor_line, "")
+call s:h("PmenuSel", s:bg, s:blue, "bold")
 call s:h("PmenuSbar", "", s:selection, "")
-call s:h("PmenuThumb", "", s:fg, "")
+call s:h("PmenuThumb", "", s:gutter_fg, "")
+
+call s:h("NormalFloat", s:fg, s:bg, "")
+call s:h("FloatBorder", s:gutter_fg, s:bg, "")
+call s:h("FloatTitle", s:blue, s:bg, "bold")
 
 call s:h("SpellBad", s:red, "", "")
 call s:h("SpellCap", s:yellow, "", "")
@@ -161,17 +165,17 @@ call s:h("SpecialComment", s:fg, "", "")
 call s:h("Debug", s:fg, "", "")
 call s:h("Underlined", s:fg, "", "")
 call s:h("Ignore", s:fg, "", "")
-call s:h("Error", s:red, s:gutter_bg, "")
+call s:h("Error", s:red, "", "")
 call s:h("Todo", s:purple, "", "")
 " }
 
 
 " Plugins {
 " GitGutter
-call s:h("GitGutterAdd", s:green, s:gutter_bg, "")
-call s:h("GitGutterDelete", s:red, s:gutter_bg, "")
-call s:h("GitGutterChange", s:yellow, s:gutter_bg, "")
-call s:h("GitGutterChangeDelete", s:red, s:gutter_bg, "")
+call s:h("GitGutterAdd", s:green, "", "")
+call s:h("GitGutterDelete", s:red, "", "")
+call s:h("GitGutterChange", s:yellow, "", "")
+call s:h("GitGutterChangeDelete", s:red, "", "")
 " Fugitive
 call s:h("diffAdded", s:green, "", "")
 call s:h("diffRemoved", s:red, "", "")
@@ -222,3 +226,16 @@ hi link gitcommitUnmergedArrow gitcommitUnmergedFile
     let g:terminal_color_foreground = s:fg.gui
   endif
 " }
+
+" mitchellh's personal customizations {
+  if has('nvim')
+    " The separator between splits
+    call s:h("WinSeparator", s:comment_fg, "", "")
+
+    " nvim-treesitter-context
+    call s:h("TreesitterContext", s:gutter_fg, "", "")
+    call s:h("TreesitterContextBottom", "", "", "underline")
+    call s:h("TreesitterContextLineNumber", s:fg, "", "")
+    call s:h("TreesitterContextLineNumberBottom", "", "", "underline")
+  endif
+  " }

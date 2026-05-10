@@ -44,7 +44,7 @@ alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
 alias imgcat="viu" # show images in terminal
-alias notes="cd ~/Dropbox/notes/ && nvim ."
+alias notes="cd ~/Dropbox/notes"
 
 # PLUGINS
 plugin add "zshzoo/macos"
@@ -71,3 +71,15 @@ fi
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^Xe' edit-command-line
+
+# bun completions
+[ -s "/Users/akc/.bun/_bun" ] && source "/Users/akc/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/akc/.lmstudio/bin"
+# End of LM Studio CLI section
+

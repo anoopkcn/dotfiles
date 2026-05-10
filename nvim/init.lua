@@ -1,9 +1,11 @@
 -- Neovim Configuration (init.lua)
 -- LICENSE: MIT
 -- AUTHOR:  @anoopkcn
+
 require("vim._core.ui2").enable({})
 vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
+vim.opt.laststatus = 3
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.incsearch = true
@@ -28,25 +30,7 @@ vim.opt.switchbuf:append("useopen")
 vim.opt.title = true
 vim.opt.titlestring = "%t%m%r"
 
-vim.cmd("colorscheme habamax")
-local text = "#bcbcbc"
-local text_faint = "#767676"
-local cmdline_bg = "#303030"
-vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
-vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = "NONE" })
-vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = "NONE" })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = "NONE" })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg = text_faint, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg, bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-vim.api.nvim_set_hl(0, "FoldColumn", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = text_faint, bg = "none" })
+vim.cmd.colorscheme("onehalfdark")
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
     { noremap = true, silent = true, desc = "Disable Space" })
@@ -80,7 +64,7 @@ vim.keymap.set("n", "]t", "<cmd>tabnext<cr>",
     { noremap = true, silent = true, desc = "Next diagnostic" })
 vim.keymap.set("n", "[t", "<cmd>tabprevious<cr>",
     { noremap = true, silent = true, desc = "Previous diagnostic" })
-vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'single' }) end,
+vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'rounded' }) end,
     { noremap = true, silent = true, desc = "Open diagnostic float" })
 vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { noremap = true, silent = true, desc = "Format buffer" })
@@ -110,7 +94,10 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
-vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", })
+vim.pack.add {
+    { src = 'https://github.com/neovim/nvim-lspconfig' },
+}
+vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", "ts_ls" })
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
     callback = function(args)
@@ -186,6 +173,8 @@ if ok_fuzzy then
     vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false, desc = "Fuzzy live grep" })
     vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false, desc = "Fuzzy buffer list" })
     vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false, desc = "Fuzzy list" })
+    vim.keymap.set('n', '<leader>gb', '<CMD>FuzzyGitBranches<CR>', { desc = "Git branches" })
+    vim.keymap.set('n', '<leader>gw', '<CMD>FuzzyGitWorktrees<CR>', { desc = "Git worktrees" })
 
     vim.keymap.set('n', '<leader>fw', function()
         local word = vim.fn.expand('<cword>')
@@ -224,9 +213,9 @@ vim.pack.add({
         name = "vim-fugitive"
     },
 })
-vim.keymap.set("n", "<leader>G", "<CMD>rightbelow vertical Git<CR>",
+vim.keymap.set("n", "<leader>G", "<CMD>Git<CR>",
     { noremap = true, silent = true, desc = "Open Git interface" })
-vim.keymap.set("n", "<leader>gl", "<CMD>rightbelow vertical Git log<CR>",
+vim.keymap.set("n", "<leader>gl", "<CMD>Git log<CR>",
     { noremap = true, silent = true, desc = "Git log" })
 -- } fugitive
 
@@ -308,3 +297,5 @@ setup_treesitter()
 -- },
 -- })
 -- require("dap-config")
+
+-- vim.opt.statusline = "%<%f%h%m %{FugitiveStatusline()}%r%=%-14.(%l,%c%V%) %P"

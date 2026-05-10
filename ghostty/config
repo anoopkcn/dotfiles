@@ -1,26 +1,26 @@
 # Ghostty Terminal Configuration
 # Ref: https://ghostty.org/docs/config/reference
 
-theme = habamax
 font-family = Berkeley Mono Variable
+# font-family = JetBrains Mono
 window-title-font-family = Berkeley Mono Variable
-background-opacity = 0.98
+background-opacity = 0.95
+background-blur-radius = 20
 background-blur = true
-
-font-thicken = true
-font-size = 14
-font-feature = -calt
-adjust-cell-height=32%
-adjust-cursor-thickness=3
-window-padding-balance=true
-selection-foreground = cell-foreground
-selection-background = #1a3456
-split-divider-color = #1a3456
-
+macos-non-native-fullscreen = visible-menu
+macos-option-as-alt = left
+mouse-hide-while-typing = true
 macos-option-as-alt = true
 macos-titlebar-style = tabs
-# window-save-state=always
+window-save-state=always
 macos-titlebar-proxy-icon=hidden
+
+font-size = 12
+# font-thicken = true
+font-feature = -calt
+adjust-cell-height=10%
+adjust-cursor-thickness=3
+window-padding-balance=true
 
 keybind = super+s>r=reload_config
 keybind = super+s>x=close_surface
