@@ -1,6 +1,6 @@
 -- Neovim Configuration (init.lua)
 -- LICENSE: MIT
--- AUTHOR:  @anoopkcn
+-- AUTHOR: @anoopkcn
 
 -- OPTIONS
 
@@ -38,12 +38,6 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 
--- vim.opt.title = true
--- vim.opt.titlestring = "%t%m%r"
-vim.opt.winbar = "%t%m%r "
-    .. "%{get(b:,'gitsigns_head','') != ''"
-    .. " ? '('.b:gitsigns_head.') '.get(b:,'gitsigns_status','')"
-    .. " : ''}"
 vim.opt.ruler = true
 
 vim.cmd.colorscheme("onehalfdark")
@@ -141,6 +135,24 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
 vim.api.nvim_create_autocmd("WinLeave", {
     group = cursorline_group,
     callback = function() vim.wo.cursorline = false end,
+})
+
+local winbar_group = vim.api.nvim_create_augroup("winbar", { clear = true })
+vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew", "TermOpen" }, {
+    group = winbar_group,
+    callback = function()
+        vim.schedule(function()
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.api.nvim_win_is_valid(win) then
+                    local buf = vim.api.nvim_win_get_buf(win)
+                    local is_float = vim.api.nvim_win_get_config(win).relative ~= ""
+                    if vim.bo[buf].buftype == "" and not is_float then
+                        vim.wo[win].winbar = "%t%m%r"
+                    end
+                end
+            end
+        end)
+    end,
 })
 
 
@@ -285,6 +297,19 @@ vim.keymap.set("n", "<leader>G", "<CMD>Git<CR>",
 vim.keymap.set("n", "<leader>gl", "<CMD>Git log<CR>",
     { noremap = true, silent = true, desc = "Git log" })
 -- } fugitive
+
+-- jj.nvim {
+vim.pack.add({
+    {
+        src = "https://github.com/NicolasGB/jj.nvim",
+        name = "jj.nvim"
+    },
+})
+local ok_jj, jj = pcall(require, "jj")
+if ok_jj then
+    jj.setup({})
+end
+-- }
 
 -- treesitter {
 vim.pack.add({
