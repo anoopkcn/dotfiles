@@ -29,7 +29,8 @@ vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.title = true
 vim.opt.titlestring = "%t%m%r"
-
+vim.opt.winbar = "%t%m%r %{get(b:,'gitsigns_head','') != '' ? '('.b:gitsigns_head.') '.get(b:,'gitsigns_status','') : ''}"
+vim.opt.ruler = true
 vim.cmd.colorscheme("onehalfdark")
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
@@ -92,6 +93,11 @@ vim.keymap.set("n", "<leader>'", TimestampInsert,
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+    pattern = "GitSignsUpdate",
+    callback = function() vim.cmd("redrawstatus") end,
 })
 
 vim.pack.add {
