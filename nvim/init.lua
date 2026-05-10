@@ -18,7 +18,7 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.wrap = true
 vim.opt.showbreak = "⤷ "
-vim.opt.showmode = true
+vim.opt.showmode = false
 vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.swapfile = false
@@ -130,6 +130,35 @@ vim.pack.add({
         name = "copilot"
     },
 })
+
+-- lualine {
+vim.pack.add({
+    {
+        src = "https://github.com/nvim-lualine/lualine.nvim",
+        name = "lualine"
+    },
+})
+local ok_lualine, lualine = pcall(require, "lualine")
+if ok_lualine then
+    lualine.setup({
+        options = {
+            theme = "auto",
+            globalstatus = true,
+            section_separators = "",
+            component_separators = "",
+            icons_enabled = false,
+        },
+        sections = {
+            lualine_a = { "mode" },
+            lualine_b = { "branch", "diff", "diagnostics" },
+            lualine_c = { { "filename", path = 1 } },
+            lualine_x = { "filetype" },
+            lualine_y = { "progress" },
+            lualine_z = { "location" },
+        },
+    })
+end
+-- } lualine
 
 -- csub {
 vim.pack.add({
@@ -298,4 +327,3 @@ setup_treesitter()
 -- })
 -- require("dap-config")
 
--- vim.opt.statusline = "%<%f%h%m %{FugitiveStatusline()}%r%=%-14.(%l,%c%V%) %P"
