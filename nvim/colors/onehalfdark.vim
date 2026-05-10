@@ -7,6 +7,9 @@
 "   A dark vim color scheme based on Atom's One. See github.com/sonph/onehalf
 "   for installation instructions, a light color scheme, versions for other
 "   editors/terminals, and a matching theme for vim-airline.
+"
+"   This is a modified version of the original onehalfdark.vim by @sonph, with
+"   some personal customizations by @anoopkcn
 " ==============================================================================
 
 set background=dark
