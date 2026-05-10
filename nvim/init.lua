@@ -6,8 +6,9 @@ require("vim._core.ui2").enable({})
 vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
 vim.opt.laststatus = 0
+vim.opt.cursorline = true
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
@@ -98,6 +99,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.api.nvim_create_autocmd("User", {
     pattern = "GitSignsUpdate",
     callback = function() vim.cmd("redrawstatus") end,
+})
+
+local cursorline_group = vim.api.nvim_create_augroup("cursorline_active_only", { clear = true })
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    group = cursorline_group,
+    callback = function() vim.wo.cursorline = true end,
+})
+vim.api.nvim_create_autocmd("WinLeave", {
+    group = cursorline_group,
+    callback = function() vim.wo.cursorline = false end,
 })
 
 vim.pack.add {
