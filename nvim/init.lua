@@ -122,20 +122,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
-vim.api.nvim_create_autocmd("User", {
-    pattern = "GitSignsUpdate",
-    callback = function() vim.cmd("redrawstatus") end,
-})
-
--- local cursorline_group = vim.api.nvim_create_augroup("cursorline_active_only", { clear = true })
--- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
---     group = cursorline_group,
---     callback = function() vim.wo.cursorline = true end,
--- })
--- vim.api.nvim_create_autocmd("WinLeave", {
---     group = cursorline_group,
---     callback = function() vim.wo.cursorline = false end,
--- })
 
 local winbar_group = vim.api.nvim_create_augroup("winbar", { clear = true })
 vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew", "TermOpen" }, {
@@ -181,10 +167,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- PLUGINS
 
 vim.pack.add({
-    {
-        src = "https://github.com/lewis6991/gitsigns.nvim",
-        version = "main"
-    },
     {
         src = "https://github.com/tpope/vim-surround",
         name = "vim-surround"
@@ -340,23 +322,12 @@ vim.api.nvim_create_autocmd('PackChanged', {
 local setup_treesitter = function()
     local treesitter = require("nvim-treesitter")
     local ensure_installed = {
-        "vim",
-        "vimdoc",
-        "rust",
-        "c",
-        "cpp",
-        "go",
-        "html",
-        "css",
-        "javascript",
-        "json",
-        "lua",
-        "markdown",
-        "markdown_inline",
-        "typescript",
-        "tsx",
-        "bash",
-        "python",
+        "vim", "vimdoc",
+        "rust", "c", "cpp", "go",
+        "html", "css", "javascript", "json",
+        "markdown", "markdown_inline",
+        "typescript", "tsx",
+        "bash", "python", "lua",
     }
 
     local config = require("nvim-treesitter.config")
