@@ -264,21 +264,6 @@ if ok_filemarks then
 end
 -- } filemarks
 
--- fugitive {
-vim.pack.add({
-    {
-        src = "https://github.com/tpope/vim-fugitive",
-        name = "vim-fugitive"
-    },
-})
-
-local ok_fugitive, _ = pcall(require, "fugitive")
-if ok_fugitive then
-    vim.keymap.set("n", "<leader>G", "<CMD>Git<CR>",
-        { noremap = true, silent = true, desc = "Open Git interface" })
-end
--- } fugitive
-
 -- jj.nvim {
 vim.pack.add({
     {
