@@ -339,12 +339,3 @@ end
 
 setup_treesitter()
 -- } treesitter
-
--- vim.pack.add({
--- {
---     src = "https://github.com/mfussenegger/nvim-dap",
---     name = "nvim-dap",
---     version = "master"
--- },
--- })
--- require("dap-config")
