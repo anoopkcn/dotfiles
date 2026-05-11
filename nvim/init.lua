@@ -11,7 +11,6 @@ vim.g.netrw_liststyle = 1
 
 vim.opt.laststatus = 0
 vim.opt.number = true
--- vim.opt.relativenumber = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
