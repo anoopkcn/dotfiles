@@ -10,7 +10,6 @@ vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
 
 vim.opt.laststatus = 0
--- vim.opt.cursorline = true
 vim.opt.number = true
 -- vim.opt.relativenumber = true
 vim.opt.incsearch = true
@@ -260,7 +259,6 @@ local ok_filemarks, filemarks = pcall(require, "filemarks")
 if ok_filemarks then
     filemarks.setup({
         dir_open_cmd = "Explore"
-        -- dir_open_cmd = "Oil %s"
     })
     vim.keymap.set("n", "<leader>l", "<cmd>bot FilemarksList<cr>",
         { noremap = true, silent = true, desc = "show file marks list" })
@@ -279,8 +277,6 @@ local ok_fugitive, _ = pcall(require, "fugitive")
 if ok_fugitive then
     vim.keymap.set("n", "<leader>G", "<CMD>Git<CR>",
         { noremap = true, silent = true, desc = "Open Git interface" })
-    -- vim.keymap.set("n", "<leader>gl", "<CMD>Git log<CR>",
-    --     { noremap = true, silent = true, desc = "Git log" })
 end
 -- } fugitive
 
