@@ -38,6 +38,7 @@ vim.opt.switchbuf:append("useopen")
 
 vim.opt.ruler = true
 
+-- ./nvim/colors/onehalfdark.vim 
 vim.cmd.colorscheme("onehalfdark")
 
 
