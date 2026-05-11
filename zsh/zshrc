@@ -49,8 +49,6 @@ alias notes="cd ~/Dropbox/notes"
 # PLUGINS
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
-# plugin add "zsh-users/zsh-autosuggestions"
-# plugin add "zsh-users/zsh-completions"
 plugin add "anoopkcn/zig-shell-completions"
 
 # plugin settings
@@ -79,7 +77,5 @@ bindkey '^Xe' edit-command-line
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/akc/.lmstudio/bin"
-# End of LM Studio CLI section
-
+source <(fzf --zsh)
+eval "$(zoxide init zsh)"

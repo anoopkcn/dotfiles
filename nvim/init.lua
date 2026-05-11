@@ -39,80 +39,61 @@ vim.opt.switchbuf:append("useopen")
 
 vim.opt.ruler = true
 
--- ./nvim/colors/onehalfdark.vim 
+-- ./nvim/colors/onehalfdark.vim
 vim.cmd.colorscheme("onehalfdark")
 
 
 -- KEYMAPS
 
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>",
-    { noremap = true, silent = true, desc = "Disable Space" })
-vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>",
-    { noremap = true, silent = true, desc = "Disable Ctrl-Space" })
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>",
-    { noremap = true, silent = true, desc = "Clear search highlight" })
+vim.keymap.set("n", "<Esc>", "<CMD>nohlsearch<CR>", { noremap = true, silent = true })
 
-vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]],
-    { noremap = true, silent = true, desc = "Paste from system clipboard" })
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]],
-    { noremap = true, silent = true, desc = "Yank to system clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]], { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>bd", vim.cmd.bd,
-    { noremap = true, silent = true, desc = "Buffer delete" })
-vim.keymap.set("n", "<leader>on", vim.cmd.only,
-    { noremap = true, silent = true, desc = "Close other buffers" })
+vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<CR>", { noremap = true, silent = true, })
+vim.keymap.set("n", "<leader>-", ":rightbelow split<CR>", { noremap = true, silent = true, })
 
-vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<CR>",
-    { noremap = true, silent = true, desc = "Vertical split" })
-vim.keymap.set("n", "<leader>-", ":rightbelow split<CR>",
-    { noremap = true, silent = true, desc = "Horizontal split" })
+vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>",
-    { noremap = true, silent = true, desc = "Next item in quickfixlist" })
-vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>",
-    { noremap = true, silent = true, desc = "Prev item in quickfixlist" })
+vim.keymap.set("n", "<C-s>", "<CMD>mksession!<CR>", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist,
-    { noremap = true, silent = true, desc = "Open diagnostics in quickfixlist" })
-vim.keymap.set("n", "]x", function() vim.diagnostic.jump({ count = 1 }) end,
-    { noremap = true, silent = true, desc = "Next diagnostic" })
-vim.keymap.set("n", "[x", function() vim.diagnostic.jump({ count = -1 }) end,
-    { noremap = true, silent = true, desc = "Previous diagnostic" })
-vim.keymap.set("n", "]t", "<cmd>tabnext<cr>",
-    { noremap = true, silent = true, desc = "Next diagnostic" })
-vim.keymap.set("n", "[t", "<cmd>tabprevious<cr>",
-    { noremap = true, silent = true, desc = "Previous diagnostic" })
-vim.keymap.set("n", "<leader>x", function() vim.diagnostic.open_float({ border = 'rounded' }) end,
-    { noremap = true, silent = true, desc = "Open diagnostic float" })
+vim.keymap.set("n", "<leader>fe", "<CMD>Ex<CR>", { noremap = true, silent = true })
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
-    { noremap = true, silent = true, desc = "Format buffer" })
+vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>bd", vim.cmd.bd, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>on", vim.cmd.only, { noremap = true, silent = true })
 
-vim.keymap.set("n", "<C-s>", "<cmd>mksession!<cr>",
-    { noremap = true, silent = true, desc = "Save session" })
+vim.keymap.set("n", "]x", function()
+    vim.diagnostic.jump({ count = 1 })
+end, { noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>fe", "<cmd>Ex<cr>",
-    { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>z", "<cmd>terminal<cr>",
-    { desc = "Open terminal" })
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]],
-    { noremap = true, silent = true })
+vim.keymap.set("n", "[x", function()
+    vim.diagnostic.jump({ count = -1 })
+end, { noremap = true, silent = true })
 
-ToggleQuickfixList = function()
+vim.keymap.set("n", "<leader>x", function()
+    vim.diagnostic.open_float({ border = 'rounded' })
+end, { noremap = true, silent = true, })
+
+vim.keymap.set("n", "<leader>,", function()
+    vim.lsp.buf.format({ async = true })
+end, { noremap = true, silent = true, })
+
+vim.keymap.set("n", "<leader>fq", function()
     local qf = vim.fn.getqflist({ winid = 1 }).winid
     if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
-end
-vim.keymap.set("n", "<leader>fq", ToggleQuickfixList,
-    { noremap = true, silent = true, desc = "Toggle quickfixlist" })
+end, { noremap = true, silent = true, })
 
-TimestampInsert = function()
+vim.keymap.set("n", "<leader>'", function()
     local raw_timestamp = os.date("%FT%T")
     local timestamp_str = string.format("%s", raw_timestamp or "")
     vim.api.nvim_put({ timestamp_str }, "c", true, true)
-end
-vim.keymap.set("n", "<leader>'", TimestampInsert,
-    { noremap = true, silent = true, desc = "Insert current timestamp" })
+end, { noremap = true, silent = true, })
 
 
 -- AUTOCOMMANDS
@@ -144,9 +125,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew", "TermOpen" },
 
 -- LSP
 
-vim.pack.add {
-    { src = 'https://github.com/neovim/nvim-lspconfig' },
-}
+vim.pack.add { { src = 'https://github.com/neovim/nvim-lspconfig' } }
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", "ts_ls" })
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
@@ -164,7 +143,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 
--- PLUGINS
+-- PLUGINS 
 
 vim.pack.add({
     {
@@ -189,20 +168,19 @@ vim.pack.add({
         name = "csub"
     },
 })
-local ok, csub = pcall(require, "csub")
-if ok then
+local ok_csub, csub = pcall(require, "csub")
+if ok_csub then
     csub.setup({
         default_mode = nil,
         handlers = {
             { match = "FuzzyGrep",    mode = "replace" },
             { match = "vimgrep",      mode = "replace" },
             { match = "FuzzyBuffers", mode = "buffers" },
-            { match = "FuzzyFiles",   mode = nil }, -- disabled
+            { match = "FuzzyFiles",   mode = "files" },
             { match = "make",         mode = nil }, -- disabled
         },
     })
-    vim.keymap.set("n", "<leader>s", "<cmd>Csub<cr>",
-        { desc = "Open Csub buffer for current active quickfix list" })
+    vim.keymap.set("n", "<leader>s", "<CMD>Csub<CR>", {})
 end
 -- } csub
 
@@ -215,27 +193,22 @@ vim.pack.add({
 })
 local ok_fuzzy, fuzzy = pcall(require, "fuzzy")
 if ok_fuzzy then
-    fuzzy.setup()
-    vim.keymap.set("n", "<leader>/", ":FuzzyGrep ",
-        { silent = false, desc = "Fuzzy grep" })
-    vim.keymap.set("n", "<leader>?", ":FuzzyFiles ",
-        { silent = false, desc = "Fuzzy grep files" })
-    vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>",
-        { silent = false, desc = "Fuzzy grep Buffers" })
-    vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>",
-        { silent = false, desc = "Fuzzy search neovim helptags" })
-    vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>",
-        { silent = false, desc = "Fuzzy grep files" })
-    vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>",
-        { silent = false, desc = "Fuzzy live grep" })
-    vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>",
-        { silent = false, desc = "Fuzzy buffer list" })
-    vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>",
-        { silent = false, desc = "Fuzzy list" })
-    vim.keymap.set('n', '<leader>gb', '<CMD>FuzzyGitBranches<CR>',
-        { desc = "Git branches" })
-    vim.keymap.set('n', '<leader>gw', '<CMD>FuzzyGitWorktrees<CR>',
-        { desc = "Git worktrees" })
+    fuzzy.setup({
+        open_single_result = true,
+        window = {
+            height = 0.6,
+        }
+    })
+    vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false })
+    vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false })
+    vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { silent = false })
+    vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>", { silent = false })
+    vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false })
+    vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false })
+    vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false })
+    vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false })
+    vim.keymap.set('n', '<leader>gb', '<CMD>FuzzyGitBranches<CR>', { silent = false })
+    vim.keymap.set('n', '<leader>gw', '<CMD>FuzzyGitWorktrees<CR>', { silent = false })
 
     vim.keymap.set('n', '<leader>fw', function()
         local word = vim.fn.expand('<cword>')
@@ -261,8 +234,7 @@ if ok_filemarks then
     filemarks.setup({
         dir_open_cmd = "Explore"
     })
-    vim.keymap.set("n", "<leader>l", "<cmd>bot FilemarksList<cr>",
-        { noremap = true, silent = true, desc = "show file marks list" })
+    vim.keymap.set("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { noremap = true, silent = true })
 end
 -- } filemarks
 
@@ -276,9 +248,12 @@ vim.pack.add({
 
 local ok_jj, jj = pcall(require, "jj")
 if ok_jj then
-    jj.setup({})
-    vim.keymap.set("n", "<leader>J", "<CMD>J<CR>",
-        { noremap = true, silent = true, desc = "Open Git interface" })
+    jj.setup({
+        terminal = {
+            window = { split_size = 0.3 }
+        }
+    })
+    vim.keymap.set("n", "<leader>J", "<CMD>J<CR>", { noremap = true, silent = true })
 end
 -- }
 
