@@ -196,7 +196,7 @@ if ok_fuzzy then
     fuzzy.setup({
         open_single_result = true,
         window = {
-            height = 0.6,
+            height = 0.45,
         }
     })
     vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false })
