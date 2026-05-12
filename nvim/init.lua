@@ -9,6 +9,11 @@ require("vim._core.ui2").enable({})
 vim.g.mapleader = " "
 vim.g.netrw_liststyle = 1
 
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+
 vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -126,7 +131,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew", "TermOpen" },
 -- LSP
 
 vim.pack.add { { src = 'https://github.com/neovim/nvim-lspconfig' } }
-vim.lsp.enable({ "clangd", "lua_ls", "pyright", "marksman", "ts_ls" })
+vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
     callback = function(args)
@@ -143,7 +148,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 
--- PLUGINS 
+-- PLUGINS
 
 vim.pack.add({
     {
@@ -250,7 +255,7 @@ local ok_jj, jj = pcall(require, "jj")
 if ok_jj then
     jj.setup({
         terminal = {
-            window = { split_size = 0.3 }
+            window = { split_size = 0.25 }
         }
     })
     vim.keymap.set("n", "<leader>J", "<CMD>J<CR>", { noremap = true, silent = true })
