@@ -2,20 +2,9 @@
 -- LICENSE: MIT
 -- AUTHOR: @anoopkcn
 
-vim.loader.enable()
-
 -- OPTIONS
 
 vim.g.mapleader = " "
-
-vim.g.loaded_python3_provider = 0
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_node_provider = 0
-
-vim.g.loaded_matchit = 1
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 
 vim.opt.laststatus = 0
 vim.opt.number = true
@@ -44,10 +33,18 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-
+vim.opt.winbar = "%t%m%r"
 vim.opt.ruler = true
 
--- ./nvim/colors/onehalfdark.lua
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+
+vim.g.loaded_matchit = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 vim.cmd.colorscheme("onehalfdark")
 
 
@@ -100,25 +97,6 @@ end, { noremap = true, silent = true, })
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
-})
-
-
-local winbar_group = vim.api.nvim_create_augroup("winbar", { clear = true })
-vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew", "TermOpen" }, {
-    group = winbar_group,
-    callback = function()
-        vim.schedule(function()
-            for _, win in ipairs(vim.api.nvim_list_wins()) do
-                if vim.api.nvim_win_is_valid(win) then
-                    local buf = vim.api.nvim_win_get_buf(win)
-                    local is_float = vim.api.nvim_win_get_config(win).relative ~= ""
-                    if vim.bo[buf].buftype == "" and not is_float then
-                        vim.wo[win].winbar = "%t%m%r"
-                    end
-                end
-            end
-        end)
-    end,
 })
 
 
@@ -230,10 +208,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
         vim.pack.add({
             { src = "https://github.com/neovim/nvim-lspconfig" },
-            { src = "https://github.com/anoopkcn/csub.nvim",         name = "csub" },
-            { src = "https://github.com/anoopkcn/fuzzy.nvim",        name = "fuzzy" },
-            { src = "https://github.com/anoopkcn/filemarks.nvim",    name = "filemarks" },
-            { src = "https://github.com/NicolasGB/jj.nvim",          name = "jj.nvim" },
+            { src = "https://github.com/anoopkcn/csub.nvim",      name = "csub" },
+            { src = "https://github.com/anoopkcn/fuzzy.nvim",     name = "fuzzy" },
+            { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
+            { src = "https://github.com/NicolasGB/jj.nvim",       name = "jj.nvim" },
             {
                 src = "https://github.com/nvim-treesitter/nvim-treesitter",
                 name = "treesitter",
