@@ -9,12 +9,15 @@ vim.loader.enable()
 require("vim._core.ui2").enable({})
 
 vim.g.mapleader = " "
-vim.g.netrw_liststyle = 1
 
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
+
+vim.g.loaded_matchit = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 vim.opt.laststatus = 0
 vim.opt.number = true
@@ -68,7 +71,6 @@ vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>", { noremap = true, silent = true }
 
 vim.keymap.set("n", "<C-s>", "<CMD>mksession!<CR>", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>fe", "<CMD>Ex<CR>", { noremap = true, silent = true })
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist, { noremap = true, silent = true })
@@ -290,7 +292,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
         end)
 
         pcall(function()
-            require("filemarks").setup({ dir_open_cmd = "Explore" })
+            require("filemarks").setup({})
         end)
 
         pcall(function()
