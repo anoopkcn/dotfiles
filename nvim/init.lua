@@ -105,16 +105,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Eager: needed at startup (Plug mappings, InsertEnter hooks, etc.)
 vim.pack.add({
     {
-        src = "https://github.com/tpope/vim-surround",
-        name = "vim-surround"
-    },
-    {
         src = "https://github.com/github/copilot.vim",
         name = "copilot"
     },
 })
 
 require("brackets")
+require("surround")
 
 -- Deferred plugins: vim.pack.add() is called inside the VimEnter block below.
 -- Calling it here at startup adds them to runtimepath, which causes Neovim's
