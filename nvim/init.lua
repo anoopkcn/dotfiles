@@ -6,8 +6,6 @@ vim.loader.enable()
 
 -- OPTIONS
 
-require("vim._core.ui2").enable({})
-
 vim.g.mapleader = " "
 
 vim.g.loaded_python3_provider = 0
@@ -49,7 +47,7 @@ vim.opt.switchbuf:append("useopen")
 
 vim.opt.ruler = true
 
--- ./nvim/colors/onehalfdark.vim
+-- ./nvim/colors/onehalfdark.lua
 vim.cmd.colorscheme("onehalfdark")
 
 
@@ -140,33 +138,11 @@ vim.pack.add({
 
 require("brackets")
 
--- Deferred: registered in rtp now (cheap), required + setup post-startup
-vim.pack.add({
-    {
-        src = "https://github.com/neovim/nvim-lspconfig",
-    },
-    {
-        src = "https://github.com/anoopkcn/csub.nvim",
-        name = "csub"
-    },
-    {
-        src = "https://github.com/anoopkcn/fuzzy.nvim",
-        name = "fuzzy"
-    },
-    {
-        src = "https://github.com/anoopkcn/filemarks.nvim",
-        name = "filemarks"
-    },
-    {
-        src = "https://github.com/NicolasGB/jj.nvim",
-        name = "jj.nvim"
-    },
-    {
-        src = "https://github.com/nvim-treesitter/nvim-treesitter",
-        name = "treesitter",
-        branch = "main",
-    },
-})
+-- Deferred plugins: vim.pack.add() is called inside the VimEnter block below.
+-- Calling it here at startup adds them to runtimepath, which causes Neovim's
+-- rtp plugin-loading phase (between init.lua and VimEnter) to source their
+-- plugin/ files synchronously. Deferring the call until VimEnter is the only
+-- way to keep those plugin/ files off the startup path.
 
 -- Keymaps for deferred plugins (eager so they exist from first keystroke;
 -- their backing commands/modules load in the VimEnter block below).
@@ -252,6 +228,19 @@ end
 vim.api.nvim_create_autocmd("VimEnter", {
     once = true,
     callback = function()
+        vim.pack.add({
+            { src = "https://github.com/neovim/nvim-lspconfig" },
+            { src = "https://github.com/anoopkcn/csub.nvim",         name = "csub" },
+            { src = "https://github.com/anoopkcn/fuzzy.nvim",        name = "fuzzy" },
+            { src = "https://github.com/anoopkcn/filemarks.nvim",    name = "filemarks" },
+            { src = "https://github.com/NicolasGB/jj.nvim",          name = "jj.nvim" },
+            {
+                src = "https://github.com/nvim-treesitter/nvim-treesitter",
+                name = "treesitter",
+                branch = "main",
+            },
+        })
+
         vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
