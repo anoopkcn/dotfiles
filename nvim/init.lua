@@ -2,6 +2,8 @@
 -- LICENSE: MIT
 -- AUTHOR: @anoopkcn
 
+vim.loader.enable()
+
 -- OPTIONS
 
 require("vim._core.ui2").enable({})
@@ -73,14 +75,6 @@ vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist, { noremap = true, si
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd, { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>on", vim.cmd.only, { noremap = true, silent = true })
 
-vim.keymap.set("n", "]x", function()
-    vim.diagnostic.jump({ count = 1 })
-end, { noremap = true, silent = true })
-
-vim.keymap.set("n", "[x", function()
-    vim.diagnostic.jump({ count = -1 })
-end, { noremap = true, silent = true })
-
 vim.keymap.set("n", "<leader>x", function()
     vim.diagnostic.open_float({ border = 'rounded' })
 end, { noremap = true, silent = true, })
@@ -128,37 +122,13 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew", "TermOpen" },
 })
 
 
--- LSP
-
-vim.pack.add { { src = 'https://github.com/neovim/nvim-lspconfig' } }
-vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
-    callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client then client.server_capabilities.semanticTokensProvider = nil end
-        local map_opts = { buffer = bufnr, noremap = true, silent = true }
-        vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
-        end, map_opts)
-        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
-    end,
-})
-
-
 -- PLUGINS
 
+-- Eager: needed at startup (Plug mappings, InsertEnter hooks, etc.)
 vim.pack.add({
     {
         src = "https://github.com/tpope/vim-surround",
         name = "vim-surround"
-    },
-    {
-        src = "https://github.com/tpope/vim-unimpaired",
-        name = "vim-unimpaired",
-        version = "master"
     },
     {
         src = "https://github.com/github/copilot.vim",
@@ -166,104 +136,29 @@ vim.pack.add({
     },
 })
 
--- csub {
+require("brackets")
+
+-- Deferred: registered in rtp now (cheap), required + setup post-startup
 vim.pack.add({
+    {
+        src = "https://github.com/neovim/nvim-lspconfig",
+    },
     {
         src = "https://github.com/anoopkcn/csub.nvim",
         name = "csub"
     },
-})
-local ok_csub, csub = pcall(require, "csub")
-if ok_csub then
-    csub.setup({
-        default_mode = nil,
-        handlers = {
-            { match = "FuzzyGrep",    mode = "replace" },
-            { match = "vimgrep",      mode = "replace" },
-            { match = "FuzzyBuffers", mode = "buffers" },
-            { match = "FuzzyFiles",   mode = "files" },
-            { match = "make",         mode = nil }, -- disabled
-        },
-    })
-    vim.keymap.set("n", "<leader>s", "<CMD>Csub<CR>", {})
-end
--- } csub
-
--- fuzzy {
-vim.pack.add({
     {
         src = "https://github.com/anoopkcn/fuzzy.nvim",
         name = "fuzzy"
     },
-})
-local ok_fuzzy, fuzzy = pcall(require, "fuzzy")
-if ok_fuzzy then
-    fuzzy.setup({
-        open_single_result = true,
-        window = {
-            height = 0.45,
-        }
-    })
-    vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false })
-    vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false })
-    vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { silent = false })
-    vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>", { silent = false })
-    vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false })
-    vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false })
-    vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false })
-    vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false })
-    vim.keymap.set('n', '<leader>gb', '<CMD>FuzzyGitBranches<CR>', { silent = false })
-    vim.keymap.set('n', '<leader>gw', '<CMD>FuzzyGitWorktrees<CR>', { silent = false })
-
-    vim.keymap.set('n', '<leader>fw', function()
-        local word = vim.fn.expand('<cword>')
-        if word ~= '' then fuzzy.grep({ word }) end
-    end, { desc = 'Grep word' })
-
-    vim.keymap.set('n', '<leader>fW', function()
-        local word = vim.fn.expand('<cWORD>')
-        if word ~= '' then fuzzy.grep({ '-F', word }) end
-    end, { desc = 'Grep WORD (literal)' })
-end
--- } fuzzy
-
--- filemarks {
-vim.pack.add({
     {
         src = "https://github.com/anoopkcn/filemarks.nvim",
         name = "filemarks"
     },
-})
-local ok_filemarks, filemarks = pcall(require, "filemarks")
-if ok_filemarks then
-    filemarks.setup({
-        dir_open_cmd = "Explore"
-    })
-    vim.keymap.set("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { noremap = true, silent = true })
-end
--- } filemarks
-
--- jj.nvim {
-vim.pack.add({
     {
         src = "https://github.com/NicolasGB/jj.nvim",
         name = "jj.nvim"
     },
-})
-
-local ok_jj, jj = pcall(require, "jj")
-if ok_jj then
-    jj.setup({
-        terminal = {
-            window = { split_size = 0.25 }
-        }
-    })
-    vim.keymap.set("n", "<leader>J", "<CMD>J<CR>", { noremap = true, silent = true })
-end
--- }
-
--- treesitter {
-vim.pack.add({
     {
         src = "https://github.com/nvim-treesitter/nvim-treesitter",
         name = "treesitter",
@@ -271,17 +166,46 @@ vim.pack.add({
     },
 })
 
-vim.api.nvim_create_autocmd('PackChanged', {
+-- Keymaps for deferred plugins (eager so they exist from first keystroke;
+-- their backing commands/modules load in the VimEnter block below).
+vim.keymap.set("n", "<leader>s", "<CMD>Csub<CR>", {})
+
+vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false })
+vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false })
+vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>", { silent = false })
+vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false })
+vim.keymap.set("n", "<leader>gb", "<CMD>FuzzyGitBranches<CR>", { silent = false })
+vim.keymap.set("n", "<leader>gw", "<CMD>FuzzyGitWorktrees<CR>", { silent = false })
+
+vim.keymap.set("n", "<leader>fw", function()
+    local word = vim.fn.expand("<cword>")
+    if word ~= "" then require("fuzzy").grep({ word }) end
+end, { desc = "Grep word" })
+
+vim.keymap.set("n", "<leader>fW", function()
+    local word = vim.fn.expand("<cWORD>")
+    if word ~= "" then require("fuzzy").grep({ "-F", word }) end
+end, { desc = "Grep WORD (literal)" })
+
+vim.keymap.set("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>J", "<CMD>J<CR>", { noremap = true, silent = true })
+
+-- Treesitter auto-update on pack change (one-time autocmd, cheap to register eagerly)
+vim.api.nvim_create_autocmd("PackChanged", {
     callback = function(ev)
         local name, kind = ev.data.spec.name, ev.data.kind
-        if name == 'nvim-treesitter' and kind == 'update' then
-            if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
-            vim.cmd('TSUpdate')
+        if name == "nvim-treesitter" and kind == "update" then
+            if not ev.data.active then vim.cmd.packadd("nvim-treesitter") end
+            vim.cmd("TSUpdate")
         end
-    end
+    end,
 })
 
-local setup_treesitter = function()
+local function setup_treesitter()
     local treesitter = require("nvim-treesitter")
     local ensure_installed = {
         "vim", "vimdoc",
@@ -319,5 +243,68 @@ local setup_treesitter = function()
     })
 end
 
-setup_treesitter()
--- } treesitter
+-- Defer the heavy work: LSP, plugin setups, treesitter activation.
+-- VimEnter fires immediately after startup completes; the FileType re-fire
+-- at the end ensures buffers already loaded at startup (e.g. `nvim file.py`)
+-- still trigger the LSP and treesitter FileType autocmds registered here.
+vim.api.nvim_create_autocmd("VimEnter", {
+    once = true,
+    callback = function()
+        vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
+        vim.api.nvim_create_autocmd("LspAttach", {
+            group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+            callback = function(args)
+                local bufnr = args.buf
+                local client = vim.lsp.get_client_by_id(args.data.client_id)
+                if client then client.server_capabilities.semanticTokensProvider = nil end
+                local map_opts = { buffer = bufnr, noremap = true, silent = true }
+                vim.keymap.set("n", "K", function()
+                    vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
+                end, map_opts)
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+            end,
+        })
+
+        pcall(function()
+            require("csub").setup({
+                default_mode = nil,
+                handlers = {
+                    { match = "FuzzyGrep",    mode = "replace" },
+                    { match = "vimgrep",      mode = "replace" },
+                    { match = "FuzzyBuffers", mode = "buffers" },
+                    { match = "FuzzyFiles",   mode = "files" },
+                    { match = "make",         mode = nil },
+                },
+            })
+        end)
+
+        pcall(function()
+            require("fuzzy").setup({
+                open_single_result = true,
+                window = { height = 0.45 },
+            })
+            -- fuzzy.setup registers a VimEnter autocmd to warm the file cache;
+            -- since we're already past VimEnter, trigger it manually.
+            require("fuzzy.complete").warm_cache()
+        end)
+
+        pcall(function()
+            require("filemarks").setup({ dir_open_cmd = "Explore" })
+        end)
+
+        pcall(function()
+            require("jj").setup({
+                terminal = { window = { split_size = 0.25 } },
+            })
+        end)
+
+        setup_treesitter()
+
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_loaded(buf) then
+                vim.api.nvim_exec_autocmds("FileType", { buffer = buf })
+            end
+        end
+    end,
+})
