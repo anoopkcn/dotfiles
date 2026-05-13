@@ -5,7 +5,6 @@ setopt extended_glob null_glob
 path=(
     /Users/akc/.local/bin
     /Library/TeX/texbin
-    /Users/akc/develop/zenv/zig-out/bin
     $path
 )
 typeset -U path
@@ -14,7 +13,6 @@ export PATH
 export EDITOR='nvim'
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export CONDA_CHANGEPS1=no
-export MANPATH="$MANPATH:${HOME}/programming/c-man:${HOME}/programming/python-man"
 
 # INPUTRC
 bindkey "^[[A" history-search-backward
@@ -69,9 +67,6 @@ fi
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^Xe' edit-command-line
-
-# bun completions
-[ -s "/Users/akc/.bun/_bun" ] && source "/Users/akc/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
