@@ -2,6 +2,9 @@
 -- LICENSE: MIT
 -- AUTHOR: @anoopkcn
 
+-- nvim v 0.12.0+ is required
+require('vim._core.ui2').enable()
+
 -- OPTIONS
 
 vim.g.mapleader = " "
@@ -31,6 +34,8 @@ vim.opt.path:append("**")
 vim.opt.swapfile = false
 
 vim.opt.pumborder = "rounded"
+vim.opt.winborder = "rounded" -- since 0.12.0
+vim.opt.completeopt:append("popup")
 
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
