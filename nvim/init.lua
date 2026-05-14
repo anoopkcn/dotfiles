@@ -94,6 +94,7 @@ require("brackets")
 require("surround")
 
 vim.pack.add({
+    { src = "https://github.com/stevearc/oil.nvim",               name = "oil" },
     { src = "https://github.com/NicolasGB/jj.nvim",               name = "jj.nvim" },
     { src = "https://github.com/github/copilot.vim",              name = "copilot" },
     { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
@@ -139,6 +140,11 @@ require("filemarks").setup({})
 
 require("jj").setup({
     terminal = { window = { split_size = 0.25 } },
+})
+
+require("oil").setup({
+    columns = {},
+    confirmation = { border = "rounded" },
 })
 
 local treesitter = require("nvim-treesitter")
@@ -191,7 +197,6 @@ map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>")
 map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>")
 map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>")
 map("n", "<leader>fl", "<CMD>FuzzyList<CR>")
-map("n", "<leader>gb", "<CMD>FuzzyGitBranches<CR>")
 map("n", "<leader>gw", "<CMD>FuzzyGitWorktrees<CR>")
 
 map("n", "<leader>fw", function()
@@ -206,3 +211,4 @@ end)
 
 map("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { silent = true })
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true })
+map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
