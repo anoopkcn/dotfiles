@@ -143,8 +143,30 @@ require("jj").setup({
 })
 
 require("oil").setup({
-    columns = {},
+    columns = {
+        "permissions",
+        "size",
+        "mtime",
+    },
+    float = {
+        border = "rounded",
+        max_width = 80,
+        max_height = 40,
+        override = function(conf)
+            conf.row = 1
+            return conf
+        end,
+    },
+    view_options = { show_hidden = true },
     confirmation = { border = "rounded" },
+    keymaps = {
+        ["q"] = { "actions.close", mode = "n" },
+        ["<C-p>"] = false,
+        ["<M-p>"] = {
+            "actions.preview",
+            opts = { horizontal = true, split = "belowright" },
+        },
+    },
 })
 
 local treesitter = require("nvim-treesitter")
