@@ -217,7 +217,13 @@ vim.api.nvim_create_autocmd("PackChanged", {
 
 -- KEYMAPS (Plugin-specific)
 
-map("n", "<leader>s", "<CMD>Csub<CR>")
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "qf", "csub" },
+    group = vim.api.nvim_create_augroup("CsubQfMap", { clear = true }),
+    callback = function(args)
+        map("n", "<leader>s", "<CMD>Csub<CR>", { buffer = args.buf, silent = true })
+    end,
+})
 
 map("n", "<leader>.", "<CMD>FuzzyBuffers<CR>")
 map("n", "<leader>g", "<CMD>FuzzyFiles!<CR>")
