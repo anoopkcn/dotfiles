@@ -2,8 +2,11 @@
 -- LICENSE: MIT
 -- AUTHOR: @anoopkcn
 
--- nvim v 0.12.0+ is required
+-- nvim v 0.12.0+ {
 require('vim._core.ui2').enable()
+vim.opt.winborder = "rounded"
+vim.opt.completeopt:append("popup")
+-- }
 
 -- OPTIONS
 
@@ -34,8 +37,6 @@ vim.opt.path:append("**")
 vim.opt.swapfile = false
 
 vim.opt.pumborder = "rounded"
-vim.opt.winborder = "rounded" -- since 0.12.0
-vim.opt.completeopt:append("popup")
 
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
@@ -97,6 +98,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 require("brackets")
 require("surround")
+-- require("sessions")
 
 vim.pack.add({
     { src = "https://github.com/stevearc/oil.nvim",               name = "oil" },
@@ -216,26 +218,24 @@ vim.api.nvim_create_autocmd("PackChanged", {
 -- KEYMAPS (Plugin-specific)
 
 map("n", "<leader>s", "<CMD>Csub<CR>")
-map("n", "<leader>/", ":FuzzyGrep ", { silent = false })
-map("n", "<leader>?", ":FuzzyFiles ", { silent = false })
-map("n", "<leader>.", "<CMD>FuzzyBuffers<CR>")
-map("n", "<leader>fh", "<CMD>FuzzyHelp<CR>")
-map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>")
-map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>")
-map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>")
-map("n", "<leader>fl", "<CMD>FuzzyList<CR>")
-map("n", "<leader>gw", "<CMD>FuzzyGitWorktrees<CR>")
 
-map("n", "<leader>fw", function()
+map("n", "<leader>.", "<CMD>FuzzyBuffers<CR>")
+map("n", "<leader>g", "<CMD>FuzzyFiles!<CR>")
+map("n", "<leader>/", "<CMD>FuzzyGrep!<CR>")
+map("n", "<leader>h", "<CMD>FuzzyBuffers!<CR>")
+
+map("n", "<leader>w", function()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end
 end)
 
-map("n", "<leader>fW", function()
+map("n", "<leader>W", function()
     local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
 end)
 
 map("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { silent = true })
+
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true })
+
 map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
