@@ -6,6 +6,11 @@
 
 vim.g.mapleader = " "
 
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+
 vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -36,11 +41,6 @@ vim.opt.switchbuf:append("useopen")
 vim.opt.winbar = "%f%m%r"
 vim.opt.ruler = true
 
-vim.g.loaded_python3_provider = 0
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_node_provider = 0
-
 vim.g.loaded_matchit = 1
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -52,6 +52,7 @@ vim.cmd.colorscheme("onehalfdark")
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>", { noremap = true, silent = true })
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true, silent = true })
 
 vim.keymap.set("n", "<Esc>", "<CMD>nohlsearch<CR>", { noremap = true, silent = true })
 
@@ -66,11 +67,10 @@ vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>", { noremap = true, silent = true }
 
 vim.keymap.set("n", "<C-s>", "<CMD>mksession!<CR>", { noremap = true, silent = true })
 
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true, silent = true })
-
-vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist, { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>bd", vim.cmd.bd, { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>on", vim.cmd.only, { noremap = true, silent = true })
+
+vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist, { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader>x", function()
     vim.diagnostic.open_float({ border = 'rounded' })
@@ -92,8 +92,6 @@ vim.keymap.set("n", "<leader>'", function()
 end, { noremap = true, silent = true, })
 
 
--- AUTOCOMMANDS
-
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
@@ -104,80 +102,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 require("brackets")
 require("surround")
-
-vim.keymap.set("n", "<leader>s", "<CMD>Csub<CR>", {})
-vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false })
-vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false })
-vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>", { silent = false })
-vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false })
-vim.keymap.set("n", "<leader>gb", "<CMD>FuzzyGitBranches<CR>", { silent = false })
-vim.keymap.set("n", "<leader>gw", "<CMD>FuzzyGitWorktrees<CR>", { silent = false })
-
-vim.keymap.set("n", "<leader>fw", function()
-    local word = vim.fn.expand("<cword>")
-    if word ~= "" then require("fuzzy").grep({ word }) end
-end, { desc = "Grep word" })
-
-vim.keymap.set("n", "<leader>fW", function()
-    local word = vim.fn.expand("<cWORD>")
-    if word ~= "" then require("fuzzy").grep({ "-F", word }) end
-end, { desc = "Grep WORD (literal)" })
-
-vim.keymap.set("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>J", "<CMD>J<CR>", { noremap = true, silent = true })
-
--- Treesitter auto-update on pack change (one-time autocmd, cheap to register eagerly)
-vim.api.nvim_create_autocmd("PackChanged", {
-    callback = function(ev)
-        local name, kind = ev.data.spec.name, ev.data.kind
-        if name == "nvim-treesitter" and kind == "update" then
-            if not ev.data.active then vim.cmd.packadd("nvim-treesitter") end
-            vim.cmd("TSUpdate")
-        end
-    end,
-})
-
-local function setup_treesitter()
-    local treesitter = require("nvim-treesitter")
-    local ensure_installed = {
-        "vim", "vimdoc",
-        "rust", "c", "cpp", "go",
-        "html", "css", "javascript", "json",
-        "markdown", "markdown_inline",
-        "typescript", "tsx",
-        "bash", "python", "lua",
-    }
-
-    local config = require("nvim-treesitter.config")
-
-    local already_installed = config.get_installed()
-    local parsers_to_install = {}
-
-    for _, parser in ipairs(ensure_installed) do
-        if not vim.tbl_contains(already_installed, parser) then
-            table.insert(parsers_to_install, parser)
-        end
-    end
-
-    if #parsers_to_install > 0 then
-        treesitter.install(parsers_to_install)
-    end
-
-    local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
-    vim.api.nvim_create_autocmd("FileType", {
-        group = group,
-        callback = function(args)
-            local lang = vim.treesitter.language.get_lang(args.match)
-            if vim.list_contains(treesitter.get_installed(), lang) then
-                vim.treesitter.start(args.buf)
-            end
-        end,
-    })
-end
 
 vim.pack.add({
     { src = "https://github.com/NicolasGB/jj.nvim",               name = "jj.nvim" },
@@ -205,34 +129,96 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
-pcall(function()
-    require("csub").setup({
-        default_mode = nil,
-        handlers = {
-            { match = "FuzzyGrep",    mode = "replace" },
-            { match = "vimgrep",      mode = "replace" },
-            { match = "FuzzyBuffers", mode = "buffers" },
-            { match = "FuzzyFiles",   mode = "files" },
-            { match = "make",         mode = nil },
-        },
-    })
-end)
+require("csub").setup({
+    default_mode = nil,
+    handlers = {
+        { match = "FuzzyGrep",    mode = "replace" },
+        { match = "vimgrep",      mode = "replace" },
+        { match = "FuzzyBuffers", mode = "buffers" },
+        { match = "FuzzyFiles",   mode = "files" },
+        { match = "make",         mode = nil },
+    },
+})
 
-pcall(function()
-    require("fuzzy").setup({
-        open_single_result = true,
-        window = { width=0.45, height = 0.45 },
-    })
-end)
+require("fuzzy").setup({
+    open_single_result = true,
+    window = { width = 0.45, height = 0.45 },
+})
 
-pcall(function()
-    require("filemarks").setup({})
-end)
+require("filemarks").setup({})
 
-pcall(function()
-    require("jj").setup({
-        terminal = { window = { split_size = 0.25 } },
-    })
-end)
+require("jj").setup({
+    terminal = { window = { split_size = 0.25 } },
+})
 
-setup_treesitter()
+local treesitter = require("nvim-treesitter")
+local ensure_installed = {
+    "vim", "vimdoc", "rust", "c", "cpp", "go",
+    "html", "css", "javascript", "json",
+    "markdown", "markdown_inline",
+    "typescript", "tsx", "bash", "python", "lua",
+}
+
+local config = require("nvim-treesitter.config")
+
+local already_installed = config.get_installed()
+local parsers_to_install = {}
+
+for _, parser in ipairs(ensure_installed) do
+    if not vim.tbl_contains(already_installed, parser) then
+        table.insert(parsers_to_install, parser)
+    end
+end
+
+if #parsers_to_install > 0 then
+    treesitter.install(parsers_to_install)
+end
+
+local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+    group = group,
+    callback = function(args)
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if vim.list_contains(treesitter.get_installed(), lang) then
+            vim.treesitter.start(args.buf)
+        end
+    end,
+})
+
+vim.api.nvim_create_autocmd("PackChanged", {
+    callback = function(ev)
+        local name, kind = ev.data.spec.name, ev.data.kind
+        if name == "nvim-treesitter" and kind == "update" then
+            if not ev.data.active then vim.cmd.packadd("nvim-treesitter") end
+            vim.cmd("TSUpdate")
+        end
+    end,
+})
+
+
+-- KEYMAPS (Plugin-specific)
+
+vim.keymap.set("n", "<leader>s", "<CMD>Csub<CR>", {})
+vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false })
+vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false })
+vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>", { silent = false })
+vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false })
+vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false })
+vim.keymap.set("n", "<leader>gb", "<CMD>FuzzyGitBranches<CR>", { silent = false })
+vim.keymap.set("n", "<leader>gw", "<CMD>FuzzyGitWorktrees<CR>", { silent = false })
+
+vim.keymap.set("n", "<leader>fw", function()
+    local word = vim.fn.expand("<cword>")
+    if word ~= "" then require("fuzzy").grep({ word }) end
+end, {})
+
+vim.keymap.set("n", "<leader>fW", function()
+    local word = vim.fn.expand("<cWORD>")
+    if word ~= "" then require("fuzzy").grep({ "-F", word }) end
+end, {})
+
+vim.keymap.set("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>J", "<CMD>J<CR>", { noremap = true, silent = true })
