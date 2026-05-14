@@ -33,7 +33,7 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-vim.opt.winbar = "%t%m%r"
+vim.opt.winbar = "%f%m%r"
 vim.opt.ruler = true
 
 vim.g.loaded_python3_provider = 0
@@ -221,7 +221,7 @@ end)
 pcall(function()
     require("fuzzy").setup({
         open_single_result = true,
-        window = { height = 0.45 },
+        window = { width=0.45, height = 0.45 },
     })
 end)
 
