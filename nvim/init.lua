@@ -14,7 +14,6 @@ vim.g.loaded_node_provider = 0
 vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
 
@@ -26,20 +25,17 @@ vim.opt.smartindent = true
 
 vim.opt.wrap = true
 vim.opt.showbreak = "⤷ "
-vim.opt.showmode = true
 
 vim.opt.undofile = true
 vim.opt.path:append("**")
 vim.opt.swapfile = false
 
-vim.opt.wildmenu = true
 vim.opt.pumborder = "rounded"
 
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.winbar = "%f%m%r"
-vim.opt.ruler = true
 
 vim.g.loaded_matchit = 1
 vim.g.loaded_netrw = 1
@@ -48,49 +44,43 @@ vim.g.loaded_netrwPlugin = 1
 vim.cmd.colorscheme("onehalfdark")
 
 
--- KEYMAPS
+-- KEYMAPS (General)
 
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "<C-Space>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true, silent = true })
+local map = vim.keymap.set
 
-vim.keymap.set("n", "<Esc>", "<CMD>nohlsearch<CR>", { noremap = true, silent = true })
+map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true })
+map("t", "<Esc>", [[<C-\><C-n>]], { silent = true })
 
-vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]], { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { noremap = true, silent = true })
+map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true })
 
-vim.keymap.set("n", "<leader>\\", ":rightbelow vsplit<CR>", { noremap = true, silent = true, })
-vim.keymap.set("n", "<leader>-", ":rightbelow split<CR>", { noremap = true, silent = true, })
+map({ "n", "v" }, "<leader>p", [["+p]], { silent = true })
+map({ "n", "v" }, "<leader>y", [["+y]], { silent = true })
 
-vim.keymap.set("n", "<M-j>", "<CMD>cnext<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<M-k>", "<CMD>cprev<CR>", { noremap = true, silent = true })
+map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true })
+map("n", "<leader>-", ":rightbelow split<CR>", { silent = true })
 
-vim.keymap.set("n", "<C-s>", "<CMD>mksession!<CR>", { noremap = true, silent = true })
+map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true })
+map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true })
 
-vim.keymap.set("n", "<leader>bd", vim.cmd.bd, { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>on", vim.cmd.only, { noremap = true, silent = true })
+map("n", "<C-s>", "<CMD>mksession!<CR>", { silent = true })
 
-vim.keymap.set("n", "<leader>ft", vim.diagnostic.setqflist, { noremap = true, silent = true })
+map("n", "<leader>bd", vim.cmd.bd, { silent = true })
+map("n", "<leader>on", vim.cmd.only, { silent = true })
 
-vim.keymap.set("n", "<leader>x", function()
-    vim.diagnostic.open_float({ border = 'rounded' })
-end, { noremap = true, silent = true, })
+map("n", "<leader>t", vim.diagnostic.setqflist, { silent = true })
 
-vim.keymap.set("n", "<leader>,", function()
+map("n", "<leader>x", function()
+    vim.diagnostic.open_float({ border = "rounded" })
+end, { silent = true })
+
+map("n", "<leader>,", function()
     vim.lsp.buf.format({ async = true })
-end, { noremap = true, silent = true, })
+end, { silent = true })
 
-vim.keymap.set("n", "<leader>fq", function()
-    local qf = vim.fn.getqflist({ winid = 1 }).winid
-    if qf > 0 then vim.cmd("cclose") else vim.cmd("copen") end
-end, { noremap = true, silent = true, })
-
-vim.keymap.set("n", "<leader>'", function()
-    local raw_timestamp = os.date("%FT%T")
-    local timestamp_str = string.format("%s", raw_timestamp or "")
-    vim.api.nvim_put({ timestamp_str }, "c", true, true)
-end, { noremap = true, silent = true, })
-
+map("n", "<leader>q", function()
+    vim.cmd(vim.fn.getqflist({ winid = 0 }).winid > 0 and "cclose" or "copen")
+end, { silent = true, desc = "Toggle quickfix" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
@@ -120,12 +110,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client then client.server_capabilities.semanticTokensProvider = nil end
-        local map_opts = { buffer = bufnr, noremap = true, silent = true }
-        vim.keymap.set("n", "K", function()
+        local map_opts = { buffer = bufnr, silent = true }
+        map("n", "K", function()
             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
         end, map_opts)
-        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts)
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts)
+        map("n", "gD", vim.lsp.buf.declaration, map_opts)
+        map("n", "gd", vim.lsp.buf.definition, map_opts)
     end,
 })
 
@@ -159,19 +149,13 @@ local ensure_installed = {
     "typescript", "tsx", "bash", "python", "lua",
 }
 
-local config = require("nvim-treesitter.config")
+local already_installed = require("nvim-treesitter.config").get_installed()
+local to_install = vim.tbl_filter(function(p)
+    return not vim.tbl_contains(already_installed, p)
+end, ensure_installed)
 
-local already_installed = config.get_installed()
-local parsers_to_install = {}
-
-for _, parser in ipairs(ensure_installed) do
-    if not vim.tbl_contains(already_installed, parser) then
-        table.insert(parsers_to_install, parser)
-    end
-end
-
-if #parsers_to_install > 0 then
-    treesitter.install(parsers_to_install)
+if #to_install > 0 then
+    treesitter.install(to_install)
 end
 
 local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
@@ -198,27 +182,27 @@ vim.api.nvim_create_autocmd("PackChanged", {
 
 -- KEYMAPS (Plugin-specific)
 
-vim.keymap.set("n", "<leader>s", "<CMD>Csub<CR>", {})
-vim.keymap.set("n", "<leader>/", ":FuzzyGrep ", { silent = false })
-vim.keymap.set("n", "<leader>?", ":FuzzyFiles ", { silent = false })
-vim.keymap.set("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fh", "<CMD>FuzzyHelp<CR>", { silent = false })
-vim.keymap.set("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { silent = false })
-vim.keymap.set("n", "<leader>fl", "<CMD>FuzzyList<CR>", { silent = false })
-vim.keymap.set("n", "<leader>gb", "<CMD>FuzzyGitBranches<CR>", { silent = false })
-vim.keymap.set("n", "<leader>gw", "<CMD>FuzzyGitWorktrees<CR>", { silent = false })
+map("n", "<leader>s", "<CMD>Csub<CR>")
+map("n", "<leader>/", ":FuzzyGrep ", { silent = false })
+map("n", "<leader>?", ":FuzzyFiles ", { silent = false })
+map("n", "<leader>.", "<CMD>FuzzyBuffers<CR>")
+map("n", "<leader>fh", "<CMD>FuzzyHelp<CR>")
+map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>")
+map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>")
+map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>")
+map("n", "<leader>fl", "<CMD>FuzzyList<CR>")
+map("n", "<leader>gb", "<CMD>FuzzyGitBranches<CR>")
+map("n", "<leader>gw", "<CMD>FuzzyGitWorktrees<CR>")
 
-vim.keymap.set("n", "<leader>fw", function()
+map("n", "<leader>fw", function()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end
-end, {})
+end)
 
-vim.keymap.set("n", "<leader>fW", function()
+map("n", "<leader>fW", function()
     local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
-end, {})
+end)
 
-vim.keymap.set("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>J", "<CMD>J<CR>", { noremap = true, silent = true })
+map("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { silent = true })
+map("n", "<leader>J", "<CMD>J<CR>", { silent = true })
