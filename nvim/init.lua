@@ -98,12 +98,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 require("brackets")
 require("surround")
--- require("sessions")
+-- require("sessions") 
 
 vim.pack.add({
     { src = "https://github.com/stevearc/oil.nvim",               name = "oil" },
     { src = "https://github.com/NicolasGB/jj.nvim",               name = "jj.nvim" },
-    { src = "https://github.com/github/copilot.vim",              name = "copilot" },
+    { src = "https://github.com/zbirenbaum/copilot.lua",          name = "copilot" },
     { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
     { src = "https://github.com/anoopkcn/fuzzy.nvim",             name = "fuzzy" },
     { src = "https://github.com/anoopkcn/filemarks.nvim",         name = "filemarks" },
@@ -125,6 +125,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "gD", vim.lsp.buf.declaration, map_opts)
         map("n", "gd", vim.lsp.buf.definition, map_opts)
     end,
+})
+
+require("copilot").setup({
+    suggestion = {
+        auto_trigger = true,
+    }
 })
 
 require("csub").setup({
