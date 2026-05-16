@@ -132,6 +132,7 @@ vim.api.nvim_create_autocmd("InsertEnter", {
     callback = function()
         require("copilot").setup({
             suggestion = { auto_trigger = true },
+            filetypes = { markdown = true },
         })
     end,
 })
