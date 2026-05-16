@@ -54,35 +54,35 @@ vim.cmd.colorscheme("onehalfdark")
 
 local map = vim.keymap.set
 
-map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
-map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true })
-map("t", "<Esc>", [[<C-\><C-n>]], { silent = true })
+map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
+map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true, desc = "Disable Ctrl-Space" })
+map("t", "<Esc>", [[<C-\><C-n>]], { silent = true, desc = "Exit terminal mode" })
 
-map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true })
+map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
 
-map({ "n", "v" }, "<leader>p", [["+p]], { silent = true })
-map({ "n", "v" }, "<leader>y", [["+y]], { silent = true })
+map({ "n", "v" }, "<leader>p", [["+p]], { silent = true, desc = "Paste from system clipboard" })
+map({ "n", "v" }, "<leader>y", [["+y]], { silent = true, desc = "Yank to system clipboard" })
 
-map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true })
-map("n", "<leader>-", ":rightbelow split<CR>", { silent = true })
+map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true, desc = "Split window vertically (right)" })
+map("n", "<leader>-", ":rightbelow split<CR>", { silent = true, desc = "Split window horizontally (below)" })
 
-map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true })
-map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true })
+map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
+map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
 
-map("n", "<C-s>", "<CMD>mksession!<CR>", { silent = true })
+map("n", "<C-s>", "<CMD>mksession!<CR>", { silent = true, desc = "Save session" })
 
-map("n", "<leader>bd", vim.cmd.bd, { silent = true })
-map("n", "<leader>on", vim.cmd.only, { silent = true })
+map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
+map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
 
-map("n", "<leader>t", vim.diagnostic.setqflist, { silent = true })
+map("n", "<leader>t", vim.diagnostic.setqflist, { silent = true, desc = "Send diagnostics to quickfix" })
 
 map("n", "<leader>x", function()
     vim.diagnostic.open_float({ border = "rounded" })
-end, { silent = true })
+end, { silent = true, desc = "Show diagnostic in float" })
 
 map("n", "<leader>,", function()
     vim.lsp.buf.format({ async = true })
-end, { silent = true })
+end, { silent = true, desc = "Format buffer via LSP" })
 
 map("n", "<leader>q", function()
     vim.cmd(vim.fn.getqflist({ winid = 0 }).winid > 0 and "cclose" or "copen")
@@ -121,9 +121,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local map_opts = { buffer = bufnr, silent = true }
         map("n", "K", function()
             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
-        end, map_opts)
-        map("n", "gD", vim.lsp.buf.declaration, map_opts)
-        map("n", "gd", vim.lsp.buf.definition, map_opts)
+        end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
+        map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
+        map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
     end,
 })
 
@@ -227,27 +227,27 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = { "qf", "csub" },
     group = vim.api.nvim_create_augroup("CsubQfMap", { clear = true }),
     callback = function(args)
-        map("n", "<leader>s", "<CMD>Csub<CR>", { buffer = args.buf, silent = true })
+        map("n", "<leader>s", "<CMD>Csub<CR>", { buffer = args.buf, silent = true, desc = "Substitute in quickfix (Csub)" })
     end,
 })
 
-map("n", "<leader>.", "<CMD>FuzzyBuffers<CR>")
-map("n", "<leader>g", "<CMD>FuzzyFiles!<CR>")
-map("n", "<leader>/", "<CMD>FuzzyGrep!<CR>")
-map("n", "<leader>h", "<CMD>FuzzyBuffers!<CR>")
+map("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { desc = "Fuzzy find buffers" })
+map("n", "<leader>g", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
+map("n", "<leader>/", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
+map("n", "<leader>h", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers (history), open in picker" })
 
 map("n", "<leader>w", function()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end
-end)
+end, { desc = "Grep word under cursor" })
 
 map("n", "<leader>W", function()
     local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
-end)
+end, { desc = "Grep WORD under cursor (fixed string)" })
 
-map("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { silent = true })
+map("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { silent = true, desc = "List filemarks" })
 
-map("n", "<leader>J", "<CMD>J<CR>", { silent = true })
+map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
 
 map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
