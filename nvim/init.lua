@@ -98,7 +98,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 require("brackets")
 require("surround")
--- require("sessions") 
+-- require("sessions")
 
 vim.pack.add({
     { src = "https://github.com/stevearc/oil.nvim",               name = "oil" },
@@ -127,10 +127,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
-require("copilot").setup({
-    suggestion = {
-        auto_trigger = true,
-    }
+vim.api.nvim_create_autocmd("InsertEnter", {
+    once = true,
+    callback = function()
+        require("copilot").setup({
+            suggestion = { auto_trigger = true },
+        })
+    end,
 })
 
 require("csub").setup({
@@ -151,9 +154,9 @@ require("fuzzy").setup({
 
 require("filemarks").setup({})
 
-require("jj").setup({
-    terminal = { window = { split_size = 0.25 } },
-})
+vim.schedule(function()
+    require("jj").setup({})
+end)
 
 require("oil").setup({
     columns = {
@@ -227,7 +230,8 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = { "qf", "csub" },
     group = vim.api.nvim_create_augroup("CsubQfMap", { clear = true }),
     callback = function(args)
-        map("n", "<leader>s", "<CMD>Csub<CR>", { buffer = args.buf, silent = true, desc = "Substitute in quickfix (Csub)" })
+        map("n", "<leader>s", "<CMD>Csub<CR>",
+            { buffer = args.buf, silent = true, desc = "Substitute in quickfix (Csub)" })
     end,
 })
 
