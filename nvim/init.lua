@@ -153,7 +153,8 @@ require("fuzzy").setup({
 })
 
 require("filemarks").setup({
-    show_help = false
+    show_help = false,
+    dir_open_cmd = "Oil %s"
 })
 
 require("jj").setup({})
