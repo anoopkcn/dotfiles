@@ -6,6 +6,7 @@
 require('vim._core.ui2').enable()
 vim.opt.winborder = "rounded"
 vim.opt.completeopt:append("popup")
+-- vim.opt.autocomplete = true
 -- }
 
 -- OPTIONS
@@ -19,7 +20,7 @@ vim.g.loaded_node_provider = 0
 
 vim.opt.laststatus = 0
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
 
@@ -48,7 +49,6 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.cmd.colorscheme("onehalfdark")
-
 
 -- KEYMAPS (General)
 
@@ -152,11 +152,11 @@ require("fuzzy").setup({
     window = { width = 0.45, height = 0.45 },
 })
 
-require("filemarks").setup({})
+require("filemarks").setup({
+    show_help = false
+})
 
-vim.schedule(function()
-    require("jj").setup({})
-end)
+require("jj").setup({})
 
 require("oil").setup({
     columns = {
