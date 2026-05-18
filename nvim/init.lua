@@ -43,6 +43,7 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.winbar = "%f%m%r"
+-- vim.opt.inccommand = "split"
 
 vim.g.loaded_matchit = 1
 vim.g.loaded_netrw = 1
@@ -68,8 +69,6 @@ map("n", "<leader>-", ":rightbelow split<CR>", { silent = true, desc = "Split wi
 
 map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
-
-map("n", "<C-s>", "<CMD>mksession!<CR>", { silent = true, desc = "Save session" })
 
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
 map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
@@ -237,22 +236,22 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-map("n", "<leader>.", "<CMD>FuzzyBuffers<CR>", { desc = "Fuzzy find buffers" })
-map("n", "<leader>g", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
-map("n", "<leader>/", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
-map("n", "<leader>h", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers (history), open in picker" })
+map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
+map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
+map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers (history), open in picker" })
+map("n", "<leader>fz", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy find LSP symbols, open in picker" })
 
-map("n", "<leader>w", function()
+map("n", "<leader>fw", function()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end
 end, { desc = "Grep word under cursor" })
 
-map("n", "<leader>W", function()
+map("n", "<leader>fW", function()
     local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
 end, { desc = "Grep WORD under cursor (fixed string)" })
 
-map("n", "<leader>l", "<CMD>bot FilemarksList<CR>", { silent = true, desc = "List filemarks" })
+map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
 
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
 
