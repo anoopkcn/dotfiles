@@ -115,7 +115,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
-map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word cursor is on globally" })
+map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+    { desc = "Replace word cursor is on globally" })
 
 
 
@@ -133,9 +134,10 @@ vim.pack.add({
     { src = "https://github.com/anoopkcn/filemarks.nvim",         name = "filemarks" },
     { src = "https://github.com/neovim/nvim-lspconfig",           branch = "master" },
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" },
+    { src = "https://github.com/tpope/vim-fugitive",              name = "fugitive" },
+    { src = "https://github.com/nvim-mini/mini.notify",           name = "mini.notify" },
+    { src = "https://github.com/nvim-mini/mini.diff",             name = "mini.diff" },
 })
-
-vim.pack.add({ 'https://github.com/nvim-mini/mini.notify' })
 
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -161,6 +163,16 @@ vim.api.nvim_create_autocmd("InsertEnter", {
             filetypes = { markdown = true },
         })
     end,
+})
+
+MiniNotify = require("mini.notify")
+MiniNotify.setup({
+    content = { format = function(notif) return notif.msg end, }
+})
+
+MiniDiff = require("mini.diff")
+MiniDiff.setup({
+    source = MiniDiff.gen_source.git({ index = false }),
 })
 
 require("csub").setup({
@@ -255,4 +267,4 @@ map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "L
 
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
 
-map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open fugitive Git status" })
