@@ -33,9 +33,14 @@ vim.opt.smartindent = true
 vim.opt.wrap = true
 vim.opt.showbreak = "⤷ "
 
-vim.opt.undofile = true
-vim.opt.path:append("**")
 vim.opt.swapfile = false
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
+vim.opt.path:append("**")
+
+vim.opt.isfname:append("@-@")
+vim.opt.guicursor = ""
+vim.opt.scrolloff = 8
 
 vim.opt.pumborder = "rounded"
 
@@ -45,10 +50,13 @@ vim.opt.switchbuf:append("useopen")
 vim.opt.winbar = "%f%m%r"
 -- vim.opt.inccommand = "split"
 
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
 
+vim.opt.termguicolors = true
 vim.cmd.colorscheme("onehalfdark")
 
 -- KEYMAPS (General)
@@ -57,15 +65,30 @@ local map = vim.keymap.set
 
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
 map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true, desc = "Disable Ctrl-Space" })
-map("t", "<Esc>", [[<C-\><C-n>]], { silent = true, desc = "Exit terminal mode" })
+-- map("t", "<Esc>", [[<C-\><C-n>]], { silent = true, desc = "Exit terminal mode" })
 
 map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
 
+map("x", "p", [["_dP]], { silent = true, desc = "Paste without overwriting register" })
 map({ "n", "v" }, "<leader>p", [["+p]], { silent = true, desc = "Paste from system clipboard" })
 map({ "n", "v" }, "<leader>y", [["+y]], { silent = true, desc = "Yank to system clipboard" })
+map({ "n", "v" }, "<leader>d", [["_d]], { silent = true, desc = "Delete without overwriting register" })
+
+map("v", "<", "<gv", { silent = true, desc = "Indent left and reselect" })
+map("v", ">", ">gv", { silent = true, desc = "Indent right and reselect" })
+
+map("n", "J", "mzJ`z", { silent = true, desc = "Join line below without moving cursor" })
+
+map("n", "<C-d>", "<C-d>zz", { desc = "move down in buffer with cursor entered" })
+map("n", "<C-u>", "<C-u>zz", { desc = "move up in buffer with cursor centered" })
+
+map("n", "n", "nzzzv", { desc = "Next search result with cursor centered" })
+map("n", "N", "Nzzzv", { desc = "Previous search result with cursor centered" })
 
 map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true, desc = "Split window vertically (right)" })
 map("n", "<leader>-", ":rightbelow split<CR>", { silent = true, desc = "Split window horizontally (below)" })
+
+map("n", "<leader>fe", "<CMD>Explore<CR>", { silent = true, desc = "Open file explorer" })
 
 map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
@@ -92,6 +115,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
+map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word cursor is on globally" })
+
+
 
 -- PLUGINS
 
@@ -100,7 +126,6 @@ require("surround")
 -- require("sessions")
 
 vim.pack.add({
-    { src = "https://github.com/stevearc/oil.nvim",               name = "oil" },
     { src = "https://github.com/NicolasGB/jj.nvim",               name = "jj.nvim" },
     { src = "https://github.com/zbirenbaum/copilot.lua",          name = "copilot" },
     { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
@@ -109,6 +134,8 @@ vim.pack.add({
     { src = "https://github.com/neovim/nvim-lspconfig",           branch = "master" },
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" },
 })
+
+vim.pack.add({ 'https://github.com/nvim-mini/mini.notify' })
 
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -154,37 +181,10 @@ require("fuzzy").setup({
 
 require("filemarks").setup({
     show_help = false,
-    dir_open_cmd = "Oil %s"
+    dir_open_cmd = "Explore"
 })
 
 require("jj").setup({})
-
-require("oil").setup({
-    columns = {
-        "permissions",
-        "size",
-        "mtime",
-    },
-    float = {
-        border = "rounded",
-        max_width = 80,
-        max_height = 40,
-        override = function(conf)
-            conf.row = 1
-            return conf
-        end,
-    },
-    view_options = { show_hidden = true },
-    confirmation = { border = "rounded" },
-    keymaps = {
-        ["q"] = { "actions.close", mode = "n" },
-        ["<C-p>"] = false,
-        ["<M-p>"] = {
-            "actions.preview",
-            opts = { horizontal = true, split = "belowright" },
-        },
-    },
-})
 
 local treesitter = require("nvim-treesitter")
 local ensure_installed = {

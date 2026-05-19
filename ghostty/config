@@ -1,8 +1,8 @@
 # Ghostty Terminal Configuration
 # Ref: https://ghostty.org/docs/config/reference
 
-# font-family = Berkeley Mono Variable
-font-family = JetBrains Mono
+font-family = Berkeley Mono Variable
+# font-family = JetBrains Mono
 window-title-font-family = Berkeley Mono Variable
 macos-non-native-fullscreen = visible-menu
 macos-option-as-alt = left
@@ -15,7 +15,7 @@ macos-titlebar-proxy-icon=hidden
 font-size = 12
 # font-thicken = true
 font-feature = -calt
-# adjust-cell-height=5%
+adjust-cell-height=5%
 adjust-cursor-thickness=2
 window-padding-balance=true
 
