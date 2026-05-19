@@ -6,7 +6,6 @@
 require('vim._core.ui2').enable()
 vim.opt.winborder = "rounded"
 vim.opt.completeopt:append("popup")
--- vim.opt.autocomplete = true
 -- }
 
 -- OPTIONS
@@ -37,6 +36,9 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.path:append("**")
+
+vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
+vim.opt.shortmess:append("c")
 
 vim.opt.isfname:append("@-@")
 vim.opt.guicursor = ""
@@ -145,7 +147,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client then client.server_capabilities.semanticTokensProvider = nil end
+        if client then
+            client.server_capabilities.semanticTokensProvider = nil
+            if client:supports_method("textDocument/completion") then
+                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+                vim.bo[bufnr].autocomplete = true
+            end
+        end
         local map_opts = { buffer = bufnr, silent = true }
         map("n", "K", function()
             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
@@ -169,6 +177,7 @@ MiniNotify = require("mini.notify")
 MiniNotify.setup({
     content = { format = function(notif) return notif.msg end, }
 })
+
 
 MiniDiff = require("mini.diff")
 MiniDiff.setup({
@@ -248,9 +257,9 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers (history), open in picker" })
 map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
 map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
-map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers (history), open in picker" })
 map("n", "<leader>fz", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy find LSP symbols, open in picker" })
 
 map("n", "<leader>fw", function()
