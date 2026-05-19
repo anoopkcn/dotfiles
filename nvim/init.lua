@@ -1,17 +1,12 @@
--- Neovim Configuration (init.lua)
--- LICENSE: MIT
 -- AUTHOR: @anoopkcn
+-- LICENSE: MIT
 
--- nvim v 0.12.0+ {
 require('vim._core.ui2').enable()
 vim.opt.winborder = "rounded"
 vim.opt.completeopt:append("popup")
--- }
 
 -- OPTIONS
-
 vim.g.mapleader = " "
-
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
@@ -49,22 +44,20 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-vim.opt.winbar = "%f%m%r"
+vim.opt.winbar        = "%f%m%r"
 -- vim.opt.inccommand = "split"
 
-vim.g.netrw_banner = 0
+vim.g.netrw_banner    = 0
 vim.g.netrw_liststyle = 1
-vim.g.loaded_matchit = 1
+vim.g.loaded_matchit  = 1
 -- vim.g.loaded_netrw = 1
 -- vim.g.loaded_netrwPlugin = 1
 
 vim.opt.termguicolors = true
-vim.cmd.colorscheme("onehalfdark")
+vim.o.foldmethod      = "marker"
 
--- KEYMAPS (General)
-
+-- KEYMAPS
 local map = vim.keymap.set
-
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
 map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true, desc = "Disable Ctrl-Space" })
 -- map("t", "<Esc>", [[<C-\><C-n>]], { silent = true, desc = "Exit terminal mode" })
@@ -112,17 +105,25 @@ map("n", "<leader>q", function()
     vim.cmd(vim.fn.getqflist({ winid = 0 }).winid > 0 and "cclose" or "copen")
 end, { silent = true, desc = "Toggle quickfix" })
 
+map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+    { desc = "Replace word cursor is on globally" })
+
+-- AUTOCOMMANDS
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
 })
 
-map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-    { desc = "Replace word cursor is on globally" })
+vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
+    pattern = { "*.*" },
+    callback = function() vim.cmd("silent! mkview") end,
+})
+vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+    pattern = { "*.*" },
+    callback = function() vim.cmd("silent! loadview") end,
+})
 
-
-
--- PLUGINS
+vim.cmd.colorscheme("onehalfdark")
 
 require("brackets")
 require("surround")
@@ -130,7 +131,7 @@ require("surround")
 
 vim.pack.add({
     { src = "https://github.com/NicolasGB/jj.nvim",               name = "jj.nvim" },
-    { src = "https://github.com/zbirenbaum/copilot.lua",          name = "copilot" },
+    -- { src = "https://github.com/zbirenbaum/copilot.lua",          name = "copilot" },
     { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
     { src = "https://github.com/anoopkcn/fuzzy.nvim",             name = "fuzzy" },
     { src = "https://github.com/anoopkcn/filemarks.nvim",         name = "filemarks" },
@@ -163,20 +164,31 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
-vim.api.nvim_create_autocmd("InsertEnter", {
-    once = true,
-    callback = function()
-        require("copilot").setup({
-            suggestion = { auto_trigger = true },
-            filetypes = { markdown = true },
-        })
-    end,
-})
+-- vim.api.nvim_create_autocmd("InsertEnter", {
+--     once = true,
+--     callback = function()
+--         require("copilot").setup({
+--             suggestion = { auto_trigger = true },
+--             filetypes = { markdown = true },
+--         })
+--     end,
+-- })
 
 MiniNotify = require("mini.notify")
 MiniNotify.setup({
     content = { format = function(notif) return notif.msg end, }
 })
+
+local function set_notify_hl()
+    vim.api.nvim_set_hl(0, "MiniNotifyNormal", { link = "Normal" })
+    vim.api.nvim_set_hl(0, "MiniNotifyBorder", { fg = "#919baa" })
+    vim.api.nvim_set_hl(0, "MiniNotifyTitle", { link = "Title" })
+end
+vim.api.nvim_create_autocmd("ColorScheme", {
+    group = vim.api.nvim_create_augroup("MiniNotifyTheme", { clear = true }),
+    callback = set_notify_hl,
+})
+set_notify_hl()
 
 
 MiniDiff = require("mini.diff")

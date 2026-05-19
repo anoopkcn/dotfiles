@@ -41,8 +41,14 @@ alias ls="ls --color=auto"
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
-alias imgcat="viu" # show images in terminal
 alias notes="cd ~/Dropbox/notes"
+
+# kitten aliases
+alias icat="kitten icat"
+alias s="kitten ssh"
+alias clip="kitten clipboard"
+alias kls="kitten choose-files"
+alias hg="kitten hyperlinked-grep"
 
 # PLUGINS
 plugin add "zshzoo/macos"
