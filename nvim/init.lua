@@ -23,7 +23,6 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
-
 vim.opt.wrap = true
 vim.opt.showbreak = "⤷ "
 
@@ -31,7 +30,6 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.path:append("**")
-
 vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
 vim.opt.shortmess:append("c")
 
@@ -40,71 +38,49 @@ vim.opt.guicursor = ""
 vim.opt.scrolloff = 8
 
 vim.opt.pumborder = "rounded"
-
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.winbar        = "%f%m%r"
--- vim.opt.inccommand = "split"
 
 vim.g.netrw_banner    = 0
 vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit  = 1
--- vim.g.loaded_netrw = 1
--- vim.g.loaded_netrwPlugin = 1
-
 vim.opt.termguicolors = true
-vim.o.foldmethod      = "marker"
 
 -- KEYMAPS
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
 map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true, desc = "Disable Ctrl-Space" })
--- map("t", "<Esc>", [[<C-\><C-n>]], { silent = true, desc = "Exit terminal mode" })
-
 map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
-
 map("x", "p", [["_dP]], { silent = true, desc = "Paste without overwriting register" })
 map({ "n", "v" }, "<leader>p", [["+p]], { silent = true, desc = "Paste from system clipboard" })
 map({ "n", "v" }, "<leader>y", [["+y]], { silent = true, desc = "Yank to system clipboard" })
 map({ "n", "v" }, "<leader>d", [["_d]], { silent = true, desc = "Delete without overwriting register" })
-
 map("v", "<", "<gv", { silent = true, desc = "Indent left and reselect" })
 map("v", ">", ">gv", { silent = true, desc = "Indent right and reselect" })
-
 map("n", "J", "mzJ`z", { silent = true, desc = "Join line below without moving cursor" })
-
 map("n", "<C-d>", "<C-d>zz", { desc = "move down in buffer with cursor entered" })
 map("n", "<C-u>", "<C-u>zz", { desc = "move up in buffer with cursor centered" })
-
 map("n", "n", "nzzzv", { desc = "Next search result with cursor centered" })
 map("n", "N", "Nzzzv", { desc = "Previous search result with cursor centered" })
-
 map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true, desc = "Split window vertically (right)" })
 map("n", "<leader>-", ":rightbelow split<CR>", { silent = true, desc = "Split window horizontally (below)" })
-
 map("n", "<leader>fe", "<CMD>Explore<CR>", { silent = true, desc = "Open file explorer" })
-
 map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
-
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
 map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
-
 map("n", "<leader>t", vim.diagnostic.setqflist, { silent = true, desc = "Send diagnostics to quickfix" })
-
 map("n", "<leader>x", function()
     vim.diagnostic.open_float({ border = "rounded" })
 end, { silent = true, desc = "Show diagnostic in float" })
-
 map("n", "<leader>,", function()
     vim.lsp.buf.format({ async = true })
 end, { silent = true, desc = "Format buffer via LSP" })
-
 map("n", "<leader>q", function()
     vim.cmd(vim.fn.getqflist({ winid = 0 }).winid > 0 and "cclose" or "copen")
 end, { silent = true, desc = "Toggle quickfix" })
-
 map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
     { desc = "Replace word cursor is on globally" })
 
@@ -124,11 +100,12 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
 })
 
 vim.cmd.colorscheme("onehalfdark")
+
 require("brackets")
 require("surround")
 
 -- TREESITTER
-vim.pack.add({{ src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" }})
+vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" } })
 local treesitter = require("nvim-treesitter")
 local ensure_installed = {
     "vim", "vimdoc", "rust", "c", "cpp", "go",
@@ -168,7 +145,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 })
 
 -- LSP
-vim.pack.add({{ src = "https://github.com/neovim/nvim-lspconfig",branch = "master" }})
+vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
@@ -204,17 +181,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- })
 
 vim.pack.add({
-    { src = "https://github.com/NicolasGB/jj.nvim", name = "jj.nvim" },
-    { src = "https://github.com/anoopkcn/csub.nvim", name = "csub" },
-    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
+    { src = "https://github.com/NicolasGB/jj.nvim",       name = "jj.nvim" },
+    { src = "https://github.com/anoopkcn/csub.nvim",      name = "csub" },
+    { src = "https://github.com/anoopkcn/fuzzy.nvim",     name = "fuzzy" },
     { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
-    { src = "https://github.com/tpope/vim-fugitive", name = "fugitive" },
-    { src = "https://github.com/nvim-mini/mini.diff", name = "mini.diff" },
+    { src = "https://github.com/tpope/vim-fugitive",      name = "fugitive" },
+    { src = "https://github.com/nvim-mini/mini.diff",     name = "mini.diff" },
 })
 
-MiniDiff = require("mini.diff")
-MiniDiff.setup({
-    source = MiniDiff.gen_source.git({ index = false }),
+require("mini.diff").setup({
+    source = require("mini.diff").gen_source.git({ index = false }),
 })
 
 require("csub").setup({
@@ -252,7 +228,7 @@ require("jj").setup({})
 map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers" })
 map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
 map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
-map("n", "<leader>fz", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy find LSP symbols"})
+map("n", "<leader>fz", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy find LSP symbols" })
 map("n", "<leader>fw", function()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end
@@ -261,9 +237,6 @@ map("n", "<leader>fW", function()
     local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
 end, { desc = "Grep WORD under cursor (fixed string)" })
-
 map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
-
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
-
 map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open fugitive Git status" })
