@@ -123,6 +123,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     callback = function() vim.cmd("silent! loadview") end,
 })
 
+
 vim.cmd.colorscheme("onehalfdark")
 
 require("brackets")
@@ -131,15 +132,14 @@ require("surround")
 
 vim.pack.add({
     { src = "https://github.com/NicolasGB/jj.nvim",               name = "jj.nvim" },
-    -- { src = "https://github.com/zbirenbaum/copilot.lua",          name = "copilot" },
     { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
     { src = "https://github.com/anoopkcn/fuzzy.nvim",             name = "fuzzy" },
     { src = "https://github.com/anoopkcn/filemarks.nvim",         name = "filemarks" },
     { src = "https://github.com/neovim/nvim-lspconfig",           branch = "master" },
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" },
     { src = "https://github.com/tpope/vim-fugitive",              name = "fugitive" },
-    { src = "https://github.com/nvim-mini/mini.notify",           name = "mini.notify" },
     { src = "https://github.com/nvim-mini/mini.diff",             name = "mini.diff" },
+    -- { src = "https://github.com/zbirenbaum/copilot.lua",          name = "copilot" },
 })
 
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
@@ -173,22 +173,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 --         })
 --     end,
 -- })
-
-MiniNotify = require("mini.notify")
-MiniNotify.setup({
-    content = { format = function(notif) return notif.msg end, }
-})
-
-local function set_notify_hl()
-    vim.api.nvim_set_hl(0, "MiniNotifyNormal", { link = "Normal" })
-    vim.api.nvim_set_hl(0, "MiniNotifyBorder", { fg = "#919baa" })
-    vim.api.nvim_set_hl(0, "MiniNotifyTitle", { link = "Title" })
-end
-vim.api.nvim_create_autocmd("ColorScheme", {
-    group = vim.api.nvim_create_augroup("MiniNotifyTheme", { clear = true }),
-    callback = set_notify_hl,
-})
-set_notify_hl()
 
 
 MiniDiff = require("mini.diff")
