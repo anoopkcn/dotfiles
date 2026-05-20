@@ -1,0 +1,475 @@
+#!/usr/bin/env bash
+# ks - kitty session helper
+#
+# Usage:
+#   ks <path>     Open a new kitty OS window tagged with session_name=<folder>-<uid>.
+#   ks -l         List all active kitty sessions.
+#   ks -s <name>  Switch focus to the session with the given name.
+#   ks -k         Interactive picker (fzf, multi-select) over active sessions; kill on Enter.
+#   ks -k <name>  Kill the session with the given name (closes its OS window).
+#   ks -k --all   Kill all sessions except the currently focused one.
+#   ks -i         Interactive picker (fzf) over active sessions; switch on select.
+#   ks -n         Interactive picker (fzf) over KS_LOCATIONS subdirs; create on select.
+
+set -euo pipefail
+
+# Resolve the kitty remote-control socket.
+# Inside a kitty window, $KITTY_LISTEN_ON is set automatically.
+# Otherwise fall back to globbing the listen_on path (kitty appends -<pid>).
+if [[ -n "${KITTY_LISTEN_ON:-}" ]]; then
+  socket="$KITTY_LISTEN_ON"
+else
+  socket_path="$(ls -t /tmp/mykitty-* 2>/dev/null | head -n1 || true)"
+  if [[ -z "${socket_path:-}" ]]; then
+    echo "ks: no kitty socket found (is kitty running with listen_on?)" >&2
+    exit 1
+  fi
+  socket="unix:${socket_path}"
+fi
+
+usage() {
+  cat <<'EOF'
+Usage:
+  ks <path>     Open a new kitty OS window tagged with session_name=<folder>-<uid>.
+  ks -l         List all active kitty sessions.
+  ks -s <name>  Switch focus to the session with the given name.
+  ks -k         Interactive picker (fzf, multi-select) over active sessions; kill on Enter.
+  ks -k <name>  Kill the session with the given name (closes its OS window).
+  ks -k --all   Kill all sessions except the currently focused one.
+  ks -i         Interactive picker (fzf) over active sessions; switch on select.
+  ks -n         Interactive picker (fzf) over KS_LOCATIONS subdirs; create on select.
+EOF
+}
+
+require_fzf() {
+  if ! command -v fzf >/dev/null 2>&1; then
+    echo "ks: fzf not found in PATH (brew install fzf)" >&2
+    exit 1
+  fi
+}
+
+# Emits one TSV line per active session, sorted focused-first then most-recent:
+#   <name>\t<cwd>\t<launch_path>\t<focused>\t<last_focused_at>
+# cwd is the live foreground-process cwd (with /private/ stripped); launch_path
+# is the session_path user_var if set, else the cwd.
+list_sessions_tsv() {
+  kitty @ --to "$socket" ls | python3 -c '
+import json, sys
+
+def strip_private(p):
+    return p[len("/private"):] if p.startswith("/private/") else p
+
+data = json.load(sys.stdin)
+rows = []
+for os_win in data:
+    os_focused = os_win.get("is_focused", False)
+    for tab in os_win.get("tabs", []):
+        tab_focused = tab.get("is_focused", False)
+        for w in tab.get("windows", []):
+            uv = w.get("user_vars") or {}
+            name = uv.get("session_name", "")
+            if not name:
+                continue
+            fg = w.get("foreground_processes") or []
+            cwd = (fg[0].get("cwd") if fg else None) or w.get("cwd", "")
+            cwd = strip_private(cwd)
+            launch_path = strip_private(uv.get("session_path") or cwd)
+            rows.append({
+                "name": name,
+                "cwd": cwd,
+                "launch_path": launch_path,
+                "focused": os_focused and tab_focused and w.get("is_focused", False),
+                "last_focused_at": w.get("last_focused_at", 0) or 0,
+            })
+
+# Dedupe by session_name: prefer focused, else most-recent.
+by_name = {}
+for r in rows:
+    cur = by_name.get(r["name"])
+    if cur is None:
+        by_name[r["name"]] = r
+        continue
+    if r["focused"] and not cur["focused"]:
+        by_name[r["name"]] = r
+    elif r["focused"] == cur["focused"] and r["last_focused_at"] > cur["last_focused_at"]:
+        by_name[r["name"]] = r
+
+items = sorted(by_name.values(), key=lambda r: (-int(r["focused"]), -r["last_focused_at"], r["name"]))
+for r in items:
+    name = r["name"]
+    cwd = r["cwd"]
+    launch = r["launch_path"]
+    focused = int(r["focused"])
+    last = r["last_focused_at"]
+    print(f"{name}\t{cwd}\t{launch}\t{focused}\t{last}")
+'
+}
+
+# Create a new OS-window session at the given absolute path.
+create_session() {
+  local abs_path="$1"
+  local folder_name uid session_name
+  folder_name="$(basename "$abs_path")"
+  uid="$(LC_ALL=C od -An -tx1 -N3 /dev/urandom | tr -d ' \n')"
+  session_name="${folder_name}-${uid}"
+  kitty @ --to "$socket" launch \
+    --type=os-window \
+    --cwd="$abs_path" \
+    --var="session_name=${session_name}" \
+    --var="session_path=${abs_path}" >/dev/null
+  echo "$session_name"
+}
+
+cmd_list() {
+  local tsv
+  tsv="$(list_sessions_tsv)"
+  if [[ -z "$tsv" ]]; then
+    return 0
+  fi
+  HOME="$HOME" python3 -c '
+import os, sys
+home = os.environ.get("HOME", "")
+items = []
+for line in sys.stdin:
+    line = line.rstrip("\n")
+    if not line:
+        continue
+    parts = line.split("\t")
+    if len(parts) < 5:
+        continue
+    name, cwd, _launch, focused, _last = parts[0], parts[1], parts[2], parts[3], parts[4]
+    items.append((name, cwd, focused == "1"))
+if not items:
+    sys.exit(0)
+name_w = max(len(n) for n, _, _ in items)
+for name, cwd, focused in items:
+    if home and cwd.startswith(home):
+        cwd = "~" + cwd[len(home):]
+    marker = "*" if focused else " "
+    print(f"{marker} {name:<{name_w}}  {cwd}")
+' <<<"$tsv"
+}
+
+cmd_switch() {
+  local name="$1"
+  local err
+  if err="$(kitty @ --to "$socket" focus-window --match "var:session_name=$name" 2>&1 >/dev/null)"; then
+    return 0
+  fi
+  if [[ "$err" == *"No matching windows"* ]]; then
+    echo "ks: no session named '$name'" >&2
+  else
+    echo "ks: ${err:-failed to focus session \'$name\'}" >&2
+  fi
+  exit 1
+}
+
+cmd_kill_all() {
+  local ids
+  if ! ids="$(kitty @ --to "$socket" ls | python3 -c '
+import json, sys
+data = json.load(sys.stdin)
+focused_os = None
+for os_win in data:
+    if os_win.get("is_focused"):
+        focused_os = os_win.get("id")
+        break
+if focused_os is None:
+    sys.stderr.write("ks: could not identify the focused kitty OS window\n")
+    sys.exit(2)
+for os_win in data:
+    if os_win.get("id") == focused_os:
+        continue
+    if not any((w.get("user_vars") or {}).get("session_name")
+               for tab in os_win.get("tabs", [])
+               for w in tab.get("windows", [])):
+        continue
+    for tab in os_win.get("tabs", []):
+        for w in tab.get("windows", []):
+            wid = w.get("id")
+            if wid is not None:
+                print(wid)
+')"; then
+    exit 1
+  fi
+  if [[ -z "$ids" ]]; then
+    echo "ks: no other sessions to kill" >&2
+    return 0
+  fi
+  local wid count=0
+  while IFS= read -r wid; do
+    [[ -z "$wid" ]] && continue
+    kitty @ --to "$socket" close-window --match "id:$wid" >/dev/null 2>&1 || true
+    count=$((count + 1))
+  done <<<"$ids"
+  echo "ks: closed $count session window(s)" >&2
+}
+
+kill_session_by_name() {
+  local name="$1"
+  local ids
+  ids="$(kitty @ --to "$socket" ls | python3 -c '
+import json, sys
+target = sys.argv[1]
+data = json.load(sys.stdin)
+for os_win in data:
+    win_ids = []
+    found = False
+    for tab in os_win.get("tabs", []):
+        for w in tab.get("windows", []):
+            wid = w.get("id")
+            if wid is not None:
+                win_ids.append(str(wid))
+            if (w.get("user_vars") or {}).get("session_name") == target:
+                found = True
+    if found:
+        for wid in win_ids:
+            print(wid)
+        break
+' "$name")"
+  if [[ -z "$ids" ]]; then
+    return 1
+  fi
+  local wid
+  while IFS= read -r wid; do
+    [[ -z "$wid" ]] && continue
+    kitty @ --to "$socket" close-window --match "id:$wid" >/dev/null 2>&1 || true
+  done <<<"$ids"
+  return 0
+}
+
+cmd_kill() {
+  local name="$1"
+  if ! kill_session_by_name "$name"; then
+    echo "ks: no session named '$name'" >&2
+    exit 1
+  fi
+}
+
+cmd_pick_session() {
+  require_fzf
+  local tsv display chosen name fzf_rc
+  tsv="$(list_sessions_tsv)"
+  if [[ -z "$tsv" ]]; then
+    echo "ks: no active sessions" >&2
+    return 0
+  fi
+  display="$(HOME="$HOME" python3 -c '
+import os, sys
+home = os.environ.get("HOME", "")
+items = []
+for line in sys.stdin:
+    line = line.rstrip("\n")
+    if not line:
+        continue
+    parts = line.split("\t")
+    if len(parts) < 5:
+        continue
+    name, cwd, focused, last = parts[0], parts[1], parts[3] == "1", float(parts[4] or 0)
+    items.append((name, cwd, focused, last))
+if not items:
+    sys.exit(0)
+items.sort(key=lambda x: (x[2], x[3]))
+name_w = max(len(n) for n, _, _, _ in items)
+for name, cwd, _, _ in items:
+    disp = cwd
+    if home and disp.startswith(home):
+        disp = "~" + disp[len(home):]
+    print(f"{name}\t{name:<{name_w}}  {disp}")
+' <<<"$tsv")"
+
+  set +e
+  chosen="$(printf "%s\n" "$display" | fzf --ansi --reverse --no-multi --height=40% \
+    --with-nth=2 --delimiter=$'\t' --prompt='session > ' \
+    --header='Enter: switch • Esc: cancel')"
+  fzf_rc=$?
+  set -e
+  if [[ $fzf_rc -ne 0 || -z "$chosen" ]]; then
+    return 0
+  fi
+  name="$(printf "%s" "$chosen" | cut -f1)"
+  cmd_switch "$name"
+}
+
+cmd_pick_kill() {
+  require_fzf
+  local tsv display chosen fzf_rc
+  tsv="$(list_sessions_tsv)"
+  if [[ -z "$tsv" ]]; then
+    echo "ks: no active sessions" >&2
+    return 0
+  fi
+  display="$(HOME="$HOME" python3 -c '
+import os, sys
+home = os.environ.get("HOME", "")
+items = []
+for line in sys.stdin:
+    line = line.rstrip("\n")
+    if not line:
+        continue
+    parts = line.split("\t")
+    if len(parts) < 5:
+        continue
+    name, cwd, focused, last = parts[0], parts[1], parts[3] == "1", float(parts[4] or 0)
+    items.append((name, cwd, focused, last))
+if not items:
+    sys.exit(0)
+items.sort(key=lambda x: (x[2], x[3]))
+name_w = max(len(n) for n, _, _, _ in items)
+for name, cwd, _, _ in items:
+    disp = cwd
+    if home and disp.startswith(home):
+        disp = "~" + disp[len(home):]
+    print(f"{name}\t{name:<{name_w}}  {disp}")
+' <<<"$tsv")"
+
+  set +e
+  chosen="$(printf "%s\n" "$display" | fzf --ansi --reverse --multi --height=40% \
+    --with-nth=2 --delimiter=$'\t' --prompt='kill > ' \
+    --header='Tab: select • Enter: kill • Esc: cancel')"
+  fzf_rc=$?
+  set -e
+  if [[ $fzf_rc -ne 0 || -z "$chosen" ]]; then
+    return 0
+  fi
+  local name killed=0
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    name="${line%%$'\t'*}"
+    if kill_session_by_name "$name"; then
+      killed=$((killed + 1))
+    fi
+  done <<<"$chosen"
+  echo "ks: killed $killed session(s)" >&2
+}
+
+cmd_pick_new() {
+  require_fzf
+  if [[ -z "${KS_LOCATIONS:-}" ]]; then
+    cat >&2 <<'EOF'
+ks: KS_LOCATIONS is not set.
+Example: export KS_LOCATIONS="$HOME/projects:$HOME/.config"
+EOF
+    exit 1
+  fi
+
+  local display chosen abs_path fzf_rc
+
+  display="$(KS_LOCATIONS="$KS_LOCATIONS" HOME="$HOME" \
+    kitty @ --to "$socket" ls | python3 -c '
+import json, os, sys
+
+def strip_private(p):
+    return p[len("/private"):] if p.startswith("/private/") else p
+
+home = os.environ.get("HOME", "")
+locs = [os.path.expanduser(p) for p in os.environ.get("KS_LOCATIONS", "").split(":") if p]
+
+try:
+    data = json.load(sys.stdin)
+except (json.JSONDecodeError, ValueError):
+    data = []
+
+active = set()
+for os_win in data:
+    for tab in os_win.get("tabs", []):
+        for w in tab.get("windows", []):
+            uv = w.get("user_vars") or {}
+            if not uv.get("session_name"):
+                continue
+            fg = w.get("foreground_processes") or []
+            cwd = (fg[0].get("cwd") if fg else None) or w.get("cwd", "")
+            active.add(strip_private(uv.get("session_path") or cwd))
+
+seen = set()
+items = []
+for loc in locs:
+    if not os.path.isdir(loc):
+        continue
+    try:
+        names = sorted(os.listdir(loc))
+    except OSError:
+        continue
+    for n in names:
+        if n.startswith("."):
+            continue
+        full = os.path.join(loc, n)
+        if not os.path.isdir(full):
+            continue
+        try:
+            abs_full = strip_private(os.path.realpath(full))
+        except OSError:
+            abs_full = strip_private(full)
+        if abs_full in active or abs_full in seen:
+            continue
+        seen.add(abs_full)
+        items.append((os.path.basename(abs_full), abs_full))
+
+items.sort(key=lambda x: (x[0].lower(), x[1]))
+if not items:
+    sys.exit(0)
+name_w = max(len(n) for n, _ in items)
+for name, full in items:
+    disp = full
+    if home and disp.startswith(home):
+        disp = "~" + disp[len(home):]
+    print(f"{full}\t{name:<{name_w}}  {disp}")
+')"
+
+  if [[ -z "$display" ]]; then
+    echo "ks: no available directories" >&2
+    return 0
+  fi
+
+  set +e
+  chosen="$(printf "%s\n" "$display" | fzf --ansi --reverse --no-multi --height=40% \
+    --with-nth=2 --delimiter=$'\t' --prompt='new > ' \
+    --header='Enter: create session • Esc: cancel')"
+  fzf_rc=$?
+  set -e
+  if [[ $fzf_rc -ne 0 || -z "$chosen" ]]; then
+    return 0
+  fi
+  abs_path="$(printf "%s" "$chosen" | cut -f1)"
+  create_session "$abs_path"
+}
+
+# --- Dispatch ---
+
+if [[ $# -lt 1 ]]; then
+  usage >&2
+  exit 1
+fi
+
+case "$1" in
+  -h|--help) usage; exit 0 ;;
+  -l|--list) cmd_list; exit 0 ;;
+  -s|--switch)
+    if [[ $# -lt 2 || -z "$2" ]]; then
+      echo "ks: -s requires a session name" >&2
+      exit 1
+    fi
+    cmd_switch "$2"
+    exit 0
+    ;;
+  -k|--kill)
+    if [[ $# -lt 2 || -z "$2" ]]; then
+      cmd_pick_kill
+    elif [[ "$2" == "--all" || "$2" == "-a" ]]; then
+      cmd_kill_all
+    else
+      cmd_kill "$2"
+    fi
+    exit 0
+    ;;
+  -i|--interactive) cmd_pick_session; exit 0 ;;
+  -n|--new) cmd_pick_new; exit 0 ;;
+esac
+
+target="$1"
+if [[ ! -d "$target" ]]; then
+  echo "ks: not a directory: $target" >&2
+  exit 1
+fi
+abs_path="$(cd "$target" && pwd)"
+create_session "$abs_path"
