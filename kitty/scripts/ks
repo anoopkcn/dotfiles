@@ -44,7 +44,17 @@ EOF
 require_fzf() {
   if ! command -v fzf >/dev/null 2>&1; then
     echo "ks: fzf not found in PATH (brew install fzf)" >&2
+    pause_overlay
     exit 1
+  fi
+}
+
+# Keep the overlay window open long enough to read an error/notice.
+# No-op when stderr is not a tty (e.g. piped invocation).
+pause_overlay() {
+  if [[ -t 2 ]]; then
+    read -n 1 -s -r -p "ks: press any key to close..." </dev/tty >&2 2>/dev/null || true
+    echo >&2
   fi
 }
 
@@ -248,10 +258,19 @@ cmd_kill() {
 
 cmd_pick_session() {
   require_fzf
-  local tsv display chosen name fzf_rc
+  local tsv display chosen name fzf_rc tsv_rc
+  set +e
   tsv="$(list_sessions_tsv)"
+  tsv_rc=$?
+  set -e
+  if [[ $tsv_rc -ne 0 ]]; then
+    echo "ks: failed to query kitty sessions (rc=$tsv_rc)" >&2
+    pause_overlay
+    return 1
+  fi
   if [[ -z "$tsv" ]]; then
     echo "ks: no active sessions" >&2
+    pause_overlay
     return 0
   fi
   display="$(HOME="$HOME" python3 -c '
@@ -293,10 +312,19 @@ for name, cwd, _, _ in items:
 
 cmd_pick_kill() {
   require_fzf
-  local tsv display chosen fzf_rc
+  local tsv display chosen fzf_rc tsv_rc
+  set +e
   tsv="$(list_sessions_tsv)"
+  tsv_rc=$?
+  set -e
+  if [[ $tsv_rc -ne 0 ]]; then
+    echo "ks: failed to query kitty sessions (rc=$tsv_rc)" >&2
+    pause_overlay
+    return 1
+  fi
   if [[ -z "$tsv" ]]; then
     echo "ks: no active sessions" >&2
+    pause_overlay
     return 0
   fi
   display="$(HOME="$HOME" python3 -c '
@@ -350,11 +378,13 @@ cmd_pick_new() {
 ks: KS_LOCATIONS is not set.
 Example: export KS_LOCATIONS="$HOME/projects:$HOME/.config"
 EOF
+    pause_overlay
     exit 1
   fi
 
-  local display chosen abs_path fzf_rc
+  local display chosen abs_path fzf_rc sub_rc
 
+  set +e
   display="$(KS_LOCATIONS="$KS_LOCATIONS" HOME="$HOME" \
     kitty @ --to "$socket" ls | python3 -c '
 import json, os, sys
@@ -415,9 +445,18 @@ for name, full in items:
         disp = "~" + disp[len(home):]
     print(f"{full}\t{name:<{name_w}}  {disp}")
 ')"
+  sub_rc=$?
+  set -e
+
+  if [[ $sub_rc -ne 0 ]]; then
+    echo "ks: failed to query kitty sessions (rc=$sub_rc)" >&2
+    pause_overlay
+    return 1
+  fi
 
   if [[ -z "$display" ]]; then
     echo "ks: no available directories" >&2
+    pause_overlay
     return 0
   fi
 

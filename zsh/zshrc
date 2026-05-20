@@ -96,5 +96,3 @@ export BAT_THEME="OneHalfDark"
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}' --preview-window=hidden"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200' --preview-window=hidden"
 source <(fzf --zsh)
-
-export KS_LOCATIONS=$HOME/develop:$HOME/Work:$HOME/Dropbox/projects:$HOME/Dropbox

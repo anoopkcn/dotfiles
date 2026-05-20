@@ -223,7 +223,7 @@ require("csub").setup({
         { match = "FuzzyGrep",    mode = "replace" },
         { match = "vimgrep",      mode = "replace" },
         { match = "FuzzyBuffers", mode = "buffers" },
-        { match = "FuzzyFiles",   mode = "files" },
+        { match = "FuzzyFiles",   mode = nil },
         { match = "make",         mode = nil },
     },
 })
