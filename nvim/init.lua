@@ -123,86 +123,12 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     callback = function() vim.cmd("silent! loadview") end,
 })
 
-
 vim.cmd.colorscheme("onehalfdark")
-
 require("brackets")
 require("surround")
--- require("sessions")
 
-vim.pack.add({
-    { src = "https://github.com/NicolasGB/jj.nvim",               name = "jj.nvim" },
-    { src = "https://github.com/anoopkcn/csub.nvim",              name = "csub" },
-    { src = "https://github.com/anoopkcn/fuzzy.nvim",             name = "fuzzy" },
-    { src = "https://github.com/anoopkcn/filemarks.nvim",         name = "filemarks" },
-    { src = "https://github.com/neovim/nvim-lspconfig",           branch = "master" },
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" },
-    { src = "https://github.com/tpope/vim-fugitive",              name = "fugitive" },
-    { src = "https://github.com/nvim-mini/mini.diff",             name = "mini.diff" },
-    -- { src = "https://github.com/zbirenbaum/copilot.lua",          name = "copilot" },
-})
-
-vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
-    callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client then
-            client.server_capabilities.semanticTokensProvider = nil
-            if client:supports_method("textDocument/completion") then
-                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-                vim.bo[bufnr].autocomplete = true
-            end
-        end
-        local map_opts = { buffer = bufnr, silent = true }
-        map("n", "K", function()
-            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
-        end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
-        map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
-        map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
-    end,
-})
-
--- vim.api.nvim_create_autocmd("InsertEnter", {
---     once = true,
---     callback = function()
---         require("copilot").setup({
---             suggestion = { auto_trigger = true },
---             filetypes = { markdown = true },
---         })
---     end,
--- })
-
-
-MiniDiff = require("mini.diff")
-MiniDiff.setup({
-    source = MiniDiff.gen_source.git({ index = false }),
-})
-
-require("csub").setup({
-    default_mode = nil,
-    handlers = {
-        { match = "FuzzyGrep",    mode = "replace" },
-        { match = "vimgrep",      mode = "replace" },
-        { match = "FuzzyBuffers", mode = "buffers" },
-        { match = "FuzzyFiles",   mode = "files" },
-        { match = "make",         mode = nil },
-    },
-})
-
-require("fuzzy").setup({
-    open_single_result = true,
-    window = { width = 0.45, height = 0.45 },
-})
-
-require("filemarks").setup({
-    show_help = false,
-    dir_open_cmd = "Explore"
-})
-
-require("jj").setup({})
-
+-- TREESITTER
+vim.pack.add({{ src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" }})
 local treesitter = require("nvim-treesitter")
 local ensure_installed = {
     "vim", "vimdoc", "rust", "c", "cpp", "go",
@@ -241,8 +167,66 @@ vim.api.nvim_create_autocmd("PackChanged", {
     end,
 })
 
+-- LSP
+vim.pack.add({{ src = "https://github.com/neovim/nvim-lspconfig",branch = "master" }})
+vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+    callback = function(args)
+        local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client then
+            client.server_capabilities.semanticTokensProvider = nil
+            if client:supports_method("textDocument/completion") then
+                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+                vim.bo[bufnr].autocomplete = true
+            end
+        end
+        local map_opts = { buffer = bufnr, silent = true }
+        map("n", "K", function()
+            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
+        end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
+        map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
+        map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
+    end,
+})
 
--- KEYMAPS (Plugin-specific)
+-- COPILOT
+-- vim.pack.add({{ src = "https://github.com/zbirenbaum/copilot.lua", name = "copilot" }})
+-- vim.api.nvim_create_autocmd("InsertEnter", {
+--     once = true,
+--     callback = function()
+--         require("copilot").setup({
+--             suggestion = { auto_trigger = true },
+--             filetypes = { markdown = true },
+--         })
+--     end,
+-- })
+
+vim.pack.add({
+    { src = "https://github.com/NicolasGB/jj.nvim", name = "jj.nvim" },
+    { src = "https://github.com/anoopkcn/csub.nvim", name = "csub" },
+    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
+    { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
+    { src = "https://github.com/tpope/vim-fugitive", name = "fugitive" },
+    { src = "https://github.com/nvim-mini/mini.diff", name = "mini.diff" },
+})
+
+MiniDiff = require("mini.diff")
+MiniDiff.setup({
+    source = MiniDiff.gen_source.git({ index = false }),
+})
+
+require("csub").setup({
+    default_mode = nil,
+    handlers = {
+        { match = "FuzzyGrep",    mode = "replace" },
+        { match = "vimgrep",      mode = "replace" },
+        { match = "FuzzyBuffers", mode = "buffers" },
+        { match = "FuzzyFiles",   mode = "files" },
+        { match = "make",         mode = nil },
+    },
+})
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "qf", "csub" },
@@ -253,16 +237,26 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers (history), open in picker" })
+require("fuzzy").setup({
+    open_single_result = true,
+    window = { width = 0.45, height = 0.45 },
+})
+
+require("filemarks").setup({
+    show_help = false,
+    dir_open_cmd = "Explore"
+})
+
+require("jj").setup({})
+
+map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers" })
 map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
 map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
-map("n", "<leader>fz", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy find LSP symbols, open in picker" })
-
+map("n", "<leader>fz", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy find LSP symbols"})
 map("n", "<leader>fw", function()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end
 end, { desc = "Grep word under cursor" })
-
 map("n", "<leader>fW", function()
     local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
