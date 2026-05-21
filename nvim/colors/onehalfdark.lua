@@ -9,19 +9,20 @@ vim.g.colors_name = "onehalfdark"
 
 local c = {
     black       = { gui = "#282c34", cterm = 236 },
-    red         = { gui = "#e06c75", cterm = 168 },
-    green       = { gui = "#98c379", cterm = 114 },
-    yellow      = { gui = "#e5c07b", cterm = 180 },
-    blue        = { gui = "#61afef", cterm = 75  },
-    purple      = { gui = "#c678dd", cterm = 176 },
-    cyan        = { gui = "#56b6c2", cterm = 73  },
-    white       = { gui = "#dcdfe4", cterm = 188 },
-    comment_fg  = { gui = "#5c6370", cterm = 241 },
-    gutter_fg   = { gui = "#919baa", cterm = 247 },
+    red         = { gui = "#ca6169", cterm = 168 },
+    green       = { gui = "#89b06d", cterm = 114 },
+    yellow      = { gui = "#cead6f", cterm = 180 },
+    blue        = { gui = "#579ed7", cterm = 75  },
+    purple      = { gui = "#b26cc7", cterm = 176 },
+    cyan        = { gui = "#4da4af", cterm = 73  },
+    white       = { gui = "#b2b5b9", cterm = 188 },
+    comment_fg  = { gui = "#535965", cterm = 241 },
+    muted_fg    = { gui = "#b0b6bf", cterm = 245 },
+    gutter_fg   = { gui = "#838c99", cterm = 247 },
     non_text    = { gui = "#373C45", cterm = 239 },
     cursor_line = { gui = "#313640", cterm = 237 },
     color_col   = { gui = "#313640", cterm = 237 },
-    selection   = { gui = "#474e5d", cterm = 239 },
+    selection   = { gui = "#404654", cterm = 239 },
     vertsplit   = { gui = "#313640", cterm = 237 },
 }
 c.fg = c.white
@@ -131,6 +132,9 @@ h("Underlined",    c.fg,         nil, nil)
 h("Ignore",        c.fg,         nil, nil)
 h("Error",         c.red,        nil, nil)
 h("Todo",          c.purple,     nil, nil)
+
+-- Treesitter
+h("@variable", c.muted_fg, nil, nil)
 
 -- Plugins: GitGutter / Fugitive
 h("GitGutterAdd",          c.green,  nil, nil)

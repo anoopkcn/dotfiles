@@ -41,7 +41,8 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-vim.opt.winbar        = "%f%m%r"
+vim.opt.winbar        = "%f%m%r%=%l/%L"
+vim.opt.ruler         = false
 
 vim.g.netrw_banner    = 0
 vim.g.netrw_liststyle = 1
@@ -49,7 +50,7 @@ vim.g.loaded_matchit  = 1
 vim.opt.termguicolors = true
 
 -- KEYMAPS
-local map = vim.keymap.set
+local map             = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
 map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true, desc = "Disable Ctrl-Space" })
 map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
