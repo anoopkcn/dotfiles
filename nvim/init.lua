@@ -3,7 +3,6 @@
 
 require('vim._core.ui2').enable()
 vim.opt.winborder = "rounded"
-vim.opt.completeopt:append("popup")
 
 -- OPTIONS
 vim.g.mapleader = " "
@@ -41,13 +40,16 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-vim.opt.winbar = "%f%m%r%=%l/%L"
-vim.opt.ruler = false
+vim.opt.winbar = "%f%m%r"
+vim.opt.ruler = true
 
 vim.g.netrw_banner    = 0
 vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit  = 1
 vim.opt.termguicolors = true
+
+-- colorscheme implemnted in ./nvim/colors/onehalfdark.lua
+vim.cmd.colorscheme("onehalfdark")
 
 -- KEYMAPS
 local map = vim.keymap.set
@@ -86,21 +88,22 @@ map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
     { desc = "Replace word cursor is on globally" })
 
 -- AUTOCOMMANDS
+-- highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
 })
 
+-- write a session file
 vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
     pattern = { "*.*" },
     callback = function() vim.cmd("silent! mkview") end,
 })
+-- load view for the current file
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     pattern = { "*.*" },
     callback = function() vim.cmd("silent! loadview") end,
 })
-
-vim.cmd.colorscheme("onehalfdark")
 
 require("brackets")
 require("surround")
@@ -154,11 +157,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client then
-            client.server_capabilities.semanticTokensProvider = nil
-            if client:supports_method("textDocument/completion") then
-                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-                vim.bo[bufnr].autocomplete = true
-            end
+            client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
+            -- if client:supports_method("textDocument/completion") then
+            --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+            --     vim.bo[bufnr].autocomplete = true
+            -- end
         end
         local map_opts = { buffer = bufnr, silent = true }
         map("n", "K", function()
