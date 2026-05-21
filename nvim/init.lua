@@ -41,8 +41,8 @@ vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-vim.opt.winbar        = "%f%m%r%=%l/%L"
-vim.opt.ruler         = false
+vim.opt.winbar = "%f%m%r%=%l/%L"
+vim.opt.ruler = false
 
 vim.g.netrw_banner    = 0
 vim.g.netrw_liststyle = 1
@@ -50,7 +50,7 @@ vim.g.loaded_matchit  = 1
 vim.opt.termguicolors = true
 
 -- KEYMAPS
-local map             = vim.keymap.set
+local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
 map({ "n", "v" }, "<C-Space>", "<Nop>", { silent = true, desc = "Disable Ctrl-Space" })
 map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
@@ -230,6 +230,8 @@ map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers" }
 map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
 map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
 map("n", "<leader>fz", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy find LSP symbols" })
+map("n", "<leader>?", ":FuzzyFiles ", { desc = "Fuzzy find files, open in qf" })
+map("n", "<leader>/", ":FuzzyGrep ", { desc = "Fuzzy grep, open in qf" })
 map("n", "<leader>fw", function()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end

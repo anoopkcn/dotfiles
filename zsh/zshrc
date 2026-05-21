@@ -98,4 +98,3 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-ran
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200' --preview-window=hidden"
 source <(fzf --zsh)
 
-export KS_LOCATIONS=${HOME}/develop:${HOME}/work
