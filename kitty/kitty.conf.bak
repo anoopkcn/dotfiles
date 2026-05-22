@@ -5,11 +5,10 @@
 #: kitty has very powerful font management. You can configure
 #: individual font faces and even specify special fonts for particular
 #: characters.
-
-font_family      family="Berkeley Mono Variable"
-bold_font        auto
-italic_font      auto
-bold_italic_font auto
+# font_family      Berkeley Mono Variable
+# bold_font        auto
+# italic_font      auto
+# bold_italic_font auto
 
 #: You can specify different fonts for the bold/italic/bold-italic
 #: variants. The easiest way to select fonts is to run the `kitten
@@ -20,7 +19,7 @@ bold_italic_font auto
 #: <https://sw.kovidgoyal.net/kitty/kittens/choose-fonts/#font-spec-
 #: syntax>.
 
-font_size 12.0
+font_size 11.0
 
 #: Font size (in pts).
 
@@ -3305,3 +3304,10 @@ map cmd+9 goto_tab 9
 #
 include onehalfdark.conf
 
+
+# BEGIN_KITTY_FONTS
+font_family      family="MonoLisa"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

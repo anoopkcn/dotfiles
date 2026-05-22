@@ -40,7 +40,7 @@ vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 -- vim.opt.winbar = "%f%m%r"
-vim.opt.ruler = true
+vim.opt.ruler         = true
 
 vim.g.netrw_banner    = 0
 vim.g.netrw_liststyle = 1
@@ -49,7 +49,7 @@ vim.opt.termguicolors = true
 
 -- colorscheme implemnted in ./nvim/colors/onehalfdark.lua
 vim.cmd.colorscheme("onehalfdark")
-vim.api.nvim_set_hl(0, "StatusLine", { bg ="#282c34" })
+vim.api.nvim_set_hl(0, "StatusLine", { bg = "#282c34" })
 
 -- KEYMAPS
 local map = vim.keymap.set
@@ -95,15 +95,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- write a session file
-vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
-    pattern = { "*.*" },
-    callback = function() vim.cmd("silent! mkview") end,
-})
+-- vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
+--     pattern = { "*.*" },
+--     callback = function() vim.cmd("silent! mkview") end,
+-- })
 -- load view for the current file
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-    pattern = { "*.*" },
-    callback = function() vim.cmd("silent! loadview") end,
-})
+-- vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+--     pattern = { "*.*" },
+--     callback = function() vim.cmd("silent! loadview") end,
+-- })
 
 -- -- cursorline only in active window
 -- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
@@ -119,7 +119,12 @@ require("brackets")
 require("surround")
 
 -- TREESITTER
-vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" } })
+vim.pack.add({
+    {
+        src = "https://github.com/nvim-treesitter/nvim-treesitter",
+        name = "treesitter"
+    }
+})
 local treesitter = require("nvim-treesitter")
 local ensure_installed = {
     "vim", "vimdoc", "rust", "c", "cpp", "go",

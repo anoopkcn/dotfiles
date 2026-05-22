@@ -33,23 +33,25 @@ source_file() {  [ -f "$1" ] && source "$1"  }
 path() { echo -e ${PATH//:/\\n} }
 
 source_file $HOME/.privaterc
-source_file $HOME/.config/zsh/plugin-manager.sh
-source_file $HOME/.config/zsh/minimal-prompt.sh
+source_file "${ZDOTDIR:-$HOME/.config/zsh}/plugin-manager.sh"
+source_file "${ZDOTDIR:-$HOME/.config/zsh}/minimal-prompt.sh"
+source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 
 # ALIAS
 alias ls="ls --color=auto"
 alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
-alias sync="rsync -macviz --exclude-from=${HOME}/.config/zsh/rsyncignore"
+alias sync="rsync -macviz --exclude-from=${ZDOTDIR:-$HOME/.config/zsh}/rsyncignore"
 alias notes="cd ~/Dropbox/notes"
 alias ls='eza --hyperlink'
+alias rg="rg --hyperlink-format=kitty"
 
 # kitten aliases
 alias icat="kitten icat"
 alias s="kitten ssh"
 alias clip="kitten clipboard"
 alias kls="kitten choose-files"
-alias hg="kitten hyperlinked-grep"
+alias d="kitten diff"
 
 # PLUGINS
 plugin add "zshzoo/macos"
@@ -80,7 +82,6 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # fzf — onehalfdark theme (env vars live in zsh/fzf.sh so non-zsh scripts can share)
-source "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 export BAT_THEME="OneHalfDark"
 source <(fzf --zsh)
 
@@ -92,3 +93,4 @@ if test -n "$KITTY_INSTALLATION_DIR"; then
     unfunction kitty-integration
 fi
 
+source "$HOME/.cargo/env" 
