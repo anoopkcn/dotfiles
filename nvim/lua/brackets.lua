@@ -15,8 +15,17 @@ local function with_desc(desc)
     return vim.tbl_extend("force", opts, { desc = desc })
 end
 
-map("n", "]q", function() vim.cmd(vim.v.count1 .. "cnext")     vim.cmd("normal! zv") end, with_desc("Next quickfix item"))
-map("n", "[q", function() vim.cmd(vim.v.count1 .. "cprevious") vim.cmd("normal! zv") end, with_desc("Previous quickfix item"))
+local function qf_jump(forward)
+    local step = forward and "cnext" or "cprevious"
+    local wrap = forward and "cfirst" or "clast"
+    if not pcall(vim.cmd, vim.v.count1 .. step) then
+        pcall(vim.cmd, wrap)
+    end
+    vim.cmd("normal! zv")
+end
+
+map("n", "]q", function() qf_jump(true)  end, with_desc("Next quickfix item"))
+map("n", "[q", function() qf_jump(false) end, with_desc("Previous quickfix item"))
 map("n", "]b", function() vim.cmd(vim.v.count1 .. "bnext")     end, with_desc("Next buffer"))
 map("n", "[b", function() vim.cmd(vim.v.count1 .. "bprevious") end, with_desc("Previous buffer"))
 
