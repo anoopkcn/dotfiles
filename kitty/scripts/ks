@@ -13,6 +13,13 @@
 
 set -euo pipefail
 
+# Pull in fzf theming so overlays match the interactive shell.
+# kitty's --copy-env can't reach env exported in zshrc when kitty.app is
+# launched from the Dock/Spotlight, so source the shared file directly.
+_fzf_opts="${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
+[[ -r "$_fzf_opts" ]] && source "$_fzf_opts"
+unset _fzf_opts
+
 # Resolve the kitty remote-control socket.
 # Inside a kitty window, $KITTY_LISTEN_ON is set automatically.
 # Otherwise fall back to globbing the listen_on path (kitty appends -<pid>).
@@ -125,6 +132,7 @@ create_session() {
   kitty @ --to "$socket" launch \
     --type=os-window \
     --cwd="$abs_path" \
+    --os-window-title="${session_name}" \
     --var="session_name=${session_name}" \
     --var="session_path=${abs_path}" >/dev/null
   echo "$session_name"

@@ -11,7 +11,7 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 
-vim.opt.laststatus = 0
+vim.opt.laststatus = 3
 vim.opt.number = true
 -- vim.opt.relativenumber = true
 vim.opt.ignorecase = true
@@ -33,14 +33,13 @@ vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
 vim.opt.shortmess:append("c")
 
 vim.opt.isfname:append("@-@")
-vim.opt.guicursor = ""
 vim.opt.scrolloff = 8
 
 vim.opt.pumborder = "rounded"
 vim.opt.splitkeep = "screen"
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
-vim.opt.winbar = "%f%m%r"
+-- vim.opt.winbar = "%f%m%r"
 vim.opt.ruler = true
 
 vim.g.netrw_banner    = 0
@@ -50,6 +49,7 @@ vim.opt.termguicolors = true
 
 -- colorscheme implemnted in ./nvim/colors/onehalfdark.lua
 vim.cmd.colorscheme("onehalfdark")
+vim.api.nvim_set_hl(0, "StatusLine", { bg ="#282c34" })
 
 -- KEYMAPS
 local map = vim.keymap.set
@@ -105,6 +105,16 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     callback = function() vim.cmd("silent! loadview") end,
 })
 
+-- -- cursorline only in active window
+-- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+--     group = vim.api.nvim_create_augroup("cursorline_active", { clear = true }),
+--     callback = function() vim.wo.cursorline = true end,
+-- })
+-- vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+--     group = "cursorline_active",
+--     callback = function() vim.wo.cursorline = false end,
+-- })
+--
 require("brackets")
 require("surround")
 

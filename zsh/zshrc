@@ -79,22 +79,16 @@ bindkey '^Xe' edit-command-line
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# fzf — onehalfdark theme
-export FZF_DEFAULT_OPTS='--layout=reverse
---color=fg:#dcdfe4,bg:-1,hl:#e5c07b
---color=fg+:#dcdfe4,bg+:#313640,hl+:#e5c07b
---color=gutter:#282c34,border:#313640,separator:#5c6370
---color=info:#c678dd,prompt:#61afef,pointer:#e06c75
---color=marker:#98c379,spinner:#c678dd,header:#56b6c2
---color=preview-fg:#dcdfe4,preview-bg:-1,preview-border:#5c6370
---color=query:#dcdfe4,disabled:#5c6370,label:#919baa
---bind=alt-p:toggle-preview
---bind=ctrl-u:preview-half-page-up
---bind=ctrl-d:preview-half-page-down
---bind=ctrl-y:preview-up
---bind=ctrl-e:preview-down'
+# fzf — onehalfdark theme (env vars live in zsh/fzf.sh so non-zsh scripts can share)
+source "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 export BAT_THEME="OneHalfDark"
-export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}' --preview-window=hidden"
-export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200' --preview-window=hidden"
 source <(fzf --zsh)
+
+# kitty shell integration (manual — auto-injection wasn't taking effect)
+if test -n "$KITTY_INSTALLATION_DIR"; then
+    export KITTY_SHELL_INTEGRATION="enabled"
+    autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
+    kitty-integration
+    unfunction kitty-integration
+fi
 
