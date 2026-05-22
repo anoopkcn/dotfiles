@@ -39,12 +39,14 @@ source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 
 # ALIAS
 alias ls="ls --color=auto"
-alias vim='nvim'
 alias duh="du -h -d 0 [^.]*"
 alias sync="rsync -macviz --exclude-from=${ZDOTDIR:-$HOME/.config/zsh}/rsyncignore"
 alias notes="cd ~/Dropbox/notes"
 alias ls='eza --hyperlink'
 alias rg="rg --hyperlink-format=kitty"
+
+alias vim='nvim'
+alias nvim-max='NVIM_APPNAME=nvim-max nvim'
 
 # kitten aliases
 alias icat="kitten icat"
@@ -84,13 +86,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # fzf — onehalfdark theme (env vars live in zsh/fzf.sh so non-zsh scripts can share)
 export BAT_THEME="OneHalfDark"
 source <(fzf --zsh)
-
-# kitty shell integration (manual — auto-injection wasn't taking effect)
-if test -n "$KITTY_INSTALLATION_DIR"; then
-    export KITTY_SHELL_INTEGRATION="enabled"
-    autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
-    kitty-integration
-    unfunction kitty-integration
-fi
 
 source "$HOME/.cargo/env" 
