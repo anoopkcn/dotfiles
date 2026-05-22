@@ -15,9 +15,16 @@ set -euo pipefail
 
 # Pull in fzf theming so overlays match the interactive shell.
 # kitty's --copy-env can't reach env exported in zshrc when kitty.app is
-# launched from the Dock/Spotlight, so source the shared file directly.
-_fzf_opts="${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
-[[ -r "$_fzf_opts" ]] && source "$_fzf_opts"
+# launched from the Dock/Spotlight, so source the shared file directly. We
+# can't trust $ZDOTDIR here — kitty's shell integration overrides it to its
+# own internal path — so try the user config dir first, then fall back.
+for _fzf_opts in "$HOME/.config/zsh/fzf.sh" "${ZDOTDIR:-}/fzf.sh"; do
+  if [[ -r "$_fzf_opts" ]]; then
+    # shellcheck disable=SC1090
+    source "$_fzf_opts"
+    break
+  fi
+done
 unset _fzf_opts
 
 # Resolve the kitty remote-control socket.
@@ -122,20 +129,190 @@ for r in items:
 '
 }
 
-# Create a new OS-window session at the given absolute path.
+# Render a (possibly templated) kitty session file and replay its directives as
+# `kitty @` calls against the running kitty over $socket, so the new windows
+# live in the same process and ks-tracking works.
+#
+# Args: <file> <session_name> <initial_cwd>
+#   session_name is used (a) for ${KS_SESSION_NAME} substitution and (b) for the
+#   --match tag on subsequent launches. Pass "" when launching a session file
+#   whose tag is hardcoded — the match is then inferred from the first launch.
+#
+# Supported session-file directives (a subset of kitty's session-file syntax):
+#   # ...               comment / blank line — ignored
+#   cd <path>           set cwd for subsequent launch directives
+#   os_window_title T   title applied to the OS window created by the first launch
+#   launch [args...]    first launch creates the OS window; rest open in the same window
+#   new_tab [title]     open a new tab inside the session's OS window
+#   focus               focus the most recently launched window
+#   focus_os_window     no-op (the new OS window is already focused on creation)
+apply_session_file() {
+  local file="$1" session_name="$2" initial_cwd="$3"
+  KS_TEMPLATE_PATH="$file" KS_CWD="$initial_cwd" KS_SESSION_NAME="$session_name" \
+    KS_SOCKET="$socket" python3 -c '
+import os, re, shlex, subprocess, sys
+
+socket = os.environ["KS_SOCKET"]
+session_name = os.environ["KS_SESSION_NAME"]
+abs_path = os.environ["KS_CWD"]
+template_path = os.environ["KS_TEMPLATE_PATH"]
+
+with open(template_path) as f:
+    text = f.read()
+text = text.replace("${KS_CWD}", abs_path).replace("${KS_SESSION_NAME}", session_name)
+
+cwd = abs_path
+os_window_title = session_name or os.path.basename(template_path)
+first_launch_done = False
+last_window_id = None
+focused_window_id = None
+tag_match = None  # set after first launch, from session_name or extracted from launch args
+
+def kitty_at(*args):
+    cmd = ["kitty", "@", "--to", socket] + list(args)
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        sys.stderr.write("ks: " + " ".join(shlex.quote(a) for a in cmd) + "\n")
+        sys.stderr.write("ks: " + res.stderr.strip() + "\n")
+        sys.exit(1)
+    return res.stdout.strip()
+
+def extract_tag(launch_args):
+    for a in launch_args:
+        m = re.match(r"--var=session_name=(.+)$", a)
+        if m:
+            return m.group(1)
+    return None
+
+for raw in text.splitlines():
+    line = raw.strip()
+    if not line or line.startswith("#"):
+        continue
+    parts = shlex.split(line)
+    directive, rest = parts[0], parts[1:]
+    if directive == "cd":
+        target = rest[0] if rest else cwd
+        target = os.path.expanduser(target)
+        cwd = target if os.path.isabs(target) else os.path.abspath(os.path.join(cwd, target))
+    elif directive == "os_window_title":
+        os_window_title = " ".join(rest)
+    elif directive == "launch":
+        if not first_launch_done:
+            args = ["launch", "--type=os-window",
+                    "--cwd=" + cwd,
+                    "--os-window-title=" + os_window_title] + rest
+            tag_match = "var:session_name=" + (session_name or extract_tag(rest) or "")
+        else:
+            # Split / open from the previously launched window so --location
+            # behaves deterministically (kitty session file semantics).
+            match = ("id:" + last_window_id) if last_window_id else tag_match
+            args = ["launch", "--match", match, "--cwd=" + cwd] + rest
+        wid = kitty_at(*args)
+        if wid.isdigit():
+            last_window_id = wid
+        first_launch_done = True
+    elif directive == "new_tab":
+        match = ("id:" + last_window_id) if last_window_id else tag_match
+        args = ["launch", "--type=tab", "--match", match or "", "--cwd=" + cwd]
+        if rest:
+            args.append("--tab-title=" + " ".join(rest))
+        wid = kitty_at(*args)
+        if wid.isdigit():
+            last_window_id = wid
+    elif directive == "focus":
+        # In kitty session files `focus` marks the preceding launch as the
+        # final focused window — apply after all launches complete.
+        focused_window_id = last_window_id
+    elif directive == "focus_os_window":
+        pass
+    else:
+        sys.stderr.write("ks: warning: unsupported session-file directive: " + directive + "\n")
+
+if not first_launch_done:
+    sys.stderr.write("ks: session file defined no launch directives\n")
+    sys.exit(1)
+
+if focused_window_id:
+    kitty_at("focus-window", "--match", "id:" + focused_window_id)
+'
+}
+
+# Create a new OS-window session at the given absolute path using the template.
 create_session() {
   local abs_path="$1"
-  local folder_name uid session_name
+  local folder_name uid session_name template
   folder_name="$(basename "$abs_path")"
   uid="$(LC_ALL=C od -An -tx1 -N3 /dev/urandom | tr -d ' \n')"
   session_name="${folder_name}-${uid}"
-  kitty @ --to "$socket" launch \
-    --type=os-window \
-    --cwd="$abs_path" \
-    --os-window-title="${session_name}" \
-    --var="session_name=${session_name}" \
-    --var="session_path=${abs_path}" >/dev/null
+  template="${KS_TEMPLATE:-$HOME/.config/kitty/sessions/template.kitty-session}"
+  if [[ ! -r "$template" ]]; then
+    echo "ks: template not found or unreadable: $template" >&2
+    echo "ks: set KS_TEMPLATE to override, or create the default template" >&2
+    pause_overlay
+    exit 1
+  fi
+  if ! apply_session_file "$template" "$session_name" "$abs_path"; then
+    pause_overlay
+    exit 1
+  fi
   echo "$session_name"
+}
+
+# Read a session file's first launch directive and extract --var=session_name=...
+# Prints the tag value (or nothing if absent).
+extract_session_name_from_file() {
+  python3 -c '
+import re, sys
+try:
+    with open(sys.argv[1]) as f:
+        for raw in f:
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            if line.split()[0] == "launch":
+                m = re.search(r"--var=session_name=(\S+)", line)
+                if m:
+                    print(m.group(1))
+                break
+except OSError:
+    sys.exit(1)
+' "$1"
+}
+
+# Return 0 if a session with the given session_name is currently active.
+session_is_running() {
+  local name="$1"
+  kitty @ --to "$socket" ls 2>/dev/null | python3 -c '
+import json, sys
+target = sys.argv[1]
+try:
+    data = json.load(sys.stdin)
+except Exception:
+    sys.exit(1)
+for os_win in data:
+    for tab in os_win.get("tabs", []):
+        for w in tab.get("windows", []):
+            if (w.get("user_vars") or {}).get("session_name") == target:
+                sys.exit(0)
+sys.exit(1)
+' "$name"
+}
+
+# Launch a fixed (non-template) session file. If a session with its baked
+# session_name is already running, focus that instead of relaunching.
+launch_session_file() {
+  local file="$1"
+  local name
+  name="$(extract_session_name_from_file "$file")"
+  if [[ -n "$name" ]] && session_is_running "$name"; then
+    cmd_switch "$name"
+    return 0
+  fi
+  if ! apply_session_file "$file" "${name:-}" "$HOME"; then
+    pause_overlay
+    exit 1
+  fi
+  [[ -n "$name" ]] && echo "$name"
 }
 
 cmd_list() {
@@ -390,37 +567,43 @@ EOF
     exit 1
   fi
 
-  local display chosen abs_path fzf_rc sub_rc
+  local display chosen kind selector fzf_rc sub_rc sessions_dir
+  sessions_dir="${KS_SESSIONS_DIR:-$HOME/.config/kitty/sessions}"
 
   set +e
-  display="$(KS_LOCATIONS="$KS_LOCATIONS" HOME="$HOME" \
-    kitty @ --to "$socket" ls | python3 -c '
-import json, os, sys
+  display="$(kitty @ --to "$socket" ls | \
+    KS_LOCATIONS="$KS_LOCATIONS" KS_SESSIONS_DIR="$sessions_dir" HOME="$HOME" python3 -c '
+import json, os, re, sys
 
 def strip_private(p):
     return p[len("/private"):] if p.startswith("/private/") else p
 
 home = os.environ.get("HOME", "")
 locs = [os.path.expanduser(p) for p in os.environ.get("KS_LOCATIONS", "").split(":") if p]
+sessions_dir = os.environ.get("KS_SESSIONS_DIR", "")
 
 try:
     data = json.load(sys.stdin)
 except (json.JSONDecodeError, ValueError):
     data = []
 
-active = set()
+active_paths = set()
+active_names = set()
 for os_win in data:
     for tab in os_win.get("tabs", []):
         for w in tab.get("windows", []):
             uv = w.get("user_vars") or {}
-            if not uv.get("session_name"):
+            name = uv.get("session_name")
+            if not name:
                 continue
+            active_names.add(name)
             fg = w.get("foreground_processes") or []
             cwd = (fg[0].get("cwd") if fg else None) or w.get("cwd", "")
-            active.add(strip_private(uv.get("session_path") or cwd))
+            active_paths.add(strip_private(uv.get("session_path") or cwd))
 
+# Directory candidates (under KS_LOCATIONS, not already a running session).
 seen = set()
-items = []
+dirs = []
 for loc in locs:
     if not os.path.isdir(loc):
         continue
@@ -438,20 +621,58 @@ for loc in locs:
             abs_full = strip_private(os.path.realpath(full))
         except OSError:
             abs_full = strip_private(full)
-        if abs_full in active or abs_full in seen:
+        if abs_full in active_paths or abs_full in seen:
             continue
         seen.add(abs_full)
-        items.append((os.path.basename(abs_full), abs_full))
+        dirs.append((os.path.basename(abs_full), abs_full))
+dirs.sort(key=lambda x: (x[0].lower(), x[1]))
 
-items.sort(key=lambda x: (x[0].lower(), x[1]))
-if not items:
+# Session-file candidates (sessions_dir/*.kitty-session, excluding template).
+sessions = []
+if sessions_dir and os.path.isdir(sessions_dir):
+    try:
+        for n in sorted(os.listdir(sessions_dir)):
+            if n.startswith(".") or not n.endswith(".kitty-session"):
+                continue
+            if n == "template.kitty-session":
+                continue
+            full = os.path.join(sessions_dir, n)
+            baked = None
+            try:
+                with open(full) as f:
+                    for raw in f:
+                        s = raw.strip()
+                        if not s or s.startswith("#"):
+                            continue
+                        if s.split()[0] == "launch":
+                            m = re.search(r"--var=session_name=(\S+)", s)
+                            if m:
+                                baked = m.group(1)
+                            break
+            except OSError:
+                continue
+            label = n[: -len(".kitty-session")]
+            running = bool(baked) and baked in active_names
+            sessions.append((label, full, running))
+    except OSError:
+        pass
+sessions.sort(key=lambda x: x[0].lower())
+
+if not dirs and not sessions:
     sys.exit(0)
-name_w = max(len(n) for n, _ in items)
-for name, full in items:
-    disp = full
-    if home and disp.startswith(home):
-        disp = "~" + disp[len(home):]
-    print(f"{full}\t{name:<{name_w}}  {disp}")
+
+label_w = max([len(s[0]) for s in sessions] + [len(d[0]) for d in dirs] + [0])
+
+# Emit sessions first (they are typically fewer and more specific).
+for label, full, running in sessions:
+    suffix = "  (running)" if running else ""
+    print(f"session\t{full}\t[session] {label:<{label_w}}{suffix}")
+
+for label, abs_full in dirs:
+    d = abs_full
+    if home and d.startswith(home):
+        d = "~" + d[len(home):]
+    print(f"dir\t{abs_full}\t[dir]     {label:<{label_w}}  {d}")
 ')"
   sub_rc=$?
   set -e
@@ -463,22 +684,31 @@ for name, full in items:
   fi
 
   if [[ -z "$display" ]]; then
-    echo "ks: no available directories" >&2
+    echo "ks: no available directories or session files" >&2
     pause_overlay
     return 0
   fi
 
   set +e
   chosen="$(printf "%s\n" "$display" | fzf --ansi --reverse --no-multi --height=40% \
-    --with-nth=2 --delimiter=$'\t' --prompt='new > ' \
-    --header='Enter: create session • Esc: cancel')"
+    --with-nth=3 --delimiter=$'\t' --prompt='new > ' \
+    --header='Enter: open • Esc: cancel')"
   fzf_rc=$?
   set -e
   if [[ $fzf_rc -ne 0 || -z "$chosen" ]]; then
     return 0
   fi
-  abs_path="$(printf "%s" "$chosen" | cut -f1)"
-  create_session "$abs_path"
+  kind="$(printf "%s" "$chosen" | cut -f1)"
+  selector="$(printf "%s" "$chosen" | cut -f2)"
+  case "$kind" in
+    session) launch_session_file "$selector" ;;
+    dir)     create_session "$selector" ;;
+    *)
+      echo "ks: unknown selection type: $kind" >&2
+      pause_overlay
+      return 1
+      ;;
+  esac
 }
 
 # --- Dispatch ---

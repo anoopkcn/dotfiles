@@ -48,8 +48,8 @@ map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item"
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
 map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
-map("n", "<leader>z", function() vim.cmd("update") vim.cmd("silent make %")
-end, { silent = true, desc = "Save and lint current file" })
+map("n", "<leader>t", vim.diagnostic.setqflist, { silent = true, desc = "Send diagnostics to quickfix" })
+map("n", "<leader>x", function() vim.diagnostic.open_float() end, { silent = true, desc = "Show diagnostics" })
 map("n", "<leader>q", function() vim.cmd(vim.fn.getqflist({ winid = 0 }).winid > 0 and "cclose" or "copen")
 end, { silent = true, desc = "Toggle quickfix" })
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -97,3 +97,27 @@ end, { desc = "Grep word under cursor" })
 map("n", "<leader>fW", function() local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
 end, { desc = "Grep WORD under cursor (fixed string)" })
+
+
+vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
+vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+    callback = function(args)
+        local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client then
+            client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
+            -- if client:supports_method("textDocument/completion") then
+            --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+            --     vim.bo[bufnr].autocomplete = true
+            -- end
+        end
+        local map_opts = { buffer = bufnr, silent = true }
+        map("n", "K", function()
+            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
+        end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
+        map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
+        map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
+    end,
+})

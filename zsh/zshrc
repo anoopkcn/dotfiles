@@ -1,6 +1,3 @@
-# Author: @anoopkcn
-# License: MIT
-
 setopt extended_glob null_glob
 path=(
     /Users/akc/.local/bin
@@ -14,10 +11,6 @@ export EDITOR='nvim'
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export CONDA_CHANGEPS1=no
 
-# INPUTRC
-bindkey "^[[A" history-search-backward
-bindkey "^[[B" history-search-forward
-bindkey '^y' autosuggest-accept
 bindkey -e
 
 # HISTORY OPTIONS
@@ -79,11 +72,6 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# fzf — onehalfdark theme (env vars live in zsh/fzf.sh so non-zsh scripts can share)
 export BAT_THEME="OneHalfDark"
 source <(fzf --zsh)
 

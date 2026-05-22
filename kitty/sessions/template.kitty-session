@@ -1,0 +1,13 @@
+# ks template — applied to every session created by `ks -n` or `ks <path>`.
+#
+# Placeholders (substituted by ks at launch time):
+#   ${KS_CWD}          - absolute path picked by the user
+#   ${KS_SESSION_NAME} - auto-generated unique tag (<folder>-<uid>)
+#
+# At least one `launch` line MUST carry --var=session_name=${KS_SESSION_NAME}
+# so `ks -l/-s/-k` can find the session.
+
+os_window_title ${KS_SESSION_NAME}
+cd ${KS_CWD}
+launch --var=session_name=${KS_SESSION_NAME} --var=session_path=${KS_CWD}
+focus

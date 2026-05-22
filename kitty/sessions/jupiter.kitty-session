@@ -1,0 +1,15 @@
+# jupiter — three-pane split layout
+#
+# Launch: kitty --session ~/.config/kitty/sessions/jupiter.kitty-session
+# Or as startup session in kitty.conf: startup_session sessions/jupiter.kitty-session
+
+enabled_layouts splits
+layout splits
+os_window_title jupiter
+cd ~/develop
+
+launch --title=editor --var=session_name=jupiter
+focus
+
+launch --location=vsplit --title=shell --var=session_name=jupiter
+
