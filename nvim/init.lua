@@ -52,10 +52,15 @@ map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item"
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
 map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
-map("n", "<leader>t", vim.diagnostic.setqflist, { silent = true, desc = "Send diagnostics to quickfix" })
-map("n", "<leader>x", function() vim.diagnostic.open_float() end, { silent = true, desc = "Show diagnostics" })
-map("n", "<leader>q", function() vim.cmd(vim.fn.getqflist({ winid = 0 }).winid > 0 and "cclose" or "copen")
-end, { silent = true, desc = "Toggle quickfix" })
+map("n", "<leader>t", vim.diagnostic.setqflist,
+    { silent = true, desc = "Send diagnostics to quickfix" })
+map("n", "<leader>x", function() vim.diagnostic.open_float() end,
+    { silent = true, desc = "Show diagnostics" })
+map("n", "<leader>q", function() vim.cmd(vim.fn.getqflist({ winid = 0 }).winid > 0 and "cclose" or "copen") end,
+    { silent = true, desc = "Toggle quickfix" })
+map("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
+    { silent = true, desc = "Format buffer via LSP" })
+
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
@@ -76,38 +81,41 @@ vim.api.nvim_create_autocmd("FileType", {
     callback = function(args) pcall(vim.treesitter.start, args.buf) end,
 })
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/csub.nvim", name = "csub" },
-    { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" },
+    { src = "https://github.com/anoopkcn/csub.nvim",      name = "csub" },
+    { src = "https://github.com/anoopkcn/fuzzy.nvim",     name = "fuzzy" },
     { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
 })
 require("csub").setup({
     default_mode = nil,
     handlers = {
-        { match = "FuzzyGrep", mode = "replace" },
-        { match = "vimgrep", mode = "replace" },
+        { match = "FuzzyGrep",    mode = "replace" },
+        { match = "vimgrep",      mode = "replace" },
         { match = "FuzzyBuffers", mode = "buffers" },
-        { match = "FuzzyFiles", mode = nil },
+        { match = "FuzzyFiles",   mode = nil },
     },
 })
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "qf", "csub" },
     group = vim.api.nvim_create_augroup("CsubQfMap", { clear = true }),
-    callback = function(args) map("n", "<leader>s", "<CMD>Csub<CR>",
+    callback = function(args)
+        map("n", "<leader>s", "<CMD>Csub<CR>",
             { buffer = args.buf, silent = true, desc = "Substitute in quickfix (Csub)" })
     end,
 })
 require("filemarks").setup({ show_help = false, dir_open_cmd = "Explore" })
 map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
-require("fuzzy").setup({ open_single_result = true, window = { width = 0.45, height = 0.45 }})
+require("fuzzy").setup({ open_single_result = true, window = { width = 0.45, height = 0.45 } })
 map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers" })
 map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
 map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
 map("n", "<leader>?", ":FuzzyFiles ", { desc = "Fuzzy find files, open in qf" })
 map("n", "<leader>/", ":FuzzyGrep ", { desc = "Fuzzy grep, open in qf" })
-map("n", "<leader>fw", function() local word = vim.fn.expand("<cword>")
+map("n", "<leader>fw", function()
+    local word = vim.fn.expand("<cword>")
     if word ~= "" then require("fuzzy").grep({ word }) end
 end, { desc = "Grep word under cursor" })
-map("n", "<leader>fW", function() local word = vim.fn.expand("<cWORD>")
+map("n", "<leader>fW", function()
+    local word = vim.fn.expand("<cWORD>")
     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
 end, { desc = "Grep WORD under cursor (fixed string)" })
 
