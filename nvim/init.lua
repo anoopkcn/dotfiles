@@ -84,7 +84,14 @@ vim.pack.add({
     { src = "https://github.com/anoopkcn/csub.nvim",      name = "csub" },
     { src = "https://github.com/anoopkcn/fuzzy.nvim",     name = "fuzzy" },
     { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
+    { src = "https://github.com/nvim-mini/mini.diff",     name = "mini.diff" },
+    { src = "https://github.com/NicolasGB/jj.nvim",       name = "jj.nvim" },
 })
+
+require("mini.diff").setup({})
+require("jj").setup({})
+map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
+
 require("csub").setup({
     default_mode = nil,
     handlers = {
@@ -108,6 +115,7 @@ require("fuzzy").setup({ open_single_result = true, window = { width = 0.45, hei
 map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers" })
 map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
 map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
+map("n", "<leader>fs", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy grep document lsp symbols" })
 map("n", "<leader>?", ":FuzzyFiles ", { desc = "Fuzzy find files, open in qf" })
 map("n", "<leader>/", ":FuzzyGrep ", { desc = "Fuzzy grep, open in qf" })
 map("n", "<leader>fw", function()

@@ -1,5 +1,5 @@
 os_window_title "default"
 cd ~/develop
-launch --title "default" --var=session_name=default
+launch --var=session_name=default
 focus
 focus_os_window

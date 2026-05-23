@@ -517,7 +517,7 @@ def cmd_switch(name: str) -> None:
     if "No matching windows" in err:
         sys.stderr.write(f"ks: no session named '{name}'\n")
     else:
-        sys.stderr.write(f"ks: {err or f'failed to focus session ' + repr(name)}\n")
+        sys.stderr.write(f"ks: {err or 'failed to focus session ' + repr(name)}\n")
     sys.exit(1)
 
 
