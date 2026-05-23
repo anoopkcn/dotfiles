@@ -1,16 +1,5 @@
 #!/usr/bin/env python3
 """ks - kitty session helper.
-
-Usage:
-  ks <path>     Open a new kitty OS window tagged with session_name=<folder>-<uid>.
-  ks -l         List all active kitty sessions.
-  ks -s <name>  Switch focus to the session with the given name.
-  ks -k         Interactive picker (fzf, multi-select) over active sessions; kill on Enter.
-  ks -k <name>  Kill the session with the given name (closes its OS window).
-  ks -k --all   Kill all sessions except the currently focused one.
-  ks -i         Interactive picker (fzf) over active sessions; switch on select.
-  ks -n         Interactive picker (fzf) over KS_LOCATIONS subdirs; create on select.
-
 Env vars:
   KS_LOCATIONS      Colon-separated parent dirs for `-n` candidate enumeration.
   KS_TEMPLATE       Path to session-file template (default: ~/.config/kitty/sessions/template.kitty-session).
@@ -532,9 +521,11 @@ def cmd_switch(name: str) -> None:
     sys.exit(1)
 
 
-def cmd_kill(name: str) -> None:
-    if not kill_session_by_name(name):
-        sys.stderr.write(f"ks: no session named '{name}'\n")
+def cmd_kill(names: list[str]) -> None:
+    missing = [n for n in names if not kill_session_by_name(n)]
+    if missing:
+        for n in missing:
+            sys.stderr.write(f"ks: no session named '{n}'\n")
         sys.exit(1)
 
 
@@ -741,39 +732,40 @@ def cmd_pick_new() -> None:
     chosen = run_fzf(
         lines,
         prompt="new > ",
-        header="Enter: open • Esc: cancel",
-        multi=False,
+        header="Tab: select • Enter: open • Esc: cancel",
+        multi=True,
         with_nth=3,
     )
     if not chosen:
         return
-    parts = chosen[0].split("\t", 2)
-    if len(parts) < 2:
-        return
-    kind, selector = parts[0], parts[1]
-    if kind == "session":
-        launch_session_file(selector)
-    elif kind == "dir":
-        name = create_session(selector)
-        print(name)
-    else:
-        sys.stderr.write(f"ks: unknown selection type: {kind}\n")
-        pause_overlay()
-        sys.exit(1)
+    for line in chosen:
+        parts = line.split("\t", 2)
+        if len(parts) < 2:
+            continue
+        kind, selector = parts[0], parts[1]
+        if kind == "session":
+            launch_session_file(selector)
+        elif kind == "dir":
+            name = create_session(selector)
+            print(name)
+        else:
+            sys.stderr.write(f"ks: unknown selection type: {kind}\n")
+            pause_overlay()
+            sys.exit(1)
 
 
 # --- dispatch ---
 
 
 USAGE = """Usage:
-  ks <path>     Open a new kitty OS window tagged with session_name=<folder>-<uid>.
-  ks -l         List all active kitty sessions.
-  ks -s <name>  Switch focus to the session with the given name.
-  ks -k         Interactive picker (fzf, multi-select) over active sessions; kill on Enter.
-  ks -k <name>  Kill the session with the given name (closes its OS window).
-  ks -k --all   Kill all sessions except the currently focused one.
-  ks -i         Interactive picker (fzf) over active sessions; switch on select.
-  ks -n         Interactive picker (fzf) over KS_LOCATIONS subdirs; create on select.
+  ks <path> ...    Open a kitty OS window per path, tagged session_name=<folder>-<uid>.
+  ks -l            List all active kitty sessions.
+  ks -s <name>     Switch focus to the session with the given name.
+  ks -k            Interactive picker (fzf, multi-select) over active sessions; kill on Enter.
+  ks -k <name> ... Close the named session(s) (closes their OS windows).
+  ks -k --all      Close all sessions except the currently focused one.
+  ks -i            Interactive picker (fzf) over active sessions; switch on select.
+  ks -n            Interactive picker (fzf, multi-select) over KS_LOCATIONS subdirs; create on Enter.
 """
 
 
@@ -803,7 +795,7 @@ def main(argv: list[str]) -> int:
         elif rest[0] in ("--all", "-a"):
             cmd_kill_all()
         else:
-            cmd_kill(rest[0])
+            cmd_kill(rest)
         return 0
     if head in ("-i", "--interactive"):
         cmd_pick_session()
@@ -812,13 +804,14 @@ def main(argv: list[str]) -> int:
         cmd_pick_new()
         return 0
 
-    target = head
-    if not os.path.isdir(target):
-        sys.stderr.write(f"ks: not a directory: {target}\n")
-        return 1
-    abs_path = os.path.abspath(target)
-    name = create_session(abs_path)
-    print(name)
+    paths = [head, *rest]
+    for p in paths:
+        if not os.path.isdir(p):
+            sys.stderr.write(f"ks: not a directory: {p}\n")
+            return 1
+    for p in paths:
+        name = create_session(os.path.abspath(p))
+        print(name)
     return 0
 
 
