@@ -43,6 +43,10 @@ map("v", ">", ">gv", { silent = true, desc = "Indent right and reselect" })
 map("n", "J", "mzJ`z", { silent = true, desc = "Join line below without moving cursor" })
 map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true, desc = "Split window vertically (right)" })
 map("n", "<leader>-", ":rightbelow split<CR>", { silent = true, desc = "Split window horizontally (below)" })
+map("n", "<C-h>", "<C-w>h", { silent = true, desc = "Focus left window" })
+map("n", "<C-j>", "<C-w>j", { silent = true, desc = "Focus window below" })
+map("n", "<C-k>", "<C-w>k", { silent = true, desc = "Focus window above" })
+map("n", "<C-l>", "<C-w>l", { silent = true, desc = "Focus right window" })
 map("n", "<leader>fe", "<CMD>Explore<CR>", { silent = true, desc = "Open file explorer" })
 map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
@@ -55,6 +59,15 @@ end, { silent = true, desc = "Toggle quickfix" })
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
+})
+local cursorline_group = vim.api.nvim_create_augroup("cursorline_active", { clear = true })
+vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
+    group = cursorline_group,
+    callback = function() vim.wo.cursorline = true end,
+})
+vim.api.nvim_create_autocmd("WinLeave", {
+    group = cursorline_group,
+    callback = function() vim.wo.cursorline = false end,
 })
 
 require("brackets"); require("surround")
