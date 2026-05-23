@@ -149,18 +149,18 @@ class SessionRow:
 
 
 def find_current_session_name(data: list) -> str | None:
-    """The session containing the most-recently-focused session-window in the
-    focused tab — i.e. the session the user came from when an overlay grabbed
-    focus. Returns None if the focused tab has no session-tagged window.
+    """The session you're currently "in" — the most-recently-focused
+    session-window inside the focused OS window. Scans all tabs (not just the
+    focused one) so the answer survives stepping into an untagged tab or an
+    overlay that grabbed focus. Returns None if the focused OS window contains
+    no session-tagged window.
     """
     for os_win in data:
         if not os_win.get("is_focused"):
             continue
+        best_name: str | None = None
+        best_t = -1.0
         for tab in os_win.get("tabs", []):
-            if not tab.get("is_focused"):
-                continue
-            best_name: str | None = None
-            best_t = -1.0
             for w in tab.get("windows", []):
                 name = (w.get("user_vars") or {}).get("session_name")
                 if not name:
@@ -168,7 +168,7 @@ def find_current_session_name(data: list) -> str | None:
                 t = float(w.get("last_focused_at") or 0)
                 if t > best_t:
                     best_name, best_t = name, t
-            return best_name
+        return best_name
     return None
 
 
@@ -500,12 +500,14 @@ def run_fzf(
 
 
 def cmd_list() -> None:
-    rows = list_sessions()
+    data = kitty_ls()
+    rows = list_sessions(data)
     if not rows:
         return
+    current = find_current_session_name(data)
     name_w = max(len(r.name) for r in rows)
     for r in rows:
-        marker = "*" if r.focused else " "
+        marker = "*" if r.name == current else " "
         print(f"{marker} {r.name:<{name_w}}  {display_cwd(r.cwd)}")
 
 
