@@ -3,6 +3,7 @@
 
 require('vim._core.ui2').enable()
 vim.opt.winborder = "rounded"
+vim.opt.pumborder = "rounded"
 
 -- OPTIONS
 vim.g.mapleader = " "
@@ -29,7 +30,7 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.path:append("**")
-vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
+vim.opt.completeopt = "menuone,noselect,fuzzy,nosort,popup"
 vim.opt.shortmess:append("c")
 
 vim.opt.isfname:append("@-@")
@@ -161,6 +162,20 @@ vim.api.nvim_create_autocmd("PackChanged", {
 -- LSP
 vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
+vim.g.lsp_autocomplete = false
+vim.api.nvim_create_user_command("LspAutocomplete", function(opts)
+    local on = (opts.args == "on") or (opts.args == "" and not vim.g.lsp_autocomplete)
+    vim.g.lsp_autocomplete = on
+    for _, client in ipairs(vim.lsp.get_clients()) do
+        if client:supports_method("textDocument/completion") then
+            for bufnr in pairs(client.attached_buffers) do
+                vim.lsp.completion.enable(on, client.id, bufnr, { autotrigger = true })
+                vim.bo[bufnr].autocomplete = on
+            end
+        end
+    end
+    vim.notify("LSP autocomplete: " .. (on and "on" or "off"))
+end, { nargs = "?", complete = function() return { "on", "off" } end })
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
     callback = function(args)
@@ -168,10 +183,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client then
             client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
-            -- if client:supports_method("textDocument/completion") then
-            --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-            --     vim.bo[bufnr].autocomplete = true
-            -- end
+            if vim.g.lsp_autocomplete and client:supports_method("textDocument/completion") then
+                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+                vim.bo[bufnr].autocomplete = true
+            end
         end
         local map_opts = { buffer = bufnr, silent = true }
         map("n", "K", function()

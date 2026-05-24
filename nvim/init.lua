@@ -1,4 +1,6 @@
 require('vim._core.ui2').enable()
+vim.opt.winborder = "rounded"
+vim.opt.pumborder = "rounded"
 vim.g.mapleader = " "
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
@@ -18,7 +20,7 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.path:append("**")
-vim.opt.completeopt = "menuone,noselect,fuzzy,nosort"
+vim.opt.completeopt = "menuone,noselect,fuzzy,nosort" -- popup
 vim.opt.shortmess:append("c")
 vim.opt.isfname:append("@-@")
 vim.opt.splitbelow = true
@@ -75,7 +77,9 @@ vim.api.nvim_create_autocmd("WinLeave", {
     callback = function() vim.wo.cursorline = false end,
 })
 
-require("brackets"); require("surround")
+require("brackets")
+require("surround")
+
 vim.api.nvim_create_autocmd("FileType", {
     group = vim.api.nvim_create_augroup("TreeSitterStart", { clear = true }),
     callback = function(args) pcall(vim.treesitter.start, args.buf) end,
@@ -89,6 +93,7 @@ vim.pack.add({
 })
 
 require("mini.diff").setup({})
+
 require("jj").setup({})
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
 
@@ -101,6 +106,7 @@ require("csub").setup({
         { match = "FuzzyFiles",   mode = nil },
     },
 })
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "qf", "csub" },
     group = vim.api.nvim_create_augroup("CsubQfMap", { clear = true }),
@@ -109,8 +115,10 @@ vim.api.nvim_create_autocmd("FileType", {
             { buffer = args.buf, silent = true, desc = "Substitute in quickfix (Csub)" })
     end,
 })
+
 require("filemarks").setup({ show_help = false, dir_open_cmd = "Explore" })
 map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
+
 require("fuzzy").setup({ open_single_result = true, window = { width = 0.45, height = 0.45 } })
 map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers" })
 map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
@@ -130,6 +138,21 @@ end, { desc = "Grep WORD under cursor (fixed string)" })
 
 vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
+vim.g.lsp_autocomplete = false
+vim.api.nvim_create_user_command("LspAutocomplete", function(opts)
+    local on = (opts.args == "on") or (opts.args == "" and not vim.g.lsp_autocomplete)
+    vim.g.lsp_autocomplete = on
+    for _, client in ipairs(vim.lsp.get_clients()) do
+        if client:supports_method("textDocument/completion") then
+            for bufnr in pairs(client.attached_buffers) do
+                vim.lsp.completion.enable(on, client.id, bufnr, { autotrigger = true })
+                vim.bo[bufnr].autocomplete = on
+            end
+        end
+    end
+    vim.notify("LSP autocomplete: " .. (on and "on" or "off"))
+end, { nargs = "?", complete = function() return { "on", "off" } end })
+
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
     callback = function(args)
@@ -137,10 +160,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client then
             client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
-            -- if client:supports_method("textDocument/completion") then
-            --     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-            --     vim.bo[bufnr].autocomplete = true
-            -- end
+            if vim.g.lsp_autocomplete and client:supports_method("textDocument/completion") then
+                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+                vim.bo[bufnr].autocomplete = true
+            end
         end
         local map_opts = { buffer = bufnr, silent = true }
         map("n", "K", function()
