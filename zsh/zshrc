@@ -64,5 +64,6 @@ zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 export BAT_THEME="OneHalfDark"
 source <(fzf --zsh)
+eval "$(zoxide init zsh)"
 
 source "$HOME/.cargo/env" 

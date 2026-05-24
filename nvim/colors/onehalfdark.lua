@@ -17,7 +17,7 @@ local c = {
     cyan        = { gui = "#4da4af", cterm = 73  },
     white       = { gui = "#b2b5b9", cterm = 188 },
     comment_fg  = { gui = "#535965", cterm = 241 },
-    muted_fg    = { gui = "#b0b6bf", cterm = 245 },
+    muted_fg    = { gui = "#c7cbd1", cterm = 245 },
     gutter_fg   = { gui = "#838c99", cterm = 247 },
     non_text    = { gui = "#373C45", cterm = 239 },
     cursor_line = { gui = "#313640", cterm = 237 },
