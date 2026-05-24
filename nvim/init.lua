@@ -167,10 +167,7 @@ vim.keymap.set('n', 'fW', function() require('fff').live_grep({ query = vim.fn.e
 require("csub").setup({
     default_mode = nil,
     handlers = {
-        { match = "FuzzyGrep",    mode = "replace" },
-        { match = "vimgrep",      mode = "replace" },
-        { match = "FuzzyBuffers", mode = "buffers" },
-        { match = "FuzzyFiles",   mode = nil },
+        { match = "vimgrep", mode = "replace" },
     },
 })
 

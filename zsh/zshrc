@@ -36,11 +36,6 @@ alias ls='eza --hyperlink'
 alias rg="rg --hyperlink-format=kitty"
 alias gs="git status"
 alias vim='nvim'
-alias icat="kitten icat"
-alias s="kitten ssh"
-alias clip="kitten clipboard"
-alias kls="kitten choose-files"
-alias d="kitten diff"
 
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
