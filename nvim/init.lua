@@ -1,4 +1,10 @@
-require('vim._core.ui2').enable()
+require('vim._core.ui2').enable({
+    msg = {
+        pager  = { height = 0.5 },
+        dialog = { height = 0.5 },
+    },
+})
+vim.opt.fillchars:append({ msgsep = "─" })
 vim.opt.winborder = "rounded"
 vim.opt.pumborder = "rounded"
 vim.g.mapleader = " "
