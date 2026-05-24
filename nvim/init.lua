@@ -36,10 +36,9 @@ vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
--- vim.cmd.colorscheme("onehalfdark")
 
 local c = {
-    black  = { gui = "#14161b", cterm = 236 },
+    black  = { gui = "#1d1f27", cterm = 236 },
     red    = { gui = "#f5c3bb", cterm = 168 },
     green  = { gui = "#c1f4c4", cterm = 114 },
     yellow = { gui = "#f7e19e", cterm = 180 },
@@ -60,6 +59,8 @@ local function h(group, fg, bg, attr)
     set_hl(0, group, spec)
 end
 
+
+h("Normal", nil, c.black, nil)
 h("StatusLine", nil, c.black)
 h("NormalFloat", c.fg, c.bg, nil)
 h("FloatBorder", c.border, c.bg, nil)
@@ -99,6 +100,7 @@ map("n", "<leader>q", function() vim.cmd(vim.fn.getqflist({ winid = 0 }).winid >
     { silent = true, desc = "Toggle quickfix" })
 map("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { silent = true, desc = "Format buffer via LSP" })
+map("n", "<leader>z", ":! ", { desc = "Execute a command" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
@@ -163,11 +165,13 @@ vim.keymap.set('n', 'fw', function() require('fff').live_grep({ query = vim.fn.e
     { desc = 'Live grep word under cursor' })
 vim.keymap.set('n', 'fW', function() require('fff').live_grep({ query = vim.fn.expand("<cWORD>") }) end,
     { desc = 'Live grep WORD under cursor' })
+vim.keymap.set('n', 'fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
 require("csub").setup({
     default_mode = nil,
     handlers = {
-        { match = "vimgrep", mode = "replace" },
+        { match = "vimgrep",   mode = "replace" },
+        { match = "qfbuffers", mode = "buffers" },
     },
 })
 
