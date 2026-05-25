@@ -39,17 +39,19 @@ vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
+vim.opt.scrolloff = 5
 
 local c = {
-    black  = { gui = "#1d1f27", cterm = 236 },
-    red    = { gui = "#f5c3bb", cterm = 168 },
-    green  = { gui = "#c1f4c4", cterm = 114 },
-    yellow = { gui = "#f7e19e", cterm = 180 },
-    blue   = { gui = "#b1dafb", cterm = 75 },
-    purple = { gui = "#b26cc7", cterm = 176 },
-    cyan   = { gui = "#a6f5f6", cterm = 73 },
-    white  = { gui = "#e0e2e9", cterm = 188 },
-    border = { gui = "#505257", cterm = 237 },
+    black       = { gui = "#1d1f27", cterm = 236 },
+    red         = { gui = "#f5c3bb", cterm = 168 },
+    green       = { gui = "#c1f4c4", cterm = 114 },
+    yellow      = { gui = "#f7e19e", cterm = 180 },
+    blue        = { gui = "#b1dafb", cterm = 75 },
+    purple      = { gui = "#b26cc7", cterm = 176 },
+    cyan        = { gui = "#a6f5f6", cterm = 73 },
+    white       = { gui = "#e0e2e9", cterm = 188 },
+    border      = { gui = "#505257", cterm = 237 },
+    cursor_line = { gui = "#2e323a", cterm = 237 },
 }
 
 local set_hl = vim.api.nvim_set_hl
@@ -73,6 +75,7 @@ h("PmenuSel", c.fg, c.border, "bold")
 h("PmenuBorder", c.border, c.bg, nil)
 h("MsgSeparator", c.border, nil, nil)
 h("WinSeparator", c.border, nil, nil)
+h("CursorLine", nil, c.cursor_line, nil)
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
@@ -110,6 +113,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    group = vim.api.nvim_create_augroup("cursorline_active", { clear = true }),
+    callback = function() vim.wo.cursorline = true end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+    group = "cursorline_active",
+    callback = function() vim.wo.cursorline = false end,
+})
 
 -- PLUGINS
 

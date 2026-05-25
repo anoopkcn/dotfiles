@@ -30,16 +30,25 @@ KS_STATE_FILE = os.environ.get("KS_STATE_FILE") or os.path.join(
 )
 
 
+_STATE_CACHE: list[dict] | None = None
+
+
 def _state_load() -> list[dict]:
+    global _STATE_CACHE
+    if _STATE_CACHE is not None:
+        return _STATE_CACHE
     try:
         with open(KS_STATE_FILE) as f:
             data = json.load(f)
-        return data if isinstance(data, list) else []
+        _STATE_CACHE = data if isinstance(data, list) else []
     except (OSError, json.JSONDecodeError, ValueError):
-        return []
+        _STATE_CACHE = []
+    return _STATE_CACHE
 
 
 def _state_save(entries: list[dict]) -> None:
+    global _STATE_CACHE
+    _STATE_CACHE = list(entries)
     try:
         os.makedirs(os.path.dirname(KS_STATE_FILE), exist_ok=True)
         tmp = KS_STATE_FILE + ".tmp"
@@ -83,7 +92,68 @@ def strip_private(p: str) -> str:
     return p[len("/private") :] if p.startswith("/private/") else p
 
 
+def _args_to_payload(args: tuple) -> tuple[str, dict]:
+    """Parse CLI-style `kitty @` args into (cmd, payload) for the RC protocol.
+
+    Handles the subset ks emits: `--key=value`, `--key value`, repeated `--var`,
+    and trailing positional args (which become the launch process `args`).
+    """
+    if not args:
+        raise ValueError("no args")
+    cmd = args[0].replace("-", "_")
+    payload: dict = {}
+    positional: list[str] = []
+    i = 1
+    while i < len(args):
+        a = args[i]
+        if a == "--":
+            positional.extend(args[i + 1 :])
+            break
+        if a.startswith("--"):
+            key, eq, val = a[2:].partition("=")
+            key = key.replace("-", "_")
+            if not eq:
+                if i + 1 < len(args) and not args[i + 1].startswith("--"):
+                    val = args[i + 1]
+                    i += 1
+                else:
+                    val = True
+            if key == "var":
+                payload.setdefault("var", []).append(val)
+            else:
+                payload[key] = val
+        else:
+            positional.append(a)
+        i += 1
+    if positional:
+        payload["args"] = positional
+    return cmd, payload
+
+
 def kitty_at(*args: str, check: bool = True) -> str:
+    """Run a `kitty @` command. Uses the direct unix-socket RC path (~25ms
+    faster than spawning the CLI). Falls back to `kitty @` subprocess only when
+    listen_on isn't a unix socket or the args don't parse into a payload."""
+    if SOCKET_PATH:
+        try:
+            cmd_name, payload = _args_to_payload(args)
+            req: dict = {"cmd": cmd_name}
+            if payload:
+                req["payload"] = payload
+            resp = _socket_rc(req)
+        except (OSError, RuntimeError, _socket.timeout, json.JSONDecodeError, ValueError):
+            resp = None
+        if resp is not None:
+            if not resp.get("ok"):
+                if check:
+                    sys.stderr.write("ks: kitty @ " + " ".join(args) + "\n")
+                    sys.stderr.write("ks: " + str(resp.get("error", "unknown")) + "\n")
+                    sys.exit(1)
+                return ""
+            data = resp.get("data")
+            if data is None:
+                return ""
+            return data if isinstance(data, str) else str(data)
     cmd = ["kitty", "@", "--to", SOCKET, *args]
     res = subprocess.run(cmd, capture_output=True, text=True)
     if res.returncode != 0:
@@ -528,8 +598,9 @@ def _state_drop_name(name: str) -> None:
         _state_save(new_entries)
 
 
-def kill_session_by_name(name: str) -> bool:
-    data = kitty_ls()
+def kill_session_by_name(name: str, data: list | None = None) -> bool:
+    if data is None:
+        data = kitty_ls()
     live_os = {o.get("id"): o for o in data if o.get("id") is not None}
 
     target_os_id: int | None = None
@@ -555,11 +626,19 @@ def kill_session_by_name(name: str) -> bool:
         return False
 
     os_win = live_os[target_os_id]
-    for tab in os_win.get("tabs", []):
-        for w in tab.get("windows", []):
-            wid = w.get("id")
-            if wid is not None:
-                kitty_at("close-window", "--match", "id:" + str(wid), check=False)
+    ids = [
+        w.get("id")
+        for tab in os_win.get("tabs", [])
+        for w in tab.get("windows", [])
+        if w.get("id") is not None
+    ]
+    if ids:
+        kitty_at(
+            "close-window",
+            "--match",
+            " or ".join(f"id:{w}" for w in ids),
+            check=False,
+        )
 
     _state_drop_name(name)
     return True
@@ -737,20 +816,7 @@ def cmd_switch(name: str) -> None:
         sys.stderr.write(f"ks: session '{name}' has no windows to focus\n")
         sys.exit(1)
 
-    cmd = [
-        "kitty",
-        "@",
-        "--to",
-        SOCKET,
-        "focus-window",
-        "--match",
-        f"id:{target_wid}",
-    ]
-    res = subprocess.run(cmd, capture_output=True, text=True)
-    if res.returncode != 0:
-        err = res.stderr.strip()
-        sys.stderr.write(f"ks: {err or 'failed to focus session ' + repr(name)}\n")
-        sys.exit(1)
+    kitty_at("focus-window", "--match", f"id:{target_wid}")
 
 
 def cmd_kill(names: list[str]) -> None:
@@ -802,10 +868,13 @@ def cmd_kill_all() -> None:
         sys.stderr.write("ks: no other sessions to kill\n")
         return
 
-    count = 0
-    for wid in ids:
-        kitty_at("close-window", "--match", "id:" + wid, check=False)
-        count += 1
+    kitty_at(
+        "close-window",
+        "--match",
+        " or ".join(f"id:{w}" for w in ids),
+        check=False,
+    )
+    count = len(ids)
 
     if killed_os_ids:
         entries = _state_load()
@@ -861,7 +930,8 @@ def cmd_pick_session() -> None:
 
 def cmd_pick_kill() -> None:
     require_fzf()
-    rows = list_sessions()
+    data = kitty_ls()
+    rows = list_sessions(data)
     if not rows:
         sys.stderr.write("ks: no active sessions\n")
         pause_overlay()
@@ -887,7 +957,7 @@ def cmd_pick_kill() -> None:
     killed = 0
     for line in chosen:
         name = line.split("\t", 1)[0]
-        if kill_session_by_name(name):
+        if kill_session_by_name(name, data=data):
             killed += 1
     sys.stderr.write(f"ks: killed {killed} session(s)\n")
 

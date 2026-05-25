@@ -15,7 +15,5 @@ ln -sf $PATH_TO_DOTFILES/ghostty  $HOME/.config/ghostty
 ln -sf $PATH_TO_DOTFILES/nvim  $HOME/.config/nvim
 ln -sf $PATH_TO_DOTFILES/zsh  $HOME/.config/zsh
 ln -sf $PATH_TO_DOTFILES/zsh/zshrc $HOME/.zshrc
-mkdir -p $HOME/.config/btop/themes
-ln -sf $PATH_TO_DOTFILES/btop/themes/nvim.theme $HOME/.config/btop/themes/nvim.theme
-
-# Re-open the terminal
+# mkdir -p $HOME/.config/btop/themes
+# ln -sf $PATH_TO_DOTFILES/btop/themes/nvim.theme $HOME/.config/btop/themes/nvim.theme
