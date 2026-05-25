@@ -1,3 +1,6 @@
+-- neovim config file
+-- by @anoopkcn
+
 require('vim._core.ui2').enable({
     msg = {
         pager  = { height = 0.5 },
