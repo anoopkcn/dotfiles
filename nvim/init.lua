@@ -164,9 +164,7 @@ vim.keymap.set('n', 'fW', function() require('fff').live_grep({ query = vim.fn.e
 vim.keymap.set('n', 'fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
 require("csub").setup({
-    default_mode = nil,
     handlers = {
-        { match = "vimgrep",   mode = "replace" },
         { match = "qfbuffers", mode = "buffers" },
     },
 })
