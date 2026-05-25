@@ -17,10 +17,37 @@ import shutil
 import socket as _socket
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
 
 
 HOME = os.environ.get("HOME", "")
+
+KS_STATE_FILE = os.environ.get("KS_STATE_FILE") or os.path.join(
+    os.environ.get("XDG_CACHE_HOME") or os.path.join(HOME, ".cache"),
+    "ks",
+    "sessions.json",
+)
+
+
+def _state_load() -> list[dict]:
+    try:
+        with open(KS_STATE_FILE) as f:
+            data = json.load(f)
+        return data if isinstance(data, list) else []
+    except (OSError, json.JSONDecodeError, ValueError):
+        return []
+
+
+def _state_save(entries: list[dict]) -> None:
+    try:
+        os.makedirs(os.path.dirname(KS_STATE_FILE), exist_ok=True)
+        tmp = KS_STATE_FILE + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(entries, f, indent=2)
+        os.replace(tmp, KS_STATE_FILE)
+    except OSError as e:
+        sys.stderr.write(f"ks: warning: could not write state file: {e}\n")
 
 # Pinned protocol version for direct unix-socket RC. Must be <= installed kitty
 # version. 0.14.2 is conservative — modern kittys (≥0.14.2, which is years old)
@@ -137,75 +164,189 @@ class SessionRow:
     last_focused_at: float
 
 
-def find_current_session_name(data: list) -> str | None:
-    """The session you're currently "in" — the most-recently-focused
-    session-window inside the focused OS window. Scans all tabs (not just the
-    focused one) so the answer survives stepping into an untagged tab or an
-    overlay that grabbed focus. Returns None if the focused OS window contains
-    no session-tagged window.
-    """
-    for os_win in data:
-        if not os_win.get("is_focused"):
-            continue
-        best_name: str | None = None
-        best_t = -1.0
-        for tab in os_win.get("tabs", []):
-            for w in tab.get("windows", []):
-                name = (w.get("user_vars") or {}).get("session_name")
-                if not name:
-                    continue
-                t = float(w.get("last_focused_at") or 0)
-                if t > best_t:
-                    best_name, best_t = name, t
-        return best_name
+def _os_window_id_for(window_id: int, data: list | None = None) -> int | None:
+    """Look up the OS window id that owns `window_id`."""
+    if data is None:
+        data = kitty_ls()
+    for o in data:
+        for t in o.get("tabs", []):
+            for w in t.get("windows", []):
+                if w.get("id") == window_id:
+                    return o.get("id")
     return None
+
+
+def _state_record(name: str, os_window_id: int, initial_cwd: str) -> None:
+    """Persist a new session, replacing any prior entry on this socket that
+    collides on either name or os_window_id."""
+    entries = _state_load()
+    pruned = [
+        e
+        for e in entries
+        if not (
+            e.get("socket") == SOCKET_PATH
+            and (e.get("name") == name or e.get("os_window_id") == os_window_id)
+        )
+    ]
+    pruned.append(
+        {
+            "name": name,
+            "os_window_id": os_window_id,
+            "socket": SOCKET_PATH,
+            "cwd": initial_cwd,
+            "session_path": initial_cwd,
+            "created_at": time.time(),
+        }
+    )
+    _state_save(pruned)
+
+
+def _window_session_name(w: dict) -> str:
+    """Read a session name from kitty's built-in top-level field first, then
+    fall back to the user_var we set ourselves. Either is good enough to tag
+    the OS window as a session."""
+    return w.get("session_name") or (w.get("user_vars") or {}).get("session_name") or ""
+
+
+def _builtin_session_name_for_os_window(os_win: dict) -> str:
+    """First non-empty session_name found anywhere in this OS window. Used as
+    fallback detection for OS windows started via `startup_session` /
+    `kitty --session`, where the built-in field auto-propagates to every
+    window."""
+    for tab in os_win.get("tabs", []):
+        for w in tab.get("windows", []):
+            n = _window_session_name(w)
+            if n:
+                return n
+    return ""
+
+
+def find_current_session_name(data: list) -> str | None:
+    """The session you're currently "in" (the focused OS window). Tries the
+    state file first (so it works after the originally-tagged window has been
+    closed), then falls back to scanning windows for a session_name."""
+    focused_os: dict | None = None
+    for os_win in data:
+        if os_win.get("is_focused"):
+            focused_os = os_win
+            break
+    if focused_os is None:
+        return None
+    os_id = focused_os.get("id")
+    for e in _state_load():
+        if e.get("socket") == SOCKET_PATH and e.get("os_window_id") == os_id:
+            return e.get("name")
+    best_name: str | None = None
+    best_t = -1.0
+    for tab in focused_os.get("tabs", []):
+        for w in tab.get("windows", []):
+            name = _window_session_name(w)
+            if not name:
+                continue
+            t = float(w.get("last_focused_at") or 0)
+            if t > best_t:
+                best_name, best_t = name, t
+    return best_name
+
+
+def _build_row_for_os_window(
+    os_win: dict, name: str, launch_path: str, fallback_cwd: str
+) -> SessionRow:
+    """Collapse an OS window into a SessionRow.
+
+    The cwd we display is intentionally stable, not "wherever the user last cd'd
+    to". Using a most-recently-focused rep means the picker shows the cwd of
+    whatever transient window happened to grab focus last — including the very
+    overlay running `ks -i`. Instead:
+      * state-file sessions → the recorded launch path
+      * built-in (startup_session) sessions → the cwd of the *earliest* window
+        carrying the session_name tag (i.e. the original launch window)
+    """
+    os_focused = bool(os_win.get("is_focused"))
+    last_t = 0.0
+    is_session_focused = False
+
+    builtin_cwd = ""
+    builtin_id: int | None = None
+
+    for tab in os_win.get("tabs", []):
+        tab_focused = bool(tab.get("is_focused"))
+        for w in tab.get("windows", []):
+            t = float(w.get("last_focused_at") or 0)
+            if t > last_t:
+                last_t = t
+            if os_focused and tab_focused and bool(w.get("is_focused")):
+                is_session_focused = True
+            if not launch_path and _window_session_name(w) == name:
+                wid = w.get("id")
+                if isinstance(wid, int) and (builtin_id is None or wid < builtin_id):
+                    fg = w.get("foreground_processes") or []
+                    builtin_cwd = (
+                        (fg[0].get("cwd") if fg else None) or w.get("cwd", "") or ""
+                    )
+                    builtin_id = wid
+
+    cwd = strip_private(launch_path or builtin_cwd or fallback_cwd)
+    return SessionRow(
+        name=name,
+        cwd=cwd,
+        launch_path=strip_private(launch_path) or cwd,
+        focused=is_session_focused,
+        last_focused_at=last_t,
+    )
 
 
 def list_sessions(data: list | None = None) -> list[SessionRow]:
     if data is None:
         data = kitty_ls()
-    rows: list[SessionRow] = []
-    for os_win in data:
-        os_focused = os_win.get("is_focused", False)
-        for tab in os_win.get("tabs", []):
-            tab_focused = tab.get("is_focused", False)
-            for w in tab.get("windows", []):
-                uv = w.get("user_vars") or {}
-                name = uv.get("session_name", "")
-                if not name:
-                    continue
-                fg = w.get("foreground_processes") or []
-                cwd = (fg[0].get("cwd") if fg else None) or w.get("cwd", "")
-                cwd = strip_private(cwd)
-                launch_path = strip_private(uv.get("session_path") or cwd)
-                rows.append(
-                    SessionRow(
-                        name=name,
-                        cwd=cwd,
-                        launch_path=launch_path,
-                        focused=bool(
-                            os_focused and tab_focused and w.get("is_focused", False)
-                        ),
-                        last_focused_at=float(w.get("last_focused_at") or 0),
-                    )
-                )
 
-    by_name: dict[str, SessionRow] = {}
-    for r in rows:
-        cur = by_name.get(r.name)
-        if cur is None:
-            by_name[r.name] = r
+    live_os = {o.get("id"): o for o in data if o.get("id") is not None}
+
+    # Lazy prune: drop state entries for this socket whose OS window is gone.
+    entries = _state_load()
+    pruned: list[dict] = []
+    changed = False
+    for e in entries:
+        if e.get("socket") == SOCKET_PATH and e.get("os_window_id") not in live_os:
+            changed = True
             continue
-        if r.focused and not cur.focused:
-            by_name[r.name] = r
-        elif r.focused == cur.focused and r.last_focused_at > cur.last_focused_at:
-            by_name[r.name] = r
+        pruned.append(e)
+    if changed:
+        _state_save(pruned)
 
-    items = sorted(
-        by_name.values(),
+    rows_by_os: dict[int, SessionRow] = {}
+
+    # 1. Sessions from the state file (current socket only).
+    for e in pruned:
+        if e.get("socket") != SOCKET_PATH:
+            continue
+        os_id = e.get("os_window_id")
+        os_win = live_os.get(os_id)
+        if os_win is None:
+            continue
+        rows_by_os[os_id] = _build_row_for_os_window(
+            os_win,
+            name=e.get("name", ""),
+            launch_path=e.get("session_path") or e.get("cwd", ""),
+            fallback_cwd=e.get("cwd", ""),
+        )
+
+    # 2. Fallback: OS windows kitty itself tagged via startup_session /
+    #    --session, but that we don't have a state entry for.
+    for os_id, os_win in live_os.items():
+        if os_id in rows_by_os:
+            continue
+        name = _builtin_session_name_for_os_window(os_win)
+        if not name:
+            continue
+        rows_by_os[os_id] = _build_row_for_os_window(
+            os_win, name=name, launch_path="", fallback_cwd=""
+        )
+
+    return sorted(
+        rows_by_os.values(),
         key=lambda r: (-int(r.focused), -r.last_focused_at, r.name),
     )
-    return items
 
 
 def extract_session_name_from_file(path: str) -> str | None:
@@ -230,10 +371,18 @@ def extract_session_name_from_file(path: str) -> str | None:
 
 def session_is_running(name: str) -> bool:
     data = kitty_ls()
+    live_os = {o.get("id") for o in data if o.get("id") is not None}
+    for e in _state_load():
+        if (
+            e.get("socket") == SOCKET_PATH
+            and e.get("name") == name
+            and e.get("os_window_id") in live_os
+        ):
+            return True
     for os_win in data:
         for tab in os_win.get("tabs", []):
             for w in tab.get("windows", []):
-                if (w.get("user_vars") or {}).get("session_name") == name:
+                if _window_session_name(w) == name:
                     return True
     return False
 
@@ -285,7 +434,8 @@ def apply_session_file(path: str, session_name: str, initial_cwd: str) -> int:
         elif directive == "os_window_title":
             os_window_title = " ".join(rest)
         elif directive == "launch":
-            if not first_launch_done:
+            is_first = not first_launch_done
+            if is_first:
                 args = [
                     "launch",
                     "--type=os-window",
@@ -304,6 +454,10 @@ def apply_session_file(path: str, session_name: str, initial_cwd: str) -> int:
             wid = kitty_at(*args)
             if wid.isdigit():
                 last_window_id = wid
+            if is_first and session_name and wid.isdigit():
+                os_win_id = _os_window_id_for(int(wid))
+                if os_win_id is not None:
+                    _state_record(session_name, os_win_id, initial_cwd)
             first_launch_done = True
         elif directive == "new_tab":
             match = ("id:" + last_window_id) if last_window_id else (tag_match or "")
@@ -363,23 +517,52 @@ def launch_session_file(path: str) -> None:
         print(name)
 
 
+def _state_drop_name(name: str) -> None:
+    entries = _state_load()
+    new_entries = [
+        e
+        for e in entries
+        if not (e.get("socket") == SOCKET_PATH and e.get("name") == name)
+    ]
+    if len(new_entries) != len(entries):
+        _state_save(new_entries)
+
+
 def kill_session_by_name(name: str) -> bool:
     data = kitty_ls()
-    for os_win in data:
-        win_ids: list[str] = []
-        found = False
-        for tab in os_win.get("tabs", []):
-            for w in tab.get("windows", []):
-                wid = w.get("id")
-                if wid is not None:
-                    win_ids.append(str(wid))
-                if (w.get("user_vars") or {}).get("session_name") == name:
-                    found = True
-        if found:
-            for wid in win_ids:
-                kitty_at("close-window", "--match", "id:" + wid, check=False)
-            return True
-    return False
+    live_os = {o.get("id"): o for o in data if o.get("id") is not None}
+
+    target_os_id: int | None = None
+    for e in _state_load():
+        if (
+            e.get("socket") == SOCKET_PATH
+            and e.get("name") == name
+            and e.get("os_window_id") in live_os
+        ):
+            target_os_id = e.get("os_window_id")
+            break
+
+    if target_os_id is None:
+        for os_win in data:
+            for tab in os_win.get("tabs", []):
+                if any(_window_session_name(w) == name for w in tab.get("windows", [])):
+                    target_os_id = os_win.get("id")
+                    break
+            if target_os_id is not None:
+                break
+
+    if target_os_id is None:
+        return False
+
+    os_win = live_os[target_os_id]
+    for tab in os_win.get("tabs", []):
+        for w in tab.get("windows", []):
+            wid = w.get("id")
+            if wid is not None:
+                kitty_at("close-window", "--match", "id:" + str(wid), check=False)
+
+    _state_drop_name(name)
+    return True
 
 
 # --- display + fzf ---
@@ -501,6 +684,59 @@ def cmd_list() -> None:
 
 
 def cmd_switch(name: str) -> None:
+    data = kitty_ls()
+    live_os = {o.get("id"): o for o in data if o.get("id") is not None}
+
+    target_os_id: int | None = None
+    for e in _state_load():
+        if (
+            e.get("socket") == SOCKET_PATH
+            and e.get("name") == name
+            and e.get("os_window_id") in live_os
+        ):
+            target_os_id = e.get("os_window_id")
+            break
+    if target_os_id is None:
+        for os_win in data:
+            for tab in os_win.get("tabs", []):
+                if any(_window_session_name(w) == name for w in tab.get("windows", [])):
+                    target_os_id = os_win.get("id")
+                    break
+            if target_os_id is not None:
+                break
+
+    if target_os_id is None:
+        sys.stderr.write(f"ks: no session named '{name}'\n")
+        sys.exit(1)
+
+    # Pick a window to focus inside the target OS window: prefer the active
+    # tab's active window so focus lands where the user left it.
+    os_win = live_os[target_os_id]
+    target_wid: int | None = None
+    for tab in os_win.get("tabs", []):
+        if not tab.get("is_active"):
+            continue
+        for w in tab.get("windows", []):
+            if w.get("is_active"):
+                target_wid = w.get("id")
+                break
+        if target_wid is None:
+            for w in tab.get("windows", []):
+                target_wid = w.get("id")
+                break
+        break
+    if target_wid is None:
+        for tab in os_win.get("tabs", []):
+            for w in tab.get("windows", []):
+                target_wid = w.get("id")
+                break
+            if target_wid is not None:
+                break
+
+    if target_wid is None:
+        sys.stderr.write(f"ks: session '{name}' has no windows to focus\n")
+        sys.exit(1)
+
     cmd = [
         "kitty",
         "@",
@@ -508,17 +744,13 @@ def cmd_switch(name: str) -> None:
         SOCKET,
         "focus-window",
         "--match",
-        f"var:session_name={name}",
+        f"id:{target_wid}",
     ]
     res = subprocess.run(cmd, capture_output=True, text=True)
-    if res.returncode == 0:
-        return
-    err = res.stderr.strip()
-    if "No matching windows" in err:
-        sys.stderr.write(f"ks: no session named '{name}'\n")
-    else:
+    if res.returncode != 0:
+        err = res.stderr.strip()
         sys.stderr.write(f"ks: {err or 'failed to focus session ' + repr(name)}\n")
-    sys.exit(1)
+        sys.exit(1)
 
 
 def cmd_kill(names: list[str]) -> None:
@@ -531,26 +763,35 @@ def cmd_kill(names: list[str]) -> None:
 
 def cmd_kill_all() -> None:
     data = kitty_ls()
+    live_os = {o.get("id"): o for o in data if o.get("id") is not None}
     focused_os = None
-    for os_win in data:
+    for os_id, os_win in live_os.items():
         if os_win.get("is_focused"):
-            focused_os = os_win.get("id")
+            focused_os = os_id
             break
     if focused_os is None:
         sys.stderr.write("ks: could not identify the focused kitty OS window\n")
         sys.exit(2)
 
+    state_os_ids = {
+        e.get("os_window_id")
+        for e in _state_load()
+        if e.get("socket") == SOCKET_PATH and e.get("os_window_id") in live_os
+    }
+
     ids: list[str] = []
-    for os_win in data:
-        if os_win.get("id") == focused_os:
+    killed_os_ids: set[int] = set()
+    for os_id, os_win in live_os.items():
+        if os_id == focused_os:
             continue
-        has_session = any(
-            (w.get("user_vars") or {}).get("session_name")
+        has_session = os_id in state_os_ids or any(
+            _window_session_name(w)
             for tab in os_win.get("tabs", [])
             for w in tab.get("windows", [])
         )
         if not has_session:
             continue
+        killed_os_ids.add(os_id)
         for tab in os_win.get("tabs", []):
             for w in tab.get("windows", []):
                 wid = w.get("id")
@@ -565,6 +806,20 @@ def cmd_kill_all() -> None:
     for wid in ids:
         kitty_at("close-window", "--match", "id:" + wid, check=False)
         count += 1
+
+    if killed_os_ids:
+        entries = _state_load()
+        new_entries = [
+            e
+            for e in entries
+            if not (
+                e.get("socket") == SOCKET_PATH
+                and e.get("os_window_id") in killed_os_ids
+            )
+        ]
+        if len(new_entries) != len(entries):
+            _state_save(new_entries)
+
     sys.stderr.write(f"ks: closed {count} session window(s)\n")
 
 
