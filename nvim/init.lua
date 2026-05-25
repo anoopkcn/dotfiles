@@ -107,15 +107,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
--- local cursorline_group = vim.api.nvim_create_augroup("cursorline_active", { clear = true })
--- vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
---     group = cursorline_group,
---     callback = function() vim.wo.cursorline = true end,
--- })
--- vim.api.nvim_create_autocmd("WinLeave", {
---     group = cursorline_group,
---     callback = function() vim.wo.cursorline = false end,
--- })
+
+-- PLUGINS
 
 require("brackets")
 require("surround")
@@ -185,61 +178,5 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 require("filemarks").setup({ show_help = false, dir_open_cmd = "Explore" })
+
 map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
-
-
-vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
-vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
-vim.g.lsp_autocomplete = false
-vim.api.nvim_create_user_command("LspAutocomplete", function(opts)
-    local on = (opts.args == "on") or (opts.args == "" and not vim.g.lsp_autocomplete)
-    vim.g.lsp_autocomplete = on
-    for _, client in ipairs(vim.lsp.get_clients()) do
-        if client:supports_method("textDocument/completion") then
-            for bufnr in pairs(client.attached_buffers) do
-                vim.lsp.completion.enable(on, client.id, bufnr, { autotrigger = true })
-                vim.bo[bufnr].autocomplete = on
-            end
-        end
-    end
-    vim.notify("LSP autocomplete: " .. (on and "on" or "off"))
-end, { nargs = "?", complete = function() return { "on", "off" } end })
-
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
-    callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client then
-            client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
-            if vim.g.lsp_autocomplete and client:supports_method("textDocument/completion") then
-                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-                vim.bo[bufnr].autocomplete = true
-            end
-        end
-        local map_opts = { buffer = bufnr, silent = true }
-        map("n", "K", function()
-            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
-        end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
-        map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
-        map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
-    end,
-})
-
-
--- vim.pack.add({ { src = "https://github.com/anoopkcn/fuzzy.nvim", name = "fuzzy" }, })
--- require("fuzzy").setup({ open_single_result = true, window = { width = 0.45, height = 0.45 } })
--- map("n", "<leader>fb", "<CMD>FuzzyBuffers!<CR>", { desc = "Fuzzy find buffers" })
--- map("n", "<leader>ff", "<CMD>FuzzyFiles!<CR>", { desc = "Fuzzy find files, open in picker" })
--- map("n", "<leader>fg", "<CMD>FuzzyGrep!<CR>", { desc = "Fuzzy live grep, open in picker" })
--- map("n", "<leader>fs", "<CMD>FuzzyLspSymbols!<CR>", { desc = "Fuzzy grep document lsp symbols" })
--- map("n", "<leader>?", ":FuzzyFiles ", { desc = "Fuzzy find files, open in qf" })
--- map("n", "<leader>/", ":FuzzyGrep ", { desc = "Fuzzy grep, open in qf" })
--- map("n", "<leader>fw", function()
---     local word = vim.fn.expand("<cword>")
---     if word ~= "" then require("fuzzy").grep({ word }) end
--- end, { desc = "Grep word under cursor" })
--- map("n", "<leader>fW", function()
---     local word = vim.fn.expand("<cWORD>")
---     if word ~= "" then require("fuzzy").grep({ "-F", word }) end
--- end, { desc = "Grep WORD under cursor (fixed string)" })
