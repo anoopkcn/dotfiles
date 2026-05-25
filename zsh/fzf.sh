@@ -1,15 +1,15 @@
-# fzf env — onehalfdark theme
+# fzf env — palette matched to kitty/neovim.conf
 # Sourced from zshrc and from non-shell scripts that spawn fzf
 # (e.g. kitty overlay scripts), so the theme is consistent everywhere.
 
 export FZF_DEFAULT_OPTS='--layout=reverse
---color=fg:#dcdfe4,bg:-1,hl:#e5c07b
---color=fg+:#dcdfe4,bg+:#313640,hl+:#e5c07b
---color=gutter:#282c34,border:#313640,separator:#5c6370
---color=info:#c678dd,prompt:#61afef,pointer:#e06c75
---color=marker:#98c379,spinner:#c678dd,header:#56b6c2
---color=preview-fg:#dcdfe4,preview-bg:-1,preview-border:#5c6370
---color=query:#dcdfe4,disabled:#5c6370,label:#919baa
+--color=fg:#e0e2e9,bg:-1,hl:#f7e19e
+--color=fg+:#e0e2e9,bg+:#292b33,hl+:#f7e19e
+--color=gutter:#1d1f27,border:#505257,separator:#505257
+--color=info:#b26cc7,prompt:#b1dafb,pointer:#f5c3bb
+--color=marker:#c1f4c4,spinner:#b26cc7,header:#a6f5f6
+--color=preview-fg:#e0e2e9,preview-bg:-1,preview-border:#505257
+--color=query:#e0e2e9,disabled:#505257,label:#b2b5b9
 --bind=alt-p:toggle-preview
 --bind=ctrl-u:preview-half-page-up
 --bind=ctrl-d:preview-half-page-down
