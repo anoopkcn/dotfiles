@@ -1,3 +1,5 @@
+# ~/.zshrc config
+
 setopt extended_glob null_glob
 path=(
     /Users/akc/.local/bin
@@ -28,10 +30,9 @@ source_file "${ZDOTDIR:-$HOME/.config/zsh}/plugin-manager.sh"
 source_file "${ZDOTDIR:-$HOME/.config/zsh}/minimal-prompt.sh"
 source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 
-alias ls="ls --color=auto"
 alias duh="du -h -d 0 [^.]*"
 alias notes="cd ~/Dropbox/notes"
-alias ls='eza --hyperlink'
+alias l='eza --hyperlink'
 alias rg="rg --hyperlink-format=kitty"
 alias gs="git status"
 alias icat="kitten icat"
