@@ -8,22 +8,22 @@ vim.o.background = "dark"
 vim.g.colors_name = "onehalfdark"
 
 local c = {
-    black       = { gui = "#22252a", cterm = 236 },
-    red         = { gui = "#b6575f", cterm = 168 },
-    green       = { gui = "#7b9e62", cterm = 114 },
-    yellow      = { gui = "#b99c64", cterm = 180 },
-    blue        = { gui = "#4e8ec2", cterm = 75  },
-    purple      = { gui = "#a061b3", cterm = 176 },
-    cyan        = { gui = "#45949e", cterm = 73  },
-    white       = { gui = "#a0a3a7", cterm = 188 },
-    comment_fg  = { gui = "#4b505b", cterm = 241 },
-    muted_fg    = { gui = "#9ca0aa", cterm = 245 },
-    gutter_fg   = { gui = "#767e8a", cterm = 247 },
-    non_text    = { gui = "#32363e", cterm = 239 },
-    cursor_line = { gui = "#292d34", cterm = 237 },
-    color_col   = { gui = "#2c313a", cterm = 237 },
-    selection   = { gui = "#3a3f4c", cterm = 239 },
-    vertsplit   = { gui = "#2c313a", cterm = 237 },
+    black       = { gui = "#292d33", cterm = 236 },
+    red         = { gui = "#dc6a74", cterm = 168 },
+    green       = { gui = "#94bf77", cterm = 108 },
+    yellow      = { gui = "#e0bd79", cterm = 180 },
+    blue        = { gui = "#5facea", cterm = 74  },
+    purple      = { gui = "#c276d9", cterm = 140 },
+    cyan        = { gui = "#54b3bf", cterm = 73  },
+    white       = { gui = "#c2c5ca", cterm = 251 },
+    comment_fg  = { gui = "#5a616e", cterm = 241 },
+    muted_fg    = { gui = "#bdc2ce", cterm = 251 },
+    gutter_fg   = { gui = "#8f99a7", cterm = 247 },
+    non_text    = { gui = "#3d414b", cterm = 238 },
+    cursor_line = { gui = "#32373f", cterm = 237 },
+    color_col   = { gui = "#353b46", cterm = 237 },
+    selection   = { gui = "#464c5c", cterm = 239 },
+    vertsplit   = { gui = "#353b46", cterm = 237 },
 }
 c.fg = c.white
 c.bg = c.black
@@ -148,9 +148,9 @@ h("diffRemoved",           c.red,    nil, nil)
 
 -- Plugin: mini.diff (25% dimmer than diff palette)
 local mini_diff = {
-    add    = { gui = "#5c774a", cterm = 65  },
-    change = { gui = "#8b754b", cterm = 101 },
-    delete = { gui = "#894147", cterm = 95  },
+    add    = { gui = "#6f9059", cterm = 65  },
+    change = { gui = "#a88e5a", cterm = 137 },
+    delete = { gui = "#a64f56", cterm = 131 },
 }
 h("MiniDiffSignAdd",     mini_diff.add,    nil, nil)
 h("MiniDiffSignChange",  mini_diff.change, nil, nil)

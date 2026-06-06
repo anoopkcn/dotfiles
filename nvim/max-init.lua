@@ -272,6 +272,52 @@ map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "L
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
 map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open fugitive Git status" })
 
+
+-- vim.pack.add({
+--     {
+--         src = "https://github.com/nvim-treesitter/nvim-treesitter",
+--         name = "treesitter"
+--     }
+-- })
+-- local treesitter = require("nvim-treesitter")
+-- local ensure_installed = {
+--     "vim", "vimdoc", "rust", "c", "cpp", "go",
+--     "html", "css", "javascript", "json",
+--     "markdown", "markdown_inline",
+--     "typescript", "tsx", "bash", "python", "lua",
+-- }
+--
+-- local already_installed = require("nvim-treesitter.config").get_installed()
+-- local to_install = vim.tbl_filter(function(p)
+--     return not vim.tbl_contains(already_installed, p)
+-- end, ensure_installed)
+--
+-- if #to_install > 0 then
+--     treesitter.install(to_install)
+-- end
+--
+-- local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
+-- vim.api.nvim_create_autocmd("FileType", {
+--     group = group,
+--     callback = function(args)
+--         local lang = vim.treesitter.language.get_lang(args.match)
+--         if vim.list_contains(treesitter.get_installed(), lang) then
+--             vim.treesitter.start(args.buf)
+--         end
+--     end,
+-- })
+--
+-- vim.api.nvim_create_autocmd("PackChanged", {
+--     callback = function(ev)
+--         local name, kind = ev.data.spec.name, ev.data.kind
+--         if name == "nvim-treesitter" and kind == "update" then
+--             if not ev.data.active then vim.cmd.packadd("nvim-treesitter") end
+--             vim.cmd("TSUpdate")
+--         end
+--     end,
+-- })
+--
+
 -- vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
 -- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
 -- vim.g.lsp_autocomplete = false

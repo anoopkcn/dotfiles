@@ -1,2 +1,30 @@
 #!/bin/sh
-exec rsync -macviz --exclude-from="$HOME/.config/zsh/rsyncignore" "$@"
+exec rsync -macviz \
+  --exclude='*.save*' \
+  --exclude='*.x' \
+  --exclude='*.exe' \
+  --exclude='*.o' \
+  --exclude='*.o*' \
+  --exclude='*.a' \
+  --exclude='*.mod' \
+  --exclude='*.h5' \
+  --exclude='*.hdf5' \
+  --exclude='*.wfc*' \
+  --exclude='*.html' \
+  --exclude='*.htm' \
+  --exclude='.tags*' \
+  --exclude='tags' \
+  --exclude='node_modules/*' \
+  --exclude='__pycache__/*' \
+  --exclude='.pytest_cache/*' \
+  --exclude='.venv/*' \
+  --exclude='venv/*' \
+  --exclude='*.lock' \
+  --exclude='.DS_Store' \
+  --exclude='zig-out/*' \
+  --exclude='.zig-cache/*' \
+  --exclude='zenv.json' \
+  --exclude='zenv/*' \
+  --exclude='*.egg-info' \
+  --exclude='.ruff_cache/*' \
+  "$@"

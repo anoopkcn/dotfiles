@@ -40,6 +40,8 @@ alias s="kitten ssh"
 alias clip="kitten clipboard"
 alias kls="kitten choose-files"
 alias d="kitten diff"
+alias z="zenv"
+alias zx="zenv run"
 
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
@@ -63,6 +65,12 @@ zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 export BAT_THEME="OneHalfDark"
 source <(fzf --zsh)
-eval "$(zoxide init zsh)"
 
 source "$HOME/.cargo/env" 
+
+so() {
+    local target="${1:-.}"
+    local script
+    script="$(zenv activate "$target")" || return
+    source "$script"
+}

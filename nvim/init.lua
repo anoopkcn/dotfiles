@@ -36,48 +36,15 @@ vim.opt.isfname:append("@-@")
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.ruler = true
-vim.g.netrw_banner = 0
+-- vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 5
+vim.opt.cursorline = true
 
-local c = {
-    black       = { gui = "#1d1f27", cterm = 236 },
-    red         = { gui = "#f5c3bb", cterm = 168 },
-    green       = { gui = "#c1f4c4", cterm = 114 },
-    yellow      = { gui = "#f7e19e", cterm = 180 },
-    blue        = { gui = "#b1dafb", cterm = 75 },
-    purple      = { gui = "#b26cc7", cterm = 176 },
-    cyan        = { gui = "#a6f5f6", cterm = 73 },
-    white       = { gui = "#e0e2e9", cterm = 188 },
-    border      = { gui = "#505257", cterm = 237 },
-    cursor_line = { gui = "#2e323a", cterm = 237 },
-}
-
-local set_hl = vim.api.nvim_set_hl
-
-local function h(group, fg, bg, attr)
-    local spec = {}
-    if fg then spec.fg, spec.ctermfg = fg.gui, fg.cterm end
-    if bg then spec.bg, spec.ctermbg = bg.gui, bg.cterm end
-    if attr then spec[attr] = true end
-    set_hl(0, group, spec)
-end
-
-
-h("Normal", nil, c.black, nil)
-h("StatusLine", nil, c.black)
-h("NormalFloat", c.fg, c.bg, nil)
-h("FloatBorder", c.border, c.bg, nil)
-h("FloatTitle", c.blue, c.bg, "bold")
-h("Pmenu", c.fg, c.bg, nil)
-h("PmenuSel", c.fg, c.border, "bold")
-h("PmenuBorder", c.border, c.bg, nil)
-h("MsgSeparator", c.border, nil, nil)
-h("WinSeparator", c.border, nil, nil)
-h("CursorLine", nil, c.cursor_line, nil)
-
+vim.cmd.colorscheme("onehalfdark")
+vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#292d33" })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
@@ -109,6 +76,8 @@ map("n", "<leader>q", function() vim.cmd(vim.fn.getqflist({ winid = 0 }).winid >
 map("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { silent = true, desc = "Format buffer via LSP" })
 map("n", "<leader>z", ":! ", { desc = "Execute a command" })
+map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+    { desc = "Replace word cursor is on globally" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
