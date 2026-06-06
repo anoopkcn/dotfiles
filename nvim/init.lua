@@ -36,7 +36,6 @@ vim.opt.isfname:append("@-@")
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.ruler = true
--- vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
@@ -44,7 +43,7 @@ vim.opt.scrolloff = 5
 vim.opt.cursorline = true
 
 vim.cmd.colorscheme("onehalfdark")
-vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#292d33" })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
@@ -82,6 +81,16 @@ map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
     callback = function() vim.highlight.on_yank() end,
+})
+
+-- cursorline only in active window
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    group = vim.api.nvim_create_augroup("cursorline_active", { clear = true }),
+    callback = function() vim.wo.cursorline = true end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+    group = "cursorline_active",
+    callback = function() vim.wo.cursorline = false end,
 })
 
 -- PLUGINS
@@ -148,7 +157,7 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = { "qf", "csub" },
     group = vim.api.nvim_create_augroup("CsubQfMap", { clear = true }),
     callback = function(args)
-        map("n", "<leader>s", "<CMD>Csub<CR>",
+        map("n", "<leader>c", "<CMD>Csub<CR>",
             { buffer = args.buf, silent = true, desc = "Substitute in quickfix (Csub)" })
     end,
 })

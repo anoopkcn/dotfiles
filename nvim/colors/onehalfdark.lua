@@ -8,7 +8,7 @@ vim.o.background = "dark"
 vim.g.colors_name = "onehalfdark"
 
 local c = {
-    black       = { gui = "#292d33", cterm = 236 },
+    black       = { gui = "#1d1f27", cterm = 236 },
     red         = { gui = "#dc6a74", cterm = 168 },
     green       = { gui = "#94bf77", cterm = 108 },
     yellow      = { gui = "#e0bd79", cterm = 180 },
@@ -20,7 +20,7 @@ local c = {
     muted_fg    = { gui = "#bdc2ce", cterm = 251 },
     gutter_fg   = { gui = "#8f99a7", cterm = 247 },
     non_text    = { gui = "#3d414b", cterm = 238 },
-    cursor_line = { gui = "#32373f", cterm = 237 },
+    cursor_line = { gui = "#2a2d38", cterm = 237 },
     color_col   = { gui = "#353b46", cterm = 237 },
     selection   = { gui = "#464c5c", cterm = 239 },
     vertsplit   = { gui = "#353b46", cterm = 237 },

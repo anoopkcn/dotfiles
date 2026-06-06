@@ -4,7 +4,6 @@
 
 export FZF_DEFAULT_OPTS='--layout=reverse
 --info=right 
---border=rounded
 --bind=alt-p:toggle-preview
 --bind=ctrl-u:preview-half-page-up
 --bind=ctrl-d:preview-half-page-down

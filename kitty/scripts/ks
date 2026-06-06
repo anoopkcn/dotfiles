@@ -105,7 +105,13 @@ def kitty_at(*args: str, check: bool = True) -> str:
             if payload:
                 req["payload"] = payload
             resp = _socket_rc(req)
-        except (OSError, RuntimeError, _socket.timeout, json.JSONDecodeError, ValueError):
+        except (
+            OSError,
+            RuntimeError,
+            _socket.timeout,
+            json.JSONDecodeError,
+            ValueError,
+        ):
             resp = None
         if resp is not None:
             if not resp.get("ok"):
