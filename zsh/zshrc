@@ -41,7 +41,6 @@ alias clip="kitten clipboard"
 alias kls="kitten choose-files"
 alias d="kitten diff"
 alias z="zenv"
-alias zx="zenv run ."
 alias vim="nvim"
 
 plugin add "zshzoo/macos"
