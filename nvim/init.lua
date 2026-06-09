@@ -40,7 +40,7 @@ vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 5
-vim.opt.cursorline = true
+-- vim.opt.cursorline = true
 
 vim.cmd.colorscheme("onehalfdark")
 vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
@@ -61,7 +61,6 @@ map("n", "<C-h>", "<C-w>h", { silent = true, desc = "Focus left window" })
 map("n", "<C-j>", "<C-w>j", { silent = true, desc = "Focus window below" })
 map("n", "<C-k>", "<C-w>k", { silent = true, desc = "Focus window above" })
 map("n", "<C-l>", "<C-w>l", { silent = true, desc = "Focus right window" })
-map("n", "<leader>fe", "<CMD>Explore<CR>", { silent = true, desc = "Open file explorer" })
 map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
@@ -84,14 +83,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- cursorline only in active window
-vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-    group = vim.api.nvim_create_augroup("cursorline_active", { clear = true }),
-    callback = function() vim.wo.cursorline = true end,
-})
-vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-    group = "cursorline_active",
-    callback = function() vim.wo.cursorline = false end,
-})
+-- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+--     group = vim.api.nvim_create_augroup("cursorline_active", { clear = true }),
+--     callback = function() vim.wo.cursorline = true end,
+-- })
+-- vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+--     group = "cursorline_active",
+--     callback = function() vim.wo.cursorline = false end,
+-- })
 
 -- PLUGINS
 
@@ -99,7 +98,6 @@ require("brackets")
 require("surround")
 
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/csub.nvim",      name = "csub" },
     { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
     { src = "https://github.com/nvim-mini/mini.diff",     name = "mini.diff" },
     { src = "https://github.com/NicolasGB/jj.nvim",       name = "jj.nvim" },
@@ -146,21 +144,6 @@ vim.keymap.set('n', 'fw', function() require('fff').live_grep({ query = vim.fn.e
 vim.keymap.set('n', 'fW', function() require('fff').live_grep({ query = vim.fn.expand("<cWORD>") }) end,
     { desc = 'Live grep WORD under cursor' })
 vim.keymap.set('n', 'fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
-
-require("csub").setup({
-    handlers = {
-        { match = "qfbuffers", mode = "buffers" },
-    },
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "qf", "csub" },
-    group = vim.api.nvim_create_augroup("CsubQfMap", { clear = true }),
-    callback = function(args)
-        map("n", "<leader>c", "<CMD>Csub<CR>",
-            { buffer = args.buf, silent = true, desc = "Substitute in quickfix (Csub)" })
-    end,
-})
 
 require("filemarks").setup({ show_help = false, dir_open_cmd = "Explore" })
 
@@ -248,3 +231,22 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
     end,
 })
+
+
+vim.opt.runtimepath:prepend('/Users/akc/develop/stitch.nvim')
+vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
+require("oil").setup({
+    columns = {
+        -- "icon",
+        "permissions",
+        "size",
+        "mtime",
+    },
+    delete_to_trash = true,
+    skip_confirmation = true,
+    view_options = {
+        show_hidden = true,
+    }
+})
+
+map("n", "<leader>fe", "<CMD>Oil<CR>", { silent = true, desc = "Open file explorer" })
