@@ -41,6 +41,7 @@ vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 5
 -- vim.opt.cursorline = true
+vim.opt.guicursor = "a:block-blinkwait700-blinkoff400-blinkon250"
 
 vim.cmd.colorscheme("onehalfdark")
 vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
@@ -145,7 +146,7 @@ vim.keymap.set('n', 'fW', function() require('fff').live_grep({ query = vim.fn.e
     { desc = 'Live grep WORD under cursor' })
 vim.keymap.set('n', 'fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
-require("filemarks").setup({ show_help = false, dir_open_cmd = "Explore" })
+require("filemarks").setup({ show_help = false, dir_open_cmd = "Oil %s" })
 
 map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
 
@@ -237,6 +238,12 @@ vim.opt.runtimepath:prepend('/Users/akc/develop/stitch.nvim')
 require("stitch").setup({
     context = 0
 })
+
+map("n", "]c", function() require('stitch').next() end)
+map("n", "[c", function() require('stitch').prev() end)
+map("n", "<leader>c", function() require('stitch').from_qflist() end)
+map("n", "<leader>/", function() require('stitch').grep() end)
+
 vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
 -- Declare a global function to retrieve the current directory
 function _G.get_oil_winbar()
