@@ -48,8 +48,22 @@ vim.opt.guicursor = {
     "o:hor50-blinkwait700-blinkoff400-blinkon250",
 }
 
-vim.cmd.colorscheme("onehalfdark")
-vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
+-- vim.cmd.colorscheme("onehalfdark")
+-- vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
+
+local background = "#14161b"
+local cmdline_bg = "#292d36"
+local visual_bg = "#414B5E"
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
+vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
+vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
+vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
+vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
+vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = background })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg })
+vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
