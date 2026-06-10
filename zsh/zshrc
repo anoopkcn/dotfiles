@@ -68,7 +68,7 @@ source <(fzf --zsh)
 
 source "$HOME/.cargo/env" 
 
-so() {
+zo() {
     local target="${1:-.}"
     local script
     script="$(zenv activate "$target")" || return

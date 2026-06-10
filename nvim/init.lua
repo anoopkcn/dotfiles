@@ -41,29 +41,24 @@ vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 5
 -- vim.opt.cursorline = true
-vim.opt.guicursor = {
-    "n-v-c:block-blinkwait700-blinkoff400-blinkon250",
-    "i-ci-ve:ver25-blinkwait700-blinkoff400-blinkon250",
-    "r-cr:hor20-blinkwait700-blinkoff400-blinkon250",
-    "o:hor50-blinkwait700-blinkoff400-blinkon250",
-}
-
 -- vim.cmd.colorscheme("onehalfdark")
 -- vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
 
 local background = "#14161b"
-local cmdline_bg = "#292d36"
+local border = "#2e323d"
 local visual_bg = "#414B5E"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
 vim.api.nvim_set_hl(0, "Normal", { bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { bg = background })
-vim.api.nvim_set_hl(0, "PmenuSel", { bg = cmdline_bg })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
+vim.api.nvim_set_hl(0, "PmenuSel", { bg = border })
+vim.api.nvim_set_hl(0, "PmenuBorder", { fg = border, bg = background })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = border, bg = background })
 vim.api.nvim_set_hl(0, "StatusLine", { bg = background })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = border })
+vim.api.nvim_set_hl(0, "WinBar", { bg = background })
+vim.api.nvim_set_hl(0, "WinBarNC", { bg = background })
 vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
-vim.api.nvim_set_hl(0, "MsgSeparator", { fg = cmdline_bg, bg = nil })
+vim.api.nvim_set_hl(0, "MsgSeparator", { fg = border })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
@@ -262,6 +257,7 @@ map("n", "]c", function() require('stitch').next() end)
 map("n", "[c", function() require('stitch').prev() end)
 map("n", "<leader>c", function() require('stitch').from_qflist() end)
 map("n", "<leader>/", function() require('stitch').grep() end)
+map("n", "<leader>d", function() require('stitch').diff() end)
 
 vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
 -- Declare a global function to retrieve the current directory
