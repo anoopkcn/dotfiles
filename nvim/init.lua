@@ -41,7 +41,12 @@ vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 5
 -- vim.opt.cursorline = true
-vim.opt.guicursor = "a:block-blinkwait700-blinkoff400-blinkon250"
+vim.opt.guicursor = {
+    "n-v-c:block-blinkwait700-blinkoff400-blinkon250",
+    "i-ci-ve:ver25-blinkwait700-blinkoff400-blinkon250",
+    "r-cr:hor20-blinkwait700-blinkoff400-blinkon250",
+    "o:hor50-blinkwait700-blinkoff400-blinkon250",
+}
 
 vim.cmd.colorscheme("onehalfdark")
 vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
