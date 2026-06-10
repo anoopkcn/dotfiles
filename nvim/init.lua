@@ -55,15 +55,15 @@ local background = "#14161b"
 local cmdline_bg = "#292d36"
 local visual_bg = "#414B5E"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
-vim.api.nvim_set_hl(0, "Normal", { fg = text, bg = background })
-vim.api.nvim_set_hl(0, "NormalFloat", { fg = text })
-vim.api.nvim_set_hl(0, "Pmenu", { fg = text, bg = background })
-vim.api.nvim_set_hl(0, "PmenuSel", { fg = text, bg = cmdline_bg })
+vim.api.nvim_set_hl(0, "Normal", { bg = background })
+vim.api.nvim_set_hl(0, "Pmenu", { bg = background })
+vim.api.nvim_set_hl(0, "PmenuSel", { bg = cmdline_bg })
 vim.api.nvim_set_hl(0, "PmenuBorder", { fg = cmdline_bg, bg = background })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = cmdline_bg, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { fg = text, bg = background })
+vim.api.nvim_set_hl(0, "StatusLine", { bg = background })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = cmdline_bg })
 vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
+vim.api.nvim_set_hl(0, "MsgSeparator", { fg = cmdline_bg, bg = nil })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
