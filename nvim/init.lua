@@ -94,16 +94,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
--- cursorline only in active window
--- vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
---     group = vim.api.nvim_create_augroup("cursorline_active", { clear = true }),
---     callback = function() vim.wo.cursorline = true end,
--- })
--- vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
---     group = "cursorline_active",
---     callback = function() vim.wo.cursorline = false end,
--- })
-
 -- PLUGINS
 
 require("brackets")
