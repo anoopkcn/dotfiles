@@ -40,9 +40,6 @@ vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 5
--- vim.opt.cursorline = true
--- vim.cmd.colorscheme("onehalfdark")
--- vim.api.nvim_set_hl(0, "StatusLine", { fg = nil, bg = "#1d1f27" })
 
 local background = "#14161b"
 local border = "#2e323d"
@@ -113,9 +110,22 @@ require("brackets")
 require("surround")
 
 vim.pack.add({
-    { src = "https://github.com/anoopkcn/filemarks.nvim", name = "filemarks" },
-    { src = "https://github.com/nvim-mini/mini.diff",     name = "mini.diff" },
-    { src = "https://github.com/NicolasGB/jj.nvim",       name = "jj.nvim" },
+    {
+        src = "https://github.com/nvim-mini/mini.diff",
+        name = "mini.diff"
+    },
+    {
+        src = "https://github.com/NicolasGB/jj.nvim",
+        name = "jj.nvim"
+    },
+    {
+        src = "https://github.com/dmtrKovalenko/fff.nvim",
+        name = "fff.nvim"
+    },
+    {
+        src = "https://github.com/nvim-treesitter/nvim-treesitter",
+        name = "treesitter"
+    }
 })
 
 require("mini.diff").setup({
@@ -128,8 +138,6 @@ require("mini.diff").setup({
 
 require("jj").setup({})
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
-
-vim.pack.add({ 'https://github.com/dmtrKovalenko/fff.nvim' })
 
 vim.api.nvim_create_autocmd('PackChanged', {
     callback = function(ev)
@@ -160,16 +168,6 @@ vim.keymap.set('n', 'fW', function() require('fff').live_grep({ query = vim.fn.e
     { desc = 'Live grep WORD under cursor' })
 vim.keymap.set('n', 'fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
-require("filemarks").setup({ show_help = false, dir_open_cmd = "Oil %s" })
-
-map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
-
-vim.pack.add({
-    {
-        src = "https://github.com/nvim-treesitter/nvim-treesitter",
-        name = "treesitter"
-    }
-})
 local treesitter = require("nvim-treesitter")
 local ensure_installed = {
     "vim", "vimdoc", "rust", "c", "cpp", "go",
@@ -248,6 +246,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 
+-- LOCAL PLUGINS
+
 vim.opt.runtimepath:prepend('/Users/akc/develop/stitch.nvim')
 require("stitch").setup({
     context = 0
@@ -290,3 +290,7 @@ require("oil").setup({
 })
 
 map("n", "<leader>fe", "<CMD>Oil<CR>", { silent = true, desc = "Open file explorer" })
+
+vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
+require("filemarks").setup({ dir_open_cmd = "Oil %s" }) --  show_help = false
+map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
