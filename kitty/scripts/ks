@@ -32,11 +32,13 @@ def resolve_socket() -> str:
     listen = os.environ.get("KITTY_LISTEN_ON")
     if listen:
         return listen
-    candidates = sorted(
-        glob.glob("/tmp/mykitty-*"),
-        key=lambda p: os.path.getmtime(p),
-        reverse=True,
-    )
+    def mtime(p: str) -> float:
+        try:
+            return os.path.getmtime(p)
+        except OSError:  # socket vanished between glob and stat
+            return 0.0
+
+    candidates = sorted(glob.glob("/tmp/mykitty-*"), key=mtime, reverse=True)
     if not candidates:
         sys.stderr.write(
             "ks: no kitty socket found (is kitty running with listen_on?)\n"
@@ -61,6 +63,9 @@ def _args_to_payload(args: tuple) -> tuple[str, dict]:
 
     Handles the subset ks emits: `--key=value`, `--key value`, repeated `--var`,
     and trailing positional args (which become the launch process `args`).
+    Like the real `kitty @` CLI, the first positional ends flag parsing — a
+    launched program's own flags (e.g. `launch irssi --profile x`) must not be
+    mistaken for RC fields.
     """
     if not args:
         raise ValueError("no args")
@@ -73,7 +78,7 @@ def _args_to_payload(args: tuple) -> tuple[str, dict]:
         if a == "--":
             positional.extend(args[i + 1 :])
             break
-        if a.startswith("--"):
+        if not positional and a.startswith("--"):
             key, eq, val = a[2:].partition("=")
             key = key.replace("-", "_")
             if not eq:
@@ -94,25 +99,33 @@ def _args_to_payload(args: tuple) -> tuple[str, dict]:
     return cmd, payload
 
 
+class KittySocketUnavailable(Exception):
+    """The RC fast path failed before the command reached kitty (connect/send).
+    Falling back to the `kitty @` CLI cannot double-execute the command."""
+
+
 def kitty_at(*args: str, check: bool = True) -> str:
     """Run a `kitty @` command. Uses the direct unix-socket RC path (~25ms
-    faster than spawning the CLI). Falls back to `kitty @` subprocess only when
-    listen_on isn't a unix socket or the args don't parse into a payload."""
+    faster than spawning the CLI). Falls back to the `kitty @` subprocess only
+    when the command provably never reached kitty (unparseable args, connect/
+    send failure). A post-send failure must NOT fall back: a side-effectful
+    command like `launch` may already have executed."""
     if SOCKET_PATH:
+        resp = None
         try:
             cmd_name, payload = _args_to_payload(args)
             req: dict = {"cmd": cmd_name}
             if payload:
                 req["payload"] = payload
             resp = _socket_rc(req)
-        except (
-            OSError,
-            RuntimeError,
-            _socket.timeout,
-            json.JSONDecodeError,
-            ValueError,
-        ):
+        except (ValueError, KittySocketUnavailable):
             resp = None
+        except RuntimeError as e:
+            if check:
+                sys.stderr.write("ks: kitty @ " + " ".join(args) + "\n")
+                sys.stderr.write(f"ks: {e}\n")
+                sys.exit(1)
+            return ""
         if resp is not None:
             if not resp.get("ok"):
                 if check:
@@ -137,7 +150,11 @@ def kitty_at(*args: str, check: bool = True) -> str:
 
 def _socket_rc(payload: dict, timeout: float = 5.0) -> dict:
     """Send one command directly over kitty's RC unix socket. ~30× faster than
-    spawning `kitty @` because we skip a full kitty interpreter startup."""
+    spawning `kitty @` because we skip a full kitty interpreter startup.
+
+    Raises KittySocketUnavailable if the command was never delivered (safe to
+    retry via the CLI), RuntimeError if it was delivered but the response is
+    missing/malformed (the command may have executed — do not retry)."""
     payload.setdefault("version", KITTY_RC_VERSION)
     payload.setdefault("no_response", False)
     msg = b"\x1bP@kitty-cmd" + json.dumps(payload).encode() + b"\x1b\\"
@@ -145,20 +162,31 @@ def _socket_rc(payload: dict, timeout: float = 5.0) -> dict:
     s.settimeout(timeout)
     buf = b""
     try:
-        s.connect(SOCKET_PATH)
-        s.sendall(msg)
-        while True:
-            chunk = s.recv(65536)
-            if not chunk:
-                break
-            buf += chunk
-            if buf.endswith(b"\x1b\\"):
-                break
+        try:
+            s.connect(SOCKET_PATH)
+            # A partial send leaves the DCS frame unterminated, which kitty
+            # discards — so send failures cannot have executed the command.
+            s.sendall(msg)
+        except OSError as e:
+            raise KittySocketUnavailable(str(e)) from e
+        try:
+            while True:
+                chunk = s.recv(65536)
+                if not chunk:
+                    break
+                buf += chunk
+                if buf.endswith(b"\x1b\\"):
+                    break
+        except OSError as e:
+            raise RuntimeError(f"error reading kitty response: {e}") from e
     finally:
         s.close()
     if not buf.startswith(b"\x1bP@kitty-cmd") or not buf.endswith(b"\x1b\\"):
-        raise RuntimeError("ks: unexpected response framing from kitty socket")
-    return json.loads(buf[len(b"\x1bP@kitty-cmd") : -2])
+        raise RuntimeError("unexpected response framing from kitty socket")
+    try:
+        return json.loads(buf[len(b"\x1bP@kitty-cmd") : -2])
+    except ValueError as e:
+        raise RuntimeError(f"invalid JSON in kitty response: {e}") from e
 
 
 def kitty_ls() -> list:
@@ -168,7 +196,8 @@ def kitty_ls() -> list:
     if SOCKET_PATH:
         try:
             resp = _socket_rc({"cmd": "ls"})
-        except (OSError, RuntimeError, _socket.timeout, json.JSONDecodeError):
+        except (KittySocketUnavailable, RuntimeError):
+            # ls is read-only, so retrying via the CLI below is harmless.
             resp = None
         if resp is not None:
             if not resp.get("ok"):
@@ -323,8 +352,8 @@ def list_sessions(data: list | None = None) -> list[SessionRow]:
 
 def extract_session_name_from_file(path: str) -> str | None:
     """Return the --var=session_name=... value from the first `launch` directive
-    in a session file, or None. Skips comments and non-launch directives
-    (os_window_title, cd, etc.) that may appear before the first launch.
+    that carries one, or None. The template contract is "at least one launch
+    line MUST carry the var", so keep scanning past launches that don't.
     """
     try:
         with open(path) as f:
@@ -334,8 +363,14 @@ def extract_session_name_from_file(path: str) -> str | None:
                     continue
                 if line.split()[0] != "launch":
                     continue
-                m = re.search(r"--var=session_name=(\S+)", line)
-                return m.group(1) if m else None
+                try:
+                    tokens = shlex.split(line)
+                except ValueError:
+                    continue
+                for a in tokens[1:]:
+                    m = re.match(r"--var=session_name=(.+)$", a)
+                    if m:
+                        return m.group(1)
     except OSError:
         return None
     return None
@@ -361,23 +396,51 @@ def apply_session_file(path: str, session_name: str, initial_cwd: str) -> int:
     )
 
     cwd = initial_cwd
+    file_dir = os.path.dirname(os.path.abspath(path))
     os_window_title = session_name or os.path.basename(path)
     first_launch_done = False
     last_window_id: str | None = None
     focused_window_id: str | None = None
-    tag_match: str | None = None
+    # `launch --match` matches TABS: `id:` means a *tab* id (window ids are only
+    # a fallback), and kitty 0.47 rejects window_id: for launch. So each tab's
+    # first window gets a unique session_tab user var — an unambiguous anchor
+    # for follow-up launches into the session.
+    current_tab_match: str | None = None
 
-    def extract_tag(launch_args: list[str]) -> str | None:
-        for a in launch_args:
-            m = re.match(r"--var=session_name=(.+)$", a)
-            if m:
-                return m.group(1)
-        return None
+    def new_tab_anchor() -> tuple[str, str]:
+        """A fresh per-tab anchor: (--var launch arg, match expression)."""
+        tag = "session_tab=" + os.urandom(3).hex()
+        return "--var=" + tag, "var:" + tag
 
     # Tag EVERY window we create with the session name (not just the first), so
     # the whole OS window is resolvable from live `kitty @ ls` alone — this is
     # what lets ks run without a state file.
     session_vars = ["--var=session_name=" + session_name] if session_name else []
+    pending_tab: str | None = None  # new_tab seen, its first launch not yet emitted
+
+    def launch_tab(title: str, launch_rest: list[str]) -> bool:
+        nonlocal last_window_id, current_tab_match
+        if not current_tab_match:
+            sys.stderr.write("ks: new_tab has no anchor window to target\n")
+            return False
+        tab_var, tab_match = new_tab_anchor()
+        args = [
+            "launch",
+            "--type=tab",
+            "--match",
+            current_tab_match,
+            "--cwd=" + cwd,
+            *session_vars,
+            tab_var,
+        ]
+        if title:
+            args.append("--tab-title=" + title)
+        args += launch_rest
+        wid = kitty_at(*args)
+        if wid.isdigit():
+            last_window_id = wid
+        current_tab_match = tab_match
+        return True
 
     for raw in text.splitlines():
         line = raw.strip()
@@ -392,55 +455,64 @@ def apply_session_file(path: str, session_name: str, initial_cwd: str) -> int:
             cwd = (
                 target
                 if os.path.isabs(target)
-                else os.path.abspath(os.path.join(cwd, target))
+                # Native kitty resolves relative cd paths against the session
+                # file's location, not the previous cwd.
+                else os.path.abspath(os.path.join(file_dir, target))
             )
         elif directive == "os_window_title":
             os_window_title = " ".join(rest)
         elif directive == "launch":
-            is_first = not first_launch_done
-            if is_first:
+            if not first_launch_done:
+                tab_var, tab_match = new_tab_anchor()
                 args = [
                     "launch",
                     "--type=os-window",
                     "--cwd=" + cwd,
                     "--os-window-title=" + os_window_title,
                     *session_vars,
-                    *rest,
+                    tab_var,
                 ]
-                tag_match = "var:session_name=" + (
-                    session_name or extract_tag(rest) or ""
-                )
+                if session_name:
+                    # Stamp the session's launch dir on this and every later
+                    # window so -l/-n show a stable dir even after the user
+                    # cd's around or closes the original window.
+                    args.append("--var=session_path=" + cwd)
+                    session_vars.append("--var=session_path=" + cwd)
+                if pending_tab:
+                    args.append("--tab-title=" + pending_tab)
+                args += rest
+                wid = kitty_at(*args)
+                if wid.isdigit():
+                    last_window_id = wid
+                current_tab_match = tab_match
+            elif pending_tab is not None:
+                if not launch_tab(pending_tab, rest):
+                    return 1
             else:
-                match = (
-                    ("id:" + last_window_id) if last_window_id else (tag_match or "")
-                )
-                args = [
+                if not current_tab_match:
+                    sys.stderr.write("ks: launch has no anchor window to target\n")
+                    return 1
+                wid = kitty_at(
                     "launch",
                     "--match",
-                    match,
+                    current_tab_match,
                     "--cwd=" + cwd,
                     *session_vars,
                     *rest,
-                ]
-            wid = kitty_at(*args)
-            if wid.isdigit():
-                last_window_id = wid
+                )
+                if wid.isdigit():
+                    last_window_id = wid
+            pending_tab = None
             first_launch_done = True
         elif directive == "new_tab":
-            match = ("id:" + last_window_id) if last_window_id else (tag_match or "")
-            args = [
-                "launch",
-                "--type=tab",
-                "--match",
-                match,
-                "--cwd=" + cwd,
-                *session_vars,
-            ]
-            if rest:
-                args.append("--tab-title=" + " ".join(rest))
-            wid = kitty_at(*args)
-            if wid.isdigit():
-                last_window_id = wid
+            # Native kitty session semantics: new_tab opens a tab whose first
+            # window comes from the NEXT launch line. Defer creating it so the
+            # tab doesn't get an extra shell window alongside that launch.
+            if pending_tab is not None and first_launch_done:
+                # previous new_tab had no launch of its own: plain shell tab
+                if not launch_tab(pending_tab, []):
+                    return 1
+            pending_tab = " ".join(rest)
         elif directive == "focus":
             focused_window_id = last_window_id
         elif directive == "focus_os_window":
@@ -449,6 +521,11 @@ def apply_session_file(path: str, session_name: str, initial_cwd: str) -> int:
             sys.stderr.write(
                 f"ks: warning: unsupported session-file directive: {directive}\n"
             )
+
+    if pending_tab is not None and first_launch_done:
+        # trailing new_tab with no launch of its own: plain shell tab
+        if not launch_tab(pending_tab, []):
+            return 1
 
     if not first_launch_done:
         sys.stderr.write("ks: session file defined no launch directives\n")
@@ -519,20 +596,16 @@ def kill_session_by_name(name: str, data: list | None = None) -> bool:
 
 
 def display_cwd(p: str) -> str:
-    if HOME and p.startswith(HOME):
+    if HOME and (p == HOME or p.startswith(HOME + "/")):
         return "~" + p[len(HOME) :]
     return p
 
 
-def format_session_table(rows: list[SessionRow]) -> list[tuple[str, str]]:
-    """Returns [(name, fzf-display-line), ...] shared by cmd_list/-i/-k."""
-    if not rows:
-        return []
+def fzf_session_lines(rows: list[SessionRow]) -> list[str]:
+    """fzf input lines shared by -i/-k: "name<TAB>name  cwd" — fzf displays the
+    second field (--with-nth=2) and the name is read back from the first."""
     name_w = max(len(r.name) for r in rows)
-    out: list[tuple[str, str]] = []
-    for r in rows:
-        out.append((r.name, f"{r.name:<{name_w}}  {display_cwd(r.cwd)}"))
-    return out
+    return [f"{r.name}\t{r.name:<{name_w}}  {display_cwd(r.cwd)}" for r in rows]
 
 
 def pause_overlay() -> None:
@@ -731,12 +804,7 @@ def cmd_pick_session() -> None:
         rows,
         key=lambda r: (r.name == current_name, -r.last_focused_at),
     )
-    table = format_session_table(rows)
-    name_w = max(len(n) for n, _ in table)
-    lines = [
-        f"{name}\t{name:<{name_w}}  {display_cwd(r.cwd)}"
-        for (name, _), r in zip(table, rows)
-    ]
+    lines = fzf_session_lines(rows)
     chosen = run_fzf(
         lines,
         prompt="session > ",
@@ -761,12 +829,7 @@ def cmd_pick_kill() -> None:
     # Ascending: focused session lands at bottom of the fzf list — safer default
     # when the action is destructive.
     rows = sorted(rows, key=lambda r: (r.focused, r.last_focused_at))
-    table = format_session_table(rows)
-    name_w = max(len(n) for n, _ in table)
-    lines = [
-        f"{name}\t{name:<{name_w}}  {display_cwd(r.cwd)}"
-        for (name, _), r in zip(table, rows)
-    ]
+    lines = fzf_session_lines(rows)
     chosen = run_fzf(
         lines,
         prompt="kill > ",
@@ -800,24 +863,19 @@ def cmd_pick_new() -> None:
         HOME, ".config/kitty/sessions"
     )
 
-    data = kitty_ls()
-    active_paths: set[str] = set()
-    active_names: set[str] = set()
-    for os_win in data:
-        for tab in os_win.get("tabs", []):
-            for w in tab.get("windows", []):
-                uv = w.get("user_vars") or {}
-                name = uv.get("session_name")
-                if not name:
-                    continue
-                active_names.add(name)
-                fg = w.get("foreground_processes") or []
-                cwd = (fg[0].get("cwd") if fg else None) or w.get("cwd", "")
-                active_paths.add(strip_private(uv.get("session_path") or cwd))
+    # Derive running-session names and launch dirs from list_sessions so this
+    # matches every other code path: it sees kitty-native sessions (built-in
+    # session_name field) too, and uses the stable session_path launch dir
+    # rather than wherever a window happens to have cd'd to.
+    rows = list_sessions()
+    active_names = {r.name for r in rows}
+    active_paths = {r.cwd for r in rows}
 
-    # Directory candidates under KS_LOCATIONS (not already a running session).
+    # Directory candidates under KS_LOCATIONS. Dirs already hosting a session
+    # stay listed (session names are unique, so the same dir can back several
+    # sessions) — they just get an "(open)" hint.
     seen: set[str] = set()
-    dirs: list[tuple[str, str]] = []  # (label, abs_path)
+    dirs: list[tuple[str, str, bool]] = []  # (label, abs_path, open)
     for loc in locs:
         if not os.path.isdir(loc):
             continue
@@ -835,10 +893,12 @@ def cmd_pick_new() -> None:
                 abs_full = strip_private(os.path.realpath(full))
             except OSError:
                 abs_full = strip_private(full)
-            if abs_full in active_paths or abs_full in seen:
+            if abs_full in seen:
                 continue
             seen.add(abs_full)
-            dirs.append((os.path.basename(abs_full), abs_full))
+            dirs.append(
+                (os.path.basename(abs_full), abs_full, abs_full in active_paths)
+            )
     dirs.sort(key=lambda x: (x[0].lower(), x[1]))
 
     # Session-file candidates (sessions_dir/*.kitty-session, excluding template).
@@ -871,9 +931,11 @@ def cmd_pick_new() -> None:
     for label, full, running in sessions:
         suffix = "  (running)" if running else ""
         lines.append(f"session\t{full}\t[session] {label:<{label_w}}{suffix}")
-    for label, abs_full in dirs:
+    for label, abs_full, is_open in dirs:
+        suffix = "  (open)" if is_open else ""
         lines.append(
-            f"dir\t{abs_full}\t[dir]     {label:<{label_w}}  {display_cwd(abs_full)}"
+            f"dir\t{abs_full}\t[dir]     {label:<{label_w}}  "
+            f"{display_cwd(abs_full)}{suffix}"
         )
 
     chosen = run_fzf(
