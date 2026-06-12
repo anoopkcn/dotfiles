@@ -6,6 +6,7 @@ local M = {}
 
 local function buffer_items()
     local cur = vim.api.nvim_get_current_buf()
+    local alt = vim.fn.bufnr('#')
     local items = {}
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         -- The quickfix window's own buffer is buflisted; keep it out of the list.
@@ -18,7 +19,7 @@ local function buffer_items()
             local display = name ~= ''
                 and vim.fn.fnamemodify(name, ':~:.')
                 or ('[No Name #' .. buf .. ']')
-            local flag = (buf == cur and '%' or ' ')
+            local flag = (buf == cur and '%' or buf == alt and '^' or ' ')
                 .. (vim.bo[buf].modified and '+' or ' ')
             items[#items + 1] = {
                 bufnr = buf,
@@ -100,6 +101,8 @@ function M.open()
     vim.cmd('botright copen')
     vim.keymap.set('n', 'dd', delete_under_cursor,
         { buffer = true, desc = 'qfbuffers: delete buffer under cursor' })
+    vim.keymap.set('n', 'gq', '<Cmd>cclose<CR>',
+        { buffer = true, desc = 'qfbuffers: close window' })
 end
 
 return M
