@@ -2,8 +2,8 @@
 # Ref: https://ghostty.org/docs/config/reference
 
 theme = Nvim Dark
-font-family = Berkeley Mono Variable
-window-title-font-family = Berkeley Mono Variable
+font-family = Berkeley Mono
+window-title-font-family = Berkeley Mono
 font-size = 12
 font-feature = -calt
 

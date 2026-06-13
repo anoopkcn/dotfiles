@@ -33,6 +33,7 @@ source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 alias duh="du -h -d 0 [^.]*"
 alias notes="cd ~/Dropbox/notes"
 alias l='eza --hyperlink'
+alias ls='ls --color'
 alias rg="rg --hyperlink-format=kitty"
 alias gs="git status"
 alias icat="kitten icat"
@@ -40,6 +41,7 @@ alias s="kitten ssh"
 alias clip="kitten clipboard"
 alias d="kitten diff"
 alias vim="nvim"
+alias zx="zenv run"
 
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"

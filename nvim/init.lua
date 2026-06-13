@@ -40,6 +40,7 @@ vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 5
+vim.opt.cursorline = true
 
 local background = "#14161b"
 local border = "#2e323d"
@@ -99,6 +100,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 require("brackets")
 require("surround")
 
+vim.keymap.set('n', '<leader>fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
+
 vim.pack.add({
     {
         src = "https://github.com/nvim-mini/mini.diff",
@@ -150,13 +153,12 @@ vim.g.fff = {
     }
 }
 
-vim.keymap.set('n', 'ff', function() require('fff').find_files() end, { desc = 'FFFind files' })
-vim.keymap.set('n', 'fg', function() require('fff').live_grep() end, { desc = 'Live grep' })
-vim.keymap.set('n', 'fw', function() require('fff').live_grep({ query = vim.fn.expand("<cword>") }) end,
+vim.keymap.set('n', '<leader>ff', function() require('fff').find_files() end, { desc = 'FFFind files' })
+vim.keymap.set('n', '<leader>fg', function() require('fff').live_grep() end, { desc = 'Live grep' })
+vim.keymap.set('n', '<leader>fw', function() require('fff').live_grep({ query = vim.fn.expand("<cword>") }) end,
     { desc = 'Live grep word under cursor' })
-vim.keymap.set('n', 'fW', function() require('fff').live_grep({ query = vim.fn.expand("<cWORD>") }) end,
+vim.keymap.set('n', '<leader>fW', function() require('fff').live_grep({ query = vim.fn.expand("<cWORD>") }) end,
     { desc = 'Live grep WORD under cursor' })
-vim.keymap.set('n', 'fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
 local treesitter = require("nvim-treesitter")
 local ensure_installed = {
