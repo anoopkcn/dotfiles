@@ -44,7 +44,7 @@ vim.opt.cursorline = true
 vim.opt.cmdheight = 0
 
 local background = "#242731"
-local border = "#3c4253"
+local border = "#434a5f"
 local visual_bg = "#414B5E"
 local cursor_line_bg = "#2f3442"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
@@ -53,7 +53,8 @@ vim.api.nvim_set_hl(0, "Pmenu", { bg = background })
 vim.api.nvim_set_hl(0, "PmenuSel", { bg = border })
 vim.api.nvim_set_hl(0, "PmenuBorder", { fg = border, bg = background })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = border, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { bg = background })
+vim.api.nvim_set_hl(0, "StatusLine", { bg = background  })
+vim.api.nvim_set_hl(0, "StatusLineNC", { bg = background  })
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = border })
 vim.api.nvim_set_hl(0, "WinBar", { bg = background })
 vim.api.nvim_set_hl(0, "WinBarNC", { bg = background })
@@ -183,14 +184,12 @@ map("n", "<leader>/", function() require('stitch').grep() end)
 map("n", "<leader>d", function() require('stitch').diff() end)
 
 vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
--- Declare a global function to retrieve the current directory
 function _G.get_oil_winbar()
     local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
     local dir = require("oil").get_current_dir(bufnr)
     if dir then
         return dir -- full absolute path
     else
-        -- If there is no current directory (e.g. over ssh), just show the buffer name
         return vim.api.nvim_buf_get_name(0)
     end
 end
