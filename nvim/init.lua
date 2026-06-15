@@ -45,6 +45,7 @@ vim.opt.cursorline = true
 local background = "#14161b"
 local border = "#2e323d"
 local visual_bg = "#414B5E"
+local cursor_line_bg = "#262a31"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
 vim.api.nvim_set_hl(0, "Normal", { bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { bg = background })
@@ -57,7 +58,7 @@ vim.api.nvim_set_hl(0, "WinBar", { bg = background })
 vim.api.nvim_set_hl(0, "WinBarNC", { bg = background })
 vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
 vim.api.nvim_set_hl(0, "MsgSeparator", { fg = border })
-vim.api.nvim_set_hl(0, "CursorLine", { bg = "#262a31" })
+vim.api.nvim_set_hl(0, "CursorLine", { bg = cursor_line_bg })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
@@ -134,10 +135,14 @@ require("mini.diff").setup({
 })
 
 
-require("jj").setup({})
-map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
+require("jj").setup({
+    cmd = {
+        keymaps = { close = { "q", "<Esc>", "gq" }} 
+    }
+})
+map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open :J log" })
 
-map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open fujitive" })
+map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open :Git Status" })
 
 vim.api.nvim_create_autocmd('PackChanged', {
     callback = function(ev)
