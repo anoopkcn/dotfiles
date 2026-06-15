@@ -39,7 +39,7 @@ vim.opt.ruler = true
 vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
-vim.opt.scrolloff = 5
+vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 
 local background = "#14161b"
@@ -57,6 +57,7 @@ vim.api.nvim_set_hl(0, "WinBar", { bg = background })
 vim.api.nvim_set_hl(0, "WinBarNC", { bg = background })
 vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
 vim.api.nvim_set_hl(0, "MsgSeparator", { fg = border })
+vim.api.nvim_set_hl(0, "CursorLine", { bg = "#262a31" })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
@@ -112,6 +113,10 @@ vim.pack.add({
         name = "jj.nvim"
     },
     {
+        src = "https://github.com/tpope/vim-fugitive",
+        name = "fugitive"
+    },
+    {
         src = "https://github.com/dmtrKovalenko/fff.nvim",
         name = "fff.nvim"
     },
@@ -131,6 +136,8 @@ require("mini.diff").setup({
 
 require("jj").setup({})
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open jj log" })
+
+map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open fujitive" })
 
 vim.api.nvim_create_autocmd('PackChanged', {
     callback = function(ev)
@@ -199,44 +206,44 @@ vim.api.nvim_create_autocmd("PackChanged", {
 })
 
 
-vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
-vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
-vim.g.lsp_autocomplete = false
-vim.api.nvim_create_user_command("LspAutocomplete", function(opts)
-    local on = (opts.args == "on") or (opts.args == "" and not vim.g.lsp_autocomplete)
-    vim.g.lsp_autocomplete = on
-    for _, client in ipairs(vim.lsp.get_clients()) do
-        if client:supports_method("textDocument/completion") then
-            for bufnr in pairs(client.attached_buffers) do
-                vim.lsp.completion.enable(on, client.id, bufnr, { autotrigger = true })
-                vim.bo[bufnr].autocomplete = on
-            end
-        end
-    end
-    vim.notify("LSP autocomplete: " .. (on and "on" or "off"))
-end, { nargs = "?", complete = function() return { "on", "off" } end })
-
-vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
-    callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client then
-            client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
-            if vim.g.lsp_autocomplete and client:supports_method("textDocument/completion") then
-                vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-                vim.bo[bufnr].autocomplete = true
-            end
-        end
-        local map_opts = { buffer = bufnr, silent = true }
-        map("n", "K", function()
-            vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
-        end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
-        map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
-        map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
-    end,
-})
-
+-- vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
+-- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
+-- vim.g.lsp_autocomplete = false
+-- vim.api.nvim_create_user_command("LspAutocomplete", function(opts)
+--     local on = (opts.args == "on") or (opts.args == "" and not vim.g.lsp_autocomplete)
+--     vim.g.lsp_autocomplete = on
+--     for _, client in ipairs(vim.lsp.get_clients()) do
+--         if client:supports_method("textDocument/completion") then
+--             for bufnr in pairs(client.attached_buffers) do
+--                 vim.lsp.completion.enable(on, client.id, bufnr, { autotrigger = true })
+--                 vim.bo[bufnr].autocomplete = on
+--             end
+--         end
+--     end
+--     vim.notify("LSP autocomplete: " .. (on and "on" or "off"))
+-- end, { nargs = "?", complete = function() return { "on", "off" } end })
+--
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
+--     callback = function(args)
+--         local bufnr = args.buf
+--         local client = vim.lsp.get_client_by_id(args.data.client_id)
+--         if client then
+--             client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
+--             if vim.g.lsp_autocomplete and client:supports_method("textDocument/completion") then
+--                 vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+--                 vim.bo[bufnr].autocomplete = true
+--             end
+--         end
+--         local map_opts = { buffer = bufnr, silent = true }
+--         map("n", "K", function()
+--             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
+--         end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
+--         map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
+--         map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
+--     end,
+-- })
+--
 
 -- LOCAL PLUGINS
 
