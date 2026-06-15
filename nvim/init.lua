@@ -41,11 +41,12 @@ vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
+vim.opt.cmdheight = 0
 
-local background = "#14161b"
-local border = "#2e323d"
+local background = "#242731"
+local border = "#3c4253"
 local visual_bg = "#414B5E"
-local cursor_line_bg = "#262a31"
+local cursor_line_bg = "#2f3442"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
 vim.api.nvim_set_hl(0, "Normal", { bg = background })
 vim.api.nvim_set_hl(0, "Pmenu", { bg = background })
@@ -121,10 +122,6 @@ vim.pack.add({
         src = "https://github.com/dmtrKovalenko/fff.nvim",
         name = "fff.nvim"
     },
-    {
-        src = "https://github.com/nvim-treesitter/nvim-treesitter",
-        name = "treesitter"
-    }
 })
 
 require("mini.diff").setup({
@@ -171,84 +168,6 @@ vim.keymap.set('n', '<leader>fw', function() require('fff').live_grep({ query = 
     { desc = 'Live grep word under cursor' })
 vim.keymap.set('n', '<leader>fW', function() require('fff').live_grep({ query = vim.fn.expand("<cWORD>") }) end,
     { desc = 'Live grep WORD under cursor' })
-
-local treesitter = require("nvim-treesitter")
-local ensure_installed = {
-    "vim", "vimdoc", "rust", "c", "cpp", "go",
-    "html", "css", "javascript", "json",
-    "markdown", "markdown_inline",
-    "typescript", "tsx", "bash", "python", "lua",
-}
-
-local already_installed = require("nvim-treesitter.config").get_installed()
-local to_install = vim.tbl_filter(function(p)
-    return not vim.tbl_contains(already_installed, p)
-end, ensure_installed)
-
-if #to_install > 0 then
-    treesitter.install(to_install)
-end
-
-local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
-vim.api.nvim_create_autocmd("FileType", {
-    group = group,
-    callback = function(args)
-        local lang = vim.treesitter.language.get_lang(args.match)
-        if vim.list_contains(treesitter.get_installed(), lang) then
-            vim.treesitter.start(args.buf)
-        end
-    end,
-})
-
-vim.api.nvim_create_autocmd("PackChanged", {
-    callback = function(ev)
-        local name, kind = ev.data.spec.name, ev.data.kind
-        if name == "nvim-treesitter" and kind == "update" then
-            if not ev.data.active then vim.cmd.packadd("nvim-treesitter") end
-            vim.cmd("TSUpdate")
-        end
-    end,
-})
-
-
--- vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
--- vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
--- vim.g.lsp_autocomplete = false
--- vim.api.nvim_create_user_command("LspAutocomplete", function(opts)
---     local on = (opts.args == "on") or (opts.args == "" and not vim.g.lsp_autocomplete)
---     vim.g.lsp_autocomplete = on
---     for _, client in ipairs(vim.lsp.get_clients()) do
---         if client:supports_method("textDocument/completion") then
---             for bufnr in pairs(client.attached_buffers) do
---                 vim.lsp.completion.enable(on, client.id, bufnr, { autotrigger = true })
---                 vim.bo[bufnr].autocomplete = on
---             end
---         end
---     end
---     vim.notify("LSP autocomplete: " .. (on and "on" or "off"))
--- end, { nargs = "?", complete = function() return { "on", "off" } end })
---
--- vim.api.nvim_create_autocmd("LspAttach", {
---     group = vim.api.nvim_create_augroup("CustomLspAttach", { clear = true }),
---     callback = function(args)
---         local bufnr = args.buf
---         local client = vim.lsp.get_client_by_id(args.data.client_id)
---         if client then
---             client.server_capabilities.semanticTokensProvider = nil -- don't re-paint
---             if vim.g.lsp_autocomplete and client:supports_method("textDocument/completion") then
---                 vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
---                 vim.bo[bufnr].autocomplete = true
---             end
---         end
---         local map_opts = { buffer = bufnr, silent = true }
---         map("n", "K", function()
---             vim.lsp.buf.hover({ max_height = 30, max_width = 100, border = "rounded" })
---         end, vim.tbl_extend("force", map_opts, { desc = "LSP hover" }))
---         map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", map_opts, { desc = "Go to declaration" }))
---         map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", map_opts, { desc = "Go to definition" }))
---     end,
--- })
---
 
 -- LOCAL PLUGINS
 
