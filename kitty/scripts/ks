@@ -807,7 +807,7 @@ def cmd_pick_session() -> None:
     lines = fzf_session_lines(rows)
     chosen = run_fzf(
         lines,
-        prompt="session > ",
+        prompt="session ❯ ",
         header="Enter: switch • Esc: cancel",
         multi=False,
         with_nth=2,
@@ -832,7 +832,7 @@ def cmd_pick_kill() -> None:
     lines = fzf_session_lines(rows)
     chosen = run_fzf(
         lines,
-        prompt="kill > ",
+        prompt="kill ❯ ",
         header="Tab: select • Enter: kill • Esc: cancel",
         multi=True,
         with_nth=2,
@@ -940,7 +940,7 @@ def cmd_pick_new() -> None:
 
     chosen = run_fzf(
         lines,
-        prompt="new > ",
+        prompt="new ❯ ",
         header="Tab: select • Enter: open • Esc: cancel",
         multi=True,
         with_nth=3,

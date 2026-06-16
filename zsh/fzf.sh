@@ -10,6 +10,7 @@ export FZF_DEFAULT_OPTS='--layout=reverse
 --bind=ctrl-y:preview-up
 --bind=ctrl-e:preview-down
 --color=fg:-1,bg:-1,bg+:#32373f,pointer:#8ED6FE,hl:#dc6a74,hl+:#dc6a74,gutter:#292d33
+--prompt="❯ "
 '
 
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}' --preview-window=hidden"

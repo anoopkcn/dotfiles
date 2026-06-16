@@ -43,24 +43,13 @@ vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 vim.opt.cmdheight = 0
 
-local background = "#242731"
-local border = "#434a5f"
-local visual_bg = "#414B5E"
-local cursor_line_bg = "#2f3442"
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
-vim.api.nvim_set_hl(0, "Normal", { bg = background })
-vim.api.nvim_set_hl(0, "Pmenu", { bg = background })
-vim.api.nvim_set_hl(0, "PmenuSel", { bg = border })
-vim.api.nvim_set_hl(0, "PmenuBorder", { fg = border, bg = background })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = border, bg = background })
-vim.api.nvim_set_hl(0, "StatusLine", { bg = background  })
-vim.api.nvim_set_hl(0, "StatusLineNC", { bg = background  })
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = border })
-vim.api.nvim_set_hl(0, "WinBar", { bg = background })
-vim.api.nvim_set_hl(0, "WinBarNC", { bg = background })
-vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
-vim.api.nvim_set_hl(0, "MsgSeparator", { fg = border })
-vim.api.nvim_set_hl(0, "CursorLine", { bg = cursor_line_bg })
+vim.cmd.colorscheme("slate")
+
+for _, group in ipairs({ "StatusLine", "StatusLineNC" }) do
+    local hl = vim.api.nvim_get_hl(0, { name = group })
+    hl.bg = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
+    vim.api.nvim_set_hl(0, group, hl)
+end
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })

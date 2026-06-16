@@ -1,0 +1,20 @@
+-- default color scheme
+
+-- local background = "#242731"
+-- local border = "#434a5f"
+-- local visual_bg = "#414B5E"
+-- local cursor_line_bg = "#2f3442"
+-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = background })
+-- vim.api.nvim_set_hl(0, "Normal", { bg = background })
+-- vim.api.nvim_set_hl(0, "Pmenu", { bg = background })
+-- vim.api.nvim_set_hl(0, "PmenuSel", { bg = border })
+-- vim.api.nvim_set_hl(0, "PmenuBorder", { fg = border, bg = background })
+-- vim.api.nvim_set_hl(0, "FloatBorder", { fg = border, bg = background })
+-- vim.api.nvim_set_hl(0, "StatusLine", { bg = background  })
+-- vim.api.nvim_set_hl(0, "StatusLineNC", { bg = background  })
+-- vim.api.nvim_set_hl(0, "WinSeparator", { fg = border })
+-- vim.api.nvim_set_hl(0, "WinBar", { bg = background })
+-- vim.api.nvim_set_hl(0, "WinBarNC", { bg = background })
+-- vim.api.nvim_set_hl(0, "Visual", { bg = visual_bg })
+-- vim.api.nvim_set_hl(0, "MsgSeparator", { fg = border })
+-- vim.api.nvim_set_hl(0, "CursorLine", { bg = cursor_line_bg })
