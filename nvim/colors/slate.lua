@@ -24,8 +24,8 @@ local c = {
 
     -- Soft pastel accents (measured where noted)
     comment = { gui = "#828c9e", cterm = 245 }, -- muted slate-gray
-    purple  = { gui = "#c099ff", cterm = 141 }, -- keywords / control (airy lilac, bold)
-    blue    = { gui = "#82aaff", cterm = 111 }, -- functions / methods
+    blue    = { gui = "#c099ff", cterm = 141 }, -- keywords / control (airy lilac, bold)
+    purple  = { gui = "#82aaff", cterm = 111 }, -- functions / methods
     green   = { gui = "#a0ddac", cterm = 114 }, -- strings             [measured]
     green2  = { gui = "#8cc570", cterm = 107 }, -- diff-add / raw      [measured]
     cyan    = { gui = "#a0def3", cterm = 153 }, -- types / builtins    [measured]
@@ -88,9 +88,9 @@ h("Title",        c.blue,   nil,             "bold")
 h("SnippetTabstop", nil,    c.bg3)
 
 -- Search
-h("Search",     c.bg,    c.blue)             -- all / lazy matches
-h("IncSearch",  c.bg,    c.yellow)           -- current match
-h("CurSearch",  c.bg,    c.yellow)
+-- h("Search",     c.bg,    c.blue)             -- all / lazy matches
+-- h("IncSearch",  c.bg,    c.yellow)           -- current match
+-- h("CurSearch",  c.bg,    c.yellow)
 h("Substitute", c.bg,    c.red)
 
 -- Messages
@@ -114,9 +114,9 @@ h("PmenuExtraSel", c.comment, c.bg3)
 h("PmenuMatch",    c.blue,    c.bg_1,         "bold")  -- fuzzy-matched chars (nvim 0.11+)
 h("PmenuMatchSel", c.blue,    c.bg3,          "bold")
 h("ComplMatchIns", c.comment)                          -- inline insert preview (nvim 0.11+)
-h("NormalFloat",   c.fg,      c.bg_1)
-h("FloatBorder",   c.bg4,     c.bg_1)
-h("FloatTitle",    c.blue,    c.bg_1,         "bold")
+h("NormalFloat",   c.fg,      c.bg)
+h("FloatBorder",   c.bg4,     c.bg)
+h("FloatTitle",    c.blue,    c.bg,           "bold")
 link("FloatFooter", "FloatTitle")
 link("WildMenu",    "IncSearch")
 

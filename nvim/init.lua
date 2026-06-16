@@ -42,6 +42,22 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 vim.opt.cmdheight = 0
+vim.o.statusline = " "
+
+function _G.SearchCount()
+  if vim.v.hlsearch == 0 then
+    return ""
+  end
+
+  local ok, count = pcall(vim.fn.searchcount, { recompute = 1, maxcount = 9999 })
+  if not ok or count.total == 0 then
+    return ""
+  end
+
+  return string.format("[%d/%d]", count.current, count.total)
+end
+
+vim.o.winbar = " %t%m%=%{v:lua.SearchCount()}  %l:%c/%L  %p%%"
 
 vim.cmd.colorscheme("slate")
 
