@@ -3,8 +3,8 @@
 
 require('vim._core.ui2').enable({
     msg = {
-        pager  = { height = 0.5 },
-        dialog = { height = 0.5 },
+        pager  = { height = 0.4 },
+        dialog = { height = 0.4 },
     },
 })
 vim.opt.fillchars:append({ msgsep = "─" })
@@ -41,23 +41,8 @@ vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
-vim.opt.cmdheight = 0
 vim.o.statusline = " "
-
-function _G.SearchCount()
-  if vim.v.hlsearch == 0 then
-    return ""
-  end
-
-  local ok, count = pcall(vim.fn.searchcount, { recompute = 1, maxcount = 9999 })
-  if not ok or count.total == 0 then
-    return ""
-  end
-
-  return string.format("[%d/%d]", count.current, count.total)
-end
-
-vim.o.winbar = " %t%m%=%{v:lua.SearchCount()}  %l:%c/%L  %p%%"
+vim.o.winbar = " %t%m%=%l:%c/%L  %p%%"
 
 vim.cmd.colorscheme("slate")
 
@@ -105,7 +90,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- PLUGINS
-
 require("brackets")
 require("surround")
 
@@ -137,14 +121,12 @@ require("mini.diff").setup({
     }
 })
 
-
 require("jj").setup({
     cmd = {
         keymaps = { close = { "q", "<Esc>", "gq" }} 
     }
 })
 map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open :J log" })
-
 map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open :Git Status" })
 
 vim.api.nvim_create_autocmd('PackChanged', {
@@ -158,7 +140,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
 })
 
 vim.g.fff = {
-    prompt = '> ',
+    prompt = '❯ ',
     lazy_sync = true,
     debug = { enabled = true, show_scores = true },
     layout = {
@@ -176,7 +158,6 @@ vim.keymap.set('n', '<leader>fW', function() require('fff').live_grep({ query = 
     { desc = 'Live grep WORD under cursor' })
 
 -- LOCAL PLUGINS
-
 vim.opt.runtimepath:prepend('/Users/akc/develop/stitch.nvim')
 require("stitch").setup({
     context = 0
@@ -200,12 +181,7 @@ function _G.get_oil_winbar()
 end
 
 require("oil").setup({
-    columns = {
-        -- "icon",
-        "permissions",
-        "size",
-        "mtime",
-    },
+    columns = { "permissions", "size", "mtime" },
     delete_to_trash = true,
     skip_confirmation = true,
     view_options = {
