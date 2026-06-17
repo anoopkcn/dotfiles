@@ -13,7 +13,8 @@ local c = {
     bg     = { gui = "#232732", cterm = 235 }, -- Normal background  [measured]
     bg1    = { gui = "#2a2f3d", cterm = 236 }, -- CursorLine / Pmenu
     bg2    = { gui = "#32384a", cterm = 237 }, -- NonText / separators
-    bg3    = { gui = "#303a54", cterm = 238 }, -- Visual (blue-tinted)
+    bg3    = { gui = "#303a54", cterm = 238 }, -- Pmenu/Tab selection (blue-tinted)
+    sel    = { gui = "#3c4e7a", cterm = 60  }, -- Visual text selection (lifted for distinctness)
     bg4    = { gui = "#4d5566", cterm = 240 }, -- fold / conceal / sign chrome
     gutter = { gui = "#5b647b", cterm = 242 }, -- line numbers (lifted for legibility)
     fg     = { gui = "#e0e2ea", cterm = 254 }, -- Normal text        [measured]
@@ -74,15 +75,15 @@ h("Folded",       c.comment, c.bg1, "italic")
 h("ColorColumn",  nil,      c.bg1)
 h("VertSplit",    c.bg2,    nil)
 h("WinSeparator", c.bg2,    nil)
-h("Visual",       nil,      c.bg3)
-h("VisualNOS",    nil,      c.bg3)
+h("Visual",       nil,      c.sel)
+h("VisualNOS",    nil,      c.sel)
 h("QuickFixLine", nil,      c.bg1)
 h("MatchParen",   c.cyan,   c.bg3, "bold")
 h("Conceal",      c.bg4,    nil)
 h("NonText",      c.bg2,    nil)
 h("Whitespace",   c.bg2,    nil)
 h("SpecialKey",   c.bg2,    nil)
-h("EndOfBuffer",  c.bg,     nil)
+h("EndOfBuffer",  c.bg2,    nil)
 h("Directory",    c.purple2,   nil)
 h("Title",        c.purple2,   nil, "bold")
 h("SnippetTabstop", nil,    c.bg3)
@@ -140,15 +141,16 @@ h("debugBreakpoint", c.red, nil)
 
 -- Diff (background tints, readable text kept on top)
 local diff = {
-    add    = { gui = "#1f3a2c", cterm = 22  },
+    add    = { gui = "#2d4a38", cterm = 22  }, -- muted forest green (add block)
     change = { gui = "#2a3145", cterm = 237 },
     text   = { gui = "#3a4a6a", cterm = 24  },
-    delete = { gui = "#3a2630", cterm = 52  },
+    delete = { gui = "#4e3638", cterm = 52  }, -- muted maroon (delete block)
 }
 h("DiffAdd",    nil,    diff.add)
 h("DiffChange", nil,    diff.change)
 h("DiffText",   nil,    diff.text)
-h("DiffDelete", c.red,  diff.delete)
+-- dim fill-char colour so filler "-" dashes blend into the maroon block
+h("DiffDelete", { gui = "#7a5254", cterm = 95 }, diff.delete)
 h("Added",      c.green2)
 h("Changed",    c.yellow)
 h("Removed",    c.red)

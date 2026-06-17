@@ -63,7 +63,7 @@ fi
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^Xe' edit-command-line
-export BAT_THEME="OneHalfDark"
+export BAT_THEME="slate"
 source <(fzf --zsh)
 
 source "$HOME/.cargo/env" 
