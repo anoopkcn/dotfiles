@@ -16,7 +16,7 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
-vim.opt.laststatus = 3
+vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.ignorecase = true
@@ -42,16 +42,15 @@ vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
 vim.o.statusline = " "
-vim.o.winbar = "%t%m%=%l:%c/%L  %p%%"
+-- vim.o.winbar = " %t%m%=%l:%c/%L  %p%%"
+vim.o.winbar = " %f%m"
 
 vim.cmd.colorscheme("slate")
-
-for _, group in ipairs({ "StatusLine", "StatusLineNC" }) do
-    local hl = vim.api.nvim_get_hl(0, { name = group })
-    hl.bg = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
-    vim.api.nvim_set_hl(0, group, hl)
-end
+vim.api.nvim_set_hl(0, "CursorLine", { bg = "#14161d" })
+vim.api.nvim_set_hl(0, "CursorLineSign", { bg = "#14161d" })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ecbe70", bg = "#14161d" })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
@@ -200,17 +199,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 
 -- LOCAL PLUGINS
--- vim.opt.runtimepath:prepend('/Users/akc/develop/stitch.nvim')
-vim.pack.add({ { src = "https://github.com/anoopkcn/stitch.nvim" } })
-require("stitch").setup({
-    context = 0
-})
-
-map("n", "]c", function() require('stitch').next() end)
-map("n", "[c", function() require('stitch').prev() end)
-map("n", "<leader>c", function() require('stitch').from_qflist() end)
-map("n", "<leader>/", function() require('stitch').grep() end)
-map("n", "<leader>d", function() require('stitch').diff() end)
 
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
 vim.pack.add({ { src = "https://github.com/anoopkcn/oil.nvim" } })
@@ -241,4 +229,4 @@ map("n", "<leader>fe", "<CMD>Oil<CR>", { silent = true, desc = "Open file explor
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
 vim.pack.add({ { src = "https://github.com/anoopkcn/filemarks.nvim" } })
 require("filemarks").setup({ dir_open_cmd = "Oil %s" }) --  show_help = false
-map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
+map("n", "<leader>l", "<CMD>FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })

@@ -24,7 +24,7 @@ precmd() {
     fi
 }
 
-PROMPT='%F{cyan}%~%f${PROMPT_ENV_SEGMENT:+ ${PROMPT_ENV_SEGMENT}} %(?.%F{cyan}❯%f.%F{red}❯%f) '
+PROMPT='%F{cyan}%~%f${PROMPT_ENV_SEGMENT:+ env:${PROMPT_ENV_SEGMENT}} %(?.%F{cyan}❯%f.%F{red}❯%f) '
 
 # Git segment: no leading/trailing spaces in formats
 # zstyle ':vcs_info:git:*' formats 'git:%F{blue}(%b%F{yellow}%u%f%F{green}%c%f%F{blue})%f'

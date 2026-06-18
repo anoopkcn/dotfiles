@@ -10,7 +10,7 @@ vim.g.colors_name = "slate"
 local c = {
     -- Neutral slate ramp (lifted off black -> soft cool white)
     bg_1   = { gui = "#1d2029", cterm = 235 }, -- deepest (popup / float depth)
-    bg     = { gui = "#232732", cterm = 235 }, -- Normal background  [measured]
+    bg     = { gui = "#14161d", cterm = 235 }, -- Normal background  [measured]
     bg1    = { gui = "#2a2f3d", cterm = 236 }, -- CursorLine / Pmenu
     bg2    = { gui = "#32384a", cterm = 237 }, -- NonText / separators
     bg3    = { gui = "#303a54", cterm = 238 }, -- Pmenu/Tab selection (blue-tinted)
@@ -74,7 +74,7 @@ h("FoldColumn",   c.bg4,    c.bg)
 h("Folded",       c.comment, c.bg1, "italic")
 h("ColorColumn",  nil,      c.bg1)
 h("VertSplit",    c.bg2,    nil)
-h("WinSeparator", c.bg2,    nil)
+h("WinSeparator", c.bg2,    c.bg2)
 h("Visual",       nil,      c.sel)
 h("VisualNOS",    nil,      c.sel)
 h("QuickFixLine", nil,      c.bg1)
@@ -122,8 +122,8 @@ link("FloatFooter", "FloatTitle")
 link("WildMenu",    "IncSearch")
 
 -- Statusline / tabline / winbar
-h("StatusLine",   c.fg,      c.bg1)
-h("StatusLineNC", c.comment, c.bg1)
+h("StatusLine",   c.fg,      c.bg2)
+h("StatusLineNC", c.comment, c.bg2)
 link("StatusLineTerm",   "StatusLine")
 link("StatusLineTermNC", "StatusLineNC")
 h("WinBar",       c.fg,      nil, "bold")

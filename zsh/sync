@@ -24,7 +24,7 @@ exec rsync -macviz \
   --exclude='zig-out/*' \
   --exclude='.zig-cache/*' \
   --exclude='zenv.json' \
-  --exclude='zenv/*' \
+  --exclude='.zenv/*' \
   --exclude='*.egg-info' \
   --exclude='.ruff_cache/*' \
   "$@"
