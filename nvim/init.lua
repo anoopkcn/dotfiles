@@ -8,7 +8,7 @@ require('vim._core.ui2').enable({
     },
 })
 
-vim.opt.fillchars:append({ msgsep = "─" })
+vim.opt.fillchars:append({ msgsep = "━" })
 vim.opt.winborder = "rounded"
 vim.opt.pumborder = "rounded"
 vim.g.mapleader = " "
@@ -43,7 +43,7 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 vim.o.statusline = " "
-vim.o.winbar = " %t%m%=%l:%c/%L  %p%%"
+vim.o.winbar = "%t%m%=%l:%c/%L  %p%%"
 
 vim.cmd.colorscheme("slate")
 
@@ -200,7 +200,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 
 -- LOCAL PLUGINS
-vim.opt.runtimepath:prepend('/Users/akc/develop/stitch.nvim')
+-- vim.opt.runtimepath:prepend('/Users/akc/develop/stitch.nvim')
+vim.pack.add({ { src = "https://github.com/anoopkcn/stitch.nvim" } })
 require("stitch").setup({
     context = 0
 })
@@ -211,7 +212,8 @@ map("n", "<leader>c", function() require('stitch').from_qflist() end)
 map("n", "<leader>/", function() require('stitch').grep() end)
 map("n", "<leader>d", function() require('stitch').diff() end)
 
-vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
+-- vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
+vim.pack.add({ { src = "https://github.com/anoopkcn/oil.nvim" } })
 function _G.get_oil_winbar()
     local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
     local dir = require("oil").get_current_dir(bufnr)
@@ -236,6 +238,7 @@ require("oil").setup({
 
 map("n", "<leader>fe", "<CMD>Oil<CR>", { silent = true, desc = "Open file explorer" })
 
-vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
+-- vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
+vim.pack.add({ { src = "https://github.com/anoopkcn/filemarks.nvim" } })
 require("filemarks").setup({ dir_open_cmd = "Oil %s" }) --  show_help = false
 map("n", "<leader>l", "<CMD>bot FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })

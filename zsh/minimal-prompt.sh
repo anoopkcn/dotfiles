@@ -16,7 +16,6 @@ precmd() {
         env_text="(${VIRTUAL_ENV:t})"
     fi
 
-    # Trim leading/trailing whitespace from env_text
     env_text="${env_text##[[:space:]]##}"
     env_text="${env_text%%[[:space:]]##}"
 
@@ -25,7 +24,7 @@ precmd() {
     fi
 }
 
-PROMPT='%F{cyan}%~%f${PROMPT_ENV_SEGMENT:+ env:${PROMPT_ENV_SEGMENT}} %(?.%F{cyan}❯%f.%F{red}❯%f) '
+PROMPT='%F{cyan}%~%f${PROMPT_ENV_SEGMENT:+ ${PROMPT_ENV_SEGMENT}} %(?.%F{cyan}❯%f.%F{red}❯%f) '
 
 # Git segment: no leading/trailing spaces in formats
 # zstyle ':vcs_info:git:*' formats 'git:%F{blue}(%b%F{yellow}%u%f%F{green}%c%f%F{blue})%f'
