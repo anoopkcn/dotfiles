@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Login-shell entry point.
+# bash reads exactly one of ~/.bash_profile, ~/.bash_login, ~/.profile on login,
+
+[ -f "$HOME/.profile" ] && . "$HOME/.profile"
+[ -f "$HOME/.bashrc" ]  && . "$HOME/.bashrc"

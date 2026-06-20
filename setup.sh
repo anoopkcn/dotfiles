@@ -16,6 +16,10 @@ ln -sf $PATH_TO_DOTFILES/nvim  $HOME/.config/nvim
 ln -sf $PATH_TO_DOTFILES/zsh  $HOME/.config/zsh
 ln -sf $PATH_TO_DOTFILES/zsh/zshrc $HOME/.zshrc
 
+# bash (plugin manager + plugins not ported)
+ln -sf $PATH_TO_DOTFILES/bash/bashrc $HOME/.bashrc
+ln -sf $PATH_TO_DOTFILES/bash/bash_profile $HOME/.bash_profile
+
 # bat — config + slate theme; rebuild syntax/theme cache afterwards
 ln -sf $PATH_TO_DOTFILES/bat  $HOME/.config/bat
 command -v bat >/dev/null 2>&1 && bat cache --build

@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+# Only do interactive setup when interactive
+case $- in
+    *i*) ;;
+    *) return ;;
+esac
+
+shopt -s extglob nullglob # just for loops expand glob
+
+# resolve this file's real directory (it is symlinked from the dotfiles repo)
+__bashrc_src="${BASH_SOURCE[0]}"
+__bashrc_link="$(readlink "$__bashrc_src" 2>/dev/null)" && __bashrc_src="$__bashrc_link"
+BASH_CONFIG_DIR="$(cd "$(dirname "$__bashrc_src")" 2>/dev/null && pwd)"
+unset __bashrc_src __bashrc_link
+
+# helpers (zsh: source_file / path)
+source_file() { [ -f "$1" ] && source "$1"; }
+path() { echo -e "${PATH//:/\\n}"; }
+
+path_prepend() {
+    local dir
+    for dir in "$@"; do
+        [ -d "$dir" ] || continue
+        case ":$PATH:" in
+            *":$dir:"*) ;;
+            *) PATH="$dir:$PATH" ;;
+        esac
+    done
+}
+path_prepend /Library/TeX/texbin "$HOME/.local/bin"
+export PATH
+
+export EDITOR='nvim'
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+export CONDA_CHANGEPS1=no
+export BAT_THEME="slate"
+
+HISTFILE="$HOME/.bash_history"
+HISTSIZE=10000
+HISTFILESIZE=$HISTSIZE
+HISTCONTROL=ignoreboth          # HIST_IGNORE_DUPS + HIST_IGNORE_SPACE
+shopt -s histappend             # don't clobber the file on exit; share-history in __prompt_command
+
+source_file "$HOME/.privaterc"
+
+source_file "$BASH_CONFIG_DIR/minimal-prompt.sh"
+source_file "$BASH_CONFIG_DIR/fzf.sh"
+
+alias duh="du -h -d 0 [^.]*"
+alias notes="cd ~/Dropbox/notes"
+alias ll='eza --hyperlink'
+alias rg="rg --hyperlink-format=kitty"
+alias mg="kitten hyperlinked-grep"
+alias gs="git status"
+alias icat="kitten icat"
+alias s="kitten ssh"
+alias clip="kitten clipboard"
+alias d="kitten diff"
+alias vim="nvim"
+alias zx="zenv run"
+alias put="kitten transfer --permissions-bypass=hpc_transfer --direction=upload"
+alias get="kitten transfer --permissions-bypass=hpc_transfer"
+alias pbcopy="kitten clipboard"
+
+if command -v brew >/dev/null 2>&1; then
+    eval "$(brew shellenv)"
+fi
+
+if command -v brew >/dev/null 2>&1; then
+    BREW_PREFIX="$(brew --prefix)"
+    if [ -r "$BREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
+        source "$BREW_PREFIX/etc/profile.d/bash_completion.sh"
+    fi
+fi
+bind 'set completion-ignore-case on' 2>/dev/null
+
+# Up/Down: search history by what's already typed (prefix match), not blind stepping.
+# Bind both normal (\e[A) and application-mode (\eOA) cursor sequences for terminal portability.
+bind '"\e[A": history-search-backward' 2>/dev/null
+bind '"\e[B": history-search-forward'  2>/dev/null
+bind '"\eOA": history-search-backward' 2>/dev/null
+bind '"\eOB": history-search-forward'  2>/dev/null
+
+if command -v fzf >/dev/null 2>&1; then
+    source <(fzf --bash)
+fi
+
+source_file "$HOME/.cargo/env"
+
+zo() {
+    local target="${1:-.}"
+    local script
+    script="$(zenv activate "$target")" || return
+    source "$script"
+}
