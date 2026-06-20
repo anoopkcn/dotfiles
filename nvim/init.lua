@@ -7,8 +7,8 @@ require('vim._core.ui2').enable({
         dialog = { height = 0.4 },
     },
 })
-
 vim.opt.fillchars:append({ msgsep = "━" })
+
 vim.opt.winborder = "rounded"
 vim.opt.pumborder = "rounded"
 vim.g.mapleader = " "
@@ -16,7 +16,6 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
-vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.ignorecase = true
@@ -41,16 +40,20 @@ vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
+vim.opt.laststatus = 3
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = "number"
 vim.o.statusline = " "
--- vim.o.winbar = " %t%m%=%l:%c/%L  %p%%"
 vim.o.winbar = " %f%m"
+vim.opt.cmdheight = 0
 
 vim.cmd.colorscheme("slate")
-vim.api.nvim_set_hl(0, "CursorLine", { bg = "#14161d" })
-vim.api.nvim_set_hl(0, "CursorLineSign", { bg = "#14161d" })
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ecbe70", bg = "#14161d" })
+local _bg = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
+vim.api.nvim_set_hl(0, "CursorLine", { bg = _bg })
+vim.api.nvim_set_hl(0, "CursorLineSign", { bg = _bg })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ecbe70", bg = _bg })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = _bg, bg = _bg })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = _bg, bg = _bg })
 
 local map = vim.keymap.set
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true, desc = "Disable Space (reserved as leader)" })
