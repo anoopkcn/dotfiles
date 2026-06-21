@@ -7,7 +7,7 @@ require('vim._core.ui2').enable({
         dialog = { height = 0.4 },
     },
 })
-vim.opt.fillchars:append({ msgsep = "━" })
+vim.opt.fillchars:append({ msgsep = "─" })
 
 vim.opt.winborder = "rounded"
 vim.opt.pumborder = "rounded"
@@ -16,8 +16,6 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
-vim.opt.number = true
-vim.opt.relativenumber = true
 vim.opt.ignorecase = true
 vim.opt.signcolumn = "yes"
 vim.opt.expandtab = true
@@ -40,6 +38,10 @@ vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.numberwidth = 4
+vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
 vim.opt.laststatus = 3
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = "number"
