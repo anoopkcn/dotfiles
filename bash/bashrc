@@ -95,3 +95,25 @@ zo() {
     script="$(zenv activate "$target")" || return
     source "$script"
 }
+
+pi() {
+    for arg in "$@"; do 
+        case "$arg" in
+            --nvim|--nvim=*) pi-nvim "$@"; return ;;
+        esac
+   done
+   command pi "$@"
+}
+
+claude() {
+    for arg in "$@"; do
+        case "$arg" in
+            --nvim|--nvim=*|--nvim-*)
+                NVIM_AWARE_PROMPT_CONTEXT=full \
+                  NVIM_AWARE_SNAPSHOT_TTL_MS=750 \
+                  claude-nvim "$@"
+                  return ;;
+          esac
+    done
+    command claude "$@"
+}

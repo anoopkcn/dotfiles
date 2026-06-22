@@ -40,8 +40,6 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.numberwidth = 4
-vim.opt.statuscolumn = "%=%{v:relnum == 0 ? v:lnum : v:relnum} "
 vim.opt.laststatus = 3
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = "number"
@@ -88,6 +86,12 @@ map("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
 map("n", "<leader>z", ":! ", { desc = "Execute a command" })
 map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
     { desc = "Replace word cursor is on globally" })
+
+map("n", "<Tab>", ">>", { silent = true, desc = "Indent line" })
+map("n", "<S-Tab>", "<<", { silent = true, desc = "De-indent line" })
+map("v", "<Tab>", ">gv", { silent = true, desc = "Indent selection" })
+map("v", "<S-Tab>", "<gv", { silent = true, desc = "De-indent selection" })
+
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
@@ -226,6 +230,11 @@ require("oil").setup({
     },
     win_options = {
         winbar = "%!v:lua.get_oil_winbar()",
+    },
+    keymaps = {
+        ["!"] = "actions.run_command",
+        ["&"] = "actions.run_command_async",
+        ["<C-c>"] = "actions.stop_command",
     },
 })
 
