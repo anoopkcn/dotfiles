@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Only do interactive setup when interactive
+# [[ $- != *i* ]] && return
 case $- in
     *i*) ;;
     *) return ;;

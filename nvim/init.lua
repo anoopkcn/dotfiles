@@ -84,8 +84,6 @@ map("n", "<leader>q", function() vim.cmd(vim.fn.getqflist({ winid = 0 }).winid >
 map("n", "<leader>,", function() vim.lsp.buf.format({ async = true }) end,
     { silent = true, desc = "Format buffer via LSP" })
 map("n", "<leader>z", ":! ", { desc = "Execute a command" })
-map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-    { desc = "Replace word cursor is on globally" })
 
 map("n", "<Tab>", ">>", { silent = true, desc = "Indent line" })
 map("n", "<S-Tab>", "<<", { silent = true, desc = "De-indent line" })
@@ -101,6 +99,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- PLUGINS
 require("brackets")
 require("surround")
+require("search_replace")
 
 vim.keymap.set('n', '<leader>fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
@@ -156,7 +155,11 @@ vim.g.fff = {
         anchor = 'top',
         prompt_position = 'top',
         flex = { size = 130, wrap = 'bottom' },
-    }
+    },
+    debug = {
+    enabled = false,
+    show_scores = false,
+  },
 }
 
 vim.keymap.set('n', '<leader>ff', function() require('fff').find_files() end, { desc = 'FFFind files' })
