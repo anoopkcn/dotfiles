@@ -29,7 +29,7 @@ path_prepend() {
         esac
     done
 }
-path_prepend /Library/TeX/texbin "$HOME/.local/bin"
+path_prepend /Library/TeX/texbin "$HOME/.local/bin" "$HOME/.cargo/bin"
 export PATH
 
 export EDITOR='nvim'
