@@ -11,6 +11,16 @@
 
 set $mod Mod4
 
+# Colors — slate (matches nvim/colors/slate.lua)
+set $bg        #14161d
+set $bg_alt    #1b1f2a
+set $fg        #e0e2ea
+set $muted     #828c9e
+set $accent    #88a0c8
+set $accent2   #a0ddac
+set $urgent    #f7768e
+set $border    #32384a
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 # font pango:monospace 8
@@ -29,7 +39,7 @@ exec --no-startup-id dex --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -58,7 +68,8 @@ bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
 # bindsym $mod+d exec --no-startup-id dmenu_run
-bindsym $mod+d exec --no-startup-id env PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin dmenu_run
+# bindsym $mod+d exec --no-startup-id env PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin dmenu_run
+bindsym $mod+d exec --no-startup-id env PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin dmenu_run -i -fn "Berkeley Mono Variable-10" -nb "$bg" -nf "$fg" -sb "$accent" -sf "$bg"
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
 # There also is i3-dmenu-desktop which only displays applications shipping a
@@ -189,14 +200,28 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        font pango:Berkeley Mono Variable 8
         status_command i3status
+        position top
+        font pango:Berkeley Mono Variable 8
+        tray_output primary
+
+        colors {
+                background $bg_alt
+                statusline $fg
+                separator  $muted
+
+                focused_workspace  $accent $accent $bg
+                active_workspace   $border $border $fg
+                inactive_workspace $bg_alt $bg_alt $muted
+                urgent_workspace   $urgent $urgent $bg
+                binding_mode       $accent2 $accent2 $bg
+        }
 }
 
 exec --no-startup-id feh --bg-fill ~/Images/wallpaper/fall-echo-tries.png
 
 # Lock screen when inactive
-# exec --no-startup-id pkill xss-lock; xss-lock --transfer-sleep-lock -- slock
+exec --no-startup-id xss-lock --transfer-sleep-lock -- slock
 exec --no-startup-id xidlehook --not-when-audio --not-when-fullscreen --timer 600 'slock' ''
 # Suspend manually
 bindsym Control+Mod1+BackSpace exec --no-startup-id systemctl suspend
@@ -211,12 +236,20 @@ exec --no-startup-id blueman-applet
 exec --no-startup-id dunst
 exec --no-startup-id picom
 
-default_border normal 1
-default_floating_border normal 1
-
-client.focused          #285577 #285577 #ffffff #285577 #285577
-client.focused_inactive #333333 #333333 #ffffff #333333 #333333
-client.unfocused        #222222 #222222 #888888 #222222 #222222
-client.urgent           #900000 #900000 #ffffff #900000 #900000
-
+default_border pixel 1
+default_floating_border pixel 1
 hide_edge_borders smart
+
+# Gaps
+gaps inner 4
+gaps outer 2
+smart_gaps on
+# smart_borders on
+
+# class                 border   background text    indicator child_border
+client.focused          $accent  $accent    $bg     $accent   $accent
+client.focused_inactive $border  $bg_alt    $muted  $border   $border
+client.unfocused        $border  $bg_alt    $muted  $border   $border
+client.urgent           $urgent  $urgent    $bg     $urgent   $urgent
+client.placeholder      $bg_alt  $bg_alt    $fg     $bg_alt   $bg_alt
+client.background       $bg
