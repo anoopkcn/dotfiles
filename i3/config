@@ -59,6 +59,9 @@ bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
+# Floating windows
+for_window [class="Thunar"] floating enable
+for_window [class="Blueman-manager"] floating enable
 
 # move tiling windows via drag & drop by left-clicking into the title bar,
 # or left-clicking anywhere into the window while holding the floating modifier.
@@ -82,10 +85,10 @@ bindsym $mod+d exec --no-startup-id env PATH=$HOME/.local/bin:/usr/local/bin:/us
 # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -94,10 +97,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -106,7 +109,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+s split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -115,7 +118,7 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
+bindsym $mod+q layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
@@ -129,7 +132,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+b focus child
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -223,11 +226,9 @@ bar {
         }
 }
 
+# exec --no-startup-id feh --bg-fill ~/Images/wallpaper/023.png
 exec --no-startup-id feh --bg-fill ~/Images/wallpaper/fall-echo-tries.png
 
-# Lock screen when inactive
-exec --no-startup-id xss-lock --transfer-sleep-lock -- slock
-exec --no-startup-id xidlehook --not-when-audio --not-when-fullscreen --timer 600 'slock' ''
 # Suspend manually
 bindsym Control+Mod1+BackSpace exec --no-startup-id systemctl suspend
 
