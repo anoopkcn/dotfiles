@@ -246,10 +246,9 @@ default_floating_border pixel 1
 hide_edge_borders smart
 
 # Gaps
-gaps inner 4
-gaps outer 2
-smart_gaps off
-# smart_borders on
+# gaps inner 2
+# gaps outer 2
+# smart_gaps off
 
 # class                 border   background text    indicator child_border
 client.focused          $sel     $sel       $fg     $accent   $sel

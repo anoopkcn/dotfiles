@@ -4,6 +4,9 @@ Env vars:
   KS_LOCATIONS      Colon-separated parent dirs for `-n` candidate enumeration.
   KS_TEMPLATE       Path to session-file template (default: ~/.config/kitty/sessions/template.kitty-session).
   KS_SESSIONS_DIR   Directory of *.kitty-session files for `-n` (default: ~/.config/kitty/sessions).
+  KS_PICKER         Interactive picker: `dmenu` or `fzf`. Unset prefers dmenu,
+                    falling back to fzf. dmenu is single-select (the `-k`/`-n`
+                    multi-select is fzf-only).
 """
 
 from __future__ import annotations
@@ -592,7 +595,7 @@ def kill_session_by_name(name: str, data: list | None = None) -> bool:
     return True
 
 
-# --- display + fzf ---
+# --- display + picker ---
 
 
 def display_cwd(p: str) -> str:
@@ -601,11 +604,11 @@ def display_cwd(p: str) -> str:
     return p
 
 
-def fzf_session_lines(rows: list[SessionRow]) -> list[str]:
-    """fzf input lines shared by -i/-k: "name<TAB>name  cwd" — fzf displays the
-    second field (--with-nth=2) and the name is read back from the first."""
+def session_items(rows: list[SessionRow]) -> list[tuple[str, str]]:
+    """(value, display) pairs shared by -i/-k: value is the session name, display
+    is "name  cwd". The picker layer shows `display` and hands back `value`."""
     name_w = max(len(r.name) for r in rows)
-    return [f"{r.name}\t{r.name:<{name_w}}  {display_cwd(r.cwd)}" for r in rows]
+    return [(r.name, f"{r.name:<{name_w}}  {display_cwd(r.cwd)}") for r in rows]
 
 
 def pause_overlay() -> None:
@@ -647,48 +650,99 @@ def load_fzf_env() -> None:
         os.environ["FZF_DEFAULT_OPTS"] = m.group(2)
 
 
-def require_fzf() -> None:
-    if shutil.which("fzf") is None:
-        sys.stderr.write("ks: fzf not found in PATH (brew install fzf)\n")
-        pause_overlay()
-        sys.exit(1)
-    load_fzf_env()
+def resolve_picker() -> str:
+    """Which interactive picker to use. Honors KS_PICKER (dmenu|fzf) when it
+    names an installed binary; otherwise auto-selects, preferring dmenu (lighter
+    than fzf) and falling back to fzf. Returns "" if neither is installed."""
+    order = []
+    choice = (os.environ.get("KS_PICKER") or "").strip().lower()
+    if choice in ("dmenu", "fzf"):
+        order.append(choice)
+    for p in ("dmenu", "fzf"):
+        if p not in order:
+            order.append(p)
+    for p in order:
+        if shutil.which(p):
+            return p
+    return ""
 
 
-def run_fzf(
-    lines: list[str],
+def pick(
+    items: list[tuple],
     *,
     prompt: str,
     header: str,
     multi: bool,
-    with_nth: int,
-    delimiter: str = "\t",
-) -> list[str] | None:
-    """Run fzf over `lines`. Returns selected lines, or None on cancel."""
+) -> list | None:
+    """Run the resolved picker over (value, display) pairs. Returns the list of
+    selected `value`s, or None on cancel. dmenu is single-select regardless of
+    `multi`; fzf honors it."""
+    picker = resolve_picker()
+    if not picker:
+        sys.stderr.write("ks: no picker found in PATH (install dmenu or fzf)\n")
+        pause_overlay()
+        sys.exit(1)
+    if picker == "fzf":
+        load_fzf_env()
+        return _pick_fzf(items, prompt=prompt, header=header, multi=multi)
+    return _pick_dmenu(items, prompt=prompt)
+
+
+def _pick_fzf(
+    items: list[tuple],
+    *,
+    prompt: str,
+    header: str,
+    multi: bool,
+) -> list | None:
+    # Carry the item index (not the value) in hidden field 1 so displays with
+    # tabs or duplicate text can never confuse the read-back. fzf shows field 2.
+    lines = [f"{i}\t{display}" for i, (_, display) in enumerate(items)]
     cmd = [
         "fzf",
         "--ansi",
         "--reverse",
         "--height=40%",
-        f"--with-nth={with_nth}",
-        f"--delimiter={delimiter}",
+        "--with-nth=2",
+        "--delimiter=\t",
         f"--prompt={prompt}",
         f"--header={header}",
+        "--multi" if multi else "--no-multi",
     ]
-    cmd.append("--multi" if multi else "--no-multi")
-    res = subprocess.run(
-        cmd,
-        input="\n".join(lines),
-        capture_output=True,
-        text=True,
-    )
+    res = subprocess.run(cmd, input="\n".join(lines), capture_output=True, text=True)
     # fzf exit: 0 = match, 1 = no match, 2 = error, 130 = ctrl-c/esc
     if res.returncode != 0:
         return None
     out = res.stdout.strip("\n")
     if not out:
         return None
-    return out.split("\n")
+    values = []
+    for line in out.split("\n"):
+        idx = line.split("\t", 1)[0]
+        if idx.isdigit() and int(idx) < len(items):
+            values.append(items[int(idx)][0])
+    return values or None
+
+
+def _pick_dmenu(items: list[tuple], *, prompt: str) -> list | None:
+    """dmenu shows exactly the lines it's fed and echoes the chosen one, so we
+    map display -> value ourselves. Single-select only; no --with-nth/--header,
+    so alignment padding is best-effort under dmenu's font."""
+    by_display: dict[str, object] = {}
+    displays: list[str] = []
+    for value, display in items:
+        by_display[display] = value
+        displays.append(display)
+    # -i: case-insensitive. -l 20: vertical list rather than a single-line bar.
+    cmd = ["dmenu", "-i", "-l", "20", "-p", prompt.strip()]
+    res = subprocess.run(cmd, input="\n".join(displays), capture_output=True, text=True)
+    if res.returncode != 0:
+        return None
+    out = res.stdout.strip("\n")
+    # dmenu echoes typed text when it matches no row; only act on a real row.
+    if out not in by_display:
+        return None
+    return [by_display[out]]
 
 
 # --- commands ---
@@ -788,7 +842,6 @@ def cmd_kill_all() -> None:
 
 
 def cmd_pick_session() -> None:
-    require_fzf()
     data = kitty_ls()
     rows = list_sessions(data)
     if not rows:
@@ -804,22 +857,18 @@ def cmd_pick_session() -> None:
         rows,
         key=lambda r: (r.name == current_name, -r.last_focused_at),
     )
-    lines = fzf_session_lines(rows)
-    chosen = run_fzf(
-        lines,
+    chosen = pick(
+        session_items(rows),
         prompt="session ❯ ",
         header="Enter: switch • Esc: cancel",
         multi=False,
-        with_nth=2,
     )
     if not chosen:
         return
-    name = chosen[0].split("\t", 1)[0]
-    cmd_switch(name)
+    cmd_switch(chosen[0])
 
 
 def cmd_pick_kill() -> None:
-    require_fzf()
     data = kitty_ls()
     rows = list_sessions(data)
     if not rows:
@@ -829,26 +878,22 @@ def cmd_pick_kill() -> None:
     # Ascending: focused session lands at bottom of the fzf list — safer default
     # when the action is destructive.
     rows = sorted(rows, key=lambda r: (r.focused, r.last_focused_at))
-    lines = fzf_session_lines(rows)
-    chosen = run_fzf(
-        lines,
+    chosen = pick(
+        session_items(rows),
         prompt="kill ❯ ",
         header="Tab: select • Enter: kill • Esc: cancel",
         multi=True,
-        with_nth=2,
     )
     if not chosen:
         return
     killed = 0
-    for line in chosen:
-        name = line.split("\t", 1)[0]
+    for name in chosen:
         if kill_session_by_name(name, data=data):
             killed += 1
     sys.stderr.write(f"ks: killed {killed} session(s)\n")
 
 
 def cmd_pick_new() -> None:
-    require_fzf()
     locations = os.environ.get("KS_LOCATIONS", "")
     if not locations:
         sys.stderr.write(
@@ -927,31 +972,29 @@ def cmd_pick_new() -> None:
 
     label_w = max([len(s[0]) for s in sessions] + [len(d[0]) for d in dirs] + [0])
 
-    lines: list[str] = []
+    # (value, display): value is a (kind, selector) pair the picker hands back.
+    items: list[tuple] = []
     for label, full, running in sessions:
         suffix = "  (running)" if running else ""
-        lines.append(f"session\t{full}\t[session] {label:<{label_w}}{suffix}")
+        items.append((("session", full), f"[session] {label:<{label_w}}{suffix}"))
     for label, abs_full, is_open in dirs:
         suffix = "  (open)" if is_open else ""
-        lines.append(
-            f"dir\t{abs_full}\t[dir]     {label:<{label_w}}  "
-            f"{display_cwd(abs_full)}{suffix}"
+        items.append(
+            (
+                ("dir", abs_full),
+                f"[dir]     {label:<{label_w}}  {display_cwd(abs_full)}{suffix}",
+            )
         )
 
-    chosen = run_fzf(
-        lines,
+    chosen = pick(
+        items,
         prompt="new ❯ ",
         header="Tab: select • Enter: open • Esc: cancel",
         multi=True,
-        with_nth=3,
     )
     if not chosen:
         return
-    for line in chosen:
-        parts = line.split("\t", 2)
-        if len(parts) < 2:
-            continue
-        kind, selector = parts[0], parts[1]
+    for kind, selector in chosen:
         if kind == "session":
             launch_session_file(selector)
         elif kind == "dir":
@@ -970,11 +1013,14 @@ USAGE = """Usage:
   ks <path> ...    Open a kitty OS window per path, tagged session_name=<folder>-<uid>.
   ks -l            List all active kitty sessions.
   ks -s <name>     Switch focus to the session with the given name.
-  ks -k            Interactive picker (fzf, multi-select) over active sessions; kill on Enter.
+  ks -k            Interactive picker over active sessions; kill on Enter.
   ks -k <name> ... Close the named session(s) (closes their OS windows).
   ks -k --all      Close all sessions except the currently focused one.
-  ks -i            Interactive picker (fzf) over active sessions; switch on select.
-  ks -n            Interactive picker (fzf, multi-select) over KS_LOCATIONS subdirs; create on Enter.
+  ks -i            Interactive picker over active sessions; switch on select.
+  ks -n            Interactive picker over KS_LOCATIONS subdirs; create on Enter.
+
+Picker: KS_PICKER=dmenu|fzf (unset prefers dmenu, falls back to fzf).
+dmenu is single-select; -k/-n multi-select needs fzf.
 """
 
 
