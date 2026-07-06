@@ -240,7 +240,6 @@ bindsym $mod+c exec --no-startup-id sh -c 'xcolor | tr -d "\n" | xclip -selectio
 exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id blueman-applet
 exec --no-startup-id dunst
-exec --no-startup-id picom
 
 default_border pixel 1
 default_floating_border pixel 1
