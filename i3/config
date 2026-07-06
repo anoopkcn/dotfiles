@@ -20,7 +20,7 @@ set $accent    #88a0c8
 set $accent2   #a0ddac
 set $urgent    #f7768e
 set $border    #32384a
-set $sel       #445988
+set $sel       #88a0c8
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -241,14 +241,14 @@ exec --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id blueman-applet
 exec --no-startup-id dunst
 
-default_border pixel 1
-default_floating_border pixel 1
+default_border pixel 2
+default_floating_border pixel 2
 hide_edge_borders smart
 
 # Gaps
-# gaps inner 2
-# gaps outer 2
-# smart_gaps off
+gaps inner 4
+gaps outer 2
+smart_gaps off
 
 # class                 border   background text    indicator child_border
 client.focused          $sel     $sel       $fg     $accent   $sel

@@ -1,16 +1,17 @@
 # Ghostty Terminal Configuration
 # Ref: https://ghostty.org/docs/config/reference
 
-theme = Nvim Dark
+# theme = Nvim Dark
 font-family = Berkeley Mono
 window-title-font-family = Berkeley Mono
-font-size = 12
+font-size = 10
 font-feature = -calt
 
+window-decoration = none
+# window-decoration = client
 macos-titlebar-style = tabs
 macos-option-as-alt = left
 window-save-state = always
-window-decoration = client
 adjust-cursor-thickness = 2
 
 # mouse-hide-while-typing = true
