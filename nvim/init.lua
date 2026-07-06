@@ -120,6 +120,17 @@ vim.pack.add({
         src = "https://github.com/dmtrKovalenko/fff.nvim",
         name = "fff.nvim"
     },
+    { 
+        src = "https://github.com/neovim/nvim-lspconfig", 
+        branch = "master" 
+    },
+    {
+         src = "https://github.com/anoopkcn/oil.nvim" 
+    },
+    {
+         src = "https://github.com/anoopkcn/filemarks.nvim" 
+    },
+
 })
 
 require("mini.diff").setup({
@@ -170,8 +181,6 @@ vim.keymap.set('n', '<leader>fW', function() require('fff').live_grep({ query = 
     { desc = 'Live grep WORD under cursor' })
 
 
-
-vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig", branch = "master" } })
 vim.lsp.enable({ "clangd", "lua_ls", "pyright", "ruff", "ts_ls" })
 vim.g.lsp_autocomplete = false
 vim.api.nvim_create_user_command("LspAutocomplete", function(opts)
@@ -213,7 +222,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- LOCAL PLUGINS
 
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
-vim.pack.add({ { src = "https://github.com/anoopkcn/oil.nvim" } })
 function _G.get_oil_winbar()
     local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
     local dir = require("oil").get_current_dir(bufnr)
@@ -244,6 +252,5 @@ require("oil").setup({
 map("n", "<leader>fe", "<CMD>Oil<CR>", { silent = true, desc = "Open file explorer" })
 
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
-vim.pack.add({ { src = "https://github.com/anoopkcn/filemarks.nvim" } })
 require("filemarks").setup({ dir_open_cmd = "Oil %s" }) --  show_help = false
 map("n", "<leader>l", "<CMD>FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
