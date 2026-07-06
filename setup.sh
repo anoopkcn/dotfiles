@@ -24,6 +24,9 @@ ln -sf $PATH_TO_DOTFILES/bash/bash_profile $HOME/.bash_profile
 ln -sf $PATH_TO_DOTFILES/bat  $HOME/.config/bat
 command -v bat >/dev/null 2>&1 && bat cache --build
 
+# zathura — slate dark theme (recolor/dark mode on by default)
+ln -sf $PATH_TO_DOTFILES/zathura  $HOME/.config/zathura
+
 # btop — drop the slate theme in place (btop.conf stays btop-managed)
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme

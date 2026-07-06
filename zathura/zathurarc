@@ -1,0 +1,53 @@
+# zathura — slate dark theme
+# Matches the palette used across i3/bat/btop.
+
+# --- dark mode -------------------------------------------------------------
+# Invert page colors (proper dark mode). Toggle at runtime with Ctrl+r.
+set recolor              true
+set recolor-keephue      true
+set recolor-reverse-video true
+set recolor-lightcolor   "#14161d"
+set recolor-darkcolor    "#e0e2ea"
+
+# --- UI colors -------------------------------------------------------------
+set default-bg           "#14161d"
+set default-fg           "#e0e2ea"
+
+set statusbar-bg         "#1d2029"
+set statusbar-fg         "#e0e2ea"
+
+set inputbar-bg          "#1d2029"
+set inputbar-fg          "#e0e2ea"
+
+set notification-bg      "#1d2029"
+set notification-fg      "#e0e2ea"
+set notification-error-bg   "#1d2029"
+set notification-error-fg   "#f7768e"
+set notification-warning-bg "#1d2029"
+set notification-warning-fg "#f7768e"
+
+set highlight-color         "rgba(136,160,200,0.35)"
+set highlight-active-color  "rgba(160,221,172,0.45)"
+
+set completion-bg           "#1d2029"
+set completion-fg           "#828c9e"
+set completion-group-bg     "#14161d"
+set completion-group-fg     "#88a0c8"
+set completion-highlight-bg "#3c4e7a"
+set completion-highlight-fg "#e0e2ea"
+
+set index-bg             "#14161d"
+set index-fg             "#e0e2ea"
+set index-active-bg      "#3c4e7a"
+set index-active-fg      "#e0e2ea"
+
+set render-loading-bg    "#14161d"
+set render-loading-fg    "#828c9e"
+
+# --- behavior --------------------------------------------------------------
+set selection-clipboard  clipboard
+set adjust-open          width
+set scroll-step          60
+set guioptions           ""
+set window-title-basename true
+set statusbar-home-tilde  true
