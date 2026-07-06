@@ -7,8 +7,8 @@
 # If the above line is not correctly displayed, fix your editor first!
 #
 # Colors — slate (matches i3/config and nvim/colors/slate.lua)
-#   bg #14161d  bg_alt #1b1f2a  fg #e0e2ea  muted #828c9e
-#   accent #88a0c8  green #a0ddac  amber #d7ba7d  urgent #f7768e  border #32384a
+#   bg #14161d  bg_alt #1d2029  fg #e0e2ea  muted #828c9e
+#   accent #88a0c8  green #a0ddac  yellow #ecbe70  urgent #f7768e  border #32384a
 
 general {
         colors = true
@@ -16,7 +16,7 @@ general {
         markup = pango
 
         color_good      = "#a0ddac"
-        color_degraded  = "#d7ba7d"
+        color_degraded  = "#ecbe70"
         color_bad       = "#f7768e"
         color_separator = "#32384a"
 }
