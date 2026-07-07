@@ -4,7 +4,7 @@
 # theme = Nvim Dark
 font-family = Berkeley Mono
 window-title-font-family = Berkeley Mono
-font-size = 10
+font-size = 12
 font-feature = -calt
 
 window-decoration = none

@@ -1,0 +1,61 @@
+/* Waybar — slate theme (matches sway/config, i3status, nvim slate.lua)
+   bg #14161d  bg_alt #1d2029  fg #e0e2ea  muted #828c9e
+   accent #88a0c8  green #a0ddac  yellow #ecbe70  urgent #f7768e  border #32384a */
+
+* {
+    font-family: "Berkeley Mono Variable", monospace;
+    font-size: 14px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background: #1d2029;
+    color: #e0e2ea;
+    border-bottom: 1px solid #32384a;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    color: #828c9e;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button.focused,
+#workspaces button.visible {
+    color: #14161d;
+    background: #88a0c8;
+}
+
+#workspaces button.urgent {
+    color: #14161d;
+    background: #f7768e;
+}
+
+#mode {
+    padding: 0 8px;
+    color: #14161d;
+    background: #a0ddac;
+}
+
+#network,
+#pulseaudio,
+#backlight,
+#battery,
+#disk,
+#cpu,
+#memory,
+#tray,
+#clock {
+    padding: 0 8px;
+}
+
+#battery.warning {
+    color: #ecbe70;
+}
+
+#battery.critical {
+    color: #f7768e;
+}

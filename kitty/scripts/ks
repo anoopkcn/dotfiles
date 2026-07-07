@@ -4,9 +4,10 @@ Env vars:
   KS_LOCATIONS      Colon-separated parent dirs for `-n` candidate enumeration.
   KS_TEMPLATE       Path to session-file template (default: ~/.config/kitty/sessions/template.kitty-session).
   KS_SESSIONS_DIR   Directory of *.kitty-session files for `-n` (default: ~/.config/kitty/sessions).
-  KS_PICKER         Interactive picker: `dmenu` or `fzf`. Unset prefers dmenu,
-                    falling back to fzf. dmenu is single-select (the `-k`/`-n`
-                    multi-select is fzf-only).
+  KS_PICKER         Interactive picker: `fuzzel`, `dmenu`, or `fzf`. Unset
+                    prefers fuzzel (Wayland), then dmenu, then fzf. fuzzel and
+                    dmenu are single-select (the `-k`/`-n` multi-select is
+                    fzf-only).
 """
 
 from __future__ import annotations
@@ -651,14 +652,14 @@ def load_fzf_env() -> None:
 
 
 def resolve_picker() -> str:
-    """Which interactive picker to use. Honors KS_PICKER (dmenu|fzf) when it
-    names an installed binary; otherwise auto-selects, preferring dmenu (lighter
-    than fzf) and falling back to fzf. Returns "" if neither is installed."""
+    """Which interactive picker to use. Honors KS_PICKER (fuzzel|dmenu|fzf) when
+    it names an installed binary; otherwise auto-selects, preferring fuzzel (the
+    Wayland GUI picker), then dmenu (X11), then fzf. Returns "" if none exist."""
     order = []
     choice = (os.environ.get("KS_PICKER") or "").strip().lower()
-    if choice in ("dmenu", "fzf"):
+    if choice in ("fuzzel", "dmenu", "fzf"):
         order.append(choice)
-    for p in ("dmenu", "fzf"):
+    for p in ("fuzzel", "dmenu", "fzf"):
         if p not in order:
             order.append(p)
     for p in order:
@@ -679,12 +680,14 @@ def pick(
     `multi`; fzf honors it."""
     picker = resolve_picker()
     if not picker:
-        sys.stderr.write("ks: no picker found in PATH (install dmenu or fzf)\n")
+        sys.stderr.write("ks: no picker found in PATH (install fuzzel, dmenu, or fzf)\n")
         pause_overlay()
         sys.exit(1)
     if picker == "fzf":
         load_fzf_env()
         return _pick_fzf(items, prompt=prompt, header=header, multi=multi)
+    if picker == "fuzzel":
+        return _pick_fuzzel(items, prompt=prompt)
     return _pick_dmenu(items, prompt=prompt)
 
 
@@ -722,6 +725,23 @@ def _pick_fzf(
         if idx.isdigit() and int(idx) < len(items):
             values.append(items[int(idx)][0])
     return values or None
+
+
+def _pick_fuzzel(items: list[tuple], *, prompt: str) -> list | None:
+    """fuzzel --dmenu is a Wayland-native dmenu replacement. --index makes it
+    echo the chosen row's index instead of its text, so displays with duplicate
+    or tab-laden text can't confuse the read-back. Single-select (GUI overlay),
+    like dmenu; -k/-n multi-select still needs fzf."""
+    displays = [display for _, display in items]
+    # -d: dmenu mode. --index: print the selected row index. -l 20: list height.
+    cmd = ["fuzzel", "--dmenu", "--index", "-l", "20", "-p", prompt.strip() + " "]
+    res = subprocess.run(cmd, input="\n".join(displays), capture_output=True, text=True)
+    if res.returncode != 0:
+        return None
+    out = res.stdout.strip("\n")
+    if not out.isdigit() or int(out) >= len(items):
+        return None
+    return [items[int(out)][0]]
 
 
 def _pick_dmenu(items: list[tuple], *, prompt: str) -> list | None:
@@ -1019,8 +1039,8 @@ USAGE = """Usage:
   ks -i            Interactive picker over active sessions; switch on select.
   ks -n            Interactive picker over KS_LOCATIONS subdirs; create on Enter.
 
-Picker: KS_PICKER=dmenu|fzf (unset prefers dmenu, falls back to fzf).
-dmenu is single-select; -k/-n multi-select needs fzf.
+Picker: KS_PICKER=fuzzel|dmenu|fzf (unset prefers fuzzel, then dmenu, then fzf).
+fuzzel and dmenu are single-select; -k/-n multi-select needs fzf.
 """
 
 

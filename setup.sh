@@ -27,8 +27,18 @@ command -v bat >/dev/null 2>&1 && bat cache --build
 # zathura — slate dark theme (recolor/dark mode on by default)
 ln -sf $PATH_TO_DOTFILES/zathura  $HOME/.config/zathura
 
-# picom — compositor config (vsync to stop screen tearing)
+# picom — compositor config (vsync to stop screen tearing); X11/i3 only
 ln -sf $PATH_TO_DOTFILES/picom  $HOME/.config/picom
+
+# sway + waybar — Wayland WM and status bar
+ln -sfn $PATH_TO_DOTFILES/sway    $HOME/.config/sway
+ln -sfn $PATH_TO_DOTFILES/waybar  $HOME/.config/waybar
+
+# environment.d — HiDPI/Wayland toolkit hints (Qt/Firefox/Java scaling)
+ln -sfn $PATH_TO_DOTFILES/environment.d  $HOME/.config/environment.d
+
+# fuzzel — fast Wayland launcher / dmenu replacement (slate theme)
+ln -sfn $PATH_TO_DOTFILES/fuzzel  $HOME/.config/fuzzel
 
 # btop — drop the slate theme in place (btop.conf stays btop-managed)
 mkdir -p $HOME/.config/btop/themes
