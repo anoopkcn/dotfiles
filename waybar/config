@@ -3,7 +3,7 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 20,
+    "height": 25,
     // Gaps come purely from CSS padding (0 8px per module = 16px between modules);
     // keep this 0 so it doesn't stack with the padding and desync the tray.
     "spacing": 0,

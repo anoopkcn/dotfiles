@@ -35,8 +35,10 @@ output * bg ~/Images/wallpaper/fall-echo-tries.png fill
 
 ### Idle / lock (swayidle + swaylock replace xss-lock/slock/xidlehook)
 # Lock after 10 min, power off displays after 15, and lock before sleep.
-# Fullscreen windows and apps that grab the idle-inhibit protocol (mpv,
-# browsers playing video) suppress the timeout — see inhibit_idle below.
+# Idle is suppressed while:
+#   - a window is fullscreen (inhibit_idle fullscreen, below), and
+#   - audio is playing — swayidle.sh checks pactl before locking, replacing
+#     xidlehook's --not-when-audio so windowed videos (browser) don't lock.
 exec_always ~/.config/sway/swayidle.sh
 for_window [app_id=".*"] inhibit_idle fullscreen
 for_window [class=".*"] inhibit_idle fullscreen
@@ -180,12 +182,12 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 ### Media / hardware keys (--locked so they work on the lock screen)
-bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-bindsym --locked XF86MonBrightnessUp exec brightnessctl set +10%
-bindsym --locked XF86MonBrightnessDown exec brightnessctl set 10%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86AudioPlay exec playerctl play-pause
 bindsym --locked XF86AudioNext exec playerctl next
 bindsym --locked XF86AudioPrev exec playerctl previous
@@ -197,11 +199,11 @@ bindsym Shift+Print exec grim -g "$(slurp)" ~/Images/Screenshots/$(date +%F_%H-%
 bindsym Print exec sh -c 'f=~/Images/Screenshots/$(date +%F_%H-%M-%S).png; grim -g "$(slurp)" "$f" && wl-copy < "$f" && notify-send "Screenshot" "$f"'
 
 ### Appearance
-default_border pixel 2
-default_floating_border pixel 2
+default_border pixel 1
+default_floating_border pixel 1
 hide_edge_borders none
 
-gaps inner 6
+gaps inner 4
 gaps outer 0
 smart_gaps off
 
