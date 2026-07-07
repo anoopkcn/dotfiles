@@ -31,6 +31,10 @@ font pango:Berkeley Mono Variable 8
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
+# Compositor: eliminates screen tearing by syncing frame updates to vblank.
+# The Intel modesetting driver has no working TearFree, so picom does the vsync.
+exec_always --no-startup-id picom
+
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
@@ -109,10 +113,10 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+s split h
+bindsym $mod+- split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $mod+\ split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -228,6 +232,10 @@ bar {
 
 # exec --no-startup-id feh --bg-fill ~/Images/wallpaper/023.png
 exec --no-startup-id feh --bg-fill ~/Images/wallpaper/fall-echo-tries.png
+exec --no-startup-id xrdb -merge ~/.Xresources
+exec --no-startup-id blueman-applet
+exec --no-startup-id dunst
+# exec --no-startup-id clipmenud
 
 # Suspend manually
 bindsym Control+Mod1+BackSpace exec --no-startup-id systemctl suspend
@@ -236,11 +244,8 @@ bindsym Control+Mod1+BackSpace exec --no-startup-id systemctl suspend
 bindsym Shift+Print exec --no-startup-id sh -c 'maim -s ~/Images/Screenshots/$(date +%F_%H-%M-%S).png'
 bindsym Print exec --no-startup-id sh -c 'maim -s | xclip -selection clipboard -t image/png'
 bindsym $mod+c exec --no-startup-id sh -c 'xcolor | tr -d "\n" | xclip -selection clipboard'
-bindsym $mod+p exec --no-startup-id sh -c 'f=$(fd -t f . "$HOME" | dmenu -i -l 10 -p "Open:") && [ -n "$f" ] && xdg-open "$f"'
-
-exec --no-startup-id xrdb -merge ~/.Xresources
-exec --no-startup-id blueman-applet
-exec --no-startup-id dunst
+bindsym $mod+p exec --no-startup-id sh -c 'f=$(fd -t f . "$HOME" | dmenu -i -l 10) && [ -n "$f" ] && xdg-open "$f"'
+bindsym $mod+v exec --no-startup-id clipmenu
 
 default_border pixel 2
 default_floating_border pixel 2
@@ -248,7 +253,7 @@ hide_edge_borders smart
 
 # Gaps
 gaps inner 6
-gaps outer 2
+gaps outer 0
 smart_gaps off
 
 # class                 border   background text    indicator child_border

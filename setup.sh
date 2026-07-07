@@ -27,6 +27,9 @@ command -v bat >/dev/null 2>&1 && bat cache --build
 # zathura — slate dark theme (recolor/dark mode on by default)
 ln -sf $PATH_TO_DOTFILES/zathura  $HOME/.config/zathura
 
+# picom — compositor config (vsync to stop screen tearing)
+ln -sf $PATH_TO_DOTFILES/picom  $HOME/.config/picom
+
 # btop — drop the slate theme in place (btop.conf stays btop-managed)
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme
