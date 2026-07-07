@@ -14,7 +14,6 @@
 window#waybar {
     background: #1d2029;
     color: #e0e2ea;
-    border-bottom: 1px solid #32384a;
 }
 
 /* Workspaces — focus is a quiet accent underline, not a solid block.
