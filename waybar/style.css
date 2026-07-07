@@ -1,9 +1,10 @@
-/* Waybar — slate theme (matches sway/config, i3status, nvim slate.lua)
-   bg #14161d  bg_alt #1d2029  fg #e0e2ea  muted #828c9e
-   accent #88a0c8  green #a0ddac  yellow #ecbe70  urgent #f7768e  border #32384a */
+/* Waybar — slate theme (matches sway/config, dunst, fuzzel, nvim slate.lua)
+   Surface system: bar/popup = surface #1d2029, hairline = border #32384a.
+   bg #14161d  surface #1d2029  hover #262a38  fg #e0e2ea  muted #828c9e  dim #565f70
+   accent #88a0c8  green #a0ddac  yellow #ecbe70  urgent #f7768e  border #32384a  sel #3c4e7a */
 
 * {
-    font-family: "Berkeley Mono Variable", monospace;
+    font-family: "Berkeley Mono Variable", "Berkeley Mono", monospace;
     font-size: 15px;
     min-height: 0;
     border: none;
@@ -16,26 +17,38 @@ window#waybar {
     border-bottom: 1px solid #32384a;
 }
 
+/* Workspaces — focus is a quiet accent underline, not a solid block.
+   Urgent is the one thing loud enough to fill (it should demand attention). */
 #workspaces button {
-    padding: 0 8px;
+    padding: 0 9px;
     color: #828c9e;
     background: transparent;
     border-bottom: 2px solid transparent;
+    transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+#workspaces button:hover {
+    color: #e0e2ea;
+    background: #262a38;
+    border-bottom: 2px solid transparent;
+    box-shadow: none;
 }
 
 #workspaces button.focused,
 #workspaces button.visible {
     color: #14161d;
     background: #88a0c8;
+    border-bottom: 2px solid #88a0c8;
 }
 
 #workspaces button.urgent {
     color: #14161d;
     background: #f7768e;
+    border-bottom: 2px solid #f7768e;
 }
 
 #mode {
-    padding: 0 8px;
+    padding: 0 9px;
     color: #14161d;
     background: #a0ddac;
 }
@@ -49,7 +62,25 @@ window#waybar {
 #memory,
 #tray,
 #clock {
-    padding: 0 8px;
+    padding: 0 9px;
+    color: #e0e2ea;
+    transition: background 120ms ease;
+}
+
+/* Hover surface — shared #262a38 across every interactive module */
+#network:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#battery:hover,
+#disk:hover,
+#cpu:hover,
+#memory:hover,
+#clock:hover {
+    background: #262a38;
+}
+
+#battery.charging {
+    color: #a0ddac;
 }
 
 #battery.warning {

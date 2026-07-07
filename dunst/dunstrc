@@ -115,7 +115,11 @@
     frame_width = 2
 
     # Defines color of the frame around the notification window.
-    frame_color = "#aaaaaa"
+    # slate border — per-urgency frames override this below
+    frame_color = "#32384a"
+
+    # Progress-bar fill (dunstify -h int:value:NN) — slate accent
+    highlight = "#88a0c8"
 
     # Size of gap to display between notifications - requires a compositor.
     # If value is greater than 0, separator_height will be ignored and a border
@@ -148,6 +152,9 @@
 
     ### Text ###
 
+    # Static "Berkeley Mono" (not the Variable family): it ships real Regular +
+    # Bold faces, so the <b>%s</b> summaries below render as true bold instead of
+    # Pango's smeared faux-bold synthesis of a variable font.
     font = Berkeley Mono 11
 
     # The spacing between lines.  If the height is smaller than the
@@ -190,7 +197,9 @@
     #   %n  progress value if set without any extra characters
     #   %%  literal %
     # Markup is allowed
-    format = "<b>%s</b>\n%b"
+    # Muted uppercase source line, bold summary, muted body — matches the
+    # label/value hierarchy used in waybar (app name plays the "label" role).
+    format = "<span foreground='#565f70' size='small'>%a</span>\n<b>%s</b>\n%b"
 
     # Alignment of message text.
     # Possible values are "left", "center" and "right".
@@ -361,30 +370,31 @@
     # This setting overrides enable_posix_regex.
     enable_pcre_regex = false
 
+# Slate urgency colors — same surface as waybar/fuzzel (#1d2029, ~95% opaque),
+# distinguished by frame: dim for low, accent for normal, red for critical.
+# IMPORTANT: colors have to be defined in quotation marks, otherwise the "#"
+# and everything after it is interpreted as a comment.
 [urgency_low]
-    # IMPORTANT: colors have to be defined in quotation marks.
-    # Otherwise the "#" and following would be interpreted as a comment.
-    background = "#222222CC"
-    foreground = "#888888"
+    background = "#14161df2"
+    foreground = "#828c9e"
+    frame_color = "#32384a"
     timeout = 10
-    # Icon for notifications with low urgency
     default_icon = dialog-information
 
 [urgency_normal]
-    background = "#285577CC"
-    foreground = "#ffffff"
+    background = "#1d2029f2"
+    foreground = "#e0e2ea"
+    frame_color = "#88a0c8"
     timeout = 10
     override_pause_level = 30
-    # Icon for notifications with normal urgency
     default_icon = dialog-information
 
 [urgency_critical]
-    background = "#900000CC"
-    foreground = "#ffffff"
-    frame_color = "#ff0000"
+    background = "#1d2029f2"
+    foreground = "#f7768e"
+    frame_color = "#f7768e"
     timeout = 0
     override_pause_level = 60
-    # Icon for notifications with critical urgency
     default_icon = dialog-warning
 
 # Every section that isn't one of the above is interpreted as a rules to

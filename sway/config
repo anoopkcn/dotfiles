@@ -89,6 +89,11 @@ bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec fuzzel
 
+# Window switcher — list every window across all workspaces and focus the pick.
+# This is what lets windows stay titlebar-less: find windows on demand instead
+# of reading always-visible titlebars. Searches app id + title. (sway/window-switcher.py)
+bindsym $mod+Tab exec ~/.config/sway/window-switcher.py
+
 # fuzzy-find a file under $HOME and open it. fuzzel --dmenu handles 20k+ items
 # fast (wmenu lays out the whole list in software and lags on big inputs).
 bindsym $mod+p exec sh -c 'f=$(fd -t f . "$HOME" | fuzzel --dmenu) && [ -n "$f" ] && xdg-open "$f"'
@@ -206,21 +211,39 @@ bindsym Shift+Print exec grim -g "$(slurp)" ~/Images/Screenshots/$(date +%F_%H-%
 bindsym Print exec sh -c 'f=~/Images/Screenshots/$(date +%F_%H-%M-%S).png; grim -g "$(slurp)" "$f" && wl-copy < "$f" && notify-send "Screenshot" "$f"'
 
 ### Appearance
-default_border pixel 1
-default_floating_border pixel 1
+# No chrome at all: no titlebar and no border around windows. Tabbed/stacked
+# layouts (mod+w / mod+q) still show their tab strip — that's intrinsic to the
+# layout — but nothing else draws a frame. (To bring back a 1px focus border:
+# default_border pixel 1)
+default_border none
+default_floating_border none
 hide_edge_borders none
 
-gaps inner 4
-gaps outer 0
-smart_gaps off
+# Tabbed/stacked tabs are the only place titles show (tiling is titlebar-less).
+# Compact padding, left-aligned labels.
+titlebar_padding 8 2
+title_align left
 
-# class                 border   background text     indicator child_border
-# Subtle focus: focused titlebar matches unfocused, only the title text is blue.
-client.focused          $accent  $bg_alt    $accent  $accent   $accent
-client.focused_inactive $border  $bg_alt    $dim     $border   $border
-client.unfocused        $border  $bg_alt    $dim     $border   $border
-client.urgent           $urgent  $urgent    $bg     $urgent   $urgent
-client.placeholder      $bg_alt  $bg_alt    $fg     $bg_alt   $bg_alt
+# gaps inner 4
+# gaps outer 0
+# smart_gaps off
+
+# The window color language. Text colors are tuned for tab legibility (the only
+# place titles render): every tab label stays readable, with a clear
+# focused > active-tab > other-tab hierarchy.
+#   focused          = muted dark-blue fill, light text (no frame line)
+#   focused_inactive = selected tab of an unfocused group: light text on surface
+#   unfocused        = other tabs in the strip: muted-but-readable label on surface
+#   urgent           = red fill, demands attention
+# Each state's border matches its own background, so tabs are flat — no frame
+# line around any title. Focus is signalled by fill/text alone.
+#
+# class                 border    background  text     indicator  child_border
+client.focused          $sel      $sel        $fg      $accent2   $sel
+client.focused_inactive $bg_alt   $bg_alt     $fg      $sel       $bg_alt
+client.unfocused        $bg_alt   $bg_alt     $muted   $bg_alt    $bg_alt
+client.urgent           $urgent   $urgent     $bg      $urgent    $urgent
+client.placeholder      $bg_alt   $bg_alt     $fg      $bg_alt    $bg_alt
 client.background       $bg
 
 # Status bar is Waybar, launched via exec_always above (no sway `bar {}` block).
