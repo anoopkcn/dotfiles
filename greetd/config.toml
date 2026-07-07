@@ -1,0 +1,16 @@
+# greetd + tuigreet — Wayland-native login (replaces lightdm/lightdm-gtk-greeter,
+# which drew its greeter on X11). System-level config, so it can't be symlinked
+# like the rest of the dotfiles; copy into place instead:
+#   sudo cp greetd/config.toml /etc/greetd/config.toml
+
+[terminal]
+# VT to run the greeter on. lightdm used VT 7; greetd convention is VT 1.
+vt = 1
+
+[default_session]
+# --remember / --remember-user-session: preselect the last user and their last
+#   session (cached in /var/cache/tuigreet).
+# --sessions: offer the session files (sway) via F3; --cmd sway is the fallback
+#   if no session file is picked.
+command = "tuigreet --time --remember --remember-user-session --sessions /usr/share/wayland-sessions --cmd sway"
+user = "greeter"

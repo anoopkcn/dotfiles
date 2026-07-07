@@ -50,3 +50,7 @@ command -v gsettings >/dev/null 2>&1 && \
 # btop — drop the slate theme in place (btop.conf stays btop-managed)
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme
+
+# greetd + tuigreet — Wayland-native login manager (replaced lightdm).
+# System-level config, needs root; copy manually (don't symlink into /etc):
+#   sudo cp $PATH_TO_DOTFILES/greetd/config.toml /etc/greetd/config.toml
