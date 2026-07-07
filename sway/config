@@ -172,9 +172,13 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r reload
 bindsym $mod+Shift+x exec $lock
-bindsym $mod+Shift+e exec swaynag -t warning \
-    -m 'Exit sway? This will end your Wayland session.' \
-    -B 'Yes, exit sway' 'swaymsg exit'
+bindsym $mod+Shift+BackSpace exec swaynag -t warning \
+    -m 'Power menu' \
+    -B 'Lock' "$lock" \
+    -B 'Logout' 'swaymsg exit' \
+    -B 'Suspend' 'systemctl suspend' \
+    -B 'Reboot' 'systemctl reboot' \
+    -B 'Poweroff' 'systemctl poweroff'
 bindsym Control+Mod1+BackSpace exec systemctl suspend
 
 ### Resize mode
@@ -224,9 +228,9 @@ hide_edge_borders none
 titlebar_padding 8 2
 title_align left
 
-# gaps inner 4
-# gaps outer 0
-# smart_gaps off
+gaps inner 4
+gaps outer 2
+smart_gaps off
 
 # The window color language. Text colors are tuned for tab legibility (the only
 # place titles render): every tab label stays readable, with a clear
