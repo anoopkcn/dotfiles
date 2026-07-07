@@ -49,10 +49,17 @@ for_window [class=".*"] inhibit_idle fullscreen
 exec nm-applet --indicator
 exec blueman-applet
 exec dunst
+# polkit authentication agent — shows the GUI password prompt when an app
+# (udisks mounts, NetworkManager, GUI installers) requests privilege escalation.
+# Requires the polkit-gnome package. Harmless no-op if not installed.
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec_always sh -c 'pkill -x waybar; exec waybar'
 # cliphist watchers record clipboard history (text + images) for $mod+v
 exec wl-paste --type text --watch cliphist store
 exec wl-paste --type image --watch cliphist store
+
+### Cursor — uniform pointer theme/size across Wayland + XWayland (see environment.d)
+seat seat0 xcursor_theme Adwaita 24
 
 ### Input — touchpad (ported from x11/30-touchpad.conf; sway uses libinput too)
 input "type:touchpad" {

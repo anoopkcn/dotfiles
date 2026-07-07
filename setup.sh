@@ -40,6 +40,13 @@ ln -sfn $PATH_TO_DOTFILES/environment.d  $HOME/.config/environment.d
 # fuzzel — fast Wayland launcher / dmenu replacement (slate theme)
 ln -sfn $PATH_TO_DOTFILES/fuzzel  $HOME/.config/fuzzel
 
+# dunst — notification daemon (slate theme, transparent backgrounds)
+ln -sfn $PATH_TO_DOTFILES/dunst  $HOME/.config/dunst
+
+# GTK apps: prefer dark to match the slate palette (Firefox is already dark)
+command -v gsettings >/dev/null 2>&1 && \
+  gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+
 # btop — drop the slate theme in place (btop.conf stays btop-managed)
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme
