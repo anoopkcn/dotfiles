@@ -9,27 +9,30 @@
 # each handled by the inner loop, so a dock that lights up 2-3 screens notifies
 # for each.
 #
+# The internal panel (eDP-1) is never announced -- lid-switch.sh disables and
+# re-enables it, which would otherwise fire a bogus "connected" on every lid
+# open. Only genuinely external displays notify.
+#
 # Everything is defensive: missing make/model/mode/refresh degrade to a shorter
 # message rather than an error, and an empty lookup still notifies with the name.
 #
 # Started once from sway/config via `exec` (survives reloads, so no duplicates).
 
-# Space-separated, sorted list of active output names ("" if swaymsg/jq fail).
-snapshot() {
-    swaymsg -t get_outputs 2>/dev/null \
-        | jq -r '[.[] | select(.active) | .name] | sort | join(" ")' 2>/dev/null
-}
+_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$_dir/sway-lib.sh" || { echo "sway-lib.sh not found" >&2; exit 1; }
 
-# Snapshot what's already present at startup so we don't notify for it.
-prev=$(snapshot)
+# Snapshot what's already active at startup so we don't notify for it.
+prev=$(active_names)
 
 swaymsg -t subscribe -m '["output"]' 2>/dev/null | while read -r _; do
-    outputs=$(swaymsg -t get_outputs 2>/dev/null)
+    outputs=$(sway_outputs)
     [ -z "$outputs" ] && continue
-    cur=$(printf '%s' "$outputs" | jq -r '[.[] | select(.active) | .name] | sort | join(" ")' 2>/dev/null)
+    cur=$(active_names "$outputs")
 
     for name in $cur; do
         case " $prev " in *" $name "*) continue ;; esac   # already known -> skip
+        [ "$name" = "$INTERNAL" ] && continue             # internal panel: not a "connect"
+                                                          # (lid-switch re-enables it on open)
 
         # Newly connected. Build a multi-line body, tolerant of missing fields:
         #   Make Model

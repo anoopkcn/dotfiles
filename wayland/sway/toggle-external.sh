@@ -7,23 +7,19 @@
 # workspaces back to the laptop; re-enabling restores the arrangement (position
 # etc. come from ~/.config/sway/outputs via the include in config).
 
-INTERNAL="eDP-1"
+_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$_dir/sway-lib.sh" || { echo "sway-lib.sh not found" >&2; exit 1; }
+
+outputs=$(sway_outputs)
 
 # External outputs sway currently knows about (enabled or not).
-externals=$(swaymsg -t get_outputs | jq -r --arg int "$INTERNAL" \
-    '.[] | select(.name != $int) | .name')
+externals=$(external_names "$outputs")
 
 # Nothing external connected (e.g. cable actually unplugged) -> nothing to do.
 [ -z "$externals" ] && exit 0
 
-# Are any externals currently active? If so we turn them off, else back on.
-any_active=$(swaymsg -t get_outputs | jq -r --arg int "$INTERNAL" \
-    '[.[] | select(.name != $int) | .active] | any')
-
+# Any external currently active? If so turn them all off, else back on.
+if has_external "$outputs"; then action=disable; else action=enable; fi
 for out in $externals; do
-    if [ "$any_active" = "true" ]; then
-        swaymsg output "$out" disable
-    else
-        swaymsg output "$out" enable
-    fi
+    swaymsg output "$out" "$action" >/dev/null
 done

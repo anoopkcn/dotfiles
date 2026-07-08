@@ -42,6 +42,15 @@ output * bg ~/Images/wallpaper/fall.png fill
 # does not manage wallpapers).
 include ~/.config/sway/outputs
 
+### Lid switch — dock-aware
+# Closing the lid WITH an external active moves eDP-1's workspaces onto the
+# external and keeps eDP-1 hidden (logind is docked=ignore here, so no suspend).
+# Undocked, the script no-ops and logind suspends as normal. Opening moves them
+# back. --reload: reload-safe (script keys off its state file, not live output
+# state). --locked: still fire while swaylock is up. (lid:on = closed.)
+bindswitch --reload --locked lid:on  exec ~/.config/sway/lid-switch.sh close
+bindswitch --reload --locked lid:off exec ~/.config/sway/lid-switch.sh open
+
 ### Idle / lock (swayidle + swaylock replace xss-lock/slock/xidlehook)
 # Lock after 10 min, power off displays after 15, and lock before sleep.
 # Idle is suppressed while:

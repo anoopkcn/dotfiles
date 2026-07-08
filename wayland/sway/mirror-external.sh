@@ -13,6 +13,9 @@
 #
 # Pairs with toggle-external.sh, which *extends* onto the external instead.
 
+_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$_dir/sway-lib.sh" || { echo "sway-lib.sh not found" >&2; exit 1; }
+
 STATE="${XDG_RUNTIME_DIR:-/tmp}/wl-mirror-origin"
 
 # sway's exec PATH does not include ~/.local/bin, so resolve wl-mirror by hand
@@ -23,18 +26,11 @@ for p in "$HOME/.local/bin/wl-mirror" /usr/local/bin/wl-mirror /usr/bin/wl-mirro
 done
 [ -z "$WL_MIRROR" ] && WL_MIRROR=$(command -v wl-mirror)
 
-# Move the currently focused workspace onto output $1.
-move_ws_to() { swaymsg "move workspace to output \"$1\"" >/dev/null; }
-
 # Move the recorded workspace back to the output it came from, then forget it.
-# Switch + move are chained in ONE swaymsg message so sway applies them in order
-# atomically -- two separate calls race (the move can fire before the focus
-# switch settles and end up moving the wrong workspace).
 restore_home() {
     [ -f "$STATE" ] || return
     IFS='|' read -r ws origin < "$STATE"
-    swaymsg "workspace --no-auto-back-and-forth \"$ws\"; move workspace to output \"$origin\"" \
-        >/dev/null 2>&1
+    ws_switch_move "$ws" "$origin"    # atomic switch+move (see sway-lib.sh)
     rm -f "$STATE"
 }
 
@@ -52,33 +48,25 @@ if [ -z "$WL_MIRROR" ]; then
     exit 1
 fi
 
-outputs=$(swaymsg -t get_outputs)
+outputs=$(sway_outputs)
 
 # Need at least two active outputs to mirror between.
-if [ "$(echo "$outputs" | jq '[.[] | select(.active)] | length')" -lt 2 ]; then
+if [ "$(active_names "$outputs" | wc -w)" -lt 2 ]; then
     notify-send "Mirror" "Need a second output connected to mirror"
     exit 1
 fi
 
-# Source = active output with the most pixels (current_mode w*h). Ignore any
-# active output without a mode, and default missing dimensions to 0 so a
-# transient null mode can't blow up the comparison. Ties: first.
-source=$(echo "$outputs" | jq -r '
-    [.[] | select(.active and .current_mode != null)]
-    | max_by((.current_mode.width // 0) * (.current_mode.height // 0)) | .name')
+source=$(highest_res "$outputs")      # capture the sharpest screen
 
-# The focused workspace and the output it currently lives on (its home). Split
-# on the tab only (IFS=tab) so workspace names with spaces (e.g. "1: web") stay
-# intact instead of spilling into $origin.
-IFS=$'\t' read -r ws origin < <(swaymsg -t get_workspaces | jq -r \
-    '.[] | select(.focused) | "\(.name)\t\(.output)"')
+# The focused workspace and the output it currently lives on (its home).
+IFS=$'\t' read -r ws origin < <(focused_ws)
 
 # Move the workspace onto the source so your apps render there natively, but
 # only if it isn't already there. Remember its home so we can restore later; if
 # no move is needed, drop any stale record so toggle-off doesn't act on it.
 if [ "$origin" != "$source" ]; then
     printf '%s|%s\n' "$ws" "$origin" > "$STATE"
-    move_ws_to "$source"
+    ws_move_to "$source"
 else
     rm -f "$STATE"
 fi
