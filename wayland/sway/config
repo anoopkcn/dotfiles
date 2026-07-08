@@ -52,6 +52,11 @@ exec_always ~/.config/sway/swayidle.sh
 for_window [app_id=".*"] inhibit_idle fullscreen
 for_window [class=".*"] inhibit_idle fullscreen
 
+# Screen-mirror window (mirror-external.sh): never let the wl-mirror clone grab
+# keyboard focus. Its workspace lives on the high-res source output; the clone
+# just fills another screen, so focus must stay on your apps, not the copy.
+no_focus [app_id="at.yrlf.wl_mirror"]
+
 ### Autostart
 # NB: no `dex --autostart` here — it would pull in X11-only picom.desktop from
 # /etc/xdg/autostart and double-launch the applets below. Start what we need explicitly.
@@ -66,6 +71,10 @@ exec_always sh -c 'pkill -x waybar; exec waybar'
 # cliphist watchers record clipboard history (text + images) for $mod+v
 exec wl-paste --type text --watch cliphist store
 exec wl-paste --type image --watch cliphist store
+# Notify (name + resolution) when a display is connected. `exec` not
+# `exec_always`: it subscribes to sway's IPC event stream and survives reloads,
+# so re-running it on every reload would just pile up duplicate subscribers.
+exec ~/.config/sway/output-notify.sh
 
 ### Cursor — uniform pointer theme/size across Wayland + XWayland (see environment.d)
 seat seat0 xcursor_theme Adwaita 24
@@ -117,6 +126,11 @@ bindsym $mod+c exec hyprpicker -a
 # power button: it disables the output so sway moves workspaces back to the
 # laptop (power-cycling the screen alone leaves them stranded on the dead link).
 bindsym --no-repeat $mod+Shift+m exec ~/.config/sway/toggle-external.sh
+
+# Mirror (clone) the laptop panel onto the external output via wl-mirror.
+# wlroots has no output cloning, so this captures eDP-1 into a window and
+# fullscreens it on the external. Press again to stop mirroring.
+bindsym --no-repeat $mod+Shift+i exec ~/.config/sway/mirror-external.sh
 
 ### Key bindings — focus
 bindsym $mod+$left focus left
