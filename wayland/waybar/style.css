@@ -89,3 +89,11 @@ window#waybar {
 #battery.critical {
     color: #f7768e;
 }
+
+/* Do-Not-Disturb indicator — only visible while dunst is paused. Per-word
+   colours come from pango spans in the exec ("dnd" muted, "on" urgent red);
+   this base colour is just a fallback. */
+#custom-dnd {
+    padding: 0 9px;
+    color: #828c9e;
+}

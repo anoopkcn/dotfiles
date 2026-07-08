@@ -10,7 +10,7 @@
 
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["network", "pulseaudio", "backlight", "battery", "disk", "cpu", "memory", "clock", "tray"],
+    "modules-right": ["custom/dnd", "network", "pulseaudio", "backlight", "battery", "disk", "cpu", "memory", "clock", "tray"],
 
     "sway/workspaces": {
         "disable-scroll": true,
@@ -75,6 +75,18 @@
         "format": "<span color='#828c9e'>mem</span> {used:0.1f}G",
         "tooltip-format": "{used:0.1f}G / {total:0.1f}G used ({percentage}%)\nswap {swapUsed:0.1f}G / {swapTotal:0.1f}G",
         "interval": 5
+    },
+
+    // Do-Not-Disturb indicator. No polling: waybar runs this once at startup and
+    // then only when it receives SIGRTMIN+1, which the $mod+Shift+n toggle (and
+    // the on-click below) send via `pkill -RTMIN+1 waybar`. Shows "dnd on" (label
+    // muted, "on" in urgent red, matching vol/mute and net/down) only while dunst
+    // is paused; empty output the rest of the time, so waybar hides it.
+    "custom/dnd": {
+        "exec": "dunstctl is-paused | grep -q true && echo \"<span color='#828c9e'>dnd</span> <span color='#f7768e'>on</span>\" || true",
+        "signal": 1,
+        "tooltip": false,
+        "on-click": "dunstctl set-paused toggle && pkill -RTMIN+1 waybar"
     },
 
     "tray": {

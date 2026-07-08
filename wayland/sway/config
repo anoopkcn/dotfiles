@@ -22,7 +22,7 @@ set $border    #32384a
 set $sel       #3c4e7a
 set $dim       #565f70
 
-font pango:Berkeley Mono Variable 10
+font pango:Berkeley Mono Variable 11
 
 # Screen lock command (used by swayidle and the manual bind)
 set $lock swaylock -f -c 14161d
@@ -34,7 +34,13 @@ output eDP-1 mode 1920x1200@60Hz scale 1.0
 # Slate gradient wallpaper (matches the redesign theme). Regenerate both
 # variants with sway/generate-wallpaper.sh; swap slate-desk -> slate-glow for
 # the plainer single-glow gradient instead.
-output * bg ~/Images/wallpaper/xp.png fill
+output * bg ~/Images/wallpaper/fall.png fill
+
+# Per-output mode/position/scale/transform managed by nwg-displays (GUI: drag
+# monitors, Apply -> writes this file). Included AFTER the lines above so it
+# overrides the eDP-1 defaults; background stays defined above (nwg-displays
+# does not manage wallpapers).
+include ~/.config/sway/outputs
 
 ### Idle / lock (swayidle + swaylock replace xss-lock/slock/xidlehook)
 # Lock after 10 min, power off displays after 15, and lock before sleep.
@@ -107,6 +113,11 @@ bindsym $mod+v exec sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl
 # Color picker (xcolor on X11) — hyprpicker copies the hex to the clipboard.
 bindsym $mod+c exec hyprpicker -a
 
+# Toggle external monitor(s) off/on. Use this instead of the monitor's own
+# power button: it disables the output so sway moves workspaces back to the
+# laptop (power-cycling the screen alone leaves them stranded on the dead link).
+bindsym --no-repeat $mod+Shift+m exec ~/.config/sway/toggle-external.sh
+
 ### Key bindings — focus
 bindsym $mod+$left focus left
 bindsym $mod+$down focus down
@@ -132,10 +143,16 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+q layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
+bindsym $mod+n splitv
+bindsym $mod+o splith
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 bindsym $mod+b focus child
+
+# Do Not Disturb: toggle dunst pause (meetings/presentations). Paused popups are
+# silently queued and flushed when you turn it back off.
+bindsym $mod+Shift+n exec sh -c 'if [ "$(dunstctl is-paused)" = "true" ]; then dunstctl set-paused false && notify-send "Notifications" "Resumed"; else notify-send "Do Not Disturb" "Notifications paused" && dunstctl set-paused true; fi; pkill -RTMIN+1 waybar'
 
 ### Workspaces
 set $ws1 "1"
@@ -172,7 +189,7 @@ bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 ### Session control
-bindsym $mod+Shift+c reload
+# bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r reload
 bindsym $mod+Shift+x exec $lock
 bindsym $mod+Shift+BackSpace exec swaynag -t warning \
@@ -218,15 +235,14 @@ bindsym Shift+Print exec grim -g "$(slurp)" ~/Images/Screenshots/$(date +%F_%H-%
 bindsym Print exec sh -c 'f=~/Images/Screenshots/$(date +%F_%H-%M-%S).png; grim -g "$(slurp)" "$f" && wl-copy < "$f" && notify-send "Screenshot" "$f"'
 
 ### Appearance
-# Titlebar-less, but a thin frame so focus is legible against the dark
-# wallpaper: 2px border, no titlebar. Tabbed/stacked layouts (mod+w / mod+q)
-# still show their tab strip on top of this. The focused frame is the accent
-# blue; unfocused frames match the surface colour and stay near-invisible.
-default_border pixel 2
+# Titlebars on tiled windows too: `normal 0` draws a title bar with no frame
+# border around the window body. Tabbed/stacked layouts (mod+w / mod+q) show
+# their tab strip as usual. Focus is carried by the titlebar fill, not a frame.
+default_border normal 0
 default_floating_border pixel 2
 hide_edge_borders none
 
-# Tabbed/stacked tabs are the only place titles show (tiling is titlebar-less).
+# Titlebar look (applies to tiling titlebars and tabbed/stacked tab strips).
 # Compact padding, left-aligned labels.
 titlebar_padding 8 2
 title_align left
@@ -235,16 +251,16 @@ gaps inner 4
 gaps outer 2
 smart_gaps off
 
-# The window color language. Text colors are tuned for tab legibility (the only
-# place titles render): every tab label stays readable, with a clear
+# The window color language. Text colors are tuned for title legibility (tiling
+# titlebars and tab strips): every label stays readable, with a clear
 # focused > active-tab > other-tab hierarchy.
 #   focused          = muted dark-blue fill, light text (no frame line)
 #   focused_inactive = selected tab of an unfocused group: light text on surface
 #   unfocused        = other tabs in the strip: muted-but-readable label on surface
 #   urgent           = red fill, demands attention
-# Tab strips stay flat (border matches background), but child_border — the
-# window's pixel frame — carries focus: accent blue when focused, surface
-# colour otherwise, so only the active window is outlined.
+# With `normal 0` there's no frame line, so focus is carried by the titlebar
+# fill: accent blue when focused, surface colour otherwise. child_border only
+# shows if a border width is ever set again.
 #
 # class                 border    background  text     indicator  child_border
 client.focused          $sel      $sel        $fg      $accent2   $accent
