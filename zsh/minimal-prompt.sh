@@ -1,10 +1,7 @@
 # PROMPT
-autoload -Uz vcs_info
 setopt prompt_subst
 
 precmd() {
-    vcs_info
-
     PROMPT_ENV_SEGMENT=""
 
     local env_text=""
@@ -27,6 +24,9 @@ precmd() {
 PROMPT='%F{cyan}%~%f${PROMPT_ENV_SEGMENT:+ env:${PROMPT_ENV_SEGMENT}} %(?.%F{cyan}❯%f.%F{red}❯%f) '
 
 # Git segment: no leading/trailing spaces in formats
+# To re-enable: uncomment the zstyles + PROMPT below, add `autoload -Uz vcs_info`
+# and call `vcs_info` inside precmd. Keep `enable git` so vcs_info doesn't probe
+# every VCS backend (svn/hg/bzr/...) on each prompt.
 # zstyle ':vcs_info:git:*' formats 'git:%F{blue}(%b%F{yellow}%u%f%F{green}%c%f%F{blue})%f'
 # zstyle ':vcs_info:git:*' actionformats 'git:%F{blue}(%b|%a%F{yellow}%u%f%F{green}%c%f%F{blue})%f'
 # zstyle ':vcs_info:*' enable git

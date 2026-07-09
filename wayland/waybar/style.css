@@ -1,4 +1,4 @@
-/* Waybar — slate theme (matches sway/config, dunst, fuzzel, nvim slate.lua)
+/* Waybar — slate theme (matches hypr config, dunst, fuzzel, nvim slate.lua)
    Surface system: bar/popup = surface #1d2029, hairline = border #32384a.
    bg #14161d  surface #1d2029  hover #262a38  fg #e0e2ea  muted #828c9e  dim #565f70
    accent #88a0c8  green #a0ddac  yellow #ecbe70  urgent #f7768e  border #32384a  sel #3c4e7a */
@@ -33,7 +33,7 @@ window#waybar {
     box-shadow: none;
 }
 
-#workspaces button.focused,
+#workspaces button.active,
 #workspaces button.visible {
     color: #14161d;
     background: #88a0c8;
@@ -46,7 +46,7 @@ window#waybar {
     border-bottom: 2px solid #f7768e;
 }
 
-#mode {
+#submap {
     padding: 0 9px;
     color: #14161d;
     background: #a0ddac;

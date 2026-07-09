@@ -1,0 +1,25 @@
+# ReGreet — graphical greeter for greetd, slate-adjacent dark look.
+# Deployed to /etc/greetd/regreet.toml (see setup.sh).
+# NOTE: runs as the `greeter` user, which can't read /home/akc — the wallpaper
+# is copied to /usr/share/backgrounds and the font must be a system font
+# (Berkeley Mono lives in ~/.local/share/fonts, invisible to the greeter).
+
+[background]
+path = "/usr/share/backgrounds/fall_croped.png"
+fit = "Cover"
+
+[GTK]
+application_prefer_dark_theme = true
+cursor_theme_name = "Adwaita"
+font_name = "Liberation Mono 14"
+icon_theme_name = "Adwaita"
+
+[commands]
+reboot = ["systemctl", "reboot"]
+poweroff = ["systemctl", "poweroff"]
+
+[appearance]
+greeting_msg = "Welcome back!"
+
+[widget.clock]
+format = "%a %d %b %H:%M"

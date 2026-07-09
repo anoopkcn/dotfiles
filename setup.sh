@@ -31,9 +31,11 @@ ln -sf $PATH_TO_DOTFILES/zathura  $HOME/.config/zathura
 # picom — compositor config (vsync to stop screen tearing); X11/i3 only
 # ln -sf $PATH_TO_DOTFILES/x11/picom  $HOME/.config/picom
 
-# sway + waybar — Wayland WM and status bar
-ln -sfn $PATH_TO_DOTFILES/wayland/sway    $HOME/.config/sway
+# Hyprland + waybar — Wayland WM and status bar
+ln -sfn $PATH_TO_DOTFILES/wayland/hypr    $HOME/.config/hypr
 ln -sfn $PATH_TO_DOTFILES/wayland/waybar  $HOME/.config/waybar
+# drop the old sway symlink if it's still around
+[ -L "$HOME/.config/sway" ] && rm $HOME/.config/sway
 
 # environment.d — HiDPI/Wayland toolkit hints (Qt/Firefox/Java scaling)
 ln -sfn $PATH_TO_DOTFILES/wayland/environment.d  $HOME/.config/environment.d
@@ -61,6 +63,10 @@ ln -sf $PATH_TO_DOTFILES/gtk-3.0/settings.ini $HOME/.config/gtk-3.0/settings.ini
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme
 
-# greetd + tuigreet — Wayland-native login manager (replaced lightdm).
+# greetd + ReGreet — Wayland-native graphical login (replaced tuigreet).
 # System-level config, needs root; copy manually (don't symlink into /etc):
-#   sudo cp $PATH_TO_DOTFILES/wayland/greetd/config.toml /etc/greetd/config.toml
+#   sudo cp $PATH_TO_DOTFILES/wayland/greetd/config.toml          /etc/greetd/config.toml
+#   sudo cp $PATH_TO_DOTFILES/wayland/greetd/hyprland-greeter.lua /etc/greetd/
+#   sudo cp $PATH_TO_DOTFILES/wayland/greetd/regreet.toml         /etc/greetd/
+# The greeter user can't read /home, so the wallpaper is served system-wide:
+#   sudo cp ~/Images/wallpaper/fall_croped.png /usr/share/backgrounds/

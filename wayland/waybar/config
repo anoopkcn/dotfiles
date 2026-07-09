@@ -1,4 +1,4 @@
-// Waybar — slate theme (matches sway/config and i3status/config).
+// Waybar — slate theme (matches hypr/conf/options.lua and i3status/config).
 // Modules mirror the old i3status order: net/eth, battery, disk, load, mem, clock.
 {
     "layer": "top",
@@ -8,16 +8,20 @@
     // keep this 0 so it doesn't stack with the padding and desync the tray.
     "spacing": 0,
 
-    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-left": ["ext/workspaces", "hyprland/submap"],
     "modules-center": [],
     "modules-right": ["custom/dnd", "network", "pulseaudio", "backlight", "battery", "disk", "cpu", "memory", "clock", "tray"],
 
-    "sway/workspaces": {
-        "disable-scroll": true,
-        "format": "{name}"
+    // ext-workspace-v1 protocol module, NOT hyprland/workspaces: that module
+    // switches workspaces by sending classic `dispatch workspace N` over IPC,
+    // which the Lua fork rejects — clicks silently did nothing. The protocol
+    // activation is handled inside the compositor, so clicking works.
+    "ext/workspaces": {
+        "format": "{name}",
+        "on-click": "activate" // unlike hyprland/workspaces, clicks are no-ops without this
     },
 
-    "sway/mode": {
+    "hyprland/submap": {
         "format": "{}"
     },
 

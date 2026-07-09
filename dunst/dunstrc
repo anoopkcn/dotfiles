@@ -90,7 +90,7 @@
     # This option will only work if a compositing window manager is
     # present (e.g. xcompmgr, compiz, etc.). (X11 only)
     # transparency = 0 # DEFAULT
-    # NOTE: X11 only — no effect under sway/Wayland. On Wayland, transparency
+    # NOTE: X11 only — no effect under Wayland. On Wayland, transparency
     # comes from the alpha channel in the per-urgency background colors below
     # (e.g. "#222222E6" = ~90% opaque). See [urgency_*] sections.
     transparency = 0
