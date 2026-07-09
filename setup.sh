@@ -44,6 +44,9 @@ ln -sfn $PATH_TO_DOTFILES/wayland/fuzzel  $HOME/.config/fuzzel
 # dunst — notification daemon (slate theme, transparent backgrounds)
 ln -sfn $PATH_TO_DOTFILES/dunst  $HOME/.config/dunst
 
+# wireplumber — stop HDMI audio from becoming default when a monitor connects
+ln -sfn $PATH_TO_DOTFILES/wireplumber  $HOME/.config/wireplumber
+
 # GTK apps: prefer dark to match the slate palette (Firefox is already dark)
 command -v gsettings >/dev/null 2>&1 && \
   gsettings set org.gnome.desktop.interface color-scheme prefer-dark

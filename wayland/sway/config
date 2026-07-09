@@ -67,6 +67,10 @@ for_window [class=".*"] inhibit_idle fullscreen
 no_focus [app_id="at.yrlf.wl_mirror"]
 
 ### Autostart
+# Export the display to the systemd user manager and D-Bus activation env,
+# then restart user services (dropbox) that need a display for their tray icon
+# — they were started at login, before sway existed, and can't see it otherwise.
+exec sh -c 'systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP; systemctl --user try-restart dropbox'
 # NB: no `dex --autostart` here — it would pull in X11-only picom.desktop from
 # /etc/xdg/autostart and double-launch the applets below. Start what we need explicitly.
 exec nm-applet --indicator
@@ -110,6 +114,11 @@ for_window [class="Blueman-manager"] floating enable
 # Drag tiling windows by the titlebar (sway default)
 tiling_drag enable
 floating_modifier $mod
+
+# When an app requests activation (xdg-activation), focus it instead of just
+# marking it urgent. Needed for kitty's focus-window RC (ks session switcher)
+# to actually switch OS windows. Default is "urgent" = highlight only.
+focus_on_window_activation focus
 
 ### Key bindings — applications
 bindsym $mod+Return exec $term
@@ -166,12 +175,17 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+q layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
-bindsym $mod+n splitv
-bindsym $mod+o splith
+bindsym $mod+minus splitv
+bindsym $mod+Shift+minus split none
+bindsym $mod+backslash splith
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 bindsym $mod+b focus child
+
+# Redisplay the most recent past notification; press repeatedly to walk back
+# through the history (session-only, capped by dunst's history_length).
+bindsym $mod+n exec dunstctl history-pop
 
 # Do Not Disturb: toggle dunst pause (meetings/presentations). Paused popups are
 # silently queued and flushed when you turn it back off.
@@ -258,10 +272,10 @@ bindsym Shift+Print exec grim -g "$(slurp)" ~/Images/Screenshots/$(date +%F_%H-%
 bindsym Print exec sh -c 'f=~/Images/Screenshots/$(date +%F_%H-%M-%S).png; grim -g "$(slurp)" "$f" && wl-copy < "$f" && notify-send "Screenshot" "$f"'
 
 ### Appearance
-# Titlebars on tiled windows too: `normal 0` draws a title bar with no frame
-# border around the window body. Tabbed/stacked layouts (mod+w / mod+q) show
-# their tab strip as usual. Focus is carried by the titlebar fill, not a frame.
-default_border normal 0
+# No titlebars on tiled windows: a thin pixel border instead. Tabbed/stacked
+# layouts (mod+w / mod+q) still show their tab strip as usual. Focus is carried
+# by the border color (child_border), not a titlebar fill.
+default_border pixel 2
 default_floating_border pixel 2
 hide_edge_borders none
 
@@ -281,12 +295,13 @@ smart_gaps off
 #   focused_inactive = selected tab of an unfocused group: light text on surface
 #   unfocused        = other tabs in the strip: muted-but-readable label on surface
 #   urgent           = red fill, demands attention
-# With `normal 0` there's no frame line, so focus is carried by the titlebar
-# fill: accent blue when focused, surface colour otherwise. child_border only
-# shows if a border width is ever set again.
+# With `pixel 2` tiled windows have no titlebar, so focus is carried by the
+# frame line (child_border): selection blue when focused (matches the focused
+# titlebar fill), surface colour otherwise.
+# The titlebar fill colors still apply to tabbed/stacked tab strips.
 #
 # class                 border    background  text     indicator  child_border
-client.focused          $sel      $sel        $fg      $accent2   $accent
+client.focused          $sel      $sel        $fg      $sel       $sel
 client.focused_inactive $bg_alt   $bg_alt     $fg      $sel       $border
 client.unfocused        $bg_alt   $bg_alt     $muted   $bg_alt    $border
 client.urgent           $urgent   $urgent     $bg      $urgent    $urgent
