@@ -63,10 +63,6 @@ ln -sf $PATH_TO_DOTFILES/gtk-3.0/settings.ini $HOME/.config/gtk-3.0/settings.ini
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme
 
-# greetd + ReGreet — Wayland-native graphical login (replaced tuigreet).
-# System-level config, needs root; copy manually (don't symlink into /etc):
-#   sudo cp $PATH_TO_DOTFILES/wayland/greetd/config.toml          /etc/greetd/config.toml
-#   sudo cp $PATH_TO_DOTFILES/wayland/greetd/hyprland-greeter.lua /etc/greetd/
-#   sudo cp $PATH_TO_DOTFILES/wayland/greetd/regreet.toml         /etc/greetd/
-# The greeter user can't read /home, so the wallpaper is served system-wide:
-#   sudo cp ~/Images/wallpaper/fall_croped.png /usr/share/backgrounds/
+# Login: no display manager — getty on tty1, bash_profile execs start-hyprland
+# after login (see bash/bash_profile). If a greeter is still enabled:
+#   sudo systemctl disable greetd.service

@@ -25,7 +25,7 @@
     # dynamic width from 0 to 300
     # width = (0, 300)
     # constant width of 300
-    width = 375
+    width = 450
 
     # The height of a single notification, excluding the frame.
     # dynamic height from 0 to 300
@@ -115,8 +115,8 @@
     frame_width = 2
 
     # Defines color of the frame around the notification window.
-    # slate border — per-urgency frames override this below
-    frame_color = "#32384a"
+    # matches hyprland active_border ($sel) — per-urgency frames override this below
+    frame_color = "#3c4e7a"
 
     # Progress-bar fill (dunstify -h int:value:NN) — slate accent
     highlight = "#88a0c8"
@@ -257,7 +257,7 @@
     min_icon_size = 32
 
     # Scale larger icons down to this size, set to 0 to disable
-    max_icon_size = 128
+    max_icon_size = 48
 
     # Paths to default icons (only necessary when not using recursive icon lookup)
     icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
@@ -384,7 +384,7 @@
 [urgency_normal]
     background = "#1d2029f2"
     foreground = "#e0e2ea"
-    frame_color = "#88a0c8"
+    frame_color = "#3c4e7a"
     timeout = 10
     override_pause_level = 30
     default_icon = dialog-information

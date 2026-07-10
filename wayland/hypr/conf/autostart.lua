@@ -35,10 +35,12 @@ hl.on("config.reloaded", restart_waybar)
 -- no flicker — shortly after any monitor comes or goes (deferred: output
 -- changes settle async). dunst would also D-Bus-respawn on the next
 -- notification, but that notification loses its history; proactive is better.
+-- hyprpaper can also wedge (process alive, IPC hung, wallpaper gone —
+-- observed after a boot-time hotplug), so probe its IPC instead of pgrep.
 local function resurrect_daemons()
     hl.timer(function()
         hl.exec_cmd("pgrep -x waybar >/dev/null || exec waybar")
-        hl.exec_cmd("pgrep -x hyprpaper >/dev/null || exec hyprpaper")
+        hl.exec_cmd("hyprctl hyprpaper listactive >/dev/null 2>&1 || { pkill -x hyprpaper; sleep 1; exec hyprpaper; }")
         hl.exec_cmd("pgrep -x dunst >/dev/null || exec dunst")
     end, { timeout = 1000, type = "oneshot" })
 end

@@ -4,3 +4,10 @@
 
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
 [ -f "$HOME/.bashrc" ]  && . "$HOME/.bashrc"
+
+# TTY-only login (greetd removed): start Hyprland after logging in on tty1.
+# exec replaces the shell, so exiting Hyprland drops back to the getty
+# prompt. Other TTYs stay plain shells.
+if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+  exec start-hyprland
+fi
