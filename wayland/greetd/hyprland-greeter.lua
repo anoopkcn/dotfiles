@@ -14,7 +14,15 @@ hl.env("XCURSOR_THEME", "Adwaita")
 hl.env("XCURSOR_SIZE", "24")
 
 hl.config({
+    -- No animations, same as the real session (hypr/conf/options.lua).
+    animations = {
+        enabled = false,
+    },
+
     misc = {
+        -- Backdrop shown before ReGreet maps its window; match the average
+        -- tone of the wallpaper so startup doesn't flash black -> bright.
+        background_color                = "rgb(a8a199)",
         disable_hyprland_logo           = true,
         disable_splash_rendering        = true,
         disable_hyprland_guiutils_check = true,
