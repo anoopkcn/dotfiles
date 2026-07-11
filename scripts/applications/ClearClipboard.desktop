@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Clear Clipboard
+Comment=Wipe cliphist history and the live clipboard
+Exec=ClearClipboard
+Icon=edit-clear
+Terminal=false
+Categories=Utility;

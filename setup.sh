@@ -47,6 +47,17 @@ ln -sfn $PATH_TO_DOTFILES/wireplumber  $HOME/.config/wireplumber
 command -v gsettings >/dev/null 2>&1 && \
   gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 
+# scripts — personal helpers linked onto PATH via ~/.local/bin
+mkdir -p $HOME/.local/bin
+for s in $PATH_TO_DOTFILES/scripts/*; do
+  [ -f "$s" ] && ln -sf "$s" $HOME/.local/bin/"$(basename "$s")"
+done
+# .desktop launchers — so scripts show up in the fuzzel (SUPER+D) app picker
+mkdir -p $HOME/.local/share/applications
+for d in $PATH_TO_DOTFILES/scripts/applications/*.desktop; do
+  [ -f "$d" ] && ln -sf "$d" $HOME/.local/share/applications/"$(basename "$d")"
+done
+
 # btop — drop the slate theme in place (btop.conf stays btop-managed)
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme

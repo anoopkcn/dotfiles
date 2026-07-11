@@ -1,0 +1,8 @@
+#!/bin/sh
+# Clear clipboard history (cliphist) and the live Wayland clipboard.
+# Bound alongside the SUPER+V history picker in hypr/conf/binds.lua.
+
+cliphist wipe
+command -v wl-copy >/dev/null 2>&1 && wl-copy --clear
+
+command -v notify-send >/dev/null 2>&1 && notify-send "Clipboard cleared"
