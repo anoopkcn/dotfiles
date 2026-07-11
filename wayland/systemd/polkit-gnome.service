@@ -1,0 +1,15 @@
+# GUI password prompt for privilege escalation (udisks, NetworkManager,
+# installers). Condition keeps this a no-op if polkit-gnome isn't installed.
+[Unit]
+Description=GNOME polkit authentication agent
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionPathExists=/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+[Service]
+ExecStart=/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+Restart=on-failure
+Slice=session.slice
+
+[Install]
+WantedBy=graphical-session.target

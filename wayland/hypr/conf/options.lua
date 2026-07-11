@@ -38,6 +38,11 @@ hl.config({
         focus_on_activate       = true,
         force_default_wallpaper = 0,
         disable_hyprland_logo   = true,
+        -- Any input wakes DPMS'd-off displays. Off by default, which means a
+        -- stray dpms-off leaves screens black with no obvious way back —
+        -- indistinguishable from a hang (learned the hard way 2026-07-11).
+        mouse_move_enables_dpms = true,
+        key_press_enables_dpms  = true,
     },
 
     cursor = {

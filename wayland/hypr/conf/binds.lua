@@ -21,14 +21,24 @@ hl.bind("SUPER + V", hl.dsp.exec_cmd("cliphist list | fuzzel --dmenu | cliphist 
 hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -a"))
 
 -- Focus ---------------------------------------------------------------------
-hl.bind("SUPER + H",     hl.dsp.focus({ direction = "left" }))
-hl.bind("SUPER + J",     hl.dsp.focus({ direction = "down" }))
-hl.bind("SUPER + K",     hl.dsp.focus({ direction = "up" }))
-hl.bind("SUPER + L",     hl.dsp.focus({ direction = "right" }))
-hl.bind("SUPER + left",  hl.dsp.focus({ direction = "left" }))
-hl.bind("SUPER + down",  hl.dsp.focus({ direction = "down" }))
-hl.bind("SUPER + up",    hl.dsp.focus({ direction = "up" }))
-hl.bind("SUPER + right", hl.dsp.focus({ direction = "right" }))
+-- In monocle every window has the same geometry, so directional focus just
+-- ping-pongs between the top two; cycle by focus order instead, and raise
+-- the result since z-order does not follow focus for stacked tiled windows.
+local function smart_focus(dir)
+    return function()
+        local ws = hl.get_active_workspace()
+        if ws ~= nil and ws.tiled_layout == "lua:monocle" then
+            hl.dispatch(hl.dsp.window.cycle_next({ prev = (dir == "left" or dir == "up") }))
+            hl.dispatch(hl.dsp.window.bring_to_top())
+        else
+            hl.dispatch(hl.dsp.focus({ direction = dir }))
+        end
+    end
+end
+for key, dir in pairs({ H = "left", J = "down", K = "up", L = "right",
+                        left = "left", down = "down", up = "up", right = "right" }) do
+    hl.bind("SUPER + " .. key, smart_focus(dir))
+end
 
 -- Move (group_aware: moves windows in/out of groups directionally) ----------
 hl.bind("SUPER + SHIFT + H",     hl.dsp.window.move({ direction = "l", group_aware = true }))
@@ -42,7 +52,43 @@ hl.bind("SUPER + SHIFT + right", hl.dsp.window.move({ direction = "r", group_awa
 
 -- Layout ---------------------------------------------------------------------
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ action = "toggle" }))
--- hl.bind("SUPER + W", hl.dsp.group.toggle())
+hl.bind("SUPER + M", hl.dsp.window.fullscreen({ action = "toggle", mode = "maximized" }))
+
+-- Monocle: every tiled window takes the full workspace area (gaps and bar
+-- kept), stacked with the focused one on top — sway's tabbed, minus the tabs.
+hl.layout.register("monocle", {
+    recalculate = function(ctx)
+        for _, t in ipairs(ctx.targets) do
+            t:place(ctx.area)
+        end
+    end,
+})
+
+-- Layout toggles: each key flips general:layout between its layout and
+-- dwindle, so any layout key also escapes any other layout. The option is
+-- global — other workspaces follow as they recalculate; per-workspace layout
+-- is read-only in 0.55 (ws.tiled_layout can't be assigned).
+local DEFAULT_LAYOUT = "dwindle"
+local function toggle_layout(name)
+    return function()
+        local ws = hl.get_active_workspace()
+        local target = (ws ~= nil and ws.tiled_layout == name) and DEFAULT_LAYOUT or name
+        hl.config({ general = { layout = target } })
+    end
+end
+hl.bind("SUPER + W", toggle_layout("lua:monocle"))
+hl.bind("SUPER + Q", toggle_layout("scrolling"))
+
+-- A window mapping into a monocle stack can land below it; raise it once the
+-- map settles (event handlers get a 50ms budget, so the work goes in a timer).
+hl.on("window.open", function()
+    hl.timer(function()
+        local ws = hl.get_active_workspace()
+        if ws ~= nil and ws.tiled_layout == "lua:monocle" then
+            hl.dispatch(hl.dsp.window.bring_to_top())
+        end
+    end, { timeout = 50, type = "oneshot" })
+end)
 hl.bind("SUPER + E", hl.dsp.layout("togglesplit"))
 hl.bind("SUPER + minus",     hl.dsp.layout("preselect d"))
 hl.bind("SUPER + backslash", hl.dsp.layout("preselect r"))
@@ -74,9 +120,9 @@ end
 -- Session control --------------------------------------------------------------
 hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
 -- Lock via logind so hypridle's lock_cmd keeps hyprlock single-instance.
-hl.bind("SUPER + SHIFT + X", hl.dsp.exec_cmd("loginctl lock-session"))
+-- hl.bind("SUPER + SHIFT + X", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind("SUPER + SHIFT + BackSpace", hl.dsp.exec_cmd("~/.config/hypr/scripts/power-menu.sh"))
-hl.bind("CTRL + ALT + BackSpace", hl.dsp.exec_cmd("systemctl suspend"))
+-- hl.bind("CTRL + ALT + BackSpace", hl.dsp.exec_cmd("systemctl suspend"))
 
 -- Resize submap (was sway mode "resize"; waybar shows it via hyprland/submap).
 -- Sane mapping: h/left shrink width, l/right grow width, k/up shrink height,

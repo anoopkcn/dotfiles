@@ -1,0 +1,17 @@
+# Clipboard history for SUPER+V. Instanced per mime class: enable
+# cliphist@text and cliphist@image. (The cliphist package ships a single
+# un-typed watcher unit; two typed watchers is the upstream-recommended way
+# to capture both text and images.)
+[Unit]
+Description=Clipboard history watcher (%i)
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+ExecStart=/usr/bin/wl-paste --type %i --watch cliphist store
+Restart=on-failure
+Slice=session.slice
+
+[Install]
+WantedBy=graphical-session.target

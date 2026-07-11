@@ -21,21 +21,15 @@ ln -sf $PATH_TO_DOTFILES/nvim  $HOME/.config/nvim
 ln -sf $PATH_TO_DOTFILES/bash/bashrc $HOME/.bashrc
 ln -sf $PATH_TO_DOTFILES/bash/bash_profile $HOME/.bash_profile
 
-# bat — config + slate theme; rebuild syntax/theme cache afterwards
-ln -sf $PATH_TO_DOTFILES/bat  $HOME/.config/bat
-command -v bat >/dev/null 2>&1 && bat cache --build
+# kitty — terminal (slate theme)
+ln -sfn $PATH_TO_DOTFILES/kitty  $HOME/.config/kitty
 
 # zathura — slate dark theme (recolor/dark mode on by default)
 ln -sf $PATH_TO_DOTFILES/zathura  $HOME/.config/zathura
 
-# picom — compositor config (vsync to stop screen tearing); X11/i3 only
-# ln -sf $PATH_TO_DOTFILES/x11/picom  $HOME/.config/picom
-
 # Hyprland + waybar — Wayland WM and status bar
 ln -sfn $PATH_TO_DOTFILES/wayland/hypr    $HOME/.config/hypr
 ln -sfn $PATH_TO_DOTFILES/wayland/waybar  $HOME/.config/waybar
-# drop the old sway symlink if it's still around
-[ -L "$HOME/.config/sway" ] && rm $HOME/.config/sway
 
 # environment.d — HiDPI/Wayland toolkit hints (Qt/Firefox/Java scaling)
 ln -sfn $PATH_TO_DOTFILES/wayland/environment.d  $HOME/.config/environment.d
@@ -53,15 +47,30 @@ ln -sfn $PATH_TO_DOTFILES/wireplumber  $HOME/.config/wireplumber
 command -v gsettings >/dev/null 2>&1 && \
   gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 
-# GTK3 (Thunar etc.) — slate theme: tint Adwaita via gtk.css + force dark.
-# Link individual files so GTK's own bookmarks/servers stay out of the repo.
-mkdir -p $HOME/.config/gtk-3.0
-ln -sf $PATH_TO_DOTFILES/gtk-3.0/gtk.css      $HOME/.config/gtk-3.0/gtk.css
-ln -sf $PATH_TO_DOTFILES/gtk-3.0/settings.ini $HOME/.config/gtk-3.0/settings.ini
-
 # btop — drop the slate theme in place (btop.conf stays btop-managed)
 mkdir -p $HOME/.config/btop/themes
 ln -sf $PATH_TO_DOTFILES/btop/themes/slate.theme $HOME/.config/btop/themes/slate.theme
+
+# systemd user units — session daemons (bar, applets, wallpaper, clipboard,
+# dropbox…) all hang off graphical-session.target; hypr/conf/autostart.lua
+# starts hyprland-session.target once the compositor is up. Link individual
+# files: systemctl manages its own symlinks (*.wants) in the same directory.
+mkdir -p $HOME/.config/systemd/user
+for f in hyprland-session.target nm-applet.service polkit-gnome.service cliphist@.service; do
+  ln -sf $PATH_TO_DOTFILES/wayland/systemd/$f $HOME/.config/systemd/user/$f
+done
+for d in blueman-applet.service.d dunst.service.d dropbox.service.d; do
+  ln -sfn $PATH_TO_DOTFILES/wayland/systemd/$d $HOME/.config/systemd/user/$d
+done
+systemctl --user daemon-reload
+# units with [Install] sections:
+systemctl --user enable waybar hypridle hyprpaper nm-applet polkit-gnome \
+  cliphist@text cliphist@image
+# shipped units without a usable [Install] (static / default.target):
+systemctl --user add-wants graphical-session.target \
+  blueman-applet.service dunst.service dropbox.service
+# dropbox must NOT also start at login — pre-session it can't see the display:
+systemctl --user disable dropbox 2>/dev/null
 
 # Login: no display manager — getty on tty1, bash_profile execs start-hyprland
 # after login (see bash/bash_profile). If a greeter is still enabled:

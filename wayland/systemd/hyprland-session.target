@@ -1,0 +1,12 @@
+# Started by hypr/conf/autostart.lua once Hyprland is up and has exported
+# WAYLAND_DISPLAY etc. to the systemd user manager. BindsTo pulls in
+# graphical-session.target, which all session daemons are WantedBy; when this
+# target stops, graphical-session.target is unneeded (StopWhenUnneeded) and
+# every PartOf= daemon stops with it. graphical-session.target itself is
+# RefuseManualStart, so this indirection is mandatory.
+[Unit]
+Description=Hyprland compositor session
+Documentation=man:systemd.special(7)
+BindsTo=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target

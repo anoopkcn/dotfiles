@@ -1,47 +1,43 @@
--- Autostart — ported from sway/config exec/exec_always lines.
+-- Autostart — session daemons are systemd user units WantedBy
+-- graphical-session.target (units + drop-ins live in wayland/systemd/,
+-- symlinked and enabled by setup.sh). Hyprland exports WAYLAND_DISPLAY /
+-- HYPRLAND_INSTANCE_SIGNATURE etc. to the systemd user manager by itself, so
+-- by the time hyprland.start fires we only have to bounce the session
+-- target: every daemon starts once, single-instanced, ordered (tray applets
+-- After=waybar), restarted on failure, logged in the journal. `restart`
+-- rather than `start` so a compositor restart within one login re-launches
+-- everything with the fresh WAYLAND_DISPLAY instead of no-opping.
 --
--- Hyprland exports WAYLAND_DISPLAY / HYPRLAND_INSTANCE_SIGNATURE etc. to the
--- systemd user manager and D-Bus activation env by itself, so sway's
--- import-environment dance is gone. Dropbox still needs a kick: its user unit
--- started at login, before the session existed, and can't see the display.
+-- The old exec_cmd-per-daemon approach raced: dropbox's login-time unit
+-- fought its restart kick, and applets registered their tray icons into a
+-- waybar that was being pkill'd/respawned at that same instant (lost
+-- bluetooth icon). Keep everything in units; don't add exec_cmd daemons here.
 --
--- NB: no `dex --autostart` here (same as sway) — it would pull in X11-only
--- picom.desktop and double-launch the applets. Start what we need explicitly.
+-- NB: xdg-desktop-autostart.target stays out of the session on purpose
+-- (nothing Wants it) — it would double-launch dropbox/blueman/nm-applet from
+-- their /etc/xdg/autostart entries and pull in X11-only picom.desktop.
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd("systemctl --user try-restart dropbox")
-    hl.exec_cmd("nm-applet --indicator")
-    hl.exec_cmd("blueman-applet")
-    hl.exec_cmd("dunst")
-    -- polkit agent: GUI password prompt for privilege escalation (udisks,
-    -- NetworkManager, installers). Harmless no-op if not installed.
-    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-    hl.exec_cmd("hyprpaper")
-    hl.exec_cmd("hypridle")
-    -- cliphist watchers record clipboard history (text + images) for SUPER+V
-    hl.exec_cmd("wl-paste --type text --watch cliphist store")
-    hl.exec_cmd("wl-paste --type image --watch cliphist store")
+    hl.exec_cmd("systemctl --user restart hyprland-session.target")
 end)
 
--- exec_always equivalent: restart waybar at start and on every config reload.
-local function restart_waybar()
-    hl.exec_cmd("pkill -x waybar; exec waybar")
-end
-hl.on("hyprland.start", restart_waybar)
-hl.on("config.reloaded", restart_waybar)
+-- exec_always equivalent: bounce waybar on config reload (hyprland.start is
+-- covered by the session target restart above).
+hl.on("config.reloaded", function()
+    hl.exec_cmd("systemctl --user try-restart waybar")
+end)
 
--- waybar, hyprpaper and dunst all sometimes die on output changes (observed:
--- physical HDMI replug, un-mirroring). Resurrect them — no-op while alive, so
--- no flicker — shortly after any monitor comes or goes (deferred: output
--- changes settle async). dunst would also D-Bus-respawn on the next
--- notification, but that notification loses its history; proactive is better.
--- hyprpaper can also wedge (process alive, IPC hung, wallpaper gone —
--- observed after a boot-time hotplug), so probe its IPC instead of pgrep.
+-- systemd resurrects crashes (Restart=on-failure), but not clean exits or
+-- wedges. waybar and dunst sometimes die on output changes (observed:
+-- physical HDMI replug, un-mirroring); hyprpaper can wedge with the process
+-- alive (IPC hung, wallpaper gone — observed after a boot-time hotplug), so
+-- probe its IPC instead of unit state. Check shortly after any monitor comes
+-- or goes (deferred: output changes settle async) — no-op while healthy.
 local function resurrect_daemons()
     hl.timer(function()
-        hl.exec_cmd("pgrep -x waybar >/dev/null || exec waybar")
-        hl.exec_cmd("hyprctl hyprpaper listactive >/dev/null 2>&1 || { pkill -x hyprpaper; sleep 1; exec hyprpaper; }")
-        hl.exec_cmd("pgrep -x dunst >/dev/null || exec dunst")
+        hl.exec_cmd("systemctl --user is-active --quiet waybar || systemctl --user restart waybar")
+        hl.exec_cmd("hyprctl hyprpaper listactive >/dev/null 2>&1 || systemctl --user restart hyprpaper")
+        hl.exec_cmd("systemctl --user is-active --quiet dunst || systemctl --user restart dunst")
     end, { timeout = 1000, type = "oneshot" })
 end
 hl.on("monitor.added", resurrect_daemons)

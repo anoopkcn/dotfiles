@@ -273,8 +273,9 @@
 
     ### Misc/Advanced ###
 
-    # dmenu path.
-    dmenu = /usr/bin/dmenu -p dunst:
+    # dmenu path — fuzzel in dmenu mode, matching the rest of the desktop
+    # (plain dmenu is X11-only: it runs blurry through XWayland at scale 1.6).
+    dmenu = /usr/bin/fuzzel --dmenu --prompt "dunst ❯ "
 
     # Browser for opening urls in context menu.
     browser = /usr/bin/xdg-open
