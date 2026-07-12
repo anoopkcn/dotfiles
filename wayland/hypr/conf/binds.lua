@@ -67,11 +67,20 @@ hl.layout.register("monocle", {
 -- global — other workspaces follow as they recalculate; per-workspace layout
 -- is read-only in 0.55 (ws.tiled_layout can't be assigned).
 local DEFAULT_LAYOUT = "dwindle"
+local function apply_layout(name)
+    hl.config({
+        general = { layout = name },
+        -- Monocle stacks every window in the same box, so hover-refocus
+        -- (follow_mouse=1) lands on whichever buried window the pick finds and
+        -- pulls it over the one just focused by keyboard. 2 = moving the mouse
+        -- never changes keyboard focus; clicking still does.
+        input = { follow_mouse = (name == "lua:monocle") and 2 or 1 },
+    })
+end
 local function toggle_layout(name)
     return function()
         local ws = hl.get_active_workspace()
-        local target = (ws ~= nil and ws.tiled_layout == name) and DEFAULT_LAYOUT or name
-        hl.config({ general = { layout = target } })
+        apply_layout((ws ~= nil and ws.tiled_layout == name) and DEFAULT_LAYOUT or name)
     end
 end
 hl.bind("SUPER + W", toggle_layout("lua:monocle"))
@@ -86,6 +95,16 @@ hl.on("window.open", function()
             hl.dispatch(hl.dsp.window.bring_to_top())
         end
     end, { timeout = 50, type = "oneshot" })
+end)
+
+-- Every deliberate focus change (click, SUPER+Tab switcher, xdg-activation)
+-- must also raise in monocle. Safe with follow_mouse=2: mouse motion can't
+-- fire this, and bring_to_top doesn't refocus, so it can't loop.
+hl.on("window.active", function()
+    local ws = hl.get_active_workspace()
+    if ws ~= nil and ws.tiled_layout == "lua:monocle" then
+        hl.dispatch(hl.dsp.window.bring_to_top())
+    end
 end)
 hl.bind("SUPER + E", hl.dsp.layout("togglesplit"))
 hl.bind("SUPER + minus",     hl.dsp.layout("preselect d"))
@@ -151,10 +170,12 @@ hl.bind("XF86AudioPlay",         hl.dsp.exec_cmd("playerctl play-pause"), { lock
 hl.bind("XF86AudioNext",         hl.dsp.exec_cmd("playerctl next"),       { locked = true })
 hl.bind("XF86AudioPrev",         hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
--- Screenshots (grim/slurp) --------------------------------------------------------
+-- Screenshots (grim/slurp/satty) --------------------------------------------------
+-- Quick region shot: grab and save straight to a file, no annotation UI.
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd([[grim -g "$(slurp)" ~/Images/Screenshots/$(date +%F_%H-%M-%S).png]]))
--- Region shot: save to a file AND copy to clipboard, then notify with the path
-hl.bind("Print", hl.dsp.exec_cmd([[f=~/Images/Screenshots/$(date +%F_%H-%M-%S).png; grim -g "$(slurp)" "$f" && wl-copy < "$f" && notify-send "Screenshot" "$f"]]))
+-- Region shot: open the grab in Satty to annotate; Enter saves to file, copies to
+-- clipboard (via wl-copy), and exits.
+hl.bind("Print", hl.dsp.exec_cmd([[grim -g "$(slurp)" - | satty --filename - --output-filename ~/Images/Screenshots/%F_%H-%M-%S.png --copy-command wl-copy --actions-on-enter save-to-file,save-to-clipboard,exit]]))
 
 -- Mouse: drag/resize windows with SUPER held (was floating_modifier + tiling_drag).
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })

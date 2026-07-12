@@ -1,0 +1,33 @@
+# slate — ghostty theme matching kitty/slate.conf and nvim/colors/slate.lua
+# Cool-slate background, soft off-white text, desaturated pastel accents.
+# The 16 ANSI colors mirror slate.lua's terminal_color_* so every terminal renders identically.
+
+background = #14161d
+foreground = #e0e2ea
+
+cursor-color = #e0e2ea
+cursor-text  = #232732
+
+# Selection — the editor's blue-tinted Visual; keeps each cell's own fg colour
+selection-foreground = cell-foreground
+selection-background = #3c4e7a
+
+# Normal (color0-7)
+palette = 0=#32384a
+palette = 1=#f7768e
+palette = 2=#a0ddac
+palette = 3=#ecbe70
+palette = 4=#88a0c8
+palette = 5=#c099ff
+palette = 6=#a0def3
+palette = 7=#e0e2ea
+
+# Bright (color8-15)
+palette = 8=#828c9e
+palette = 9=#f7768e
+palette = 10=#8cc570
+palette = 11=#ecbe70
+palette = 12=#88a0c8
+palette = 13=#db9fd6
+palette = 14=#a0def3
+palette = 15=#ffffff

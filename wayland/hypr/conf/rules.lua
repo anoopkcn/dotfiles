@@ -14,6 +14,18 @@ hl.window_rule({
     float = true,
 })
 
+hl.window_rule({
+    name  = "float-nwg-displays",
+    match = { class = "^(nwg-displays)$" },
+    float = true,
+})
+
+hl.window_rule({
+    name  = "float-satty",
+    match = { class = "^(com.gabm.satty)$" },
+    float = true,
+})
+
 -- Don't idle-lock/DPMS while any window is fullscreen (video playback).
 -- Windowed audio playback is handled by the pactl check in hypridle.conf.
 hl.window_rule({

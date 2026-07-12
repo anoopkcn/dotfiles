@@ -1,7 +1,7 @@
 # Ghostty Terminal Configuration
 # Ref: https://ghostty.org/docs/config/reference
 
-# theme = Nvim Dark
+theme = slate
 font-family = Berkeley Mono
 window-title-font-family = Berkeley Mono
 font-size = 12

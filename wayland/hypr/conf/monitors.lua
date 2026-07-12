@@ -321,10 +321,37 @@ hl.on("monitor.removed", function(m)
     end, { timeout = 500, type = "oneshot" })
 end)
 
+-- External removed while NOT mirroring (unplugged, or powered off with the
+-- link dropping). If it leaves the internal panel as the only output:
+--   * re-enable eDP-1 immediately so its workspaces come home AND we never sit
+--     at zero enabled monitors — that state wedges the backend into a black
+--     screen that only a poweroff clears (the exact docked-lid-closed bug).
+--   * if the lid is still shut, the user undocked without opening it. logind
+--     won't suspend: HandleLidSwitchDocked=ignore held on the close, and
+--     undocking fires no fresh lid event for it to re-evaluate. So suspend
+--     here, but only after a grace window — opening the lid within it leaves
+--     it open, and we keep working on eDP-1 instead of sleeping.
+hl.on("monitor.removed", function(m)
+    if mirror.active then return end
+    local ok, name = pcall(function() return m.name end)
+    if not ok or name == INTERNAL then return end
+    hl.timer(function()
+        if mirror.active or external_active() then return end
+        hl.monitor(EDP)
+        hl.timer(function()
+            if not external_active() and lid_closed() then
+                hl.exec_cmd("systemctl suspend")
+            end
+        end, { timeout = 8000, type = "oneshot" })
+    end, { timeout = 300, type = "oneshot" })
+end)
+
 -- Docked (external active): closing the lid disables eDP-1 so its workspaces
--- migrate to the external. Undocked: no-op, logind suspends as normal
--- (docked = ignore in logind.conf). The reload-behind-closed-lid case is
--- handled at load time above via the ACPI lid state.
+-- migrate to the external. Undocked: no-op, logind suspends as normal on a
+-- lid-close event (docked = ignore in logind.conf). Undocking with the lid
+-- ALREADY shut fires no such event, so the monitor.removed handler above
+-- covers that. The reload-behind-closed-lid case is handled at load time
+-- above via the ACPI lid state.
 hl.bind("switch:on:Lid Switch", function()
     -- Mirrored outputs are hidden from get_monitors(), so while presenting
     -- the count alone would say "one monitor"; mirror.active covers that.
