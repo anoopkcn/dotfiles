@@ -1,5 +1,3 @@
--- Keybinds — ported from sway/config. SUPER = the old $mod (Mod4).
-
 local terminal = "kitty"
 
 -- Applications -------------------------------------------------------------

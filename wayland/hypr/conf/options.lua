@@ -11,7 +11,7 @@ hl.config({
         gaps_in     = 4,
         gaps_out    = 6,
         col = {
-            active_border   = "rgb(3c4e7a)", -- $sel
+            active_border   = "rgb(88a0c8)", -- $sel
             inactive_border = "rgb(32384a)", -- $border
         },
     },
