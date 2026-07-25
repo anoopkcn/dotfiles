@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# zt — switch the zathura theme by rewriting the `include` line in zathurarc.
+# Usage: zt [dark|light|toggle]   (no argument prints the current theme)
+set -euo pipefail
+
+rc="${XDG_CONFIG_HOME:-$HOME/.config}/zathura/zathurarc"
+[[ -f $rc ]] || { echo "zt: no zathurarc at $rc" >&2; exit 1; }
+
+current=$(sed -n 's/^include[[:space:]]\+slate-\(dark\|light\)[[:space:]]*$/\1/p' "$rc" | head -1)
+[[ -n $current ]] || { echo "zt: no 'include slate-dark|slate-light' line in $rc" >&2; exit 1; }
+
+case "${1-}" in
+  "")       echo "$current"; exit 0 ;;
+  dark|light) want=$1 ;;
+  toggle)   [[ $current == dark ]] && want=light || want=dark ;;
+  *)        echo "usage: zt [dark|light|toggle]" >&2; exit 2 ;;
+esac
+
+if [[ $want == "$current" ]]; then
+  echo "zt: already $want"
+  exit 0
+fi
+
+# Follow the symlink so the edit lands in the dotfiles repo, not on the link.
+sed -i "s/^include[[:space:]]\+slate-$current[[:space:]]*$/include slate-$want/" "$(readlink -f "$rc")"
+echo "zt: $current -> $want (restart zathura to apply)"

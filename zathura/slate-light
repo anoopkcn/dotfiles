@@ -1,0 +1,44 @@
+# slate-light — zathura theme
+# Light counterpart to slate-dark: same cool-slate hue, inverted lightness.
+
+# Pages render in their native colors. Ctrl+r still flips to the dark mapping
+# below if a document itself is dark-on-light and you want it reversed.
+set recolor              false
+set recolor-keephue      true
+set recolor-reverse-video true
+set recolor-lightcolor   "#f2f3f7"
+set recolor-darkcolor    "#232732"
+
+set default-bg           "#f2f3f7"
+set default-fg           "#232732"
+
+set statusbar-bg         "#e2e5ec"
+set statusbar-fg         "#232732"
+
+set inputbar-bg          "#e2e5ec"
+set inputbar-fg          "#232732"
+
+set notification-bg      "#e2e5ec"
+set notification-fg      "#232732"
+set notification-error-bg   "#e2e5ec"
+set notification-error-fg   "#a3374b"
+set notification-warning-bg "#e2e5ec"
+set notification-warning-fg "#a3374b"
+
+set highlight-color         "rgba(60,78,122,0.28)"
+set highlight-active-color  "rgba(46,122,68,0.32)"
+
+set completion-bg           "#e2e5ec"
+set completion-fg           "#5c6478"
+set completion-group-bg     "#f2f3f7"
+set completion-group-fg     "#3c5a8c"
+set completion-highlight-bg "#c3cfe4"
+set completion-highlight-fg "#232732"
+
+set index-bg             "#f2f3f7"
+set index-fg             "#232732"
+set index-active-bg      "#c3cfe4"
+set index-active-fg      "#232732"
+
+set render-loading-bg    "#f2f3f7"
+set render-loading-fg    "#5c6478"
