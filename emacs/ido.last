@@ -1,0 +1,43 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/home/akc/develop/dotfiles/" . "bash/")
+ ("/home/akc/develop/" . "dotfiles/")
+ ("/home/akc/" . "develop/")
+ ("/home/akc/.config/" . "emacs/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/home/akc/develop/dotfiles/emacs/"
+ "/home/akc/develop/dotfiles/"
+ "/home/akc/.config/emacs/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "init.el"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/home/akc/develop/dotfiles/emacs/" (27219 61621 644518 589000) "auto-save-list/" "../" "init.el" "ido.last" "#init.el#" "elpa/" "./" "slate-theme.el" "eln-cache/")
+
+ ("/home/akc/.config/emacs/" (27219 61621 644518 589000) "auto-save-list/" "../" "init.el" "ido.last" "#init.el#" "elpa/" "./" "slate-theme.el" "eln-cache/")
+
+ ("/home/akc/" (27219 61648 355519 404000) "../" "Dropbox/" "Images/" ".config/" ".dmrc" ".zenv/" ".xsession-errors.old" ".gnupg/" ".Xresources" ".xsession-errors" ".Xauthority" "work/" "tools/" ".dropbox/" ".mupdf.history" ".bash_logout" "Zotero/" "./" "develop/" ".bash_profile" ".claude/" ".local/" ".bashrc" ".bash_history" ".claude.json" ".cargo/" ".zotero/" ".mozilla/" ".python_history" ".thunderbird/" "Downloads/" ".dropbox-dist/" ".fehbg" "Calibre/" ".cache/" ".pki/" ".gitconfig" ".ssh/")
+
+ ("/home/akc/develop/dotfiles/bash/" (27216 61322 672120 915000) "../" "bashrc" "./" "bash_profile" ".bashrc" "minimal-prompt.sh" "fzf.sh")
+
+ ("/home/" (27205 15582 45043 912000) "../" "./" "akc/")
+
+ ("/home/akc/develop/dotfiles/" (27219 60348 417479 733000) "../" "setup.sh" "emacs/" "zathura/" "./" "wireplumber/" ".git/" "scripts/" "wayland/" ".gitignore" "dunst/" "kitty/" "LICENSE" "README.md" "ghostty/" "nvim/" "bash/" "btop/" "zsh/")
+
+ ("/home/akc/develop/" (27211 57573 822126 307000) "../" "dotfiles/" "mtheme/" "poop/" "./" "zenv/" "oil.nvim/" "filemarks.nvim/" "toy-harness/")
+
+ ("/home/akc/.config/" (27219 60378 667480 656000) "../" "picom" "vlc/" "mimeapps.list" "gtk-3.0/" "xournalpp/" "brave-flags.conf" "BraveSoftware/" "hypr/" "emacs/" "go/" "calibre/" "zathura/" "GIMP/" "google-chrome/" "./" "dconf/" "wireplumber/" "environment.d/" "pulse/" "systemd/" "QtProject.conf" "dunst/" "kitty/" "fuzzel/" "autostart/" "xfce4/" "Thunar/" "yay/" "mozilla/" "waybar/" "ghostty/" "nvim/" "nwg-displays/" "btop/" "zsh/")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
