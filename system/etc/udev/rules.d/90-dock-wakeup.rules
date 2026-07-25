@@ -1,0 +1,30 @@
+# Let the USB-C dock wake the laptop from suspend.
+#
+# The desk monitor arrives on DP-2 over USB-C, not on the physical HDMI port.
+# DisplayPort hotplug (HPD) is NOT a system wakeup source — in s2idle the i915
+# display engine is powered down and no ACPI GPE is wired to a connector. But
+# the dock is not just video: it enumerates a whole USB tree on the same plug
+# event (two VIA Labs VL813 hubs, an RTL8153 NIC, an SD reader, a keyboard), and
+# USB *can* wake the machine. So we wake on the USB side of the dock appearing.
+#
+# Standard Intel USB-C routing splits the dock across both controllers:
+#   USB 3.x  2-2   VL813 + LAN + SD reader  -> usb2 -> 0000:00:0d.0 (TXHC)
+#   USB 2.0  3-8   VL813 + keyboard         -> usb3 -> 0000:00:14.0 (XHCI)
+#
+# /proc/acpi/wakeup has both controllers armed and their PCI power/wakeup is
+# already "enabled", but every xHCI ROOT HUB ships as power/wakeup = disabled,
+# which breaks the chain in the middle. Nothing on USB could wake this machine
+# before this file — not the dock, not the dock's keyboard.
+#
+# TRADE-OFF: root-hub wakeup is disabled by default precisely because it is the
+# classic cause of spurious wakeups (laptop waking up inside a bag). If that
+# starts happening, see system/README.md for how to narrow this.
+
+# Root hubs — this is what enables the xHCI port wake bits (PORT_WKCONN_E etc.)
+# at bus suspend, and is the actual fix for wake-on-dock-connect.
+ACTION!="remove", SUBSYSTEM=="usb", ATTR{product}=="xHCI Host Controller", ATTR{power/wakeup}="enabled"
+
+# The dock's own hubs, so a keypress on the dock keyboard (3-8.3.4, which is
+# already wakeup-enabled on its own) can propagate up through them to the root.
+ACTION!="remove", SUBSYSTEM=="usb", ATTR{idVendor}=="2109", ATTR{idProduct}=="0813", ATTR{power/wakeup}="enabled"
+ACTION!="remove", SUBSYSTEM=="usb", ATTR{idVendor}=="2109", ATTR{idProduct}=="2813", ATTR{power/wakeup}="enabled"

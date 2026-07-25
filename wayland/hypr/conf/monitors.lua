@@ -346,12 +346,37 @@ hl.on("monitor.removed", function(m)
     end, { timeout = 300, type = "oneshot" })
 end)
 
+-- Docked with the lid ALREADY shut (plug in first, wake on the external
+-- keyboard): no lid event fires, so the switch bind below never runs and
+-- eDP-1 stays enabled behind the closed lid, stranding its workspaces on an
+-- invisible panel. Read the ACPI state on hotplug and disable it so they
+-- migrate. 50ms event budget: read the name now, do the work in a timer.
+-- The external_active() re-check covers an output that vanished again
+-- within the delay — disabling eDP-1 then would mean zero enabled monitors.
+hl.on("monitor.added", function(m)
+    local ok, name = pcall(function() return m.name end)
+    if not ok or name == nil or name == INTERNAL then return end
+    hl.timer(function()
+        if lid_closed() and external_active() then
+            hl.monitor({ output = INTERNAL, disabled = true })
+        end
+    end, { timeout = 500, type = "oneshot" })
+end)
+
 -- Docked (external active): closing the lid disables eDP-1 so its workspaces
 -- migrate to the external. Undocked: no-op, logind suspends as normal on a
 -- lid-close event (docked = ignore in logind.conf). Undocking with the lid
 -- ALREADY shut fires no such event, so the monitor.removed handler above
 -- covers that. The reload-behind-closed-lid case is handled at load time
 -- above via the ACPI lid state.
+--
+-- NOTE: docked lid-close does NOT suspend from here, and must not. A timer
+-- started by the lid event cannot tell "I shut the lid and left" from "I shut
+-- the lid and am working on the external", which is the normal way this machine
+-- gets used — an earlier version tried a 90s grace window and slept the session
+-- out from under an active desk session twice. Only an idle timer can tell
+-- those apart, so the lid-closed suspend lives in hypridle.conf instead, where
+-- input activity actually resets the clock.
 hl.bind("switch:on:Lid Switch", function()
     -- Mirrored outputs are hidden from get_monitors(), so while presenting
     -- the count alone would say "one monitor"; mirror.active covers that.
