@@ -21,11 +21,12 @@ hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -a"))
 -- Focus ---------------------------------------------------------------------
 -- Directional focus in dwindle/scrolling. In monocle every window fills the
 -- same box, so direction is meaningless and plain cycle_next is a no-op there;
--- cycle the stack with cycle_next({ tiled = true }) instead (prev reverses).
+-- use monocle's own cyclenext/cycleprev layout messages (wiki: Monocle Quirks).
 local function focus_dir(dir)
     return function()
         if hl.get_config("general.layout") == "monocle" then
-            hl.dispatch(hl.dsp.window.cycle_next({ tiled = true, prev = (dir == "left" or dir == "up") }))
+            local back = (dir == "left" or dir == "up")
+            hl.dispatch(hl.dsp.layout(back and "cycleprev" or "cyclenext"))
         else
             hl.dispatch(hl.dsp.focus({ direction = dir }))
         end
@@ -36,15 +37,15 @@ for key, dir in pairs({ H = "left", J = "down", K = "up", L = "right",
     hl.bind("SUPER + " .. key, focus_dir(dir))
 end
 
--- Move (group_aware: moves windows in/out of groups directionally) ----------
-hl.bind("SUPER + SHIFT + H",     hl.dsp.window.move({ direction = "l", group_aware = true }))
-hl.bind("SUPER + SHIFT + J",     hl.dsp.window.move({ direction = "d", group_aware = true }))
-hl.bind("SUPER + SHIFT + K",     hl.dsp.window.move({ direction = "u", group_aware = true }))
-hl.bind("SUPER + SHIFT + L",     hl.dsp.window.move({ direction = "r", group_aware = true }))
-hl.bind("SUPER + SHIFT + left",  hl.dsp.window.move({ direction = "l", group_aware = true }))
-hl.bind("SUPER + SHIFT + down",  hl.dsp.window.move({ direction = "d", group_aware = true }))
-hl.bind("SUPER + SHIFT + up",    hl.dsp.window.move({ direction = "u", group_aware = true }))
-hl.bind("SUPER + SHIFT + right", hl.dsp.window.move({ direction = "r", group_aware = true }))
+-- Move ----------------------------------------------------------------------
+hl.bind("SUPER + SHIFT + H",     hl.dsp.window.move({ direction = "l" }))
+hl.bind("SUPER + SHIFT + J",     hl.dsp.window.move({ direction = "d" }))
+hl.bind("SUPER + SHIFT + K",     hl.dsp.window.move({ direction = "u" }))
+hl.bind("SUPER + SHIFT + L",     hl.dsp.window.move({ direction = "r" }))
+hl.bind("SUPER + SHIFT + left",  hl.dsp.window.move({ direction = "l" }))
+hl.bind("SUPER + SHIFT + down",  hl.dsp.window.move({ direction = "d" }))
+hl.bind("SUPER + SHIFT + up",    hl.dsp.window.move({ direction = "u" }))
+hl.bind("SUPER + SHIFT + right", hl.dsp.window.move({ direction = "r" }))
 
 -- Layout ---------------------------------------------------------------------
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ action = "toggle" }))
@@ -94,7 +95,7 @@ end
 -- Scratchpad (special workspace) ----------------------------------------------
 -- SUPER+S toggles the scratchpad overlay in/out of view; SUPER+SHIFT+S sends
 -- the focused window into it.
-hl.bind("SUPER + S",         hl.dsp.workspace.toggle_special({ name = "scratchpad" }))
+hl.bind("SUPER + S",         hl.dsp.workspace.toggle_special("scratchpad"))
 hl.bind("SUPER + SHIFT + S", hl.dsp.window.move({ workspace = "special:scratchpad" }))
 
 -- Session control --------------------------------------------------------------
