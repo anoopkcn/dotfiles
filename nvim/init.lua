@@ -1,12 +1,7 @@
 -- neovim config file
 -- by @anoopkcn
 
-require('vim._core.ui2').enable({
-    msg = {
-        pager  = { height = 0.4 },
-        dialog = { height = 0.4 },
-    },
-})
+require('vim._core.ui2').enable()
 vim.opt.fillchars:append({ msgsep = "─" })
 
 vim.opt.winborder = "rounded"
@@ -89,6 +84,8 @@ map("n", "<Tab>", ">>", { silent = true, desc = "Indent line" })
 map("n", "<S-Tab>", "<<", { silent = true, desc = "De-indent line" })
 map("v", "<Tab>", ">gv", { silent = true, desc = "Indent selection" })
 map("v", "<S-Tab>", "<gv", { silent = true, desc = "De-indent selection" })
+map("n", "<leader>n", "<CMD>! jj next -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
+map("n", "<leader>N", "<CMD>! jj prev -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
 
 
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -254,3 +251,5 @@ map("n", "<leader>fe", "<CMD>Oil<CR>", { silent = true, desc = "Open file explor
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
 require("filemarks").setup({ dir_open_cmd = "Oil %s" }) --  show_help = false
 map("n", "<leader>l", "<CMD>FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
+
+vim.opt.runtimepath:prepend('/home/akc/develop/stitch.nvim')
