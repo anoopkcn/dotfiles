@@ -51,12 +51,6 @@ hl.config({
         no_hardware_cursors = 1,
     },
 
-    binds = {
-        -- Focus keys walk a group's tabs before leaving the group, which is
-        -- how sway's tabbed containers navigated.
-        movefocus_cycles_groupfirst = true,
-    },
-
     input = {
         kb_layout = "us",
         touchpad = {
@@ -68,27 +62,6 @@ hl.config({
             natural_scroll       = true,
             disable_while_typing = true,
             scroll_factor        = 0.5,
-        },
-    },
-
-    -- Groups replace sway's tabbed layout; the groupbar is the tab strip.
-    group = {
-        auto_group = true, -- new windows join the focused group (sway-tabbed feel)
-        col = {
-            border_active   = "rgb(3c4e7a)",
-            border_inactive = "rgb(32384a)",
-        },
-        groupbar = {
-            font_family         = "Berkeley Mono Variable",
-            font_size           = 11,
-            height              = 22,
-            gradients           = false,
-            text_color          = "rgb(e0e2ea)", -- $fg
-            text_color_inactive = "rgb(828c9e)", -- $muted
-            col = {
-                active   = "rgb(3c4e7a)", -- $sel
-                inactive = "rgb(1d2029)", -- $bg_alt
-            },
         },
     },
 })

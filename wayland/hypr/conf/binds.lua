@@ -19,15 +19,13 @@ hl.bind("SUPER + V", hl.dsp.exec_cmd("cliphist list | fuzzel --dmenu | cliphist 
 hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -a"))
 
 -- Focus ---------------------------------------------------------------------
--- In monocle every window has the same geometry, so directional focus just
--- ping-pongs between the top two; cycle by focus order instead, and raise
--- the result since z-order does not follow focus for stacked tiled windows.
-local function smart_focus(dir)
+-- Directional focus in dwindle/scrolling. In monocle every window fills the
+-- same box, so direction is meaningless and plain cycle_next is a no-op there;
+-- cycle the stack with cycle_next({ tiled = true }) instead (prev reverses).
+local function focus_dir(dir)
     return function()
-        local ws = hl.get_active_workspace()
-        if ws ~= nil and ws.tiled_layout == "lua:monocle" then
-            hl.dispatch(hl.dsp.window.cycle_next({ prev = (dir == "left" or dir == "up") }))
-            hl.dispatch(hl.dsp.window.bring_to_top())
+        if hl.get_config("general.layout") == "monocle" then
+            hl.dispatch(hl.dsp.window.cycle_next({ tiled = true, prev = (dir == "left" or dir == "up") }))
         else
             hl.dispatch(hl.dsp.focus({ direction = dir }))
         end
@@ -35,7 +33,7 @@ local function smart_focus(dir)
 end
 for key, dir in pairs({ H = "left", J = "down", K = "up", L = "right",
                         left = "left", down = "down", up = "up", right = "right" }) do
-    hl.bind("SUPER + " .. key, smart_focus(dir))
+    hl.bind("SUPER + " .. key, focus_dir(dir))
 end
 
 -- Move (group_aware: moves windows in/out of groups directionally) ----------
@@ -52,60 +50,19 @@ hl.bind("SUPER + SHIFT + right", hl.dsp.window.move({ direction = "r", group_awa
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind("SUPER + M", hl.dsp.window.fullscreen({ action = "toggle", mode = "maximized" }))
 
--- Monocle: every tiled window takes the full workspace area (gaps and bar
--- kept), stacked with the focused one on top — sway's tabbed, minus the tabs.
-hl.layout.register("monocle", {
-    recalculate = function(ctx)
-        for _, t in ipairs(ctx.targets) do
-            t:place(ctx.area)
-        end
-    end,
-})
-
--- Layout toggles: each key flips general:layout between its layout and
--- dwindle, so any layout key also escapes any other layout. The option is
--- global — other workspaces follow as they recalculate; per-workspace layout
--- is read-only in 0.55 (ws.tiled_layout can't be assigned).
-local DEFAULT_LAYOUT = "dwindle"
-local function apply_layout(name)
-    hl.config({
-        general = { layout = name },
-        -- Monocle stacks every window in the same box, so hover-refocus
-        -- (follow_mouse=1) lands on whichever buried window the pick finds and
-        -- pulls it over the one just focused by keyboard. 2 = moving the mouse
-        -- never changes keyboard focus; clicking still does.
-        input = { follow_mouse = (name == "lua:monocle") and 2 or 1 },
-    })
-end
+-- Layout switching. monocle (single window fills the workspace) and scrolling
+-- are built-in layouts since Hyprland 0.54. Each key toggles between its layout
+-- and dwindle. general:layout is global — other workspaces follow as they
+-- recalculate.
 local function toggle_layout(name)
     return function()
-        local ws = hl.get_active_workspace()
-        apply_layout((ws ~= nil and ws.tiled_layout == name) and DEFAULT_LAYOUT or name)
+        local current = hl.get_config("general.layout")
+        hl.config({ general = { layout = (current == name) and "dwindle" or name } })
     end
 end
-hl.bind("SUPER + W", toggle_layout("lua:monocle"))
+hl.bind("SUPER + W", toggle_layout("monocle"))
 hl.bind("SUPER + Q", toggle_layout("scrolling"))
 
--- A window mapping into a monocle stack can land below it; raise it once the
--- map settles (event handlers get a 50ms budget, so the work goes in a timer).
-hl.on("window.open", function()
-    hl.timer(function()
-        local ws = hl.get_active_workspace()
-        if ws ~= nil and ws.tiled_layout == "lua:monocle" then
-            hl.dispatch(hl.dsp.window.bring_to_top())
-        end
-    end, { timeout = 50, type = "oneshot" })
-end)
-
--- Every deliberate focus change (click, SUPER+Tab switcher, xdg-activation)
--- must also raise in monocle. Safe with follow_mouse=2: mouse motion can't
--- fire this, and bring_to_top doesn't refocus, so it can't loop.
-hl.on("window.active", function()
-    local ws = hl.get_active_workspace()
-    if ws ~= nil and ws.tiled_layout == "lua:monocle" then
-        hl.dispatch(hl.dsp.window.bring_to_top())
-    end
-end)
 hl.bind("SUPER + E", hl.dsp.layout("togglesplit"))
 hl.bind("SUPER + minus",     hl.dsp.layout("preselect d"))
 hl.bind("SUPER + backslash", hl.dsp.layout("preselect r"))
@@ -133,6 +90,12 @@ for i = 1, 10 do
     hl.bind("SUPER + " .. key,            hl.dsp.focus({ workspace = i }))
     hl.bind("SUPER + SHIFT + " .. key,    hl.dsp.window.move({ workspace = i }))
 end
+
+-- Scratchpad (special workspace) ----------------------------------------------
+-- SUPER+S toggles the scratchpad overlay in/out of view; SUPER+SHIFT+S sends
+-- the focused window into it.
+hl.bind("SUPER + S",         hl.dsp.workspace.toggle_special({ name = "scratchpad" }))
+hl.bind("SUPER + SHIFT + S", hl.dsp.window.move({ workspace = "special:scratchpad" }))
 
 -- Session control --------------------------------------------------------------
 hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
