@@ -101,7 +101,8 @@ hl.bind("SUPER + SHIFT + S", hl.dsp.window.move({ workspace = "special:scratchpa
 -- Session control --------------------------------------------------------------
 hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
 -- Lock via logind so hypridle's lock_cmd keeps hyprlock single-instance.
--- hl.bind("SUPER + SHIFT + X", hl.dsp.exec_cmd("loginctl lock-session"))
+-- The manual lock, equivalent to macOS's CTRL+CMD+Q.
+hl.bind("SUPER + SHIFT + X", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind("SUPER + SHIFT + BackSpace", hl.dsp.exec_cmd("~/.config/hypr/scripts/power-menu.sh"))
 -- hl.bind("CTRL + ALT + BackSpace", hl.dsp.exec_cmd("systemctl suspend"))
 

@@ -26,8 +26,11 @@ hl.window_rule({
     float = true,
 })
 
--- Don't idle-lock/DPMS while any window is fullscreen (video playback).
--- Windowed audio playback is handled by the pactl check in hypridle.conf.
+-- Don't idle-lock/DPMS while any window is fullscreen (video playback). This
+-- rides the Wayland idle-inhibit protocol, which hypridle honours by default.
+-- Windowed playback is not special-cased anywhere: the app takes its own idle
+-- inhibitor while playing, the same way apps take a power assertion on macOS.
+-- `idle-assertions` lists whoever is currently holding one.
 hl.window_rule({
     name         = "idle-inhibit-fullscreen",
     match        = { class = ".*" },

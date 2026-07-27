@@ -331,6 +331,11 @@ end)
 --     undocking fires no fresh lid event for it to re-evaluate. So suspend
 --     here, but only after a grace window — opening the lid within it leaves
 --     it open, and we keep working on eDP-1 instead of sleeping.
+--
+--     This is the one suspend outside hypridle, and it stays because it is a
+--     physical event rather than an idle one: without it, a laptop that gets
+--     unplugged and put in a bag stays awake until the 15-minute battery idle
+--     timer notices, which is a long time to cook in a rucksack.
 hl.on("monitor.removed", function(m)
     if mirror.active then return end
     local ok, name = pcall(function() return m.name end)
@@ -365,7 +370,8 @@ end)
 
 -- Docked (external active): closing the lid disables eDP-1 so its workspaces
 -- migrate to the external. Undocked: no-op, logind suspends as normal on a
--- lid-close event (docked = ignore in logind.conf). Undocking with the lid
+-- lid-close event (HandleLidSwitchDocked defaults to ignore, and logind counts
+-- any connected external display as "docked"). Undocking with the lid
 -- ALREADY shut fires no such event, so the monitor.removed handler above
 -- covers that. The reload-behind-closed-lid case is handled at load time
 -- above via the ACPI lid state.
@@ -374,9 +380,10 @@ end)
 -- started by the lid event cannot tell "I shut the lid and left" from "I shut
 -- the lid and am working on the external", which is the normal way this machine
 -- gets used — an earlier version tried a 90s grace window and slept the session
--- out from under an active desk session twice. Only an idle timer can tell
--- those apart, so the lid-closed suspend lives in hypridle.conf instead, where
--- input activity actually resets the clock.
+-- out from under an active desk session twice. Only an idle timer can tell those
+-- apart, so shutting the lid at the desk and leaving is left to hypridle's AC
+-- idle suspend, where input activity actually resets the clock. This mirrors
+-- macOS, where clamshell is an explicit mode and never implies you left.
 hl.bind("switch:on:Lid Switch", function()
     -- Mirrored outputs are hidden from get_monitors(), so while presenting
     -- the count alone would say "one monitor"; mirror.active covers that.
