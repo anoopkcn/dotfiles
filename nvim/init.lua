@@ -42,7 +42,7 @@ vim.o.statusline = " "
 vim.o.winbar = " %f%m%=%l:%c  %L lines  %p%% "
 -- vim.opt.cmdheight = 0
 
-vim.cmd.colorscheme("slate")
+vim.cmd.colorscheme("ghostty")
 local _bg = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
 vim.api.nvim_set_hl(0, "CursorLine", { bg = _bg })
 vim.api.nvim_set_hl(0, "CursorLineSign", { bg = _bg })
@@ -117,15 +117,15 @@ vim.pack.add({
         src = "https://github.com/dmtrKovalenko/fff.nvim",
         name = "fff.nvim"
     },
-    { 
-        src = "https://github.com/neovim/nvim-lspconfig", 
-        branch = "master" 
+    {
+        src = "https://github.com/neovim/nvim-lspconfig",
+        branch = "master"
     },
     {
-         src = "https://github.com/anoopkcn/oil.nvim" 
+        src = "https://github.com/anoopkcn/oil.nvim"
     },
     {
-         src = "https://github.com/anoopkcn/filemarks.nvim" 
+        src = "https://github.com/anoopkcn/filemarks.nvim"
     },
 
 })
@@ -158,16 +158,13 @@ vim.api.nvim_create_autocmd('PackChanged', {
 vim.g.fff = {
     prompt = '❯ ',
     lazy_sync = true,
-    debug = { enabled = true, show_scores = true },
     layout = {
         anchor = 'top',
         prompt_position = 'top',
         flex = { size = 130, wrap = 'bottom' },
     },
-    debug = {
-    enabled = false,
-    show_scores = false,
-  },
+    -- debug = { enabled = true, show_scores = true },
+    debug = { enabled = false, show_scores = false },
 }
 
 vim.keymap.set('n', '<leader>ff', function() require('fff').find_files() end, { desc = 'FFFind files' })
