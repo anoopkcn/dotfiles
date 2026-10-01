@@ -241,7 +241,9 @@ local function ensure_output_window()
         vim.bo[bufnr].bufhidden = 'hide'
         vim.bo[bufnr].filetype = 'dirx_output'
         pcall(api.nvim_buf_set_name, bufnr, 'DirxShellOutput')
-        vim.keymap.set('n', 'q', '<CMD>close<CR>', { buffer = bufnr, nowait = true })
+        vim.keymap.set('n', 'q', function()
+            M.close_output()
+        end, { buffer = bufnr, nowait = true })
         vim.keymap.set('n', '<C-c>', function()
             -- Interrupt a running job; if nothing is running, dismiss the window.
             if not stop_job() then
@@ -400,6 +402,24 @@ function M.stop_command()
     end
 end
 
+-- Close the output window, stopping a running job (its next output would reopen it).
+---@return boolean closed
+local function output_win_open()
+    local winid = output_state.winid
+    return winid ~= nil and api.nvim_win_is_valid(winid) and api.nvim_win_get_buf(winid) == output_state.bufnr
+end
+
+function M.close_output()
+    if not output_win_open() then
+        return false
+    end
+    local winid = output_state.winid
+    stop_job()
+    -- Disown the job so its on_exit doesn't reopen the window for the footer.
+    output_state.job_id, output_state.terminated = nil, false
+    return pcall(api.nvim_win_close, winid, false)
+end
+
 function M.toggle_columns()
     show_columns = not show_columns
     for _, buf in ipairs(api.nvim_list_bufs()) do
@@ -431,6 +451,16 @@ api.nvim_create_autocmd('FileType', {
         bmap({ 'n', 'x' }, '&', M.run_command_async, 'Run shell command on entry (output streams)')
         bmap('n', '<C-c>', M.stop_command, 'Stop running shell command')
         bmap('n', 'gl', M.toggle_columns, 'Toggle permissions/size/mtime columns')
+        -- Without an output window, q stays the macro-record command. An <expr>
+        -- mapping keeps the stopping q out of the recorded register; the close is
+        -- scheduled because windows can't be closed under textlock.
+        vim.keymap.set('n', 'q', function()
+            if output_win_open() then
+                vim.schedule(M.close_output)
+                return ''
+            end
+            return 'q'
+        end, { buffer = args.buf, expr = true, desc = 'Close shell command output window' })
     end,
 })
 
