@@ -1,6 +1,7 @@
 # ~/.zshrc config
 
 setopt extended_glob null_glob
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 path=(
     /Users/akc/.local/bin
     /Library/TeX/texbin
@@ -54,12 +55,6 @@ if [ -n "$ZSH_VERSION" ]; then
 
 fi
 
-if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
-    if command -v brew >/dev/null 2>&1; then
-        eval "$(brew shellenv)"
-    fi
-fi
-
 
 autoload -U edit-command-line
 zle -N edit-command-line
@@ -76,24 +71,60 @@ zo() {
     source "$script"
 }
 
-pi() {
-    for arg in "$@"; do 
-        case "$arg" in
-            --nvim|--nvim=*) pi-nvim "$@"; return ;;
-        esac
-   done
-   command pi "$@"
+# pi() {
+#     for arg in "$@"; do 
+#         case "$arg" in
+#             --nvim|--nvim=*) pi-nvim "$@"; return ;;
+#         esac
+#    done
+#    command pi "$@"
+# }
+#
+# claude() {
+#     for arg in "$@"; do
+#         case "$arg" in
+#             --nvim|--nvim=*|--nvim-*)
+#                 NVIM_AWARE_PROMPT_CONTEXT=full \
+#                   NVIM_AWARE_SNAPSHOT_TTL_MS=750 \
+#                   claude-nvim "$@"
+#                   return ;;
+#           esac
+#     done
+#     command claude "$@"
+# }
+#
+doi2bib() {
+  local doi="" info="" file=""
+  local api="https://api.crossref.org/works" trans="transform/application/x-bibtex"
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -h|--help)
+        echo "usage: doi2bib -d DOI [-i FIELD | -f FILE]"
+        return 0 ;;
+      -d|--doi)  doi=${2-};  shift ;;
+      -i|--info) info=${2-}; shift ;;
+      -f|--file) file=${2-}; shift ;;
+      *) echo "doi2bib: unknown option $1" >&2; return 1 ;;
+    esac
+    [ $# -gt 0 ] && shift
+  done
+  if [ -z "$doi" ]; then
+    echo "doi2bib: no DOI given, use -d DOI" >&2; return 1
+  fi
+
+  local bib
+  bib=$(curl -sfL "$api/$doi/$trans") || {
+    echo "doi2bib: crossref has no BibTeX for $doi" >&2; return 1
+  }
+
+  if [ -n "$file" ]; then
+    printf '\n%s\n' "$bib" >> "$file"
+  elif [ -n "$info" ]; then
+    grep -oE "$info=(\{[^}]*\}|[^,} ]*)" <<< "$bib"
+  else
+    printf '%s\n' "$bib"
+  fi
 }
 
-claude() {
-    for arg in "$@"; do
-        case "$arg" in
-            --nvim|--nvim=*|--nvim-*)
-                NVIM_AWARE_PROMPT_CONTEXT=full \
-                  NVIM_AWARE_SNAPSHOT_TTL_MS=750 \
-                  claude-nvim "$@"
-                  return ;;
-          esac
-    done
-    command claude "$@"
-}
+export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+export PWCLI="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"

@@ -1,6 +1,7 @@
 -- neovim config file
 -- by @anoopkcn
 
+-- TASK(20260921-124325): check for neovim to check if ui2 is natively supported
 require('vim._core.ui2').enable()
 vim.opt.fillchars:append({ msgsep = "─" })
 
@@ -70,7 +71,7 @@ map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item"
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
 map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
-map("n", "<leader>t", vim.diagnostic.setqflist,
+map("n", "<leader>d", vim.diagnostic.setqflist,
     { silent = true, desc = "Send diagnostics to quickfix" })
 map("n", "<leader>x", function() vim.diagnostic.open_float() end,
     { silent = true, desc = "Show diagnostics" })
@@ -84,8 +85,8 @@ map("n", "<Tab>", ">>", { silent = true, desc = "Indent line" })
 map("n", "<S-Tab>", "<<", { silent = true, desc = "De-indent line" })
 map("v", "<Tab>", ">gv", { silent = true, desc = "Indent selection" })
 map("v", "<S-Tab>", "<gv", { silent = true, desc = "De-indent selection" })
-map("n", "<leader>n", "<CMD>! jj next -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
-map("n", "<leader>N", "<CMD>! jj prev -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
+-- map("n", "<leader>n", "<CMD>! jj next -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
+-- map("n", "<leader>N", "<CMD>! jj prev -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
 
 
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -93,10 +94,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.highlight.on_yank() end,
 })
 
+-- Neovim maps .smd to rmd (Sweave), whose syntax breaks on ```python fences; treat SuperMD as markdown
+vim.filetype.add({ extension = { smd = "markdown" } })
+
 -- PLUGINS
 require("brackets")
 require("surround")
 require("search_replace")
+require("dirx")
 
 vim.keymap.set('n', '<leader>fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
@@ -106,8 +111,7 @@ vim.pack.add({
         name = "mini.diff"
     },
     {
-        src = "https://github.com/NicolasGB/jj.nvim",
-        name = "jj.nvim"
+        src = "https://github.com/github/copilot.vim"
     },
     {
         src = "https://github.com/tpope/vim-fugitive",
@@ -122,12 +126,13 @@ vim.pack.add({
         branch = "master"
     },
     {
-        src = "https://github.com/anoopkcn/oil.nvim"
-    },
-    {
         src = "https://github.com/anoopkcn/filemarks.nvim"
     },
-
+    { src = "https://github.com/anoopkcn/tatr.nvim" },
+    {
+        src = "https://github.com/nvim-treesitter/nvim-treesitter",
+        name = "treesitter"
+    }
 })
 
 require("mini.diff").setup({
@@ -137,13 +142,14 @@ require("mini.diff").setup({
     }
 })
 
-require("jj").setup({
-    cmd = {
-        keymaps = { close = { "q", "<Esc>", "gq" } }
-    }
-})
-map("n", "<leader>J", "<CMD>J<CR>", { silent = true, desc = "Open :J log" })
 map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open :Git Status" })
+vim.keymap.set("n", "<leader>tn", "<CMD>Tatr new<CR>", { desc = "tatr: new task" })
+vim.keymap.set("n", "<leader>tt", "<CMD>Tatr todo<CR>", { desc = "tatr: TODO to task" })
+vim.keymap.set("n", "<leader>tf", "<CMD>Tatr find<CR>", { desc = "tatr: find task" })
+vim.keymap.set("n", "<leader>tr", "<CMD>Tatr ref<CR>", { desc = "tatr: task references" })
+vim.keymap.set("n", "<leader>ty", "<CMD>Tatr yank<CR>", { desc = "tatr: yank HUID" })
+vim.keymap.set("n", "<leader>tl", "<CMD>Tatr ls<CR>", { desc = "tatr: list tasks" })
+vim.keymap.set("n", "<leader>tg", "<CMD>Tatr goto<CR>", { desc = "tatr: go to task under cursor" })
 
 vim.api.nvim_create_autocmd('PackChanged', {
     callback = function(ev)
@@ -151,6 +157,38 @@ vim.api.nvim_create_autocmd('PackChanged', {
         if name == 'fff.nvim' and (kind == 'install' or kind == 'update') then
             if not ev.data.active then vim.cmd.packadd('fff.nvim') end
             require('fff.download').download_or_build_binary()
+        end
+        if name == 'treesitter' and kind == 'update' then
+            if not ev.data.active then vim.cmd.packadd('treesitter') end
+            vim.cmd('TSUpdate')
+        end
+    end,
+})
+
+-- TREESITTER
+-- markdown, markdown_inline, lua, vim and vimdoc ship with Neovim; installing them here
+-- keeps their parsers in step with nvim-treesitter's queries, which take precedence
+local treesitter = require("nvim-treesitter")
+local ensure_installed = {
+    "c", "cpp", "python", "typescript", "bash", "zsh",
+    "markdown", "markdown_inline", "lua", "vim", "vimdoc",
+}
+
+local already_installed = treesitter.get_installed()
+local to_install = vim.tbl_filter(function(p)
+    return not vim.tbl_contains(already_installed, p)
+end, ensure_installed)
+
+if #to_install > 0 then
+    treesitter.install(to_install)
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true }),
+    callback = function(args)
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if lang and vim.list_contains(treesitter.get_installed(), lang) then
+            vim.treesitter.start(args.buf)
         end
     end,
 })
@@ -215,38 +253,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- LOCAL PLUGINS
 
--- vim.opt.runtimepath:prepend('/Users/akc/develop/oil.nvim')
-function _G.get_oil_winbar()
-    local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-    local dir = require("oil").get_current_dir(bufnr)
-    if dir then
-        return dir -- full absolute path
-    else
-        return vim.api.nvim_buf_get_name(0)
-    end
-end
-
-require("oil").setup({
-    columns = { "permissions", "size", "mtime" },
-    delete_to_trash = true,
-    skip_confirmation = true,
-    view_options = {
-        show_hidden = true,
-    },
-    win_options = {
-        winbar = "%!v:lua.get_oil_winbar()",
-    },
-    keymaps = {
-        ["!"] = "actions.run_command",
-        ["&"] = "actions.run_command_async",
-        ["<C-c>"] = "actions.stop_command",
-    },
-})
-
-map("n", "<leader>fe", "<CMD>Oil<CR>", { silent = true, desc = "Open file explorer" })
-
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
-require("filemarks").setup({ dir_open_cmd = "Oil %s" }) --  show_help = false
+require("filemarks").setup({ dir_open_cmd = "edit %s" }) --  show_help = false
 map("n", "<leader>l", "<CMD>FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
 
-vim.opt.runtimepath:prepend('/home/akc/develop/stitch.nvim')
+-- vim.opt.runtimepath:prepend('/home/akc/develop/stitch.nvim')
