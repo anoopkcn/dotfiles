@@ -51,16 +51,19 @@ local function around_range(target)
     local e = vim.api.nvim_buf_get_mark(0, ">")
     local sr, sc, er, ec = s[1], s[2], e[1], e[2]
     local close = close_for[target]
-    if close then
-        local last = vim.api.nvim_buf_get_lines(0, er - 1, er, false)[1] or ""
-        while ec >= 0 and last:sub(ec + 1, ec + 1) ~= close do
-            ec = ec - 1
-            if ec < 0 then return nil end
-        end
-        local first = vim.api.nvim_buf_get_lines(0, sr - 1, sr, false)[1] or ""
-        while sc < #first and first:sub(sc + 1, sc + 1) ~= target do
-            sc = sc + 1
-        end
+    local last = vim.api.nvim_buf_get_lines(0, er - 1, er, false)[1] or ""
+    while ec >= 0 and last:sub(ec + 1, ec + 1) ~= close do
+        ec = ec - 1
+    end
+    local first = vim.api.nvim_buf_get_lines(0, sr - 1, sr, false)[1] or ""
+    while sc < #first and first:sub(sc + 1, sc + 1) ~= target do
+        sc = sc + 1
+    end
+    -- When `va<char>` finds no pair, Visual mode stays on the cursor char and
+    -- the scans above run past it (e.g. onto a stray closer before the cursor).
+    if ec < 0 or sc >= #first or (sr == er and sc >= ec) then
+        vim.fn.winrestview(view)
+        return nil
     end
     return sr, sc, er, ec
 end
@@ -106,7 +109,7 @@ end
 local pending = nil
 local last_op, last_ds, last_cs_old, last_cs_new, last_ys = nil, nil, nil, nil, nil
 
-function _G.__surround_op(motion_type)
+local function surround_op(motion_type)
     local op = pending
     pending = nil
 
@@ -140,6 +143,7 @@ end
 -- If the user aborts op-pending mode (e.g. `ys<Esc>`), operatorfunc never
 -- fires and `pending` would otherwise stick around and poison the next `.`.
 vim.api.nvim_create_autocmd("ModeChanged", {
+    group = vim.api.nvim_create_augroup("surround", { clear = true }),
     pattern = "no*:*",
     callback = function() pending = nil end,
 })
@@ -167,30 +171,30 @@ local function visual_S()
 end
 
 local map = vim.keymap.set
-local expr_opts = { noremap = true, silent = true, expr = true }
+local expr_opts = { silent = true, expr = true }
 
 map("n", "ds", function()
     pending = "ds"
-    vim.o.operatorfunc = "v:lua.__surround_op"
+    vim.o.operatorfunc = surround_op
     return "g@l"
 end, expr_opts)
 
 map("n", "cs", function()
     pending = "cs"
-    vim.o.operatorfunc = "v:lua.__surround_op"
+    vim.o.operatorfunc = surround_op
     return "g@l"
 end, expr_opts)
 
 map("n", "ys", function()
     pending = "ys"
-    vim.o.operatorfunc = "v:lua.__surround_op"
+    vim.o.operatorfunc = surround_op
     return "g@"
 end, expr_opts)
 
 map("n", "yss", function()
     pending = "ys"
-    vim.o.operatorfunc = "v:lua.__surround_op"
+    vim.o.operatorfunc = surround_op
     return "g@_"
 end, expr_opts)
 
-map("x", "S", visual_S, { noremap = true, silent = true })
+map("x", "S", visual_S, { silent = true })

@@ -1,18 +1,13 @@
--- Bracket-pair keymaps in the spirit of tpope/vim-unimpaired.
--- Behaviour mirrors plugin/unimpaired.vim for:
---   ]q [q  quickfix nav (with zv)
---   ]b [b  buffer nav
---   ]<Space> [<Space>  insert blank lines
+-- Bracket-pair keymaps in the spirit of tpope/vim-unimpaired, for what the
+-- builtin unimpaired-style defaults (:h [q, :h [b, :h [<Space>, :h [d) lack:
+--   ]q [q  quickfix nav that wraps around and opens folds (zv)
 --   ]e [e  exchange line down/up (preserves cursor column)
--- Plus local additions:
---   ]x [x  diagnostic nav
--- All mappings honour [count] where it makes sense.
+-- All mappings honour [count].
 
 local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
 
 local function with_desc(desc)
-    return vim.tbl_extend("force", opts, { desc = desc })
+    return { silent = true, desc = desc }
 end
 
 local function qf_jump(forward)
@@ -26,27 +21,6 @@ end
 
 map("n", "]q", function() qf_jump(true)  end, with_desc("Next quickfix item"))
 map("n", "[q", function() qf_jump(false) end, with_desc("Previous quickfix item"))
-map("n", "]b", function() vim.cmd(vim.v.count1 .. "bnext")     end, with_desc("Next buffer"))
-map("n", "[b", function() vim.cmd(vim.v.count1 .. "bprevious") end, with_desc("Previous buffer"))
-
-map("n", "]x", function() vim.diagnostic.jump({ count = vim.v.count1 })  end, with_desc("Next diagnostic"))
-map("n", "[x", function() vim.diagnostic.jump({ count = -vim.v.count1 }) end, with_desc("Previous diagnostic"))
-
-local function blanks(n)
-    local out = {}
-    for _ = 1, n do out[#out + 1] = "" end
-    return out
-end
-
-map("n", "]<Space>", function()
-    local row = vim.api.nvim_win_get_cursor(0)[1]
-    vim.api.nvim_buf_set_lines(0, row, row, false, blanks(vim.v.count1))
-end, with_desc("Insert blank line below"))
-
-map("n", "[<Space>", function()
-    local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-    vim.api.nvim_buf_set_lines(0, row, row, false, blanks(vim.v.count1))
-end, with_desc("Insert blank line above"))
 
 -- :move resets the cursor to column 1; m` + `` round-trips the column.
 -- foldmethod is forced to manual around the move so folds don't rebuild mid-op.

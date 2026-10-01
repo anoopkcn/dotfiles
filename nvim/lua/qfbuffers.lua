@@ -4,9 +4,11 @@
 
 local M = {}
 
-local function buffer_items()
-    local cur = vim.api.nvim_get_current_buf()
-    local alt = vim.fn.bufnr('#')
+-- `win` is the window whose current (%) and alternate (^) buffers get flagged.
+local function buffer_items(win)
+    local cur, alt = vim.api.nvim_win_call(win, function()
+        return vim.api.nvim_get_current_buf(), vim.fn.bufnr('#')
+    end)
     local items = {}
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         -- The quickfix window's own buffer is buflisted; keep it out of the list.
@@ -82,7 +84,9 @@ local function delete_under_cursor()
         end
     end
     vim.api.nvim_buf_delete(item.bufnr, {})
-    local items = buffer_items()
+    -- Flag buffers from the window we came from, not the quickfix window itself.
+    local prev = vim.fn.win_getid(vim.fn.winnr('#'))
+    local items = buffer_items(prev)
     if #items == 0 then
         vim.cmd('cclose')
         return
@@ -92,7 +96,7 @@ local function delete_under_cursor()
 end
 
 function M.open()
-    local items = buffer_items()
+    local items = buffer_items(0)
     if #items == 0 then
         vim.notify('qfbuffers: no listed buffers', vim.log.levels.INFO)
         return

@@ -67,11 +67,9 @@ map("n", "<C-h>", "<C-w>h", { silent = true, desc = "Focus left window" })
 map("n", "<C-j>", "<C-w>j", { silent = true, desc = "Focus window below" })
 map("n", "<C-k>", "<C-w>k", { silent = true, desc = "Focus window above" })
 map("n", "<C-l>", "<C-w>l", { silent = true, desc = "Focus right window" })
-map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
-map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
 map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
-map("n", "<leader>d", vim.diagnostic.setqflist,
+map("n", "<leader>D", vim.diagnostic.setqflist,
     { silent = true, desc = "Send diagnostics to quickfix" })
 map("n", "<leader>x", function() vim.diagnostic.open_float() end,
     { silent = true, desc = "Show diagnostics" })
