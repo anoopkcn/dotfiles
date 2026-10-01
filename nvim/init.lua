@@ -30,10 +30,10 @@ vim.opt.isfname:append("@-@")
 vim.opt.splitbelow = true
 vim.opt.switchbuf:append("useopen")
 vim.opt.ruler = true
-vim.g.netrw_liststyle = 1
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
-vim.opt.scrolloff = 8
+-- vim.opt.scrolloff = 8
+-- vim.opt.scrolloffpad = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.laststatus = 3
@@ -63,10 +63,10 @@ map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true, desc = "Clear search h
 map("n", "J", "mzJ`z", { silent = true, desc = "Join line below without moving cursor" })
 map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true, desc = "Split window vertically (right)" })
 map("n", "<leader>-", ":rightbelow split<CR>", { silent = true, desc = "Split window horizontally (below)" })
--- map("n", "<C-h>", "<C-w>h", { silent = true, desc = "Focus left window" })
--- map("n", "<C-j>", "<C-w>j", { silent = true, desc = "Focus window below" })
--- map("n", "<C-k>", "<C-w>k", { silent = true, desc = "Focus window above" })
--- map("n", "<C-l>", "<C-w>l", { silent = true, desc = "Focus right window" })
+map("n", "<C-h>", "<C-w>h", { silent = true, desc = "Focus left window" })
+map("n", "<C-j>", "<C-w>j", { silent = true, desc = "Focus window below" })
+map("n", "<C-k>", "<C-w>k", { silent = true, desc = "Focus window above" })
+map("n", "<C-l>", "<C-w>l", { silent = true, desc = "Focus right window" })
 map("n", "<M-j>", "<CMD>cnext<CR>", { silent = true, desc = "Next quickfix item" })
 map("n", "<M-k>", "<CMD>cprev<CR>", { silent = true, desc = "Previous quickfix item" })
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
@@ -85,24 +85,18 @@ map("n", "<Tab>", ">>", { silent = true, desc = "Indent line" })
 map("n", "<S-Tab>", "<<", { silent = true, desc = "De-indent line" })
 map("v", "<Tab>", ">gv", { silent = true, desc = "Indent selection" })
 map("v", "<S-Tab>", "<gv", { silent = true, desc = "De-indent selection" })
--- map("n", "<leader>n", "<CMD>! jj next -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
--- map("n", "<leader>N", "<CMD>! jj prev -e &> /dev/null <CR>", { silent = true, desc = "JJ next revision" })
 
 
-vim.api.nvim_create_autocmd("TextYankPost", {
+vim.api.nvim_create_autocmd({ "TextYankPost", "TextPutPost" }, {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
-    callback = function() vim.highlight.on_yank() end,
+    callback = function() vim.hl.hl_op() end,
 })
 
 -- Neovim maps .smd to rmd (Sweave), whose syntax breaks on ```python fences; treat SuperMD as markdown
 vim.filetype.add({ extension = { smd = "markdown" } })
 
 -- PLUGINS
-require("brackets")
-require("surround")
-require("search_replace")
-require("dirx")
-
+-- brackets, surround, search_replace and dirx are auto-loaded from plugin/
 vim.keymap.set('n', '<leader>fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
 vim.pack.add({
@@ -128,7 +122,9 @@ vim.pack.add({
     {
         src = "https://github.com/anoopkcn/filemarks.nvim"
     },
-    { src = "https://github.com/anoopkcn/tatr.nvim" },
+    {
+        src = "https://github.com/anoopkcn/tatr.nvim"
+    },
     {
         src = "https://github.com/nvim-treesitter/nvim-treesitter",
         name = "treesitter"
@@ -166,8 +162,6 @@ vim.api.nvim_create_autocmd('PackChanged', {
 })
 
 -- TREESITTER
--- markdown, markdown_inline, lua, vim and vimdoc ship with Neovim; installing them here
--- keeps their parsers in step with nvim-treesitter's queries, which take precedence
 local treesitter = require("nvim-treesitter")
 local ensure_installed = {
     "c", "cpp", "python", "typescript", "bash", "zsh",
@@ -253,8 +247,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- LOCAL PLUGINS
 
+-- vim.opt.runtimepath:prepend('/home/akc/develop/stitch.nvim')
+
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')
+
 require("filemarks").setup({ dir_open_cmd = "edit %s" }) --  show_help = false
 map("n", "<leader>l", "<CMD>FilemarksToggle<CR>", { silent = true, desc = "List filemarks" })
-
--- vim.opt.runtimepath:prepend('/home/akc/develop/stitch.nvim')

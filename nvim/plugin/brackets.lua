@@ -64,5 +64,3 @@ end
 
 map("n", "]e", function() exchange("down") end, with_desc("Exchange line below"))
 map("n", "[e", function() exchange("up")   end, with_desc("Exchange line above"))
-
-return {}

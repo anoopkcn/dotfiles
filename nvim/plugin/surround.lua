@@ -194,5 +194,3 @@ map("n", "yss", function()
 end, expr_opts)
 
 map("x", "S", visual_S, { noremap = true, silent = true })
-
-return {}
