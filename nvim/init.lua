@@ -1,25 +1,13 @@
 -- neovim config file
 -- by @anoopkcn
 
--- TASK(20260921-124325): check for neovim to check if ui2 is natively supported
+-- TASK(20260921-124325): check for neovim update to see to check if ui2 is natively supported
 require('vim._core.ui2').enable()
-vim.opt.fillchars:append({ msgsep = "─" })
+vim.opt.fillchars:append("msgsep:─")
 
 vim.opt.winborder = "rounded"
 vim.opt.pumborder = "rounded"
 vim.g.mapleader = " "
-vim.g.loaded_python3_provider = 0
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_node_provider = 0
-vim.opt.ignorecase = true
-vim.opt.signcolumn = "yes"
-vim.opt.expandtab = true
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.smartindent = true
-vim.opt.showbreak = "⤷ "
 vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
@@ -32,8 +20,8 @@ vim.opt.switchbuf:append("useopen")
 vim.opt.ruler = true
 vim.g.loaded_matchit = 1
 vim.opt.termguicolors = true
--- vim.opt.scrolloff = 8
--- vim.opt.scrolloffpad = 1
+vim.opt.scrolloff = 8
+vim.opt.scrolloffpad = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.laststatus = 3
@@ -63,10 +51,6 @@ map("n", "<Esc>", "<CMD>nohlsearch<CR>", { silent = true, desc = "Clear search h
 map("n", "J", "mzJ`z", { silent = true, desc = "Join line below without moving cursor" })
 map("n", "<leader>\\", ":rightbelow vsplit<CR>", { silent = true, desc = "Split window vertically (right)" })
 map("n", "<leader>-", ":rightbelow split<CR>", { silent = true, desc = "Split window horizontally (below)" })
-map("n", "<C-h>", "<C-w>h", { silent = true, desc = "Focus left window" })
-map("n", "<C-j>", "<C-w>j", { silent = true, desc = "Focus window below" })
-map("n", "<C-k>", "<C-w>k", { silent = true, desc = "Focus window above" })
-map("n", "<C-l>", "<C-w>l", { silent = true, desc = "Focus right window" })
 map("n", "<leader>bd", vim.cmd.bd, { silent = true, desc = "Delete buffer" })
 map("n", "<leader>on", vim.cmd.only, { silent = true, desc = "Close other windows" })
 map("n", "<leader>D", vim.diagnostic.setqflist,
@@ -244,7 +228,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 
 -- LOCAL PLUGINS
+--
 
+
+-- TASK(20261003-233238): figure out what to do with stitch.nvim
 -- vim.opt.runtimepath:prepend('/home/akc/develop/stitch.nvim')
 
 -- vim.opt.runtimepath:prepend('/Users/akc/develop/filemarks.nvim')

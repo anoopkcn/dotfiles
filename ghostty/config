@@ -2,8 +2,8 @@
 # Ref: https://ghostty.org/docs/config/reference
 
 # theme = slate
-font-family = Berkeley Mono
-window-title-font-family = Berkeley Mono
+font-family = Berkeley Mono Variable
+window-title-font-family = Berkeley Mono Variable
 font-size = 13
 font-feature = -calt
 
