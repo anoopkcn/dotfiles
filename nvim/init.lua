@@ -66,8 +66,9 @@ map("n", "<leader>z", ":! ", { desc = "Execute a command" })
 map("n", "<Tab>", ">>", { silent = true, desc = "Indent line" })
 map("n", "<S-Tab>", "<<", { silent = true, desc = "De-indent line" })
 map("v", "<Tab>", ">gv", { silent = true, desc = "Indent selection" })
-map("v", "<S-Tab>", "<gv", { silent = true, desc = "De-indent selection" })
 
+map('n', '<C-o>', '<Plug>(nvim-dir-vsplit)') -- only works nvim 0.13+
+map('n', '<C-p>', '<Plug>(nvim-dir-split)') -- only works nvim 0.13+
 
 vim.api.nvim_create_autocmd({ "TextYankPost", "TextPutPost" }, {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),

@@ -1,126 +1,125 @@
--- Extras for the builtin directory listing (:h dir), ported from my oil.nvim fork:
---   * ls -l style columns (permissions, size, mtime) drawn as inline virtual text,
---     so each buffer line stays the bare entry name that dir.lua resolves on <CR>.
+-- Extras for the builtin directory listing (:h dir)
 --   * Dired-style ! / & shell commands on the entry or visual selection, with
 --     output in a reusable bottom split and <C-c> to stop.
---   * File operations as keys on the read-only listing: % create, r rename/move,
---     dd / v_d delete (to Trash), yy / v_y yank and x / v_x cut, p paste.
+--   * oil-style editing: the listing is an ordinary editable buffer and :w applies
+--     the edits after a confirm. A renamed line renames (a path moves the entry),
+--     a deleted line sends the entry to the Trash, a new line creates a file (or a
+--     directory when it ends in /). A line yanked (yy) or cut (dd) and put, in
+--     the same listing or another, copies or moves the entry; a put that clashes
+--     with a name is renamed name_copy_N.ext. :w in any listing applies the edits
+--     of all of them together.
 -- TASK(20261001-100536): oil features for the builtin dir explorer
 -- TASK(20261007-095118): create, delete, rename, copy and move entries
+-- TASK(20261009-102036): edit the listing and :w to apply
+-- TASK(20261009-111329): native APIs, redundancy and bug pass
+-- TASK(20261009-112136): drop the metadata columns
+-- TASK(20261009-112932): ~/$ names, copies from yanks only, no M
 
 local api = vim.api
+local uv = vim.uv
 
-local M = {}
-
-local ns = api.nvim_create_namespace('dirx.columns')
+-- One mark per listed entry, id = its line number in the render. Marks follow their
+-- line through edits and are invalidated when it is deleted, so :w can tell a
+-- renamed entry from a deleted one and a new line.
+local ns_entries = api.nvim_create_namespace('dirx.entries')
+-- One mark per line put as a copy of an entry; listing.copies holds its source path.
+local ns_copies = api.nvim_create_namespace('dirx.copies')
 local group = api.nvim_create_augroup('dirx', { clear = true })
 
----------------------------------------------------------------------------
--- Columns
----------------------------------------------------------------------------
+-- Per listing buffer, as of its last render: the lines, by mark id; and the source
+-- of the copies put since, by mark id.
+---@class dirx.Listing
+---@field lines string[]
+---@field copies table<integer, string>
 
--- Toggled with gl; global so every listing follows the same setting.
-local show_columns = true
+---@type table<integer, dirx.Listing>
+local listings = {}
 
-local current_year = os.date('%Y')
-
-local function set_hl()
-    api.nvim_set_hl(0, 'DirxPerm', { link = 'Dimmed', default = true })
-    api.nvim_set_hl(0, 'DirxSize', { link = 'Number', default = true })
-    api.nvim_set_hl(0, 'DirxMtime', { link = 'Comment', default = true })
+---@param msg string
+---@param level? integer
+local function notify(msg, level)
+    vim.notify('dirx: ' .. msg, level or vim.log.levels.INFO)
 end
 
----@param exe_modifier string|false
----@param num integer
-local function perm_to_str(exe_modifier, num)
-    local str = (bit.band(num, 4) ~= 0 and 'r' or '-') .. (bit.band(num, 2) ~= 0 and 'w' or '-')
-    if exe_modifier then
-        return str .. (bit.band(num, 1) ~= 0 and exe_modifier or exe_modifier:upper())
-    end
-    return str .. (bit.band(num, 1) ~= 0 and 'x' or '-')
-end
-
----@param mode integer
-local function format_perm(mode)
-    local extra = bit.rshift(mode, 9)
-    return perm_to_str(bit.band(extra, 4) ~= 0 and 's', bit.rshift(mode, 6))
-        .. perm_to_str(bit.band(extra, 2) ~= 0 and 's', bit.rshift(mode, 3))
-        .. perm_to_str(bit.band(extra, 1) ~= 0 and 't', mode)
-end
-
----@param size integer
-local function format_size(size)
-    if size >= 1e9 then
-        return string.format('%.1fG', size / 1e9)
-    elseif size >= 1e6 then
-        return string.format('%.1fM', size / 1e6)
-    elseif size >= 1e3 then
-        return string.format('%.1fk', size / 1e3)
-    end
-    return tostring(size)
-end
-
----@param sec integer
-local function format_mtime(sec)
-    if os.date('%Y', sec) ~= current_year then
-        return os.date('%b %d  %Y', sec)
-    end
-    return os.date('%b %d %H:%M', sec)
+-- Entry name on a listing line: without the trailing / of a directory, newlines
+-- decoded (dir.lua writes them as NUL).
+---@param line string
+local function entry_name(line)
+    return (line:gsub('/$', ''):gsub('%z', '\n'))
 end
 
 ---@param dir string
 ---@param line string
 local function line_path(dir, line)
-    return vim.fs.joinpath(dir, (line:gsub('/$', ''):gsub('%z', '\n')))
+    return vim.fs.joinpath(dir, entry_name(line))
 end
 
--- Draw the columns as real inline extmarks. Ephemeral inline virt_text from a
--- decoration provider (the :h dir-decorate approach) is never drawn, so the marks
--- are placed on each render instead (DirReadPost fires on open, R and :edit).
+-- Ids of the valid marks of namespace on each row (0-based).
 ---@param buf integer
-local function render_columns(buf)
-    api.nvim_buf_clear_namespace(buf, ns, 0, -1)
-    if not show_columns then
-        return
-    end
-    local dir = api.nvim_buf_get_name(buf)
-    local lines = api.nvim_buf_get_lines(buf, 0, -1, false)
-    local stats, size_width = {}, 1
-    for i, line in ipairs(lines) do
-        -- lstat: describe a symlink itself, like ls -l.
-        stats[i] = vim.uv.fs_lstat(line_path(dir, line))
-        if stats[i] then
-            size_width = math.max(size_width, #format_size(stats[i].size))
+---@param namespace integer
+---@return table<integer, integer[]>
+local function mark_rows(buf, namespace)
+    local rows = {}
+    for _, mark in ipairs(api.nvim_buf_get_extmarks(buf, namespace, 0, -1, { details = true })) do
+        if not mark[4].invalid then
+            rows[mark[2]] = rows[mark[2]] or {}
+            table.insert(rows[mark[2]], mark[1])
         end
     end
-    for i, line in ipairs(lines) do
-        local stat = stats[i]
-        local chunks
-        if stat then
-            local size = format_size(stat.size)
-            chunks = {
-                { format_perm(stat.mode) .. ' ', 'DirxPerm' },
-                { string.rep(' ', size_width - #size) .. size .. ' ', 'DirxSize' },
-                { format_mtime(stat.mtime.sec) .. '  ', 'DirxMtime' },
-            }
-        elseif line ~= '' then
-            -- Entry vanished between listing and stat: keep names aligned.
-            chunks = { { string.rep(' ', 10 + size_width + 1 + 12 + 2) } }
-        end
-        if chunks then
-            api.nvim_buf_set_extmark(buf, ns, i - 1, 0, { virt_text = chunks, virt_text_pos = 'inline' })
-        end
-    end
+    return rows
+end
+
+-- Forget undo history, so u can't bring back the lines of an earlier render.
+---@param buf integer
+local function clear_undo(buf)
+    local undolevels = vim.bo[buf].undolevels
+    vim.bo[buf].undolevels = -1
+    api.nvim_buf_set_lines(buf, 0, 1, false, api.nvim_buf_get_lines(buf, 0, 1, false))
+    vim.bo[buf].undolevels = undolevels
 end
 
 api.nvim_create_autocmd('User', {
     group = group,
     pattern = 'DirReadPost',
-    desc = 'dirx: permissions/size/mtime columns',
+    desc = 'dirx: snapshot entries, make the listing editable',
     callback = function(args)
-        render_columns(args.buf)
+        local buf = args.buf
+        local lines = api.nvim_buf_get_lines(buf, 0, -1, false)
+        listings[buf] = { lines = lines, copies = {} }
+        clear_undo(buf)
+        api.nvim_buf_clear_namespace(buf, ns_entries, 0, -1)
+        api.nvim_buf_clear_namespace(buf, ns_copies, 0, -1)
+        for i, line in ipairs(lines) do
+            if line ~= '' then
+                api.nvim_buf_set_extmark(buf, ns_entries, i - 1, 0, { id = i, invalidate = true })
+            end
+        end
+        -- dir.lua locks the buffer (nowrite, readonly, nomodifiable) right after
+        -- DirReadPost; unlock it once the render is done. acwrite routes :w to
+        -- BufWriteCmd.
+        vim.schedule(function()
+            if api.nvim_buf_is_valid(buf) and vim.b[buf].nvim_dir ~= nil then
+                vim.bo[buf].buftype = 'acwrite'
+                vim.bo[buf].readonly = false
+                vim.bo[buf].modifiable = true
+            end
+        end)
     end,
 })
+
+-- dir.lua re-lists a buffer whenever - or <CR> navigates into it, which would throw
+-- away the edits of a listing that was left unsaved. Keep them (R and :e! still
+-- reload).
+local nvim_dir = require('nvim.dir')
+local dir_open = nvim_dir.open
+---@diagnostic disable-next-line: duplicate-set-field
+function nvim_dir.open(buf, ...)
+    local b = buf == 0 and api.nvim_get_current_buf() or buf
+    if vim.b[b].nvim_dir ~= nil and vim.bo[b].modified then
+        return
+    end
+    return dir_open(buf, ...)
+end
 
 ---------------------------------------------------------------------------
 -- Shell commands (Dired's ! and &)
@@ -157,7 +156,7 @@ local function collect_targets()
     end
     local names = {}
     for _, line in ipairs(api.nvim_buf_get_lines(0, first - 1, last, false)) do
-        local name = line:gsub('/$', ''):gsub('%z', '\n')
+        local name = entry_name(line)
         if name ~= '' then
             table.insert(names, name)
         end
@@ -165,42 +164,19 @@ local function collect_targets()
     return names
 end
 
--- Is the char at byte i a whitespace-delimited token? Lua version of Dired's
--- \(^\|[ \t]\)\([*?]\)\([ \t]\|$\).
+-- Replace each whitespace-delimited ch, as Dired's \(^\|[ \t]\)\([*?]\)\([ \t]\|$\),
+-- with replacement, inserted literally (a function replacement, so % in names is
+-- safe). Also returns the number of replacements.
 ---@param template string
----@param i integer
-local function is_standalone(template, i)
-    local before = i == 1 or template:sub(i - 1, i - 1):match('[ \t]') ~= nil
-    local after = i == #template or template:sub(i + 1, i + 1):match('[ \t]') ~= nil
-    return before and after
-end
-
----@param template string
----@param ch string
-local function has_token(template, ch)
-    for i = 1, #template do
-        if template:sub(i, i) == ch and is_standalone(template, i) then
-            return true
-        end
-    end
-    return false
-end
-
--- Built char by char (not gsub) so % and \ in filenames are inserted literally.
----@param template string
----@param ch string
+---@param ch '*'|'?'
 ---@param replacement string
-local function replace_tokens(template, ch, replacement)
-    local out = {}
-    for i = 1, #template do
-        local c = template:sub(i, i)
-        if c == ch and is_standalone(template, i) then
-            table.insert(out, replacement)
-        else
-            table.insert(out, c)
-        end
-    end
-    return table.concat(out)
+---@return string
+---@return integer
+local function sub_token(template, ch, replacement)
+    local out, n = (' ' .. template .. ' '):gsub('(%s)%' .. ch .. '%f[%s]', function(space)
+        return space .. replacement
+    end)
+    return out:sub(2, -2), n
 end
 
 -- Dired substitution: a standalone * runs once with all names, a standalone ?
@@ -209,46 +185,40 @@ end
 ---@param names string[] shell-escaped names
 ---@return string[]
 local function build_commands(template, names)
-    if has_token(template, '*') then
-        return { replace_tokens(template, '*', table.concat(names, ' ')) }
+    local all, n = sub_token(template, '*', table.concat(names, ' '))
+    if n > 0 then
+        return { all }
     end
-    local cmds = {}
-    local per_file = has_token(template, '?')
-    for _, name in ipairs(names) do
-        table.insert(cmds, per_file and replace_tokens(template, '?', name) or template .. ' ' .. name)
-    end
-    return cmds
+    local per_file = select(2, sub_token(template, '?', '')) > 0
+    return vim.tbl_map(function(name)
+        return per_file and (sub_token(template, '?', name)) or template .. ' ' .. name
+    end, names)
 end
 
----@param cmds string[]
-local function build_header(cmds)
-    local lines = {}
-    for _, cmd in ipairs(cmds) do
-        table.insert(lines, '$ ' .. cmd)
-    end
-    return lines
+local function output_win_open()
+    local winid = output_state.winid
+    return winid ~= nil and api.nvim_win_is_valid(winid) and api.nvim_win_get_buf(winid) == output_state.bufnr
 end
 
--- Drop the trailing "" jobstart appends for the final newline.
----@param lines string[]
-local function strip_trailing_newline(lines)
-    if #lines > 0 and lines[#lines] == '' then
-        return vim.list_slice(lines, 1, #lines - 1)
+-- Close the output window, stopping a running job (its next output would reopen it).
+local function close_output()
+    if not output_win_open() then
+        return
     end
-    return lines
+    stop_job()
+    -- Disown the job so its on_exit doesn't reopen the window for the footer.
+    output_state.job_id, output_state.terminated = nil, false
+    pcall(api.nvim_win_close, output_state.winid, false)
 end
 
 ---@return integer bufnr
----@return integer winid
 local function ensure_output_window()
     if not (output_state.bufnr and api.nvim_buf_is_valid(output_state.bufnr)) then
         local bufnr = api.nvim_create_buf(false, true)
         vim.bo[bufnr].bufhidden = 'hide'
         vim.bo[bufnr].filetype = 'dirx_output'
         pcall(api.nvim_buf_set_name, bufnr, 'DirxShellOutput')
-        vim.keymap.set('n', 'q', function()
-            M.close_output()
-        end, { buffer = bufnr, nowait = true })
+        vim.keymap.set('n', 'q', close_output, { buffer = bufnr, nowait = true })
         vim.keymap.set('n', '<C-c>', function()
             -- Interrupt a running job; if nothing is running, dismiss the window.
             if not stop_job() then
@@ -257,11 +227,7 @@ local function ensure_output_window()
         end, { buffer = bufnr, nowait = true })
         output_state.bufnr = bufnr
     end
-
-    local win_ok = output_state.winid
-        and api.nvim_win_is_valid(output_state.winid)
-        and api.nvim_win_get_buf(output_state.winid) == output_state.bufnr
-    if not win_ok then
+    if not output_win_open() then
         -- Focus stays in the listing, as in Dired.
         local winid = api.nvim_open_win(output_state.bufnr, false, {
             split = 'below',
@@ -274,61 +240,67 @@ local function ensure_output_window()
         vim.wo[winid].winfixheight = true
         output_state.winid = winid
     end
-    return output_state.bufnr, output_state.winid
+    return output_state.bufnr
 end
 
----@param bufnr integer
+-- Show lines in the output window (reopened if closed), replacing or appending.
 ---@param lines string[]
 ---@param append? boolean
-local function write_output(bufnr, lines, append)
-    if not api.nvim_buf_is_valid(bufnr) then
-        return
-    end
+local function write_output(lines, append)
+    local bufnr = ensure_output_window()
     vim.bo[bufnr].modifiable = true
     api.nvim_buf_set_lines(bufnr, append and -1 or 0, -1, false, lines)
     vim.bo[bufnr].modifiable = false
-    local winid = output_state.winid
-    if winid and api.nvim_win_is_valid(winid) and api.nvim_win_get_buf(winid) == bufnr then
-        api.nvim_win_set_cursor(winid, { api.nvim_buf_line_count(bufnr), 0 })
-    end
+    api.nvim_win_set_cursor(output_state.winid, { api.nvim_buf_line_count(bufnr), 0 })
 end
 
 -- Re-list so mv/rm/touch show up. :edit fires the listing's BufReadCmd, the same
--- reload path as R.
+-- reload path as R. A listing with unsaved edits, or of a directory that is gone,
+-- is left alone.
 ---@param buf integer
+---@return boolean reloaded
 local function reload_listing(buf)
-    if api.nvim_buf_is_valid(buf) and vim.b[buf].nvim_dir ~= nil then
+    if
+        api.nvim_buf_is_valid(buf)
+        and vim.b[buf].nvim_dir ~= nil
+        and not vim.bo[buf].modified
+        and vim.fn.isdirectory(api.nvim_buf_get_name(buf)) == 1
+    then
         api.nvim_buf_call(buf, function()
             vim.cmd.edit()
         end)
+        return true
     end
+    return false
 end
 
+-- Job callbacks run on the main loop, so they write to the buffer directly.
 ---@param cmds string[]
 ---@param dir string
 ---@param listing integer
 ---@param async boolean stream output live (&) instead of showing it on exit (!)
 local function start(cmds, dir, listing, async)
-    local out = ensure_output_window()
-    local header = build_header(cmds)
-    write_output(out, async and header or vim.list_extend(vim.list_slice(header),
-        { '', '[running... <C-c> to stop]' }))
+    local header = vim.tbl_map(function(cmd)
+        return '$ ' .. cmd
+    end, cmds)
+    write_output(async and header or vim.list_extend(vim.list_slice(header), { '', '[running... <C-c> to stop]' }))
 
     local handle = {}
-    local stdout, stderr = {}, {}
-    local function on_data(acc)
-        return function(_, data)
-            if not async then
-                vim.list_extend(acc, data or {})
-                return
+    -- !: the whole output of each stream. &: the unfinished last line of each,
+    -- as a handler may get a line in pieces (:h channel-lines).
+    local output = { stdout = {}, stderr = {} }
+    local partial = { stdout = '', stderr = '' }
+    ---@param data string[]
+    ---@param stream 'stdout'|'stderr'
+    local function on_data(_, data, stream)
+        if not async then
+            output[stream] = data
+        elseif output_state.job_id == handle.id then -- not taken over by a newer command
+            data[1] = partial[stream] .. data[1]
+            partial[stream] = table.remove(data)
+            if #data > 0 then
+                write_output(data, true)
             end
-            vim.schedule(function()
-                -- Ignore if a newer command has taken over the shared window.
-                local lines = strip_trailing_newline(data or {})
-                if output_state.job_id == handle.id and #lines > 0 then
-                    write_output(ensure_output_window(), lines, true)
-                end
-            end)
         end
     end
 
@@ -336,32 +308,32 @@ local function start(cmds, dir, listing, async)
         cwd = dir,
         stdout_buffered = not async,
         stderr_buffered = not async,
-        on_stdout = on_data(stdout),
-        on_stderr = on_data(stderr),
-        on_exit = vim.schedule_wrap(function(_, code)
+        on_stdout = on_data,
+        on_stderr = on_data,
+        on_exit = function(_, code)
             if output_state.job_id ~= handle.id then
                 return
             end
-            local footer = output_state.terminated and '-- terminated --'
-                or string.format('-- exit: %d --', code)
+            local footer = output_state.terminated and '-- terminated --' or string.format('-- exit: %d --', code)
             output_state.job_id, output_state.terminated = nil, false
-            local b = ensure_output_window()
             if async then
-                write_output(b, { footer }, true)
+                local rest = vim.tbl_filter(function(line)
+                    return line ~= ''
+                end, { partial.stdout, partial.stderr })
+                write_output(vim.list_extend(rest, { footer }), true)
             else
-                local lines = build_header(cmds)
-                table.insert(lines, '')
-                vim.list_extend(lines, strip_trailing_newline(stdout))
-                vim.list_extend(lines, strip_trailing_newline(stderr))
-                vim.list_extend(lines, { '', footer })
-                write_output(b, lines)
+                local lines = vim.list_extend(vim.list_slice(header), { '' })
+                for _, data in ipairs({ output.stdout, output.stderr }) do
+                    -- Drop the "" after the final newline.
+                    vim.list_extend(lines, data, 1, data[#data] == '' and #data - 1 or #data)
+                end
+                write_output(vim.list_extend(lines, { '', footer }))
             end
             reload_listing(listing)
-        end),
+        end,
     })
     if jid <= 0 then
-        local msg = jid == 0 and 'invalid arguments to jobstart' or 'shell is not executable'
-        vim.notify('dirx: ' .. msg, vim.log.levels.ERROR)
+        notify(jid == 0 and 'invalid arguments to jobstart' or 'shell is not executable', vim.log.levels.ERROR)
         return
     end
     handle.id = jid
@@ -374,7 +346,7 @@ local function run(async)
     local dir = api.nvim_buf_get_name(listing)
     local names = collect_targets()
     if #names == 0 then
-        vim.notify('dirx: no entry under cursor', vim.log.levels.WARN)
+        notify('no entry under cursor', vim.log.levels.WARN)
         return
     end
 
@@ -393,91 +365,17 @@ local function run(async)
     start(build_commands(template, vim.tbl_map(vim.fn.shellescape, names)), dir, listing, async)
 end
 
-function M.run_command()
-    run(false)
-end
-
-function M.run_command_async()
-    run(true)
-end
-
-function M.stop_command()
-    if not stop_job() then
-        vim.notify('dirx: no command is running', vim.log.levels.INFO)
-    end
-end
-
--- Close the output window, stopping a running job (its next output would reopen it).
----@return boolean closed
-local function output_win_open()
-    local winid = output_state.winid
-    return winid ~= nil and api.nvim_win_is_valid(winid) and api.nvim_win_get_buf(winid) == output_state.bufnr
-end
-
-function M.close_output()
-    if not output_win_open() then
-        return false
-    end
-    local winid = output_state.winid
-    stop_job()
-    -- Disown the job so its on_exit doesn't reopen the window for the footer.
-    output_state.job_id, output_state.terminated = nil, false
-    return pcall(api.nvim_win_close, winid, false)
-end
-
-function M.toggle_columns()
-    show_columns = not show_columns
-    for _, buf in ipairs(api.nvim_list_bufs()) do
-        if vim.b[buf].nvim_dir ~= nil then
-            render_columns(buf)
-        end
-    end
-end
-
 ---------------------------------------------------------------------------
--- File operations
+-- Editing (oil-style): :w turns the edited listings into file operations
 ---------------------------------------------------------------------------
 
-local uv = vim.uv
-
--- Paths taken by yy/y (copy) or x (move) and put into a listing by p, so entries
--- can travel between listings.
----@type { paths: string[], mode: 'copy'|'move' }
-local clipboard = { paths = {}, mode = 'copy' }
-
----@param msg string
----@param level? integer
-local function notify(msg, level)
-    vim.notify('dirx: ' .. msg, level or vim.log.levels.INFO)
-end
-
----@param prompt string
----@param default? string
----@return string? input nil when cancelled
-local function ask(prompt, default)
-    local input = vim.fn.input({ prompt = prompt, default = default or '', completion = 'file', cancelreturn = '' })
-    if input ~= '' then
-        return input
-    end
-end
-
--- Prompt input is relative to the listing unless it is an absolute or ~ path.
+-- A typed name is relative to the listing, unless absolute or ~/. Only ~/ is
+-- expanded: ~foo and $VAR are taken as written, as they are valid file names.
 ---@param dir string
 ---@param input string
 local function resolve(dir, input)
-    if not input:match('^[/~]') then
-        input = vim.fs.joinpath(dir, input)
-    end
-    return vim.fs.normalize(input)
-end
-
--- The entry of listing dir that path is, or lies under.
----@param dir string
----@param path string
----@return string?
-local function entry_of(dir, path)
-    local rel = vim.fs.relpath(dir, path)
-    return rel and rel ~= '.' and rel:match('^[^/]+') or nil
+    local path = vim.fs.abspath(input, { cwd = dir, plain = not vim.startswith(input, '~/') })
+    return vim.fs.normalize(path, { expand_env = false })
 end
 
 -- Same inode, e.g. foo and Foo on a case-insensitive filesystem.
@@ -488,34 +386,13 @@ local function same_file(a, b)
     return sa ~= nil and sb ~= nil and sa.ino == sb.ino and sa.dev == sb.dev
 end
 
----@param name string
----@return integer?
-local function find_buf(name)
-    for _, buf in ipairs(api.nvim_list_bufs()) do
-        if api.nvim_buf_get_name(buf) == name then
-            return buf
-        end
-    end
-end
-
--- Re-list every listing of one of dirs, then put the cursor of the current
--- listing on the entry select.
+-- Re-list every listing of one of dirs. Listing names end in /, dirs (from
+-- vim.fs.dirname) don't.
 ---@param dirs table<string, true>
----@param select? string
-local function refresh(dirs, select)
+local function refresh(dirs)
     for _, buf in ipairs(api.nvim_list_bufs()) do
-        if vim.b[buf].nvim_dir ~= nil and dirs[api.nvim_buf_get_name(buf)] then
+        if dirs[vim.fs.normalize(api.nvim_buf_get_name(buf), { expand_env = false })] then
             reload_listing(buf)
-        end
-    end
-    if not select then
-        return
-    end
-    local encoded = select:gsub('\n', '\0')
-    for i, line in ipairs(api.nvim_buf_get_lines(0, 0, -1, false)) do
-        if line:gsub('/$', '') == encoded then
-            api.nvim_win_set_cursor(0, { i, 0 })
-            return
         end
     end
 end
@@ -532,7 +409,9 @@ local function rename_buffers(src, dst)
         if (vim.bo[buf].buftype == '' or listing) and (name == src or vim.startswith(name, src .. '/')) then
             if pcall(api.nvim_buf_set_name, buf, dst .. name:sub(#src + 1)) then
                 -- set_name leaves an unlisted buffer behind under the old name.
-                local stale = find_buf(name)
+                local stale = vim.iter(api.nvim_list_bufs()):find(function(b)
+                    return api.nvim_buf_get_name(b) == name
+                end)
                 if stale then
                     pcall(api.nvim_buf_delete, stale, { force = true })
                 end
@@ -550,264 +429,636 @@ local function rename_buffers(src, dst)
     end
 end
 
+-- The file operations below raise on failure; write_listings catches it.
+
 -- Move paths to the Trash, or delete them where there is no trash command.
 ---@param paths string[]
----@return string? err
 local function trash(paths)
-    if vim.fn.executable('trash') == 1 then
-        local res = vim.system(vim.list_extend({ 'trash' }, paths), { text = true }):wait()
-        if res.code ~= 0 then
-            return vim.trim(res.stderr ~= '' and res.stderr or res.stdout)
-        end
-        return nil
+    if #paths == 0 then
+        return
     end
-    for _, path in ipairs(paths) do
-        local ok, err = pcall(vim.fs.rm, path, { recursive = true })
-        if not ok then
-            return tostring(err)
+    if vim.fn.executable('trash') == 0 then
+        for _, path in ipairs(paths) do
+            vim.fs.rm(path, { recursive = true })
         end
+        return
+    end
+    local res = vim.system(vim.list_extend({ 'trash' }, paths), { text = true }):wait()
+    if res.code ~= 0 then
+        error(vim.trim(res.stderr ~= '' and res.stderr or res.stdout), 0)
     end
 end
 
 ---@param src string
 ---@param dst string
----@return string? err
 local function copy(src, dst)
+    vim.fs.mkdir(vim.fs.dirname(dst), { parents = true })
     local res = vim.system({ 'cp', '-R', src, dst }, { text = true }):wait()
     if res.code ~= 0 then
-        return vim.trim(res.stderr)
+        error(vim.trim(res.stderr), 0)
     end
 end
 
 ---@param src string
 ---@param dst string
----@return string? err
 local function move(src, dst)
+    vim.fs.mkdir(vim.fs.dirname(dst), { parents = true })
     local ok, err, code = uv.fs_rename(src, dst)
     if not ok then
         if code ~= 'EXDEV' then
-            return err
+            error(err, 0)
         end
         -- Across filesystems: copy, then remove the source (the copy is the backup).
-        err = copy(src, dst)
-        if err then
-            return err
-        end
-        local rm_ok, rm_err = pcall(vim.fs.rm, src, { recursive = true })
-        if not rm_ok then
-            return tostring(rm_err)
-        end
+        copy(src, dst)
+        vim.fs.rm(src, { recursive = true })
     end
     rename_buffers(src, dst)
 end
 
--- Copy or move src to dst. An existing dst is replaced only after confirmation,
--- and goes to the Trash.
----@param src string
----@param dst string
----@param mode 'copy'|'move'
----@return 'done'|'skipped'|'cancelled'
-local function transfer(src, dst, mode)
-    if vim.startswith(dst, src .. '/') then
-        notify(string.format('cannot %s %s into itself', mode, src), vim.log.levels.ERROR)
-        return 'skipped'
+---@param path string
+---@param is_dir boolean
+local function create(path, is_dir)
+    if is_dir then
+        vim.fs.mkdir(path, { parents = true })
+    else
+        vim.fs.mkdir(vim.fs.dirname(path), { parents = true })
+        -- wx: fail rather than truncate a file created since the check.
+        uv.fs_close(assert(uv.fs_open(path, 'wx', tonumber('644', 8))))
     end
-    if uv.fs_lstat(dst) and not (mode == 'move' and same_file(src, dst)) then
-        local choice = vim.fn.confirm(dst .. ' exists. Overwrite?', '&Yes\n&Skip\n&Cancel', 2)
-        if choice ~= 1 then
-            return choice == 2 and 'skipped' or 'cancelled'
+end
+
+-- Name typed on a line, and whether it asks for a directory (trailing /).
+---@param line string
+---@return string name
+---@return boolean is_dir
+local function parse_line(line)
+    local name = vim.trim(line)
+    local is_dir = name:sub(-1) == '/'
+    return (name:gsub('/+$', ''):gsub('%z', '\n')), is_dir
+end
+
+-- notes.txt -> notes_copy_1.txt, src/ -> src_copy_1/, with the first N that is free
+-- on disk and not in taken. Copying a copy counts on: notes_copy_1.txt ->
+-- notes_copy_2.txt.
+---@param dir string
+---@param line string
+---@param taken table<string, integer> entry names in use
+---@return string line
+local function copy_name(dir, line, taken)
+    local slash = line:match('/$') or ''
+    local name = line:sub(1, #line - #slash)
+    local stem, ext = name, ''
+    if slash == '' then
+        -- The last extension only (a.tar.gz -> a.tar_copy_1.gz); a dotfile has none.
+        -- Decoded for vim.fs.ext (a NUL can't cross into Vimscript); \n and \0 are
+        -- both one byte, so its length still slices the line.
+        local len = #vim.fs.ext((name:gsub('%z', '\n')))
+        if len > 0 then
+            stem, ext = name:sub(1, -len - 2), name:sub(-len - 1)
         end
-        local err = trash({ dst })
-        if err then
-            notify(err, vim.log.levels.ERROR)
-            return 'skipped'
+    end
+    stem = stem:gsub('_copy_%d+$', '')
+    local n = 1
+    while true do
+        local candidate = string.format('%s_copy_%d%s', stem, n, ext)
+        if not taken[entry_name(candidate)] and not uv.fs_lstat(line_path(dir, candidate)) then
+            return candidate .. slash
+        end
+        n = n + 1
+    end
+end
+
+-- Lines last yanked or deleted from a listing, per register, with the path each
+-- stands for, so a put copies (or, after dd, moves) the entry.
+---@type table<string, { lines: string[], paths: table<string, string> }>
+local yanks = {}
+
+-- Path of the entry or copy on each row of a listing, by row (0-based).
+---@param buf integer
+---@param first integer
+---@param last integer
+---@return table<integer, string>
+local function row_paths(buf, first, last)
+    local listing = listings[buf]
+    local dir = api.nvim_buf_get_name(buf)
+    local paths = {}
+    for row, ids in pairs(mark_rows(buf, ns_entries)) do
+        if row >= first and row <= last and #ids == 1 then
+            paths[row] = line_path(dir, listing.lines[ids[1]])
         end
     end
-    vim.fn.mkdir(vim.fs.dirname(dst), 'p')
-    local err = (mode == 'copy' and copy or move)(src, dst)
-    if err then
-        notify(string.format('%s %s: %s', mode, src, err), vim.log.levels.ERROR)
-        return 'skipped'
-    end
-    return 'done'
-end
-
-function M.create()
-    local dir = api.nvim_buf_get_name(0)
-    local input = ask('Create (end with / for a directory): ')
-    if not input then
-        return
-    end
-    local path = resolve(dir, input)
-    if uv.fs_lstat(path) then
-        notify(path .. ' already exists', vim.log.levels.WARN)
-        return
-    end
-    local ok, err = pcall(function()
-        if input:sub(-1) == '/' then
-            vim.fn.mkdir(path, 'p')
-        else
-            vim.fn.mkdir(vim.fs.dirname(path), 'p')
-            -- wx: fail rather than truncate a file created since the check.
-            uv.fs_close(assert(uv.fs_open(path, 'wx', tonumber('644', 8))))
+    for row, ids in pairs(mark_rows(buf, ns_copies)) do
+        if row >= first and row <= last and #ids == 1 then
+            -- A row with both marks (joined lines) stands for neither.
+            paths[row] = not paths[row] and listing.copies[ids[1]] or nil
         end
-    end)
-    if not ok then
-        notify(tostring(err), vim.log.levels.ERROR)
-        return
     end
-    refresh({ [dir] = true, [vim.fs.dirname(path)] = true }, entry_of(dir, path))
+    return paths
 end
 
--- Like mv: a target that is a directory, or ends in /, receives the entry.
-function M.rename()
-    local dir = api.nvim_buf_get_name(0)
-    local name = collect_targets()[1]
-    if not name then
-        notify('no entry under cursor', vim.log.levels.WARN)
+-- TextYankPost fires before dd removes the lines, so their marks still say
+-- which entries they are.
+---@param buf integer
+local function remember_yank(buf)
+    local event = vim.v.event
+    local reg = event.regname == '' and '"' or event.regname
+    if event.regtype ~= 'V' then
         return
     end
-    local input = ask('Rename to: ', name)
-    if not input or input == name then
-        return
+    local first = api.nvim_buf_get_mark(buf, '[')[1] - 1
+    local last = api.nvim_buf_get_mark(buf, ']')[1] - 1
+    local lines = api.nvim_buf_get_lines(buf, first, last + 1, false)
+    local paths = {}
+    for row, path in pairs(row_paths(buf, first, last)) do
+        paths[lines[row - first + 1]] = path
     end
-    local src, dst = vim.fs.joinpath(dir, name), resolve(dir, input)
-    local stat = uv.fs_stat(dst)
-    if input:sub(-1) == '/' or (stat and stat.type == 'directory' and not same_file(src, dst)) then
-        dst = vim.fs.joinpath(dst, name)
-    end
-    if transfer(src, dst, 'move') == 'done' then
-        refresh({ [dir] = true, [vim.fs.dirname(dst)] = true }, entry_of(dir, dst))
+    local yank = next(paths) and { lines = event.regcontents, paths = paths } or nil
+    yanks[reg] = yank
+    if event.regname == '' then
+        -- Vim also puts an unnamed yank in "0 and a deleted line in "1, so "0p after
+        -- a dd still puts the yank.
+        yanks[event.operator == 'y' and '0' or '1'] = yank
     end
 end
 
-function M.delete()
-    local dir = api.nvim_buf_get_name(0)
-    local names = collect_targets()
-    if #names == 0 then
-        notify('no entry under cursor', vim.log.levels.WARN)
-        return
+-- Path that line stands for when it was put from a listing's yank that is still
+-- in its register. Only the text is known, so when registers hold the same text
+-- for different entries, the unnamed one wins (sorts first).
+---@param line string
+---@return string?
+local function yanked_path(line)
+    local regs = vim.tbl_keys(yanks)
+    table.sort(regs)
+    for _, reg in ipairs(regs) do
+        local yank = yanks[reg]
+        if
+            yank.paths[line]
+            and vim.fn.getregtype(reg) == 'V'
+            and vim.deep_equal(vim.fn.getreg(reg, 1, true), yank.lines)
+        then
+            return yank.paths[line]
+        end
     end
-    local desc = #names == 1 and names[1] or string.format('%d entries', #names)
-    if vim.fn.confirm('Delete ' .. desc .. '?', '&Yes\n&No', 2) ~= 1 then
-        return
-    end
-    local err = trash(vim.tbl_map(function(name)
-        return vim.fs.joinpath(dir, name)
-    end, names))
-    if err then
-        notify(err, vim.log.levels.ERROR)
-    end
-    refresh({ [dir] = true })
 end
 
----@param mode 'copy'|'move'
-local function take(mode)
-    local register = vim.v.register
-    local dir = api.nvim_buf_get_name(0)
-    local names = collect_targets()
-    if #names == 0 then
-        notify('no entry under cursor', vim.log.levels.WARN)
+-- A put line from a live yank (yy/dd, in this listing or another) becomes a copy
+-- of the entry it stands for, which :w turns into a move when the entry's own line
+-- is gone. It keeps its name unless another line has it, or a file has it that
+-- stays (its line wasn't deleted here); then it gets copy_name. Runs after each
+-- change, so the buffer always shows the names :w will create.
+---@param buf integer
+local function mark_copies(buf)
+    local listing = listings[buf]
+    if not listing or not vim.bo[buf].modifiable then
         return
     end
-    local paths = vim.tbl_map(function(name)
-        return vim.fs.joinpath(dir, name)
-    end, names)
-    clipboard = { paths = paths, mode = mode }
-    vim.fn.setreg(register, paths, 'l')
-    local desc = #names == 1 and names[1] or string.format('%d entries', #names)
-    notify(string.format('%s %s, p to paste', mode == 'copy' and 'yanked' or 'cut', desc))
-end
-
-function M.yank()
-    take('copy')
-end
-
-function M.cut()
-    take('move')
-end
-
-function M.paste()
-    local dir = api.nvim_buf_get_name(0)
-    if #clipboard.paths == 0 then
-        notify('nothing to paste (yy/y yanks, x cuts)', vim.log.levels.WARN)
-        return
+    local dir = api.nvim_buf_get_name(buf)
+    local lines = api.nvim_buf_get_lines(buf, 0, -1, false)
+    local entries, copies = mark_rows(buf, ns_entries), mark_rows(buf, ns_copies)
+    -- taken: how many lines use each name. deleted: names whose entry line is gone.
+    local taken, present, deleted = {}, {}, {}
+    for _, line in ipairs(lines) do
+        local name = entry_name(line)
+        taken[name] = (taken[name] or 0) + 1
     end
-    local mode = clipboard.mode
-    local dirs, select = { [dir] = true }, nil
-    for _, src in ipairs(clipboard.paths) do
-        local dst = vim.fs.joinpath(dir, vim.fs.basename(src))
-        local result = 'skipped'
-        if not uv.fs_lstat(src) then
-            notify(src .. ' no longer exists', vim.log.levels.WARN)
-        elseif dst ~= src then
-            result = transfer(src, dst, mode)
-        elseif mode == 'copy' then
-            -- A copy next to its source needs a new name.
-            local input = ask('Copy as: ', vim.fs.basename(src))
-            if input and input ~= vim.fs.basename(src) then
-                dst = resolve(dir, input)
-                result = transfer(src, dst, mode)
+    for _, ids in pairs(entries) do
+        for _, id in ipairs(ids) do
+            present[id] = true
+        end
+    end
+    for id, line in ipairs(listing.lines) do
+        if line ~= '' and not present[id] then
+            deleted[entry_name(line)] = true
+        end
+    end
+
+    local joined = false
+    for i, line in ipairs(lines) do
+        local src = line ~= '' and not entries[i - 1] and not copies[i - 1] and yanked_path(line)
+        if src then
+            local name = entry_name(line)
+            if taken[name] > 1 or (not deleted[name] and uv.fs_lstat(line_path(dir, line))) then
+                taken[name] = taken[name] - 1
+                line = copy_name(dir, line, taken)
+                taken[entry_name(line)] = 1
+                -- One u takes back the put and the rename. Not allowed right after an
+                -- undo, where the rename becomes its own step.
+                if not joined then
+                    joined = pcall(vim.cmd.undojoin)
+                end
+                api.nvim_buf_set_lines(buf, i - 1, i, false, { line })
+            end
+            local id = api.nvim_buf_set_extmark(buf, ns_copies, i - 1, 0, { invalidate = true })
+            listing.copies[id] = src
+        end
+    end
+end
+
+---@class dirx.Plan
+---@field copies { src: string, dst: string }[]
+---@field deletes string[]
+---@field moves { src: string, dst: string }[]
+---@field creates { path: string, dir: boolean }[]
+
+-- Add the changes of one listing against its last render to plan.
+---@param buf integer
+---@param plan dirx.Plan
+---@param errors string[]
+local function collect(buf, plan, errors)
+    local dir = api.nvim_buf_get_name(buf)
+    local listing = listings[buf]
+    local orig = listing.lines
+    local rows, copy_rows = mark_rows(buf, ns_entries), mark_rows(buf, ns_copies)
+    local kept = {}
+
+    for i, line in ipairs(api.nvim_buf_get_lines(buf, 0, -1, false)) do
+        local ids, copy_ids = rows[i - 1], copy_rows[i - 1]
+        local name, is_dir = parse_line(line)
+        local count = (ids and #ids or 0) + (copy_ids and #copy_ids or 0)
+        if count > 1 then
+            table.insert(errors, string.format('%s line %d holds %d entries (joined lines?)', dir, i, count))
+        elseif copy_ids then
+            -- A copy whose name was blanked is dropped.
+            if name ~= '' then
+                table.insert(plan.copies, { src = listing.copies[copy_ids[1]], dst = resolve(dir, name) })
+            end
+        elseif ids then
+            local id = ids[1]
+            kept[id] = true
+            local src = line_path(dir, orig[id])
+            if name == '' then
+                table.insert(plan.deletes, src)
+            elseif line ~= orig[id] then
+                local dst = resolve(dir, name)
+                if dst ~= src then
+                    table.insert(plan.moves, { src = src, dst = dst })
+                end
+            end
+        elseif name ~= '' then
+            table.insert(plan.creates, { path = resolve(dir, name), dir = is_dir })
+        end
+    end
+    for id, line in ipairs(orig) do
+        if line ~= '' and not kept[id] then
+            table.insert(plan.deletes, line_path(dir, line))
+        end
+    end
+end
+
+-- One plan for the edits of all of bufs, so moves between listings, and edits
+-- inside a directory that another listing renames or deletes, are checked and
+-- applied together. Paths are as they are before the write.
+---@param bufs integer[]
+---@return dirx.Plan? plan
+---@return string[] errors
+local function build_plan(bufs)
+    local plan = { copies = {}, deletes = {}, moves = {}, creates = {} } ---@type dirx.Plan
+    local errors = {}
+    for _, buf in ipairs(bufs) do
+        collect(buf, plan, errors)
+    end
+
+    local deleted = {}
+    for _, path in ipairs(plan.deletes) do
+        deleted[path] = true
+    end
+    -- A line cut and put back elsewhere in its listing (dd, p) reads as delete +
+    -- create of the same name: it means nothing changed.
+    plan.creates = vim.tbl_filter(function(c)
+        if deleted[c.path] then
+            deleted[c.path] = nil
+            return false
+        end
+        return true
+    end, plan.creates)
+    -- A copy of an entry whose line was deleted (dd, then p here or in another
+    -- listing) is a move: no change when put back under its own name. Further
+    -- copies of it still copy, before the move.
+    plan.copies = vim.tbl_filter(function(c)
+        if deleted[c.src] and c.dst == c.src then
+            deleted[c.src] = nil
+            return false
+        end
+        return true
+    end, plan.copies)
+    plan.copies = vim.tbl_filter(function(c)
+        if deleted[c.src] then
+            deleted[c.src] = nil
+            table.insert(plan.moves, { src = c.src, dst = c.dst })
+            return false
+        end
+        return true
+    end, plan.copies)
+    plan.deletes = vim.tbl_filter(function(path)
+        return deleted[path] ~= nil
+    end, plan.deletes)
+
+    -- Each target must be free once deletes and moves have run.
+    local freed, taken = {}, {}
+    for _, path in ipairs(plan.deletes) do
+        freed[path] = true
+    end
+    for _, m in ipairs(plan.moves) do
+        freed[m.src] = true
+    end
+    ---@param path string
+    ---@param may_exist boolean
+    local function claim(path, may_exist)
+        if taken[path] then
+            table.insert(errors, path .. ' is named twice')
+        elseif uv.fs_lstat(path) and not may_exist then
+            table.insert(errors, path .. ' already exists')
+        end
+        for _, d in ipairs(plan.deletes) do
+            if vim.startswith(path, d .. '/') then
+                table.insert(errors, string.format('%s goes into %s, which is deleted', path, d))
             end
         end
-        if result == 'cancelled' then
-            break
-        elseif result == 'done' then
-            dirs[vim.fs.dirname(src)], dirs[vim.fs.dirname(dst)] = true, true
-            select = entry_of(dir, dst)
+        taken[path] = true
+    end
+    -- Copies run first, so their targets must be free, or deleted in this write (a
+    -- put replacing an entry; apply trashes it just before).
+    for _, c in ipairs(plan.copies) do
+        if not uv.fs_lstat(c.src) then
+            table.insert(errors, c.src .. ' no longer exists')
+        elseif vim.startswith(c.dst, c.src .. '/') then
+            table.insert(errors, string.format('cannot copy %s into itself', c.src))
         end
+        claim(c.dst, vim.list_contains(plan.deletes, c.dst))
     end
-    if mode == 'move' then
-        -- Keep what wasn't moved (skipped or cancelled) for another p.
-        clipboard.paths = vim.tbl_filter(function(path)
-            return uv.fs_lstat(path) ~= nil
-        end, clipboard.paths)
+    for _, m in ipairs(plan.moves) do
+        if vim.startswith(m.dst, m.src .. '/') then
+            table.insert(errors, string.format('cannot move %s into itself', m.src))
+        end
+        claim(m.dst, freed[m.dst] or same_file(m.src, m.dst))
     end
-    refresh(dirs, select)
+    for _, c in ipairs(plan.creates) do
+        claim(c.path, freed[c.path] or false)
+    end
+    if #errors > 0 then
+        return nil, errors
+    end
+    return plan, errors
 end
 
--- Exposed for tests.
-M._build_commands = build_commands
+-- path, or what it becomes once from is moved to to.
+---@param path string
+---@param from string
+---@param to string
+local function rebase(path, from, to)
+    if vim.startswith(path, from .. '/') then
+        return to .. path:sub(#from + 1)
+    end
+    return path
+end
+
+-- Copies first (this write may move or delete their source), then deletes (they
+-- may free a target), moves, deletes of directories that moves empty first, and
+-- creates. Every move rebases the paths still pending under it, so an edit inside
+-- a renamed directory lands in its new place. Stops at the first error; whatever
+-- ran shows up in the reloaded listings.
+---@param plan dirx.Plan
+---@param dirs table<string, true> receives the directories that changed
+local function apply(plan, dirs)
+    local function touched(...)
+        for _, path in ipairs({ ... }) do
+            dirs[vim.fs.dirname(path)] = true
+        end
+    end
+
+    local replaced = {}
+    for _, c in ipairs(plan.copies) do
+        touched(c.dst)
+        if vim.list_contains(plan.deletes, c.dst) then
+            trash({ c.dst })
+            replaced[c.dst] = true
+        end
+        copy(c.src, c.dst)
+    end
+
+    local pending, creates = vim.deepcopy(plan.moves), vim.deepcopy(plan.creates)
+    local now, later = {}, {}
+    for _, path in ipairs(vim.tbl_filter(function(path)
+        return not replaced[path]
+    end, plan.deletes)) do
+        touched(path)
+        local holds_source = vim.iter(pending):any(function(m)
+            return vim.startswith(m.src, path .. '/')
+        end)
+        table.insert(holds_source and later or now, path)
+    end
+    trash(now)
+
+    ---@param src string
+    ---@param dst string
+    local function move_rebasing(src, dst)
+        touched(src, dst)
+        move(src, dst)
+        for _, m in ipairs(pending) do
+            m.src, m.dst = rebase(m.src, src, dst), rebase(m.dst, src, dst)
+        end
+        for i, path in ipairs(later) do
+            later[i] = rebase(path, src, dst)
+        end
+        for _, c in ipairs(creates) do
+            c.path = rebase(c.path, src, dst)
+        end
+    end
+    while #pending > 0 do
+        local ready
+        for i, m in ipairs(pending) do
+            if not uv.fs_lstat(m.dst) or same_file(m.src, m.dst) then
+                ready = i
+                break
+            end
+        end
+        if ready then
+            local m = table.remove(pending, ready)
+            move_rebasing(m.src, m.dst)
+        else
+            -- Every target is held by another pending source (a -> b, b -> a): park
+            -- one source under a temporary name to break the cycle.
+            local m = pending[1]
+            if m.parked then
+                error(m.dst .. ' already exists', 0)
+            end
+            local tmp = string.format('%s.dirx-%d', m.src, uv.hrtime())
+            move_rebasing(m.src, tmp)
+            -- Not by the rebase, which leaves y -> x pointing at the freed x.
+            m.src, m.parked = tmp, true
+        end
+    end
+
+    trash(later)
+    for _, c in ipairs(creates) do
+        touched(c.path)
+        create(c.path, c.dir)
+    end
+end
+
+-- Deepest directory that holds all of paths.
+---@param paths string[]
+local function common_dir(paths)
+    local root = paths[1]
+    for _, path in ipairs(paths) do
+        while root ~= '/' and path ~= root and not vim.startswith(path, root .. '/') do
+            root = vim.fs.dirname(root)
+        end
+    end
+    return root
+end
+
+-- :w in any listing applies the edits of every listing with unsaved ones, after
+-- one confirm.
+---@param buf integer
+local function write_listings(buf)
+    local bufs = vim.tbl_filter(function(b)
+        return listings[b] ~= nil and vim.b[b].nvim_dir ~= nil and (b == buf or vim.bo[b].modified)
+    end, api.nvim_list_bufs())
+    if #bufs == 0 then
+        return
+    end
+    local plan, errors = build_plan(bufs)
+    if not plan then
+        notify('not applied:\n' .. table.concat(errors, '\n'), vim.log.levels.ERROR)
+        return
+    end
+
+    local paths = vim.tbl_map(function(b)
+        return vim.fs.normalize(api.nvim_buf_get_name(b), { expand_env = false })
+    end, bufs)
+    for _, c in ipairs(vim.list_extend(vim.list_slice(plan.copies), plan.moves)) do
+        vim.list_extend(paths, { vim.fs.dirname(c.src), vim.fs.dirname(c.dst) })
+    end
+    for _, c in ipairs(plan.creates) do
+        table.insert(paths, vim.fs.dirname(c.path))
+    end
+    local root = common_dir(paths)
+    -- Not vim.fs.relpath, which would expand a $VAR or ~ in a name.
+    ---@param path string
+    local function display(path)
+        return vim.startswith(path, root .. '/') and path:sub(#root + 2) or vim.fn.fnamemodify(path, ':~')
+    end
+    local summary = {}
+    for _, c in ipairs(plan.copies) do
+        table.insert(summary, string.format('  copy    %s -> %s', display(c.src), display(c.dst)))
+    end
+    for _, path in ipairs(plan.deletes) do
+        table.insert(summary, '  delete  ' .. display(path))
+    end
+    for _, m in ipairs(plan.moves) do
+        table.insert(summary, string.format('  move    %s -> %s', display(m.src), display(m.dst)))
+    end
+    for _, c in ipairs(plan.creates) do
+        table.insert(summary, '  create  ' .. display(c.path) .. (c.dir and '/' or ''))
+    end
+    if #summary > 0 then
+        -- Enter confirms, unless something is being deleted.
+        local choice = vim.fn.confirm(
+            string.format('Apply changes in %s?\n%s', vim.fn.fnamemodify(root, ':~'), table.concat(summary, '\n')),
+            '&Yes\n&No',
+            #plan.deletes > 0 and 2 or 1
+        )
+        if choice ~= 1 then
+            return
+        end
+    end
+
+    local dirs = {}
+    local ok, err = pcall(apply, plan, dirs)
+    if not ok then
+        notify(tostring(err), vim.log.levels.ERROR)
+    end
+    -- Re-list even after an error so the listings show what did happen. By buffer,
+    -- as a written listing may have been renamed along with its directory. The
+    -- listing of a deleted directory goes too, unless a window shows it.
+    for _, b in ipairs(bufs) do
+        if api.nvim_buf_is_valid(b) then
+            vim.bo[b].modified = false
+            if not reload_listing(b) and #vim.fn.win_findbuf(b) == 0 then
+                api.nvim_buf_delete(b, { force = true })
+            end
+        end
+    end
+    refresh(dirs)
+end
+
+local function reload()
+    if vim.bo.modified and vim.fn.confirm('Discard changes to the listing?', '&Yes\n&No', 2) ~= 1 then
+        return
+    end
+    nvim_dir._reload()
+end
 
 ---------------------------------------------------------------------------
 -- Setup
 ---------------------------------------------------------------------------
 
-set_hl()
-api.nvim_create_autocmd('ColorScheme', { group = group, desc = 'dirx: highlight links', callback = set_hl })
+-- dir.lua maps a and o (open in a split) only when nothing maps to their <Plug>s
+-- yet. Claim those from <Plug> keys nobody can type, so a and o stay append and
+-- open line in the editable listing.
+vim.keymap.set('n', '<Plug>(dirx-vsplit)', '<Plug>(nvim-dir-vsplit)')
+vim.keymap.set('n', '<Plug>(dirx-split)', '<Plug>(nvim-dir-split)')
 
 api.nvim_create_autocmd('FileType', {
     group = group,
     pattern = 'directory',
-    desc = 'dirx: listing keymaps',
+    desc = 'dirx: listing keymaps and :w',
     callback = function(args)
+        local buf = args.buf
         local function bmap(modes, lhs, rhs, desc)
-            vim.keymap.set(modes, lhs, rhs, { buffer = args.buf, silent = true, desc = desc })
+            vim.keymap.set(modes, lhs, rhs, { buffer = buf, silent = true, desc = desc })
         end
-        bmap({ 'n', 'x' }, '!', M.run_command, 'Run shell command on entry (output on exit)')
-        bmap({ 'n', 'x' }, '&', M.run_command_async, 'Run shell command on entry (output streams)')
-        bmap('n', '<C-c>', M.stop_command, 'Stop running shell command')
-        bmap('n', 'gl', M.toggle_columns, 'Toggle permissions/size/mtime columns')
-        bmap('n', '%', M.create, 'Create file, or directory if the name ends in /')
-        bmap('n', 'r', M.rename, 'Rename/move entry')
-        bmap('n', 'dd', M.delete, 'Delete entry (to Trash)')
-        bmap('x', 'd', M.delete, 'Delete selected entries (to Trash)')
-        bmap('n', 'yy', M.yank, 'Yank entry for p (copy)')
-        bmap('x', 'y', M.yank, 'Yank selected entries for p (copy)')
-        bmap('n', 'x', M.cut, 'Cut entry for p (move)')
-        bmap('x', 'x', M.cut, 'Cut selected entries for p (move)')
-        bmap('n', 'p', M.paste, 'Paste yanked/cut entries here')
-        -- Without an output window, q stays the macro-record command. An <expr>
-        -- mapping keeps the stopping q out of the recorded register; the close is
-        -- scheduled because windows can't be closed under textlock.
-        vim.keymap.set('n', 'q', function()
-            if output_win_open() then
-                vim.schedule(M.close_output)
-                return ''
+        bmap({ 'n', 'x' }, '!', function()
+            run(false)
+        end, 'Run shell command on entry (output on exit)')
+        bmap({ 'n', 'x' }, '&', function()
+            run(true)
+        end, 'Run shell command on entry (output streams)')
+        bmap('n', '<C-c>', function()
+            if not stop_job() then
+                notify('no command is running')
             end
-            return 'q'
-        end, { buffer = args.buf, expr = true, desc = 'Close shell command output window' })
+        end, 'Stop running shell command')
+        -- Replaces dir.lua's R, which would drop unsaved edits without asking.
+        bmap('n', 'R', reload, 'Reload listing (asks before dropping edits)')
+
+        api.nvim_clear_autocmds({ group = group, buffer = buf })
+        -- nested: the reload after applying goes through the listing's BufReadCmd.
+        api.nvim_create_autocmd('BufWriteCmd', {
+            group = group,
+            buffer = buf,
+            nested = true,
+            desc = 'dirx: apply the edits of all listings',
+            callback = function()
+                write_listings(buf)
+            end,
+        })
+        api.nvim_create_autocmd('TextYankPost', {
+            group = group,
+            buffer = buf,
+            desc = 'dirx: remember yanked entries for a put in another listing',
+            callback = function()
+                remember_yank(buf)
+            end,
+        })
+        api.nvim_create_autocmd({ 'TextChanged', 'InsertLeave' }, {
+            group = group,
+            buffer = buf,
+            desc = 'dirx: name put copies',
+            callback = function()
+                mark_copies(buf)
+            end,
+        })
+        api.nvim_create_autocmd('BufWipeout', {
+            group = group,
+            buffer = buf,
+            desc = 'dirx: forget listing',
+            callback = function()
+                listings[buf] = nil
+            end,
+        })
+        -- gq, not q, so q still records macros in the listing.
+        bmap('n', 'gq', close_output, 'Close shell command output window')
     end,
 })
-
-return M
