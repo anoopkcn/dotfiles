@@ -24,6 +24,7 @@ vim.opt.scrolloff = 8
 vim.opt.scrolloffpad = 1
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 3
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = "number"
@@ -67,7 +68,14 @@ map("n", "<Tab>", ">>", { silent = true, desc = "Indent line" })
 map("n", "<S-Tab>", "<<", { silent = true, desc = "De-indent line" })
 map("v", "<Tab>", ">gv", { silent = true, desc = "Indent selection" })
 
-map('n', '<C-o>', '<Plug>(nvim-dir-vsplit)') -- only works nvim 0.13+
+map('n', '<C-o>', function() -- only works nvim 0.13+
+    -- nvim-dir-vsplit runs a bare :vsplit; force the new window to the right
+    -- so the dir buffer stays on the left
+    local splitright = vim.o.splitright
+    vim.o.splitright = true
+    pcall(vim.api.nvim_feedkeys, vim.keycode('<Plug>(nvim-dir-vsplit)'), 'mx', false)
+    vim.o.splitright = splitright
+end)
 map('n', '<C-p>', '<Plug>(nvim-dir-split)') -- only works nvim 0.13+
 
 vim.api.nvim_create_autocmd({ "TextYankPost", "TextPutPost" }, {
@@ -124,7 +132,7 @@ require("mini.diff").setup({
 map("n", "<leader>G", "<CMD>Git<CR>", { silent = true, desc = "Open :Git Status" })
 vim.keymap.set("n", "<leader>tn", "<CMD>Tatr new<CR>", { desc = "tatr: new task" })
 vim.keymap.set("n", "<leader>tt", "<CMD>Tatr todo<CR>", { desc = "tatr: TODO to task" })
-vim.keymap.set("n", "<leader>tf", "<CMD>Tatr find<CR>", { desc = "tatr: find task" })
+vim.keymap.set("n", "<leader>tf", ":Tatr find ", { desc = "tatr: find task" })
 vim.keymap.set("n", "<leader>tr", "<CMD>Tatr ref<CR>", { desc = "tatr: task references" })
 vim.keymap.set("n", "<leader>ty", "<CMD>Tatr yank<CR>", { desc = "tatr: yank HUID" })
 vim.keymap.set("n", "<leader>tl", "<CMD>Tatr ls<CR>", { desc = "tatr: list tasks" })
