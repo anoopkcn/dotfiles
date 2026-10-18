@@ -237,7 +237,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 
 -- LOCAL PLUGINS
---
 
 
 -- TASK(20261003-233238): figure out what to do with stitch.nvim

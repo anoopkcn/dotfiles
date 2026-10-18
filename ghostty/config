@@ -1,24 +1,15 @@
 # Ghostty Terminal Configuration
 # Ref: https://ghostty.org/docs/config/reference
 
-# theme = slate
 font-family = Berkeley Mono Variable
 window-title-font-family = Berkeley Mono Variable
 font-size = 13
 font-feature = -calt
 
-# window-decoration = none
-# window-decoration = client
 macos-titlebar-style = tabs
 macos-option-as-alt = left
 window-save-state = always
-adjust-cursor-thickness = 2
 progress-style = false
-
-# mouse-hide-while-typing = true
-# macos-non-native-fullscreen = visible-menu
-# macos-titlebar-proxy-icon = hidden
-# window-padding-balance=true
 
 keybind = super+s>r=reload_config
 keybind = super+s>x=close_surface
