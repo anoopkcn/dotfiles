@@ -9,8 +9,8 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '*'
 zstyle ':vcs_info:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats 'git:%F{blue}(%b%F{yellow}%u%F{green}%c%F{blue})%f'
-zstyle ':vcs_info:git:*' actionformats 'git:%F{blue}(%b|%a%F{yellow}%u%F{green}%c%F{blue})%f'
+zstyle ':vcs_info:git:*' formats 'git:%F{blue}%b%F{yellow}%u%F{green}%c%f'
+zstyle ':vcs_info:git:*' actionformats 'git:%F{blue}%b|%a%F{yellow}%u%F{green}%c%f'
 
 # Command duration: shown on the info line when the last command took >= 5s
 _prompt_timer_start() { _PROMPT_CMD_START=$EPOCHREALTIME }
