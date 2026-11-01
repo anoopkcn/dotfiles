@@ -13,7 +13,15 @@ __prompt_command() {
     local c_cyan='\[\e[36m\]'
     local c_red='\[\e[31m\]'
     local c_magenta='\[\e[35m\]'
+    local c_yellow='\[\e[33m\]'
     local c_reset='\[\e[0m\]'
+
+    # user@host segment, only over SSH, so a remote shell is never mistaken
+    # for a local one; local prompts stay minimal
+    local host_segment=""
+    if [ -n "${SSH_CONNECTION:-}" ]; then
+        host_segment="${c_yellow}\u@\h${c_reset} "
+    fi
 
     # environment segment: venv > conda > bare VIRTUAL_ENV
     local env_text=""
@@ -41,7 +49,7 @@ __prompt_command() {
         pchar="${c_red}\$${c_reset}"
     fi
 
-    PS1="[${c_cyan}\w${c_reset}${env_segment}]${pchar} "
+    PS1="[${host_segment}${c_cyan}\w${c_reset}${env_segment}]${pchar} "
 }
 
 PROMPT_COMMAND=__prompt_command
