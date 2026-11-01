@@ -2,7 +2,7 @@
 # %~  -> \w        (cwd with ~ abbreviation)
 # %F{c}..%f        -> \[\e[..m\]..\[\e[0m\]
 # %(?.a.b)         -> exit-status branch, computed in __prompt_command
-# vcs_info segment -> left commented out, mirroring the zsh version
+# git segment      -> git-prompt.sh (__git_ps1), sourced below
 
 __prompt_command() {
     local exit=$?   # MUST be the first statement
@@ -49,13 +49,49 @@ __prompt_command() {
         pchar="${c_red}\$${c_reset}"
     fi
 
-    PS1="[${host_segment}${c_cyan}\w${c_reset}${env_segment}]${pchar} "
+    local ps1_pre="[${host_segment}${c_cyan}\w${c_reset}${env_segment}"
+    local ps1_post="]${pchar} "
+
+    # git segment: in this 3-arg form __git_ps1 sets PS1 itself (needed for
+    # color hints); outside a repo it just sets PS1="$pre$post"
+    if declare -F __git_ps1 >/dev/null; then
+        __git_ps1 "$ps1_pre" "$ps1_post" " git:%s"
+        # git-prompt hardcodes green for the branch; swap in our own color
+        # (detached HEAD keeps git's red)
+        local green_branch="${__git_SOH}${__git_ESC}[32m${__git_STX}\${__git_ps1_branch_name}"
+        local my_branch="${__git_SOH}${__git_ESC}[${GIT_PROMPT_BRANCH_COLOR:-33}m${__git_STX}\${__git_ps1_branch_name}"
+        PS1="${PS1/"$green_branch"/"$my_branch"}"
+    else
+        PS1="${ps1_pre}${ps1_post}"
+    fi
 }
 
-PROMPT_COMMAND=__prompt_command
+# Git segment via git's contrib prompt script (location varies by distro)
+for __git_prompt_file in \
+    /usr/share/git/completion/git-prompt.sh \
+    /usr/lib/git-core/git-sh-prompt \
+    /usr/share/git-core/contrib/completion/git-prompt.sh \
+    /opt/homebrew/etc/bash_completion.d/git-prompt.sh \
+    /usr/local/etc/bash_completion.d/git-prompt.sh; do
+    if [ -f "$__git_prompt_file" ]; then
+        source "$__git_prompt_file"
+        break
+    fi
+done
+unset __git_prompt_file
 
-# Git segment (left disabled, as in the zsh original). Bash has no vcs_info;
-# the closest drop-in is git's contrib prompt:
-#   source /opt/homebrew/etc/bash_completion.d/git-prompt.sh  (if present)
-#   GIT_PS1_SHOWDIRTYSTATE=1
-# then add  $(__git_ps1 ' git:(%s)')  into the PS1 above.
+# Markers after the branch name:
+#   *  unstaged changes      +  staged changes
+#   $  stash present         %  untracked files
+#   <  behind upstream       >  ahead   <> diverged   = in sync
+# plus |MERGING, |REBASE 1/3, etc. during operations.
+# Untracked scan can be slow in huge repos; disable per-repo with
+#   git config bash.showUntrackedFiles false
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWSTASHSTATE=1
+GIT_PS1_SHOWUNTRACKEDFILES=1
+GIT_PS1_SHOWUPSTREAM="auto"
+GIT_PS1_SHOWCOLORHINTS=1
+GIT_PS1_STATESEPARATOR=""
+
+PROMPT_COMMAND=__prompt_command
