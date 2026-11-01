@@ -44,13 +44,21 @@ __prompt_command() {
 
     local pchar
     if [ "$exit" -eq 0 ]; then
-        pchar="${c_cyan}\$${c_reset}"
+        pchar="${c_cyan}❯${c_reset}"
     else
-        pchar="${c_red}\$${c_reset}"
+        pchar="${c_red}❯${c_reset}"
     fi
 
-    local ps1_pre="[${host_segment}${c_cyan}\w${c_reset}${env_segment}"
-    local ps1_post="]${pchar} "
+    # blank line between the previous output and the prompt, except on the
+    # first prompt of the shell
+    local gap="\n"
+    if [ -z "${__prompt_started:-}" ]; then
+        gap=""
+        __prompt_started=1
+    fi
+
+    local ps1_pre="${gap}${host_segment}${c_cyan}\w${c_reset}${env_segment}"
+    local ps1_post="\n${pchar} "
 
     # git segment: in this 3-arg form __git_ps1 sets PS1 itself (needed for
     # color hints); outside a repo it just sets PS1="$pre$post"
@@ -91,5 +99,10 @@ GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWCOLORHINTS=1
 GIT_PS1_STATESEPARATOR=""
+
+# after clearing the screen, the next prompt starts at the top with no gap
+clear() {
+    command clear "$@" && unset __prompt_started
+}
 
 PROMPT_COMMAND=__prompt_command
