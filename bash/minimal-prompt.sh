@@ -83,14 +83,12 @@ unset __git_prompt_file
 # Markers after the branch name:
 #   *  unstaged changes      +  staged changes
 #   $  stash present         %  untracked files
-#   <  behind upstream       >  ahead   <> diverged   = in sync
 # plus |MERGING, |REBASE 1/3, etc. during operations.
 # Untracked scan can be slow in huge repos; disable per-repo with
 #   git config bash.showUntrackedFiles false
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
-GIT_PS1_SHOWUPSTREAM="auto"
 GIT_PS1_SHOWCOLORHINTS=1
 GIT_PS1_STATESEPARATOR=""
 
