@@ -49,6 +49,7 @@ source_file "$BASH_CONFIG_DIR/minimal-prompt.sh"
 source_file "$BASH_CONFIG_DIR/fzf.sh"
 
 alias notes="cd ~/Dropbox/notes"
+alias ls="ls --color"
 alias vim="nvim"
 
 if command -v brew >/dev/null 2>&1; then
