@@ -87,3 +87,33 @@ source_file "$HOME/.cargo/env"
 
 eval "$(zenv hook zsh)"
 
+<<<<<<< Updated upstream
+=======
+pi() {
+    for arg in "$@"; do 
+        case "$arg" in
+            --nvim|--nvim=*) pi-nvim "$@"; return ;;
+        esac
+   done
+   command pi "$@"
+}
+
+claude() {
+    for arg in "$@"; do
+        case "$arg" in
+            --nvim|--nvim=*|--nvim-*)
+                NVIM_AWARE_PROMPT_CONTEXT=full \
+                  NVIM_AWARE_SNAPSHOT_TTL_MS=750 \
+                  claude-nvim "$@"
+                  return ;;
+          esac
+    done
+    command claude "$@"
+}
+
+
+# Pi
+export PATH="/home/akc/.local/share/pi-node/node-v22.23.1-linux-x64/bin:$PATH"
+
+. "$HOME/.local/share/../bin/env"
+>>>>>>> Stashed changes

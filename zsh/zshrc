@@ -67,3 +67,5 @@ export PWCLI="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"
 eval "$(zenv hook zsh)"
 source "$HOME/.cargo/env" 
 source <(fzf --zsh)
+
+. "$HOME/.local/share/../bin/env"
