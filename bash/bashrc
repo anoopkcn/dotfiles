@@ -29,7 +29,7 @@ path_prepend() {
         esac
     done
 }
-path_prepend /Library/TeX/texbin "$HOME/.local/bin" "$HOME/.cargo/bin"
+path_prepend "$HOME/.local/bin" "$HOME/.cargo/bin"
 export PATH
 
 export EDITOR='nvim'
@@ -49,16 +49,7 @@ source_file "$BASH_CONFIG_DIR/minimal-prompt.sh"
 source_file "$BASH_CONFIG_DIR/fzf.sh"
 
 alias notes="cd ~/Dropbox/notes"
-alias ls='ls --color'
-alias rg="rg --hyperlink-format=kitty"
-alias mg="kitten hyperlinked-grep"
-alias icat="kitten icat"
-alias s="kitten ssh"
-alias clip="kitten clipboard"
 alias vim="nvim"
-alias put="kitten transfer --permissions-bypass=hpc_transfer --direction=upload"
-alias get="kitten transfer --permissions-bypass=hpc_transfer"
-alias pbcopy="kitten clipboard"
 
 if command -v brew >/dev/null 2>&1; then
     eval "$(brew shellenv)"
