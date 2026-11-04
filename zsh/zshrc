@@ -5,6 +5,7 @@ setopt extended_glob null_glob
 path=(
     /Users/akc/.local/bin
     /Library/TeX/texbin
+    /Users/akc/.opencode/bin
     $path
 )
 typeset -U path
@@ -52,14 +53,6 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 export BAT_THEME="slate"
-
-
-zo() {
-    local target="${1:-.}"
-    local script
-    script="$(zenv activate "$target")" || return
-    source "$script"
-}
 
 export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 export PWCLI="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"
