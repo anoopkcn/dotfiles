@@ -119,10 +119,16 @@ list_remote_projects() {
     done
 }
 
-# One row per entry, "<host>|<session id or path><TAB><shown text>": a green dot
-# for an open session, the name, then the parent directory dimmed. Open
-# sessions come first; a project whose session is open shares its row. Plain
-# awk, since macOS ships bash 3.2 without assoc arrays.
+# One row per entry: a green dot for an open session, the name, then the parent
+# directory dimmed. The key before the tab is "<host>|session:<id>" for a
+# session and "<host>|dir:<label>|<path>" for a project. Open sessions come
+# first; a project whose session is open shares its row.
+#
+# Each project gets a session label unique on its host: the folder name with
+# . as _ (as before, so existing sessions still match); when two folders share
+# that name, "<parent>/<name>" (develop/foo, work/foo); if that clashes too,
+# the ~ path. A session named plain "foo" then claims neither folder.
+# Plain awk, since macOS ships bash 3.2 without assoc arrays.
 format_rows() {
     awk -F'\t' -v home="$HOME" -v host="$1" '
         function row(key, mark, name, where) {
@@ -133,23 +139,35 @@ format_rows() {
         $1 == "P" && !seen[$2]++ {
             np++; dir = $2; n = split(dir, part, "/"); name = part[n]
             parent = substr(dir, 1, length(dir) - length(name) - 1)
-            if (index(parent, home) == 1) parent = "~" substr(parent, length(home) + 1)
-            key = name; gsub(/\./, "_", key)  # session labels use _ for .
-            pdir[np] = dir; pname[np] = name; ppar[np] = parent; pkey[np] = key
-            if (!(key in parent_of)) { parent_of[key] = parent; shown[key] = name }
+            m = split(parent, pp, "/"); pbase = pp[m]
+            if (index(parent "/", home "/") == 1) parent = "~" substr(parent, length(home) + 1)
+            key = name; gsub(/\./, "_", key); gsub(/\./, "_", pbase)
+            pdir[np] = dir; pname[np] = name; ppar[np] = parent
+            pkey[np] = key; pkey2[np] = pbase "/" key
+            count[key]++
         }
         END {
+            for (i = 1; i <= np; i++) {
+                l = pkey[i]
+                if (count[l] > 1) { l = pkey2[i]; count2[l]++ }
+                plabel[i] = l
+            }
+            for (i = 1; i <= np; i++) {
+                if (count[pkey[i]] > 1 && count2[plabel[i]] > 1) plabel[i] = ppar[i] "/" pname[i]
+                gsub(/\|/, "_", plabel[i])  # | separates the key fields
+                if (!(plabel[i] in by_label)) by_label[plabel[i]] = i
+            }
             for (i = 1; i <= np; i++) if (length(pname[i]) > w) w = length(pname[i])
             for (i = 1; i <= ns; i++) if (length(slabel[i]) > w) w = length(slabel[i])
             if (w > 32) w = 32
             dot = "\033[32m●\033[0m"
             for (i = 1; i <= ns; i++) {
                 l = slabel[i]
-                if (l in parent_of) row(sid[i], dot, shown[l], parent_of[l])
+                if (l in by_label) { j = by_label[l]; row(sid[i], dot, pname[j], ppar[j]) }
                 else row(sid[i], dot, l, "session")
             }
             for (i = 1; i <= np; i++)
-                if (!(pkey[i] in open)) row(pdir[i], " ", pname[i], ppar[i])
+                if (!(plabel[i] in open)) row("dir:" plabel[i] "|" pdir[i], " ", pname[i], ppar[i])
         }'
 }
 
@@ -261,7 +279,8 @@ switch_to() {
 }
 
 if [[ $# -ge 1 ]]; then
-    selected="|$(cd "$1" && pwd)"
+    dir=$(cd "$1" && pwd)
+    selected="|dir:$(basename "$dir" | tr '.|' '__')|$dir"
 else
     RS_STATE=$(mktemp -d "${TMPDIR:-/tmp}/rex-sessionizer.XXXXXX")
     state=$RS_STATE
@@ -310,9 +329,12 @@ if [[ $key == session:* ]]; then
     exit 0
 fi
 
+[[ $key == dir:* ]] || exit 0
+key=${key#dir:}
+name=${key%%|*}  # the label format_rows chose for this folder
+key=${key#*|}    # the folder; it may itself contain |
 rx=(rex)
 [[ -n $host ]] && rx=(rex -S "$host")
-name=$(basename "$key" | tr . _)
 
 # Reuse a session with the same label; Rex does not enforce unique labels.
 session_id=$("${rx[@]}" ls --json | jq -r --arg n "$name" \
