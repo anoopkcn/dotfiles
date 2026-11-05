@@ -6,10 +6,12 @@ rex.action{
   title    = "Open Project Session...",
   keywords = "project sessionizer fzf",
   run      = function(ctx, args)
-    local script = os.getenv("HOME") .. "/.config/rex/rex-sessionizer"
-    local command = { script }
+    -- This server may be creating the pane on another host (a session on a
+    -- remote server), so let the pane's shell expand $HOME there.
+    local command = { "sh", "-c", 'exec "$HOME/.config/rex/rex-sessionizer" "$@"', "rex-sessionizer" }
     if ctx.client_id then
-      command = { script, "--client", ctx.client_id }
+      table.insert(command, "--client")
+      table.insert(command, ctx.client_id)
     end
     local _, err = rex.session.new_layer{
       bounds = { 0.25, 0.15, 0.5, 0.6 },

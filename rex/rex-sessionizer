@@ -36,12 +36,13 @@ fzf_opts=(
 )
 
 switch_to() {
-    # Without --client, rex picks the app itself when exactly one is connected.
-    if [[ -n $client ]]; then
-        rex -C "$client" do session.select session_id="$1"
-    else
-        rex do session.select session_id="$1" 2>/dev/null || echo "session: $1"
+    # The client ID comes from the server that ran the action, which is not
+    # this one for a session on a remote host. Without -C, rex picks the app
+    # itself when exactly one is connected.
+    if [[ -n $client ]] && rex -C "$client" do session.select session_id="$1" 2>/dev/null; then
+        return
     fi
+    rex do session.select session_id="$1" 2>/dev/null || echo "session: $1"
 }
 
 # "S<TAB>id<TAB>label" per open session, leaving out the one this picker runs in.
