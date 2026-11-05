@@ -128,11 +128,18 @@ list_remote_projects() {
 # . as _ (as before, so existing sessions still match); when two folders share
 # that name, "<parent>/<name>" (develop/foo, work/foo); if that clashes too,
 # the ~ path. A session named plain "foo" then claims neither folder.
-# Plain awk, since macOS ships bash 3.2 without assoc arrays.
+# Plain awk, since macOS ships bash 3.2 without assoc arrays. LC_ALL=C makes
+# BSD awk and gawk both count bytes; clen() then skips UTF-8 continuation bytes
+# so names with accents still line up (wide CJK characters stay off by one).
 format_rows() {
-    awk -F'\t' -v home="$HOME" -v host="$1" '
+    LC_ALL=C awk -F'\t' -v home="$HOME" -v host="$1" '
+        function clen(s,   i, n, c) {
+            for (i = 1; i <= length(s); i++) { c = substr(s, i, 1); if (!(c >= "\200" && c < "\300")) n++ }
+            return n
+        }
+        function pad(s,   n) { n = w - clen(s); return n > 0 ? s sprintf("%" n "s", "") : s }
         function row(key, mark, name, where) {
-            printf "%s|%s\t%s %s  \033[90m%s\033[0m\n", host, key, mark, sprintf("%-" w "s", name), where
+            printf "%s|%s\t%s %s  \033[90m%s\033[0m\n", host, key, mark, pad(name), where
         }
         $1 == "H" { home = $2; next }
         $1 == "S" { ns++; sid[ns] = $2; slabel[ns] = $3; open[$3] = 1; next }
@@ -157,8 +164,8 @@ format_rows() {
                 gsub(/\|/, "_", plabel[i])  # | separates the key fields
                 if (!(plabel[i] in by_label)) by_label[plabel[i]] = i
             }
-            for (i = 1; i <= np; i++) if (length(pname[i]) > w) w = length(pname[i])
-            for (i = 1; i <= ns; i++) if (length(slabel[i]) > w) w = length(slabel[i])
+            for (i = 1; i <= np; i++) if (clen(pname[i]) > w) w = clen(pname[i])
+            for (i = 1; i <= ns; i++) if (clen(slabel[i]) > w) w = clen(slabel[i])
             if (w > 32) w = 32
             dot = "\033[32m●\033[0m"
             for (i = 1; i <= ns; i++) {
@@ -246,7 +253,9 @@ case ${1-} in
 --cycle)
     n=0
     while IFS= read -r _; do n=$((n + 1)); done < "$state/hosts"
-    echo $(( ( $(current) + $2 + n ) % n )) > "$state/idx"
+    # Write then rename: a held Tab must not let a callback read a half-written file.
+    echo $(( ( $(current) + $2 + n ) % n )) > "$state/idx.$$"
+    mv -f "$state/idx.$$" "$state/idx"
     exit ;;
 esac
 
@@ -255,6 +264,18 @@ if [[ ${1-} == --client ]]; then
     client=$2
     shift 2
 fi
+
+# Report a failure. The picker's pane closes when the script ends, so there
+# the message waits for a key; run by hand, it just exits.
+picker=""
+fail() {
+    printf '\n  \033[31m%s\033[0m\n' "$*" >&2
+    if [[ -n $picker ]]; then
+        printf '\n  press any key to close' >&2
+        read -rsn1 < /dev/tty || true
+    fi
+    exit 1
+}
 
 # Switch the app to session $2 on host $1 (empty for this machine). The request
 # has to go through the server that owns the session. The client ID comes from
@@ -275,7 +296,9 @@ switch_to() {
     if [[ -n $label ]] && "${rx[@]}" -C "$label" do session.select session_id="$2" 2>/dev/null; then
         return
     fi
-    "${rx[@]}" do session.select session_id="$2" 2>/dev/null || echo "session: $2"
+    local err
+    err=$("${rx[@]}" do session.select session_id="$2" 2>&1 > /dev/null) ||
+        fail "could not switch to $2${1:+ on $1}: ${err:-no reason given}"
 }
 
 if [[ $# -ge 1 ]]; then
@@ -311,6 +334,7 @@ else
     # active. No background bar: no single slot is a readable bar in every
     # theme, so the current line is marked by the pointer and blue bold text.
     # --sync draws once the whole list is in, not an empty list that fills later.
+    picker=1
     selected=$(rows | fzf --border=top --border-label="$(heading)" --border-label-pos=1 \
         --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --info=inline-right --sync \
         --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline' \
@@ -336,12 +360,17 @@ key=${key#*|}    # the folder; it may itself contain |
 rx=(rex)
 [[ -n $host ]] && rx=(rex -S "$host")
 
+where=${host:-this machine}
 # Reuse a session with the same label; Rex does not enforce unique labels.
-session_id=$("${rx[@]}" ls --json | jq -r --arg n "$name" \
-    'first(.sessions[] | select(.label == $n) | .session_id) // empty')
+sessions=$("${rx[@]}" ls --json 2>&1) || fail "could not list sessions on $where: $sessions"
+session_id=$(jq -r --arg n "$name" \
+    'first(.sessions[] | select(.label == $n) | .session_id) // empty' <<< "$sessions")
 
 if [[ -z $session_id ]]; then
-    session_id=$("${rx[@]}" new "$name" -c "$key" --json | jq -er '.session_id')
+    created=$("${rx[@]}" new "$name" -c "$key" --json 2>&1) ||
+        fail "could not create session $name in $key on $where: $created"
+    session_id=$(jq -er '.session_id' <<< "$created") ||
+        fail "rex new gave no session id: $created"
 fi
 
 switch_to "$host" "$session_id"
