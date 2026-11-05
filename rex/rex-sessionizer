@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Pick an open Rex session or a project directory with fzf, then switch the Rex
 # app to it, creating a session for a project if needed. A Rex take on the
-# tmux-sessionizer idea.
+# tmux-sessionizer idea. Tab and Shift-Tab switch between this machine and the
+# hosts in `rex hosts`.
 #
 # Usage: rex-sessionizer [--client CLIENT] [DIR]
 #   --client  Rex app to switch (the init.lua action passes the one that ran it)
-#   DIR       skip the picker and use DIR
+#   DIR       skip the picker and use DIR on this machine
+# fzf calls the script back with --rows, --heading and --cycle N.
 
 set -euo pipefail
 
@@ -13,51 +15,60 @@ set -euo pipefail
 # may not be on PATH yet.
 PATH="/opt/homebrew/bin:${REX_BIN_DIR:+$REX_BIN_DIR:}$PATH"
 
-client=""
-if [[ ${1-} == --client ]]; then
-    client=$2
-    shift 2
-fi
+self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
 # Every directory directly under a root is a candidate project, and so is a
 # git repo one level deeper (grouping folders such as ~/develop/agents-on-hpc).
+# On other hosts only the first level is listed: each level is a server call.
 roots=(~/develop ~/work ~/Dropbox ~/Dropbox/projects)
+remote_roots=('~/develop' '~/work' '~/Dropbox' '~/Dropbox/projects')
 
-# Only ANSI palette slots, so the picker follows whichever Rex theme is active.
-# No background bar: no single slot is a readable bar in every theme, so the
-# current line is marked by the pointer and blue bold text instead.
-fzf_opts=(
-    --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --info=inline-right
-    # Draw once the whole list is in, not an empty list that fills a moment later.
-    --sync
-    --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline'
-    --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8'
-    # Each line is "<session id or path><TAB><shown text>"; only the text is
-    # shown and searched, and only the id or path is printed.
-    --ansi --delimiter=$'\t' --with-nth=2 --accept-nth=1
-)
+# State shared with the callbacks fzf runs: hosts (one label per line, empty
+# for this machine) and idx (the line shown now).
+state=${RS_STATE:-}
 
-switch_to() {
-    # The client ID comes from the server that ran the action, which is not
-    # this one for a session on a remote host. Without -C, rex picks the app
-    # itself when exactly one is connected.
-    if [[ -n $client ]] && rex -C "$client" do session.select session_id="$1" 2>/dev/null; then
-        return
-    fi
-    rex do session.select session_id="$1" 2>/dev/null || echo "session: $1"
+host_label() { sed -n "$(( $(cat "$state/idx") + 1 ))p" "$state/hosts"; }
+
+# "akc@idli" -> "Idli"; this machine -> its own name.
+display_name() {
+    local n=${1#*@}
+    [[ -n $1 ]] || n=$(uname -n)
+    n=${n%%.*}
+    printf '%s%s' "$(printf '%s' "${n:0:1}" | tr '[:lower:]' '[:upper:]')" "${n:1}"
 }
 
-# "S<TAB>id<TAB>label" per open session, leaving out the one this picker runs in.
+# A color slot (2-6) derived from the name, so each machine keeps its color.
+name_color() { echo $(( $(printf '%s' "$1" | cksum | cut -d' ' -f1) % 5 + 2 )); }
+
+# "Sessions on" and every host: the shown one as a colored badge, others dim.
+heading() {
+    local cur i=0 label name out="Sessions on "
+    cur=$(cat "$state/idx")
+    while IFS= read -r label; do
+        name=$(display_name "$label")
+        if [[ $i == "$cur" ]]; then
+            out+=$(printf '\033[1;7;3%sm %s \033[0m' "$(name_color "$name")" "$name")
+        else
+            out+=$(printf '\033[90m %s \033[0m' "$name")
+        fi
+        i=$((i + 1))
+    done < "$state/hosts"
+    (( i > 1 )) && out+=$'  \033[90mtab: switch\033[0m'
+    printf '%s\n' "$out"
+}
+
+# "S<TAB>id<TAB>label" per open session in `rex ls --json` output on stdin,
+# leaving out the one this picker runs in.
 list_sessions() {
-    rex ls --json | jq -r --arg cur "${REX_SESSION-}" \
+    jq -r --arg cur "${REX_SESSION-}" \
         '.sessions[] | select(.session_id != $cur) | "S\t\(.session_id)\t\(.label)"'
 }
 
-# "P<TAB>dir" per project directory.
+# "P<TAB>dir" per project directory on this machine.
 list_projects() {
     local r
     # Roots in the order given, each sorted ignoring case (the C and glibc
-    # locales disagree on case); a dir under two roots is listed once.
+    # locales disagree on case).
     # Unreadable dirs make find fail; with pipefail that would discard the pick.
     for r in "${roots[@]}"; do
         [[ -d $r ]] || continue
@@ -65,19 +76,42 @@ list_projects() {
             find "$r" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
             find "$r" -mindepth 3 -maxdepth 3 -name .git | sed 's|/\.git$||'
         } 2>/dev/null | LC_ALL=C sort -f || true
-    done | awk '!seen[$0]++ { print "P\t" $0 }'
+    done | awk '{ print "P\t" $0 }'
 }
 
-# One row per entry: a green dot for an open session, the name, then the parent
-# directory dimmed. Open sessions come first; a project whose session is open
-# shares its row. Plain awk, since macOS ships bash 3.2 without assoc arrays.
+# "P<TAB>dir" per project directory on host $1 with first session $2, read
+# through the list_dir method of a terminal there, so it needs an open session.
+# Prints "H<TAB>home" first. The roots are listed in parallel.
+list_remote_projects() {
+    local block i=0 r
+    block=$(rex -S "$1" block ls -s "$2" --json |
+        jq -r 'first(.. | objects | select(.creator_name? == "com.superlogical.terminal") | .block_id) // empty')
+    [[ -n $block ]] || return 0
+    for r in "${remote_roots[@]}"; do
+        rex -S "$1" block call -s "$2" -b "$block" list_dir "$(jq -nc --arg p "$r" '{path: $p}')" \
+            > "$state/dir.$i" 2>/dev/null &
+        i=$((i + 1))
+    done
+    wait
+    for (( r = 0; r < i; r++ )); do
+        jq -r 'select(.status == "ok")
+               | "H\t\(.home)", (.path as $p | [.entries[].name] | sort_by(ascii_downcase)[] | "P\t\($p)/\(.)")' \
+            "$state/dir.$r" 2>/dev/null || true
+    done
+}
+
+# One row per entry, "<host>|<session id or path><TAB><shown text>": a green dot
+# for an open session, the name, then the parent directory dimmed. Open
+# sessions come first; a project whose session is open shares its row. Plain
+# awk, since macOS ships bash 3.2 without assoc arrays.
 format_rows() {
-    awk -F'\t' -v home="$HOME" '
+    awk -F'\t' -v home="$HOME" -v host="$1" '
         function row(key, mark, name, where) {
-            printf "%s\t%s %s  \033[90m%s\033[0m\n", key, mark, sprintf("%-" w "s", name), where
+            printf "%s|%s\t%s %s  \033[90m%s\033[0m\n", host, key, mark, sprintf("%-" w "s", name), where
         }
+        $1 == "H" { home = $2; next }
         $1 == "S" { ns++; sid[ns] = $2; slabel[ns] = $3; open[$3] = 1; next }
-        $1 == "P" {
+        $1 == "P" && !seen[$2]++ {
             np++; dir = $2; n = split(dir, part, "/"); name = part[n]
             parent = substr(dir, 1, length(dir) - length(name) - 1)
             if (index(parent, home) == 1) parent = "~" substr(parent, length(home) + 1)
@@ -100,28 +134,102 @@ format_rows() {
         }'
 }
 
-if [[ $# -ge 1 ]]; then
-    selected=$1
-else
-    printf '\033]2;Sessions\007'
-    selected=$({ list_sessions; list_projects; } | format_rows | fzf "${fzf_opts[@]}") || exit 0
+rows() {
+    local h sessions sid
+    h=$(host_label)
+    if [[ -z $h ]]; then
+        { rex ls --json | list_sessions; list_projects; } | format_rows ""
+    elif ! sessions=$(rex -S "$h" --timeout 2s ls --json 2>/dev/null); then
+        printf '%s|\t  \033[90mcannot reach %s\033[0m\n' "$h" "$h"
+    else
+        sid=$(jq -r '.sessions[0].session_id // empty' <<< "$sessions")
+        {
+            list_sessions <<< "$sessions"
+            [[ -z $sid ]] || list_remote_projects "$h" "$sid"
+        } | format_rows "$h"
+    fi
+}
+
+case ${1-} in
+--rows) rows; exit ;;
+--heading) heading; exit ;;
+--cycle)
+    n=$(wc -l < "$state/hosts")
+    echo $(( ( $(cat "$state/idx") + $2 + n ) % n )) > "$state/idx"
+    exit ;;
+esac
+
+client=""
+if [[ ${1-} == --client ]]; then
+    client=$2
+    shift 2
 fi
 
-if [[ $selected == session:* ]]; then
-    switch_to "$selected"
+# Switch the app to session $2 on host $1 (empty for this machine). The request
+# has to go through the server that owns the session. The client ID comes from
+# the server that ran the action, so other servers know the app by its label;
+# without -C, rex picks the app itself when exactly one is connected.
+switch_to() {
+    local rx=(rex) label=""
+    [[ -n $1 ]] && rx=(rex -S "$1")
+    if [[ -n $client ]]; then
+        if [[ -z $1 ]] && rex -C "$client" do session.select session_id="$2" 2>/dev/null; then
+            return
+        fi
+        label=$(rex client ls --json 2>/dev/null |
+            jq -r --arg id "$client" '.clients[] | select(.client_id == $id) | .info.label // empty')
+    fi
+    if [[ -n $label ]] && "${rx[@]}" -C "$label" do session.select session_id="$2" 2>/dev/null; then
+        return
+    fi
+    "${rx[@]}" do session.select session_id="$2" 2>/dev/null || echo "session: $2"
+}
+
+if [[ $# -ge 1 ]]; then
+    selected="|$(cd "$1" && pwd)"
+else
+    RS_STATE=$(mktemp -d "${TMPDIR:-/tmp}/rex-sessionizer.XXXXXX")
+    state=$RS_STATE
+    export RS_STATE
+    trap 'rm -rf "$RS_STATE"' EXIT
+    { echo; rex hosts --json 2>/dev/null | jq -r '.hosts[].host.label' || true; } > "$state/hosts"
+    echo 0 > "$state/idx"
+
+    q=$(printf '%q' "$self")
+    switch_host="+reload($q --rows)+transform-header($q --heading)+first"
+    printf '\033]2;Sessions\007'
+    # Only ANSI palette slots, so the picker follows whichever Rex theme is
+    # active. No background bar: no single slot is a readable bar in every
+    # theme, so the current line is marked by the pointer and blue bold text.
+    # --sync draws once the whole list is in, not an empty list that fills later.
+    selected=$(rows | fzf --header="$(heading)" --header-first \
+        --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --info=inline-right --sync \
+        --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline' \
+        --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8,header:-1' \
+        --ansi --delimiter=$'\t' --with-nth=2 --accept-nth=1 \
+        --bind="tab:execute-silent($q --cycle 1)$switch_host" \
+        --bind="shift-tab:execute-silent($q --cycle -1)$switch_host") || exit 0
+fi
+
+host=${selected%%|*}
+key=${selected#*|}
+[[ -n $key ]] || exit 0
+
+if [[ $key == session:* ]]; then
+    switch_to "$host" "$key"
     exit 0
 fi
 
-[[ -n $selected && -d $selected ]] || exit 0
-selected=$(cd "$selected" && pwd)
-name=$(basename "$selected" | tr . _)
+rx=(rex)
+[[ -n $host ]] && rx=(rex -S "$host")
+name=$(basename "$key" | tr . _)
 
 # Reuse a session with the same label; Rex does not enforce unique labels.
-session_id=$(rex ls --json | jq -r --arg n "$name" \
+session_id=$("${rx[@]}" ls --json | jq -r --arg n "$name" \
     'first(.sessions[] | select(.label == $n) | .session_id) // empty')
 
 if [[ -z $session_id ]]; then
-    session_id=$(rex new "$name" -c "$selected" --json | jq -er '.session_id')
+    session_id=$("${rx[@]}" new "$name" -c "$key" --json | jq -er '.session_id')
 fi
 
-switch_to "$session_id"
+switch_to "$host" "$session_id"
