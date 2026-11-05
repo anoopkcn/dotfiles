@@ -23,37 +23,41 @@ self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]
 roots=(~/develop ~/work ~/Dropbox ~/Dropbox/projects)
 remote_roots=('~/develop' '~/work' '~/Dropbox' '~/Dropbox/projects')
 
-# State shared with the callbacks fzf runs: hosts (one label per line, empty
-# for this machine) and idx (the line shown now).
+# State for one run, shared with the callbacks fzf runs:
+#   hosts       "label|name|color" per host; the label is empty for
+#               this machine
+#   idx         the host shown now, counted from 0
+#   rows.N      host N's rows, complete once rows.N.done exists
+# The callbacks use only shell builtins where they can: each extra process
+# costs a few milliseconds on macOS, and they run on every Tab.
 state=${RS_STATE:-}
 
-host_label() { sed -n "$(( $(cat "$state/idx") + 1 ))p" "$state/hosts"; }
+current() { local i; read -r i < "$state/idx"; echo "$i"; }
 
-# "akc@idli" -> "Idli"; this machine -> its own name.
-display_name() {
+# "akc@idli" -> "Idli"; this machine -> its own name. A color slot (2-6)
+# derived from the name, so each machine keeps its color.
+host_entry() {
     local n=${1#*@}
     [[ -n $1 ]] || n=$(uname -n)
     n=${n%%.*}
-    printf '%s%s' "$(printf '%s' "${n:0:1}" | tr '[:lower:]' '[:upper:]')" "${n:1}"
+    n=$(printf '%s' "${n:0:1}" | tr '[:lower:]' '[:upper:]')${n:1}
+    printf '%s|%s|%s\n' "$1" "$n" $(( $(printf '%s' "$n" | cksum | cut -d' ' -f1) % 5 + 2 ))
 }
-
-# A color slot (2-6) derived from the name, so each machine keeps its color.
-name_color() { echo $(( $(printf '%s' "$1" | cksum | cut -d' ' -f1) % 5 + 2 )); }
 
 # "Sessions on" and every host: the shown one as a colored badge, others dim.
 heading() {
-    local cur i=0 label name out="Sessions on "
-    cur=$(cat "$state/idx")
-    while IFS= read -r label; do
-        name=$(display_name "$label")
+    local cur i=0 label name color part out="Sessions on "
+    read -r cur < "$state/idx"
+    while IFS='|' read -r label name color; do
         if [[ $i == "$cur" ]]; then
-            out+=$(printf '\033[1;7;3%sm %s \033[0m' "$(name_color "$name")" "$name")
+            printf -v part '\033[1;7;3%sm %s \033[0m' "$color" "$name"
         else
-            out+=$(printf '\033[90m %s \033[0m' "$name")
+            printf -v part '\033[90m %s \033[0m' "$name"
         fi
+        out+=$part
         i=$((i + 1))
     done < "$state/hosts"
-    (( i > 1 )) && out+=$'  \033[90mtab: switch\033[0m'
+    if (( i > 1 )); then out+=$'  \033[90mtab: switch\033[0m'; fi
     printf '%s\n' "$out"
 }
 
@@ -83,40 +87,76 @@ list_projects() {
 # through the list_dir method of a terminal there, so it needs an open session.
 # Prints "H<TAB>home" first. The roots are listed in parallel.
 list_remote_projects() {
-    local block i=0 r
+    local block i=0 r pids=() tag=${1//[^A-Za-z0-9]/_}
     block=$(rex -S "$1" block ls -s "$2" --json |
         jq -r 'first(.. | objects | select(.creator_name? == "com.superlogical.terminal") | .block_id) // empty')
     [[ -n $block ]] || return 0
     for r in "${remote_roots[@]}"; do
         rex -S "$1" block call -s "$2" -b "$block" list_dir "$(jq -nc --arg p "$r" '{path: $p}')" \
-            > "$state/dir.$i" 2>/dev/null &
+            > "$state/ls.$tag.$i" 2>/dev/null &
+        pids+=($!)
         i=$((i + 1))
     done
-    wait
+    wait "${pids[@]}"
     for (( r = 0; r < i; r++ )); do
         jq -r 'select(.status == "ok")
                | "H\t\(.home)", (.path as $p | [.entries[].name] | sort_by(ascii_downcase)[] | "P\t\($p)/\(.)")' \
-            "$state/dir.$r" 2>/dev/null || true
+            "$state/ls.$tag.$r" 2>/dev/null || true
     done
+}
+
+# "D<TAB>id<TAB>dir" for session $1: the working folder of the program in the
+# focused pane of its active tab. Uses the caller's rx (the rex command).
+session_dir() {
+    local view block dir
+    view=$("${rx[@]}" session inspect "$1" --json) || return 0
+    block=$(jq -r '.active_window_id as $w
+                   | first(.windows[] | select(.window_id == $w) | .focused_block_id) // empty' <<< "$view")
+    [[ -n $block ]] || return 0
+    dir=$("${rx[@]}" block call -s "$1" -b "$block" process | jq -r '.foreground.cwd // .child.cwd // empty')
+    if [[ -n $dir ]]; then printf 'D\t%s\t%s\n' "$1" "$dir"; fi
+}
+
+# D lines for the sessions in the S lines on stdin whose label matches no
+# project in the P lines, on host $1. Rex lists sessions without a folder, so
+# this costs two calls per session; they run in parallel, and only for these.
+session_dirs() {
+    local rx=(rex) tag=${1:-local} n=0 sid pids=()
+    [[ -n $1 ]] && rx=(rex -S "$1")
+    tag=${tag//[^A-Za-z0-9]/_}
+    for sid in $(awk -F'\t' '
+            $1 == "P" { n = split($2, part, "/"); k = part[n]; gsub(/\./, "_", k); proj[k] = 1 }
+            $1 == "S" { s[++ns] = $2; l[ns] = $3 }
+            END { for (i = 1; i <= ns; i++) if (!(l[i] in proj)) print s[i] }'); do
+        session_dir "$sid" > "$state/cwd.$tag.$n" 2>/dev/null &
+        pids+=($!)
+        n=$((n + 1))
+    done
+    # Only these jobs: the other hosts' prefetches run in the background too.
+    if (( n > 0 )); then wait "${pids[@]}"; fi
+    if (( n > 0 )); then cat "$state/cwd.$tag".* 2>/dev/null || true; fi
 }
 
 # One row per entry, "<host>|<session id or path><TAB><shown text>": a green dot
 # for an open session, the name, then the parent directory dimmed. Open
-# sessions come first; a project whose session is open shares its row. Plain
-# awk, since macOS ships bash 3.2 without assoc arrays.
+# sessions come first; a project whose session is open shares its row, matched
+# by name, or else by the session's folder (D lines). A session in another
+# folder shows that folder. Plain awk, since macOS ships bash 3.2 without
+# assoc arrays.
 format_rows() {
     awk -F'\t' -v home="$HOME" -v host="$1" '
         function row(key, mark, name, where) {
             printf "%s|%s\t%s %s  \033[90m%s\033[0m\n", host, key, mark, sprintf("%-" w "s", name), where
         }
+        function tilde(p) { return index(p "/", home "/") == 1 ? "~" substr(p, length(home) + 1) : p }
         $1 == "H" { home = $2; next }
         $1 == "S" { ns++; sid[ns] = $2; slabel[ns] = $3; open[$3] = 1; next }
+        $1 == "D" { sdir[$2] = $3; next }
         $1 == "P" && !seen[$2]++ {
             np++; dir = $2; n = split(dir, part, "/"); name = part[n]
             parent = substr(dir, 1, length(dir) - length(name) - 1)
-            if (index(parent, home) == 1) parent = "~" substr(parent, length(home) + 1)
             key = name; gsub(/\./, "_", key)  # session labels use _ for .
-            pdir[np] = dir; pname[np] = name; ppar[np] = parent; pkey[np] = key
+            pdir[np] = dir; pname[np] = name; ppar[np] = parent; pkey[np] = key; by_dir[dir] = np
             if (!(key in parent_of)) { parent_of[key] = parent; shown[key] = name }
         }
         END {
@@ -126,36 +166,63 @@ format_rows() {
             dot = "\033[32m●\033[0m"
             for (i = 1; i <= ns; i++) {
                 l = slabel[i]
-                if (l in parent_of) row(sid[i], dot, shown[l], parent_of[l])
+                if (l in parent_of) row(sid[i], dot, shown[l], tilde(parent_of[l]))
+                else if (sid[i] in sdir) {
+                    d = sdir[sid[i]]
+                    if (d in by_dir) hide[by_dir[d]] = 1
+                    n = split(d, part, "/")
+                    # A label naming its folder needs only the parent shown.
+                    if (part[n] == l) d = substr(d, 1, length(d) - length(l) - 1)
+                    row(sid[i], dot, l, tilde(d))
+                }
                 else row(sid[i], dot, l, "session")
             }
             for (i = 1; i <= np; i++)
-                if (!(pkey[i] in open)) row(pdir[i], " ", pname[i], ppar[i])
+                if (!(pkey[i] in open) && !hide[i]) row(pdir[i], " ", pname[i], tilde(ppar[i]))
         }'
 }
 
-rows() {
-    local h sessions sid
-    h=$(host_label)
+# Rows of host label $1 (empty for this machine), fetched now.
+fetch_rows() {
+    local h=$1 sessions sid lines
     if [[ -z $h ]]; then
-        { rex ls --json | list_sessions; list_projects; } | format_rows ""
+        lines=$({ rex ls --json | list_sessions; list_projects; })
     elif ! sessions=$(rex -S "$h" --timeout 2s ls --json 2>/dev/null); then
         printf '%s|\t  \033[90mcannot reach %s\033[0m\n' "$h" "$h"
+        return
     else
         sid=$(jq -r '.sessions[0].session_id // empty' <<< "$sessions")
-        {
+        lines=$({
             list_sessions <<< "$sessions"
             [[ -z $sid ]] || list_remote_projects "$h" "$sid"
-        } | format_rows "$h"
+        })
     fi
+    { printf '%s\n' "$lines"; session_dirs "$h" <<< "$lines"; } | format_rows "$h"
+}
+
+# Fetch host N's rows into the state dir, marking them complete.
+prefetch() {
+    local label
+    label=$(sed -n "$(( $1 + 1 ))p" "$state/hosts" | cut -d'|' -f1)
+    fetch_rows "$label" > "$state/rows.$1" 2>/dev/null || true
+    : > "$state/rows.$1.done"
+}
+
+# Rows of the host shown now, waiting (up to about 5 s) for its prefetch.
+rows() {
+    local i n=0
+    i=$(current)
+    while [[ ! -e $state/rows.$i.done ]] && (( n++ < 100 )); do sleep 0.05; done
+    cat "$state/rows.$i" 2>/dev/null || true
 }
 
 case ${1-} in
 --rows) rows; exit ;;
 --heading) heading; exit ;;
 --cycle)
-    n=$(wc -l < "$state/hosts")
-    echo $(( ( $(cat "$state/idx") + $2 + n ) % n )) > "$state/idx"
+    n=0
+    while IFS= read -r _; do n=$((n + 1)); done < "$state/hosts"
+    echo $(( ( $(current) + $2 + n ) % n )) > "$state/idx"
     exit ;;
 esac
 
@@ -191,12 +258,27 @@ else
     RS_STATE=$(mktemp -d "${TMPDIR:-/tmp}/rex-sessionizer.XXXXXX")
     state=$RS_STATE
     export RS_STATE
-    trap 'rm -rf "$RS_STATE"' EXIT
-    { echo; rex hosts --json 2>/dev/null | jq -r '.hosts[].host.label' || true; } > "$state/hosts"
+    trap 'kill $(jobs -p) 2>/dev/null || true; rm -rf "$RS_STATE"' EXIT
+    {
+        host_entry ""
+        rex hosts --json 2>/dev/null | jq -r '.hosts[].host.label' | while IFS= read -r h; do
+            host_entry "$h"
+        done || true
+    } > "$state/hosts"
     echo 0 > "$state/idx"
 
+    # Other hosts load in the background while this machine's list is shown,
+    # so Tab usually finds them ready. Each run fetches afresh.
+    n=0
+    while IFS= read -r _; do
+        if (( n > 0 )); then prefetch "$n" < /dev/null & fi
+        n=$((n + 1))
+    done < "$state/hosts"
+    prefetch 0
+
     q=$(printf '%q' "$self")
-    switch_host="+reload($q --rows)+transform-header($q --heading)+first"
+    # reload-sync keeps the current list until the other host's rows are in.
+    switch_host="+reload-sync($q --rows)+transform-header($q --heading)+first"
     printf '\033]2;Sessions\007'
     # Only ANSI palette slots, so the picker follows whichever Rex theme is
     # active. No background bar: no single slot is a readable bar in every
