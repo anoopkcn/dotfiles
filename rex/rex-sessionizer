@@ -23,6 +23,11 @@ self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]
 roots=(~/develop ~/work ~/Dropbox ~/Dropbox/projects)
 remote_roots=('~/develop' '~/work' '~/Dropbox' '~/Dropbox/projects')
 
+# Between runs, the project list and the host table are kept in the cache dir
+# and used at once; each run refreshes them in the background for the next one.
+# Folders and hosts rarely change, and sessions are always fetched fresh.
+cache=${XDG_CACHE_HOME:-$HOME/.cache}/rex-sessionizer
+
 # State for one run, shared with the callbacks fzf runs:
 #   hosts       "label|name|color" per host; the label is empty for
 #               this machine
@@ -143,7 +148,7 @@ format_rows() {
 fetch_rows() {
     local h=$1 sessions sid
     if [[ -z $h ]]; then
-        { rex ls --json | list_sessions; list_projects; } | format_rows ""
+        { rex ls --json | list_sessions; cached projects list_projects; } | format_rows ""
     elif ! sessions=$(rex -S "$h" --timeout 2s ls --json 2>/dev/null); then
         printf '%s|\t  \033[90mcannot reach %s\033[0m\n' "$h" "$h"
     else
@@ -171,7 +176,34 @@ rows() {
     cat "$state/rows.$i" 2>/dev/null || true
 }
 
+# "label|name|color" for this machine and each host in `rex hosts`.
+hosts_table() {
+    host_entry ""
+    rex hosts --json 2>/dev/null | jq -r '.hosts[].host.label' | while IFS= read -r h; do
+        host_entry "$h"
+    done || true
+}
+
+# Print cache file $1, or on the first run produce it with command $2 and keep it.
+cached() {
+    if [[ -s $cache/$1 ]]; then
+        cat "$cache/$1"
+    else
+        mkdir -p "$cache"
+        "$2" | tee "$cache/$1.$$"
+        mv -f "$cache/$1.$$" "$cache/$1"
+    fi
+}
+
+# Rebuild the cache for the next run; a rename keeps a reader from seeing half.
+refresh_cache() {
+    mkdir -p "$cache"
+    list_projects > "$cache/projects.$$" && mv -f "$cache/projects.$$" "$cache/projects"
+    hosts_table > "$cache/hosts.$$" && mv -f "$cache/hosts.$$" "$cache/hosts"
+}
+
 case ${1-} in
+--refresh-cache) refresh_cache; exit ;;
 --rows) rows; exit ;;
 --heading) heading; exit ;;
 --cycle)
@@ -214,12 +246,9 @@ else
     state=$RS_STATE
     export RS_STATE
     trap 'kill $(jobs -p) 2>/dev/null || true; rm -rf "$RS_STATE"' EXIT
-    {
-        host_entry ""
-        rex hosts --json 2>/dev/null | jq -r '.hosts[].host.label' | while IFS= read -r h; do
-            host_entry "$h"
-        done || true
-    } > "$state/hosts"
+    # Closing the pane signals the script; exit so the EXIT trap still runs.
+    trap 'exit 130' HUP INT TERM
+    cached hosts hosts_table > "$state/hosts"
     echo 0 > "$state/idx"
 
     # Other hosts load in the background while this machine's list is shown,
@@ -230,6 +259,9 @@ else
         n=$((n + 1))
     done < "$state/hosts"
     prefetch 0
+    # Outside the job list, so closing the picker does not stop it.
+    nohup nice "$self" --refresh-cache > /dev/null 2>&1 < /dev/null &
+    disown
 
     q=$(printf '%q' "$self")
     # reload-sync keeps the current list until the other host's rows are in.
