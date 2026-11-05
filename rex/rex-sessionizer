@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+# Pick an open Rex session or a project directory with fzf, then switch the Rex
+# app to it, creating a session for a project if needed. A Rex take on the
+# tmux-sessionizer idea.
+#
+# Usage: rex-sessionizer [--client CLIENT] [DIR]
+#   --client  Rex app to switch (the init.lua action passes the one that ran it)
+#   DIR       skip the picker and use DIR
+
+set -euo pipefail
+
+# Rex starts this from a login shell that skips ~/.zshrc, so fzf, jq and rex
+# may not be on PATH yet.
+PATH="/opt/homebrew/bin:${REX_BIN_DIR:+$REX_BIN_DIR:}$PATH"
+
+client=""
+if [[ ${1-} == --client ]]; then
+    client=$2
+    shift 2
+fi
+
+# Every directory directly under a root is a candidate project, and so is a
+# git repo one level deeper (grouping folders such as ~/develop/agents-on-hpc).
+roots=(~/develop ~/work ~/Dropbox ~/Dropbox/projects)
+
+# Only ANSI palette slots, so the picker follows whichever Rex theme is active.
+# No background bar: no single slot is a readable bar in every theme, so the
+# current line is marked by the pointer and blue bold text instead.
+fzf_opts=(
+    --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --info=inline-right
+    --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline'
+    --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8'
+    # Each line is "<session id or path><TAB><shown text>"; only the text is
+    # shown and searched, and only the id or path is printed.
+    --ansi --delimiter=$'\t' --with-nth=2 --accept-nth=1
+)
+
+switch_to() {
+    # Without --client, rex picks the app itself when exactly one is connected.
+    if [[ -n $client ]]; then
+        rex -C "$client" do session.select session_id="$1"
+    else
+        rex do session.select session_id="$1" 2>/dev/null || echo "session: $1"
+    fi
+}
+
+# "S<TAB>id<TAB>label" per open session, leaving out the one this picker runs in.
+list_sessions() {
+    rex ls --json | jq -r --arg cur "${REX_SESSION-}" \
+        '.sessions[] | select(.session_id != $cur) | "S\t\(.session_id)\t\(.label)"'
+}
+
+# "P<TAB>dir" per project directory.
+list_projects() {
+    local existing=() r
+    for r in "${roots[@]}"; do [[ -d $r ]] && existing+=("$r"); done
+    # Unreadable dirs make find fail; with pipefail that would discard the pick.
+    {
+        find "${existing[@]}" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
+        find "${existing[@]}" -mindepth 3 -maxdepth 3 -name .git | sed 's|/\.git$||'
+    } 2>/dev/null | sort -u | awk '{ print "P\t" $0 }' || true
+}
+
+# One row per entry: a green dot for an open session, the name, then the parent
+# directory dimmed. Open sessions come first; a project whose session is open
+# shares its row. Plain awk, since macOS ships bash 3.2 without assoc arrays.
+format_rows() {
+    awk -F'\t' -v home="$HOME" '
+        function row(key, mark, name, where) {
+            printf "%s\t%s %s  \033[90m%s\033[0m\n", key, mark, sprintf("%-" w "s", name), where
+        }
+        $1 == "S" { ns++; sid[ns] = $2; slabel[ns] = $3; open[$3] = 1; next }
+        $1 == "P" {
+            np++; dir = $2; n = split(dir, part, "/"); name = part[n]
+            parent = substr(dir, 1, length(dir) - length(name) - 1)
+            if (index(parent, home) == 1) parent = "~" substr(parent, length(home) + 1)
+            key = name; gsub(/\./, "_", key)  # session labels use _ for .
+            pdir[np] = dir; pname[np] = name; ppar[np] = parent; pkey[np] = key
+            if (!(key in parent_of)) { parent_of[key] = parent; shown[key] = name }
+        }
+        END {
+            for (i = 1; i <= np; i++) if (length(pname[i]) > w) w = length(pname[i])
+            for (i = 1; i <= ns; i++) if (length(slabel[i]) > w) w = length(slabel[i])
+            if (w > 32) w = 32
+            dot = "\033[32m●\033[0m"
+            for (i = 1; i <= ns; i++) {
+                l = slabel[i]
+                if (l in parent_of) row(sid[i], dot, shown[l], parent_of[l])
+                else row(sid[i], dot, l, "session")
+            }
+            for (i = 1; i <= np; i++)
+                if (!(pkey[i] in open)) row(pdir[i], " ", pname[i], ppar[i])
+        }'
+}
+
+if [[ $# -ge 1 ]]; then
+    selected=$1
+else
+    printf '\033]2;Sessions\007'
+    selected=$({ list_sessions; list_projects; } | format_rows | fzf "${fzf_opts[@]}") || exit 0
+fi
+
+if [[ $selected == session:* ]]; then
+    switch_to "$selected"
+    exit 0
+fi
+
+[[ -n $selected && -d $selected ]] || exit 0
+selected=$(cd "$selected" && pwd)
+name=$(basename "$selected" | tr . _)
+
+# Reuse a session with the same label; Rex does not enforce unique labels.
+session_id=$(rex ls --json | jq -r --arg n "$name" \
+    'first(.sessions[] | select(.label == $n) | .session_id) // empty')
+
+if [[ -z $session_id ]]; then
+    session_id=$(rex new "$name" -c "$selected" --json | jq -er '.session_id')
+fi
+
+switch_to "$session_id"

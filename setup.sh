@@ -21,6 +21,9 @@ ln -sf $PATH_TO_DOTFILES/nvim  $HOME/.config/nvim
 ln -sf $PATH_TO_DOTFILES/bash/bashrc $HOME/.bashrc
 ln -sf $PATH_TO_DOTFILES/bash/bash_profile $HOME/.bash_profile
 
+# rex — terminal multiplexer config (init.lua)
+ln -sfn $PATH_TO_DOTFILES/rex  $HOME/.config/rex
+
 # kitty — terminal (slate theme)
 ln -sfn $PATH_TO_DOTFILES/kitty  $HOME/.config/kitty
 
