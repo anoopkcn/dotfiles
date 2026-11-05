@@ -105,58 +105,23 @@ list_remote_projects() {
     done
 }
 
-# "D<TAB>id<TAB>dir" for session $1: the working folder of the program in the
-# focused pane of its active tab. Uses the caller's rx (the rex command).
-session_dir() {
-    local view block dir
-    view=$("${rx[@]}" session inspect "$1" --json) || return 0
-    block=$(jq -r '.active_window_id as $w
-                   | first(.windows[] | select(.window_id == $w) | .focused_block_id) // empty' <<< "$view")
-    [[ -n $block ]] || return 0
-    dir=$("${rx[@]}" block call -s "$1" -b "$block" process | jq -r '.foreground.cwd // .child.cwd // empty')
-    if [[ -n $dir ]]; then printf 'D\t%s\t%s\n' "$1" "$dir"; fi
-}
-
-# D lines for the sessions in the S lines on stdin whose label matches no
-# project in the P lines, on host $1. Rex lists sessions without a folder, so
-# this costs two calls per session; they run in parallel, and only for these.
-session_dirs() {
-    local rx=(rex) tag=${1:-local} n=0 sid pids=()
-    [[ -n $1 ]] && rx=(rex -S "$1")
-    tag=${tag//[^A-Za-z0-9]/_}
-    for sid in $(awk -F'\t' '
-            $1 == "P" { n = split($2, part, "/"); k = part[n]; gsub(/\./, "_", k); proj[k] = 1 }
-            $1 == "S" { s[++ns] = $2; l[ns] = $3 }
-            END { for (i = 1; i <= ns; i++) if (!(l[i] in proj)) print s[i] }'); do
-        session_dir "$sid" > "$state/cwd.$tag.$n" 2>/dev/null &
-        pids+=($!)
-        n=$((n + 1))
-    done
-    # Only these jobs: the other hosts' prefetches run in the background too.
-    if (( n > 0 )); then wait "${pids[@]}"; fi
-    if (( n > 0 )); then cat "$state/cwd.$tag".* 2>/dev/null || true; fi
-}
-
 # One row per entry, "<host>|<session id or path><TAB><shown text>": a green dot
 # for an open session, the name, then the parent directory dimmed. Open
-# sessions come first; a project whose session is open shares its row, matched
-# by name, or else by the session's folder (D lines). A session in another
-# folder shows that folder. Plain awk, since macOS ships bash 3.2 without
-# assoc arrays.
+# sessions come first; a project whose session is open shares its row. Plain
+# awk, since macOS ships bash 3.2 without assoc arrays.
 format_rows() {
     awk -F'\t' -v home="$HOME" -v host="$1" '
         function row(key, mark, name, where) {
             printf "%s|%s\t%s %s  \033[90m%s\033[0m\n", host, key, mark, sprintf("%-" w "s", name), where
         }
-        function tilde(p) { return index(p "/", home "/") == 1 ? "~" substr(p, length(home) + 1) : p }
         $1 == "H" { home = $2; next }
         $1 == "S" { ns++; sid[ns] = $2; slabel[ns] = $3; open[$3] = 1; next }
-        $1 == "D" { sdir[$2] = $3; next }
         $1 == "P" && !seen[$2]++ {
             np++; dir = $2; n = split(dir, part, "/"); name = part[n]
             parent = substr(dir, 1, length(dir) - length(name) - 1)
+            if (index(parent, home) == 1) parent = "~" substr(parent, length(home) + 1)
             key = name; gsub(/\./, "_", key)  # session labels use _ for .
-            pdir[np] = dir; pname[np] = name; ppar[np] = parent; pkey[np] = key; by_dir[dir] = np
+            pdir[np] = dir; pname[np] = name; ppar[np] = parent; pkey[np] = key
             if (!(key in parent_of)) { parent_of[key] = parent; shown[key] = name }
         }
         END {
@@ -166,38 +131,28 @@ format_rows() {
             dot = "\033[32m●\033[0m"
             for (i = 1; i <= ns; i++) {
                 l = slabel[i]
-                if (l in parent_of) row(sid[i], dot, shown[l], tilde(parent_of[l]))
-                else if (sid[i] in sdir) {
-                    d = sdir[sid[i]]
-                    if (d in by_dir) hide[by_dir[d]] = 1
-                    n = split(d, part, "/")
-                    # A label naming its folder needs only the parent shown.
-                    if (part[n] == l) d = substr(d, 1, length(d) - length(l) - 1)
-                    row(sid[i], dot, l, tilde(d))
-                }
+                if (l in parent_of) row(sid[i], dot, shown[l], parent_of[l])
                 else row(sid[i], dot, l, "session")
             }
             for (i = 1; i <= np; i++)
-                if (!(pkey[i] in open) && !hide[i]) row(pdir[i], " ", pname[i], tilde(ppar[i]))
+                if (!(pkey[i] in open)) row(pdir[i], " ", pname[i], ppar[i])
         }'
 }
 
 # Rows of host label $1 (empty for this machine), fetched now.
 fetch_rows() {
-    local h=$1 sessions sid lines
+    local h=$1 sessions sid
     if [[ -z $h ]]; then
-        lines=$({ rex ls --json | list_sessions; list_projects; })
+        { rex ls --json | list_sessions; list_projects; } | format_rows ""
     elif ! sessions=$(rex -S "$h" --timeout 2s ls --json 2>/dev/null); then
         printf '%s|\t  \033[90mcannot reach %s\033[0m\n' "$h" "$h"
-        return
     else
         sid=$(jq -r '.sessions[0].session_id // empty' <<< "$sessions")
-        lines=$({
+        {
             list_sessions <<< "$sessions"
             [[ -z $sid ]] || list_remote_projects "$h" "$sid"
-        })
+        } | format_rows "$h"
     fi
-    { printf '%s\n' "$lines"; session_dirs "$h" <<< "$lines"; } | format_rows "$h"
 }
 
 # Fetch host N's rows into the state dir, marking them complete.
