@@ -28,6 +28,8 @@ roots=(~/develop ~/work ~/Dropbox ~/Dropbox/projects)
 # current line is marked by the pointer and blue bold text instead.
 fzf_opts=(
     --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --info=inline-right
+    # Draw once the whole list is in, not an empty list that fills a moment later.
+    --sync
     --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline'
     --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8'
     # Each line is "<session id or path><TAB><shown text>"; only the text is
