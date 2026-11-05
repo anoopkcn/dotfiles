@@ -52,13 +52,17 @@ list_sessions() {
 
 # "P<TAB>dir" per project directory.
 list_projects() {
-    local existing=() r
-    for r in "${roots[@]}"; do [[ -d $r ]] && existing+=("$r"); done
+    local r
+    # Roots in the order given, each sorted ignoring case (the C and glibc
+    # locales disagree on case); a dir under two roots is listed once.
     # Unreadable dirs make find fail; with pipefail that would discard the pick.
-    {
-        find "${existing[@]}" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
-        find "${existing[@]}" -mindepth 3 -maxdepth 3 -name .git | sed 's|/\.git$||'
-    } 2>/dev/null | sort -u | awk '{ print "P\t" $0 }' || true
+    for r in "${roots[@]}"; do
+        [[ -d $r ]] || continue
+        {
+            find "$r" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
+            find "$r" -mindepth 3 -maxdepth 3 -name .git | sed 's|/\.git$||'
+        } 2>/dev/null | LC_ALL=C sort -f || true
+    done | awk '!seen[$0]++ { print "P\t" $0 }'
 }
 
 # One row per entry: a green dot for an open session, the name, then the parent
