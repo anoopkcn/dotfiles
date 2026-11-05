@@ -12,8 +12,8 @@
 set -euo pipefail
 
 # Rex starts this from a login shell that skips ~/.zshrc, so fzf, jq and rex
-# may not be on PATH yet.
-PATH="/opt/homebrew/bin:${REX_BIN_DIR:+$REX_BIN_DIR:}$PATH"
+# may not be on PATH yet. Rex's own bin dir first, so no other `rex` wins.
+PATH="${REX_BIN_DIR:+$REX_BIN_DIR:}/opt/homebrew/bin:$PATH"
 
 self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
@@ -21,6 +21,8 @@ self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]
 # git repo one level deeper (grouping folders such as ~/develop/agents-on-hpc).
 # On other hosts only the first level is listed: each level is a server call.
 roots=(~/develop ~/work ~/Dropbox ~/Dropbox/projects)
+# Quoted on purpose: list_dir expands ~ on the other host.
+# shellcheck disable=SC2088
 remote_roots=('~/develop' '~/work' '~/Dropbox' '~/Dropbox/projects')
 
 # Between runs, the project list and the host table are kept in the cache dir
@@ -50,6 +52,8 @@ host_entry() {
 }
 
 # "Sessions on" and every host: the shown one as a colored badge, others dim.
+# Shown as the label of the top border, the only fzf heading that starts at
+# column 0 (--header is indented to line up with the list text).
 heading() {
     local cur i=0 label name color part out="Sessions on "
     read -r cur < "$state/idx"
@@ -63,14 +67,14 @@ heading() {
         i=$((i + 1))
     done < "$state/hosts"
     if (( i > 1 )); then out+=$'  \033[90mtab: switch\033[0m'; fi
-    printf '%s\n' "$out"
+    printf '%s \n' "$out"  # a space before the border line continues
 }
 
 # "S<TAB>id<TAB>label" per open session in `rex ls --json` output on stdin,
 # leaving out the one this picker runs in.
 list_sessions() {
     jq -r --arg cur "${REX_SESSION-}" \
-        '.sessions[] | select(.session_id != $cur) | "S\t\(.session_id)\t\(.label)"'
+        '.sessions[] | select(.session_id != $cur) | "S\t\(.session_id)\t\(.label // "")"'
 }
 
 # "P<TAB>dir" per project directory on this machine.
@@ -79,34 +83,39 @@ list_projects() {
     # Roots in the order given, each sorted ignoring case (the C and glibc
     # locales disagree on case).
     # Unreadable dirs make find fail; with pipefail that would discard the pick.
+    # -H: a root may be a symlink (~/Dropbox on macOS), which find would not enter.
     for r in "${roots[@]}"; do
         [[ -d $r ]] || continue
         {
-            find "$r" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
-            find "$r" -mindepth 3 -maxdepth 3 -name .git | sed 's|/\.git$||'
+            find -H "$r" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
+            find -H "$r" -mindepth 3 -maxdepth 3 -name .git | sed 's|/\.git$||'
         } 2>/dev/null | LC_ALL=C sort -f || true
     done | awk '{ print "P\t" $0 }'
 }
 
 # "P<TAB>dir" per project directory on host $1 with first session $2, read
 # through the list_dir method of a terminal there, so it needs an open session.
-# Prints "H<TAB>home" first. The roots are listed in parallel.
+# Prints "H<TAB>home" first. The roots are listed in parallel, into files named
+# by the host's index $3. Short timeouts: a stuck host must not hold up Tab.
 list_remote_projects() {
-    local block i=0 r pids=() tag=${1//[^A-Za-z0-9]/_}
-    block=$(rex -S "$1" block ls -s "$2" --json |
+    local block i=0 r pids=()
+    block=$(rex -S "$1" --timeout 2s block ls -s "$2" --json |
         jq -r 'first(.. | objects | select(.creator_name? == "com.superlogical.terminal") | .block_id) // empty')
     [[ -n $block ]] || return 0
     for r in "${remote_roots[@]}"; do
-        rex -S "$1" block call -s "$2" -b "$block" list_dir "$(jq -nc --arg p "$r" '{path: $p}')" \
-            > "$state/ls.$tag.$i" 2>/dev/null &
+        rex -S "$1" --timeout 2s block call -s "$2" -b "$block" list_dir "$(jq -nc --arg p "$r" '{path: $p}')" \
+            > "$state/ls.$3.$i" 2>/dev/null &
         pids+=($!)
         i=$((i + 1))
     done
     wait "${pids[@]}"
+    # list_dir includes hidden directories, which the local find leaves out.
     for (( r = 0; r < i; r++ )); do
         jq -r 'select(.status == "ok")
-               | "H\t\(.home)", (.path as $p | [.entries[].name] | sort_by(ascii_downcase)[] | "P\t\($p)/\(.)")' \
-            "$state/ls.$tag.$r" 2>/dev/null || true
+               | "H\t\(.home)",
+                 (.path as $p | [.entries[].name | select(startswith(".") | not)]
+                  | sort_by(ascii_downcase)[] | "P\t\($p)/\(.)")' \
+            "$state/ls.$3.$r" 2>/dev/null || true
     done
 }
 
@@ -144,36 +153,46 @@ format_rows() {
         }'
 }
 
-# Rows of host label $1 (empty for this machine), fetched now.
+# A dim row with an empty key, so Enter on it does nothing but close the picker.
+note_row() { printf '%s|\t  \033[90m%s\033[0m\n' "$1" "$2"; }
+
+# Rows of host label $1 (empty for this machine) with index $2 and display
+# name $3, fetched now.
 fetch_rows() {
     local h=$1 sessions sid
     if [[ -z $h ]]; then
         { rex ls --json | list_sessions; cached projects list_projects; } | format_rows ""
     elif ! sessions=$(rex -S "$h" --timeout 2s ls --json 2>/dev/null); then
-        printf '%s|\t  \033[90mcannot reach %s\033[0m\n' "$h" "$h"
+        note_row "$h" "cannot reach $3"
     else
         sid=$(jq -r '.sessions[0].session_id // empty' <<< "$sessions")
         {
             list_sessions <<< "$sessions"
-            [[ -z $sid ]] || list_remote_projects "$h" "$sid"
+            [[ -z $sid ]] || list_remote_projects "$h" "$sid" "$2"
         } | format_rows "$h"
+        if [[ -z $sid ]]; then note_row "$h" "no session on $3: open one there to list its projects"; fi
     fi
 }
 
 # Fetch host N's rows into the state dir, marking them complete.
 prefetch() {
-    local label
-    label=$(sed -n "$(( $1 + 1 ))p" "$state/hosts" | cut -d'|' -f1)
-    fetch_rows "$label" > "$state/rows.$1" 2>/dev/null || true
+    local label name rest
+    IFS='|' read -r label name rest < <(sed -n "$(( $1 + 1 ))p" "$state/hosts")
+    fetch_rows "$label" "$1" "$name" > "$state/rows.$1" 2>/dev/null || true
     : > "$state/rows.$1.done"
 }
 
 # Rows of the host shown now, waiting (up to about 5 s) for its prefetch.
 rows() {
-    local i n=0
+    local i n=0 label name rest
     i=$(current)
     while [[ ! -e $state/rows.$i.done ]] && (( n++ < 100 )); do sleep 0.05; done
-    cat "$state/rows.$i" 2>/dev/null || true
+    if [[ -e $state/rows.$i.done ]]; then
+        cat "$state/rows.$i" 2>/dev/null || true
+    else
+        IFS='|' read -r label name rest < <(sed -n "$(( i + 1 ))p" "$state/hosts")
+        note_row "$label" "still loading $name: press Tab to come back"
+    fi
 }
 
 # "label|name|color" for this machine and each host in `rex hosts`.
@@ -223,6 +242,7 @@ fi
 # has to go through the server that owns the session. The client ID comes from
 # the server that ran the action, so other servers know the app by its label;
 # without -C, rex picks the app itself when exactly one is connected.
+# shellcheck disable=SC1010  # `do` is a rex subcommand here, not shell syntax
 switch_to() {
     local rx=(rex) label=""
     [[ -n $1 ]] && rx=(rex -S "$1")
@@ -230,8 +250,9 @@ switch_to() {
         if [[ -z $1 ]] && rex -C "$client" do session.select session_id="$2" 2>/dev/null; then
             return
         fi
+        # || true: a failed lookup must still reach the fallback below.
         label=$(rex client ls --json 2>/dev/null |
-            jq -r --arg id "$client" '.clients[] | select(.client_id == $id) | .info.label // empty')
+            jq -r --arg id "$client" '.clients[] | select(.client_id == $id) | .info.label // empty') || true
     fi
     if [[ -n $label ]] && "${rx[@]}" -C "$label" do session.select session_id="$2" 2>/dev/null; then
         return
@@ -265,16 +286,16 @@ else
 
     q=$(printf '%q' "$self")
     # reload-sync keeps the current list until the other host's rows are in.
-    switch_host="+reload-sync($q --rows)+transform-header($q --heading)+first"
+    switch_host="+reload-sync($q --rows)+transform-border-label($q --heading)+first"
     printf '\033]2;Sessions\007'
     # Only ANSI palette slots, so the picker follows whichever Rex theme is
     # active. No background bar: no single slot is a readable bar in every
     # theme, so the current line is marked by the pointer and blue bold text.
     # --sync draws once the whole list is in, not an empty list that fills later.
-    selected=$(rows | fzf --header="$(heading)" --header-first \
+    selected=$(rows | fzf --border=top --border-label="$(heading)" --border-label-pos=1 \
         --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --info=inline-right --sync \
         --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline' \
-        --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8,header:-1' \
+        --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8,border:8,label:-1' \
         --ansi --delimiter=$'\t' --with-nth=2 --accept-nth=1 \
         --bind="tab:execute-silent($q --cycle 1)$switch_host" \
         --bind="shift-tab:execute-silent($q --cycle -1)$switch_host") || exit 0
