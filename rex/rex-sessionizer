@@ -7,7 +7,7 @@
 # Usage: rex-sessionizer [--client CLIENT] [DIR]
 #   --client  Rex app to switch (the init.lua action passes the one that ran it)
 #   DIR       skip the picker and use DIR on this machine
-# fzf calls the script back with --rows, --heading and --cycle N.
+# fzf calls the script back with --cycle N, and that with --rows when needed.
 
 set -euo pipefail
 
@@ -15,15 +15,16 @@ set -euo pipefail
 # may not be on PATH yet. Rex's own bin dir first, so no other `rex` wins.
 PATH="${REX_BIN_DIR:+$REX_BIN_DIR:}/opt/homebrew/bin:$PATH"
 
-self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+# Builtins only: dirname, basename and $(cd; pwd) cost about 8 ms per run.
+self=${BASH_SOURCE[0]}
+[[ $self == /* ]] || self=$PWD/$self
 
-# Every directory directly under a root is a candidate project, and so is a
-# git repo one level deeper (grouping folders such as ~/develop/agents-on-hpc).
-# On other hosts only the first level is listed: each level is a server call.
-roots=(~/develop ~/work ~/Dropbox ~/Dropbox/projects)
+# Every directory directly under a root is a candidate project; nothing deeper
+# is searched. To list the folders inside a grouping folder, add it as a root.
+roots=(~/develop ~/develop/thirdparty ~/develop/agents-on-hpc ~/work ~/Dropbox ~/Dropbox/projects)
 # Quoted on purpose: list_dir expands ~ on the other host.
 # shellcheck disable=SC2088
-remote_roots=('~/develop' '~/work' '~/Dropbox' '~/Dropbox/projects')
+remote_roots=('~/develop' '~/develop/thirdparty' '~/develop/agents-on-hpc' '~/work' '~/Dropbox' '~/Dropbox/projects')
 
 # Between runs, the project list and the host table are kept in the cache dir
 # and used at once; each run refreshes them in the background for the next one.
@@ -86,10 +87,8 @@ list_projects() {
     # -H: a root may be a symlink (~/Dropbox on macOS), which find would not enter.
     for r in "${roots[@]}"; do
         [[ -d $r ]] || continue
-        {
-            find -H "$r" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
-            find -H "$r" -mindepth 3 -maxdepth 3 -name .git | sed 's|/\.git$||'
-        } 2>/dev/null | LC_ALL=C sort -f || true
+        find -H "$r" -mindepth 1 -maxdepth 1 -type d ! -name '.*' 2>/dev/null |
+            LC_ALL=C sort -f || true
     done | awk '{ print "P\t" $0 }'
 }
 
@@ -249,13 +248,26 @@ refresh_cache() {
 case ${1-} in
 --refresh-cache) refresh_cache; exit ;;
 --rows) rows; exit ;;
---heading) heading; exit ;;
 --cycle)
+    # Moves to the next host and prints the fzf actions that show it, so one
+    # callback per Tab does what three did (each costs a shell and this script).
     n=0
     while IFS= read -r _; do n=$((n + 1)); done < "$state/hosts"
+    read -r i < "$state/idx"
+    i=$(( ( i + $2 + n ) % n ))
     # Write then rename: a held Tab must not let a callback read a half-written file.
-    echo $(( ( $(current) + $2 + n ) % n )) > "$state/idx.$$"
+    echo "$i" > "$state/idx.$$"
     mv -f "$state/idx.$$" "$state/idx"
+    # Rows already in: a plain cat. Otherwise --rows waits for them.
+    # reload-sync keeps the current list until the new rows are in.
+    if [[ -e $state/rows.$i.done ]]; then
+        printf -v reload 'cat %q' "$state/rows.$i"
+    else
+        printf -v reload '%q --rows' "$self"
+    fi
+    # The label goes last in the ":" form, which runs to the end of the string,
+    # so a ")" in a host name cannot end it early.
+    printf 'reload-sync(%s)+first+change-border-label:%s' "$reload" "$(heading)"
     exit ;;
 esac
 
@@ -327,8 +339,6 @@ else
     disown
 
     q=$(printf '%q' "$self")
-    # reload-sync keeps the current list until the other host's rows are in.
-    switch_host="+reload-sync($q --rows)+transform-border-label($q --heading)+first"
     printf '\033]2;Sessions\007'
     # Only ANSI palette slots, so the picker follows whichever Rex theme is
     # active. No background bar: no single slot is a readable bar in every
@@ -340,8 +350,8 @@ else
         --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline' \
         --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8,border:8,label:-1' \
         --ansi --delimiter=$'\t' --with-nth=2 --accept-nth=1 \
-        --bind="tab:execute-silent($q --cycle 1)$switch_host" \
-        --bind="shift-tab:execute-silent($q --cycle -1)$switch_host") || exit 0
+        --bind="tab:transform($q --cycle 1)" \
+        --bind="shift-tab:transform($q --cycle -1)") || exit 0
 fi
 
 host=${selected%%|*}
@@ -362,9 +372,14 @@ rx=(rex)
 
 where=${host:-this machine}
 # Reuse a session with the same label; Rex does not enforce unique labels.
-sessions=$("${rx[@]}" ls --json 2>&1) || fail "could not list sessions on $where: $sessions"
-session_id=$(jq -r --arg n "$name" \
-    'first(.sessions[] | select(.label == $n) | .session_id) // empty' <<< "$sessions")
+# The picker already shows a project with an open session as that session,
+# so only a DIR argument needs the lookup.
+session_id=""
+if [[ -z $picker ]]; then
+    sessions=$("${rx[@]}" ls --json 2>&1) || fail "could not list sessions on $where: $sessions"
+    session_id=$(jq -r --arg n "$name" \
+        'first(.sessions[] | select(.label == $n) | .session_id) // empty' <<< "$sessions")
+fi
 
 if [[ -z $session_id ]]; then
     created=$("${rx[@]}" new "$name" -c "$key" --json 2>&1) ||
