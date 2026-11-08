@@ -77,6 +77,8 @@ map('n', '<C-o>', function() -- only works nvim 0.13+
     vim.o.splitright = splitright
 end)
 map('n', '<C-p>', '<Plug>(nvim-dir-split)') -- only works nvim 0.13+
+-- builtin dir maps - only inside listings; this makes it work from any buffer
+map('n', '-', '<Plug>(nvim-dir-up)')
 
 vim.api.nvim_create_autocmd({ "TextYankPost", "TextPutPost" }, {
     group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),

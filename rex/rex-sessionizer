@@ -52,30 +52,60 @@ host_entry() {
     printf '%s|%s|%s\n' "$1" "$n" $(( $(printf '%s' "$n" | cksum | cut -d' ' -f1) % 5 + 2 ))
 }
 
-# "Sessions on" and every host: the shown one as a colored badge, others dim.
-# Shown as the label of the top border, the only fzf heading that starts at
-# column 0 (--header is indented to line up with the list text).
+# Every host, the shown one as a colored badge and the others dim, then the
+# Tab hint at the right edge. Shown as the label of the top border, the only
+# fzf heading that starts at column 0 (--header is indented to line up with
+# the list text). Padded to the full width, so no border line shows.
 heading() {
-    local cur i=0 label name color part out="Sessions on "
+    local cur i=0 label name color part out="" len=0 cols
     read -r cur < "$state/idx"
     while IFS='|' read -r label name color; do
+        if (( i > 0 )); then out+=$'\033[90m · \033[0m'; len=$((len + 3)); fi
         if [[ $i == "$cur" ]]; then
             printf -v part '\033[1;7;3%sm %s \033[0m' "$color" "$name"
+            len=$((len + ${#name} + 2))
         else
-            printf -v part '\033[90m %s \033[0m' "$name"
+            printf -v part '\033[90m%s\033[0m' "$name"
+            len=$((len + ${#name}))
         fi
         out+=$part
         i=$((i + 1))
     done < "$state/hosts"
-    if (( i > 1 )); then out+=$'  \033[90mtab: switch\033[0m'; fi
-    printf '%s \n' "$out"  # a space before the border line continues
+    if (( i > 1 )); then
+        # fzf passes its width to callbacks; the first call asks the terminal.
+        cols=${FZF_COLUMNS:-}
+        [[ -n $cols ]] || read -r _ cols < <(stty size < /dev/tty 2> /dev/null) || true
+        # 13: the width of the hint.
+        printf -v part '%*s' $(( ${cols:-0} - len - 13 > 2 ? ${cols:-0} - len - 13 : 2 )) ''
+        out+=$part$'\033[90m⇥ switch host\033[0m'
+    fi
+    printf '%s\n' "$out"
 }
 
-# "S<TAB>id<TAB>label" per open session in `rex ls --json` output on stdin,
-# leaving out the one this picker runs in.
+# "S<TAB>id<TAB>label<TAB>current" per open session in `rex ls --json` output
+# on stdin. current is 1 for the session this picker runs in, which only a
+# session on this machine can be.
 list_sessions() {
     jq -r --arg cur "${REX_SESSION-}" \
-        '.sessions[] | select(.session_id != $cur) | "S\t\(.session_id)\t\(.label // "")"'
+        '.sessions[] | "S\t\(.session_id)\t\(.label // "")\t\(if .session_id == $cur then 1 else 0 end)"'
+}
+
+# "T<TAB>id<TAB>tabs" per open session in `rex ls --json` output on stdin, on
+# host $1 (empty for this machine). `rex ls` gives no tab counts, so this runs
+# one `session inspect` per session, in parallel, into files named by the
+# host's index $2. A session that fails to answer just shows no count.
+session_tabs() {
+    local id i=0 k pids=() rx=(rex --timeout 2s)
+    [[ -n $1 ]] && rx=(rex -S "$1" --timeout 2s)
+    while IFS= read -r id; do
+        "${rx[@]}" session inspect "$id" --json > "$state/tabs.$2.$i" 2> /dev/null &
+        pids+=($!)
+        i=$((i + 1))
+    done < <(jq -r '.sessions[].session_id')
+    (( i > 0 )) || return 0
+    wait "${pids[@]}" || true
+    for (( k = 0; k < i; k++ )); do cat "$state/tabs.$2.$k"; done |
+        jq -r '"T\t\(.session_id)\t\(.windows | length)"' 2> /dev/null || true
 }
 
 # "P<TAB>dir" per project directory on this machine.
@@ -118,10 +148,16 @@ list_remote_projects() {
     done
 }
 
-# One row per entry: a green dot for an open session, the name, then the parent
-# directory dimmed. The key before the tab is "<host>|session:<id>" for a
+# Rows in four tab-separated fields: the key, the name (the only field fzf
+# searches), a dim right column, and the right column to show while a query
+# is typed, when the headings are filtered out: there a project shows its
+# parent folder instead of nothing. The key is "<host>|session:<id>" for a
 # session and "<host>|dir:<label>|<path>" for a project. Open sessions come
-# first; a project whose session is open shares its row.
+# first under OPEN, with their tab counts on the right: a green dot for the
+# session the picker runs in, blue for the others. A project whose session is
+# open shares its row. The other projects follow, grouped under a
+# heading per parent folder. A heading's key is just "<host>|" and its text
+# sits in the right column, so a query never matches it and Enter skips it.
 #
 # Each project gets a session label unique on its host: the folder name with
 # . as _ (as before, so existing sessions still match); when two folders share
@@ -137,11 +173,17 @@ format_rows() {
             return n
         }
         function pad(s,   n) { n = w - clen(s); return n > 0 ? s sprintf("%" n "s", "") : s }
-        function row(key, mark, name, where) {
-            printf "%s|%s\t%s %s  \033[90m%s\033[0m\n", host, key, mark, pad(name), where
+        # Three spaces before the mark, so the heading (one space in, from the
+        # tab fzf shows as a space) stands out to the left of the rows.
+        function row(key, mark, name, right, filtered) {
+            printf "%s|%s\t   %s %s\t\033[90m%s\033[0m\t\033[90m%s\033[0m\n", host, key, mark, pad(name), right, filtered
+        }
+        function heading(text, n) {
+            printf "%s|\t\t\033[1;90m%s\033[0m  \033[90m%d\033[0m\t\n", host, text, n
         }
         $1 == "H" { home = $2; next }
-        $1 == "S" { ns++; sid[ns] = $2; slabel[ns] = $3; open[$3] = 1; next }
+        $1 == "S" { ns++; sid[ns] = $2; slabel[ns] = $3; scur[ns] = $4; open[$3] = 1; next }
+        $1 == "T" { tabs[$2] = $3; next }
         $1 == "P" && !seen[$2]++ {
             np++; dir = $2; n = split(dir, part, "/"); name = part[n]
             parent = substr(dir, 1, length(dir) - length(name) - 1)
@@ -166,32 +208,50 @@ format_rows() {
             for (i = 1; i <= np; i++) if (clen(pname[i]) > w) w = clen(pname[i])
             for (i = 1; i <= ns; i++) if (clen(slabel[i]) > w) w = clen(slabel[i])
             if (w > 32) w = 32
-            dot = "\033[32m●\033[0m"
+            here = "\033[32m●\033[0m"; dot = "\033[34m●\033[0m"; ring = "\033[90m○\033[0m"
+            if (ns) heading("OPEN", ns)
             for (i = 1; i <= ns; i++) {
-                l = slabel[i]
-                if (l in by_label) { j = by_label[l]; row(sid[i], dot, pname[j], ppar[j]) }
-                else row(sid[i], dot, l, "session")
+                l = slabel[i]; t = tabs[sid[i]]
+                if (t != "") t = t (t == 1 ? " tab" : " tabs")
+                row(sid[i], scur[i] ? here : dot, (l in by_label) ? pname[by_label[l]] : l, t, t)
             }
-            for (i = 1; i <= np; i++)
-                if (!(plabel[i] in open)) row("dir:" plabel[i] "|" pdir[i], " ", pname[i], ppar[i])
+            # Parent folders in the order the roots came in.
+            for (i = 1; i <= np; i++) {
+                if (plabel[i] in open) continue
+                g = ppar[i]
+                if (!(g in gcount)) gname[++ng] = g
+                gcount[g]++
+            }
+            for (k = 1; k <= ng; k++) {
+                heading(gname[k], gcount[gname[k]])
+                for (i = 1; i <= np; i++)
+                    if (ppar[i] == gname[k] && !(plabel[i] in open))
+                        row("dir:" plabel[i] "|" pdir[i], ring, pname[i], "", gname[k])
+            }
         }'
 }
 
-# A dim row with an empty key, so Enter on it does nothing but close the picker.
-note_row() { printf '%s|\t  \033[90m%s\033[0m\n' "$1" "$2"; }
+# A dim row with an empty key, so Enter on it does nothing.
+note_row() { printf '%s|\t   \033[90m%s\033[0m\t\t\n' "$1" "$2"; }
 
 # Rows of host label $1 (empty for this machine) with index $2 and display
 # name $3, fetched now.
 fetch_rows() {
     local h=$1 sessions sid
     if [[ -z $h ]]; then
-        { rex ls --json | list_sessions; cached projects list_projects; } | format_rows ""
+        sessions=$(rex ls --json)
+        {
+            list_sessions <<< "$sessions"
+            session_tabs "" "$2" <<< "$sessions"
+            cached projects list_projects
+        } | format_rows ""
     elif ! sessions=$(rex -S "$h" --timeout 2s ls --json 2>/dev/null); then
         note_row "$h" "cannot reach $3"
     else
         sid=$(jq -r '.sessions[0].session_id // empty' <<< "$sessions")
         {
             list_sessions <<< "$sessions"
+            session_tabs "$h" "$2" <<< "$sessions"
             [[ -z $sid ]] || list_remote_projects "$h" "$sid" "$2"
         } | format_rows "$h"
         if [[ -z $sid ]]; then note_row "$h" "no session on $3: open one there to list its projects"; fi
@@ -203,6 +263,8 @@ prefetch() {
     local label name rest
     IFS='|' read -r label name rest < <(sed -n "$(( $1 + 1 ))p" "$state/hosts")
     fetch_rows "$label" "$1" "$name" > "$state/rows.$1" 2>/dev/null || true
+    # Headings and notes, which the count on the prompt line leaves out.
+    awk -F'\t' '$1 ~ /\|$/ { n++ } END { print n + 0 }' "$state/rows.$1" > "$state/rows.$1.heads"
     : > "$state/rows.$1.done"
 }
 
@@ -344,12 +406,37 @@ else
     # active. No background bar: no single slot is a readable bar in every
     # theme, so the current line is marked by the pointer and blue bold text.
     # --sync draws once the whole list is in, not an empty list that fills later.
+    #
+    # Headings (keys ending in "|") can't be made unselectable, so the cursor
+    # steps over them: a move that lands on one moves once more (back down at
+    # the top), Enter ignores them, and each finished search with an empty
+    # query puts the cursor on row 2, below the first heading (with a query,
+    # on the top match). The count leaves the shown host's headings out. A
+    # query hides the headings, so while there is one the right column shows
+    # each project's folder (field 4 in place of 3). Callbacks run under
+    # /bin/sh, which starts faster than the login shell fzf would use.
+    # shellcheck disable=SC2016  # $FZF_* expand in the callback shell
+    skip_down='case {1} in *\|) echo down ;; esac'
+    # shellcheck disable=SC2016
+    skip_up='case {1} in *\|) if [ "$FZF_POS" -gt 1 ]; then echo up; else echo down; fi ;; esac'
+    # shellcheck disable=SC2016
+    count='n=$FZF_MATCH_COUNT; if [ -z "$FZF_QUERY" ]; then read -r i < "$RS_STATE/idx"; read -r h 2> /dev/null < "$RS_STATE/rows.$i.heads"; n=$((n - ${h:-0})); fi; echo "$n"'
+    # One --bind each: the ":" form of transform runs to the end of the string.
+    moves=()
+    for k in down ctrl-j ctrl-n; do moves+=(--bind="$k:down+transform:$skip_down"); done
+    for k in up ctrl-k ctrl-p; do moves+=(--bind="$k:up+transform:$skip_up"); done
     picker=1
+    # shellcheck disable=SC2016
     selected=$(rows | fzf --border=top --border-label="$(heading)" --border-label-pos=1 \
-        --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --info=inline-right --sync \
+        --reverse --prompt='❯ ' --pointer='▌' --gutter=' ' --sync \
+        --info=inline-right --info-command="$count" --with-shell='/bin/sh -c' \
         --color='16,fg:-1,bg:-1,bg+:-1,fg+:4:bold,hl:4,hl+:4:bold:underline' \
         --color='pointer:4,prompt:4,query:-1:bold,info:8,separator:8,scrollbar:8,border:8,label:-1' \
-        --ansi --delimiter=$'\t' --with-nth=2 --accept-nth=1 \
+        --ansi --delimiter=$'\t' --with-nth=2,3 --nth=1 --accept-nth=1 --tabstop=1 \
+        "${moves[@]}" \
+        --bind='enter:transform:case {1} in *\|) ;; *) echo accept ;; esac' \
+        --bind='result:transform:if [ -n "$FZF_QUERY" ]; then echo first; else echo "pos(2)"; fi' \
+        --bind='change:transform:if [ -n "$FZF_QUERY" ]; then echo "change-with-nth(2,4)"; else echo "change-with-nth(2,3)"; fi' \
         --bind="tab:transform($q --cycle 1)" \
         --bind="shift-tab:transform($q --cycle -1)") || exit 0
 fi
