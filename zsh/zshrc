@@ -2,6 +2,7 @@
 
 setopt extended_glob null_glob
 [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
 path=(
     /Users/akc/.local/bin
     /Library/TeX/texbin
@@ -30,13 +31,11 @@ path() { echo -e ${PATH//:/\\n} }
 source_file $HOME/.privaterc
 source_file "${ZDOTDIR:-$HOME/.config/zsh}/plugin-manager.sh"
 source_file "${ZDOTDIR:-$HOME/.config/zsh}/minimal-prompt.sh"
-source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
+# source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 
 alias duh="du -h -d 0 [^.]*"
 alias notes="cd ~/Dropbox/notes"
 alias ls="ls --color"
-alias ll='eza --hyperlink'
-alias icat="kitten icat"
 alias vim="nvim"
 
 plugin add "zshzoo/macos"
@@ -52,13 +51,8 @@ fi
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^Xe' edit-command-line
-export BAT_THEME="slate"
 
-export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
-export PWCLI="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"
 
 eval "$(zenv hook zsh)"
-source "$HOME/.cargo/env" 
-source <(fzf --zsh)
 
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
