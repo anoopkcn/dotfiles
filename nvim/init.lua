@@ -92,6 +92,21 @@ vim.filetype.add({ extension = { smd = "markdown" } })
 -- brackets, surround, search_replace and dirx are auto-loaded from plugin/
 vim.keymap.set('n', '<leader>fb', function() require('qfbuffers').open() end, { desc = 'Buffers in quickfix' })
 
+-- Must be registered before vim.pack.add() so it fires on first install
+vim.api.nvim_create_autocmd('PackChanged', {
+    callback = function(ev)
+        local name, kind = ev.data.spec.name, ev.data.kind
+        if name == 'fff.nvim' and (kind == 'install' or kind == 'update') then
+            if not ev.data.active then vim.cmd.packadd('fff.nvim') end
+            require('fff.download').download_or_build_binary()
+        end
+        if name == 'treesitter' and kind == 'update' then
+            if not ev.data.active then vim.cmd.packadd('treesitter') end
+            vim.cmd('TSUpdate')
+        end
+    end,
+})
+
 vim.pack.add({
     {
         src = "https://github.com/nvim-mini/mini.diff",
@@ -139,20 +154,6 @@ vim.keymap.set("n", "<leader>tr", "<CMD>Tatr ref<CR>", { desc = "tatr: task refe
 vim.keymap.set("n", "<leader>ty", "<CMD>Tatr yank<CR>", { desc = "tatr: yank HUID" })
 vim.keymap.set("n", "<leader>tl", "<CMD>Tatr ls<CR>", { desc = "tatr: list tasks" })
 vim.keymap.set("n", "<leader>tg", "<CMD>Tatr goto<CR>", { desc = "tatr: go to task under cursor" })
-
-vim.api.nvim_create_autocmd('PackChanged', {
-    callback = function(ev)
-        local name, kind = ev.data.spec.name, ev.data.kind
-        if name == 'fff.nvim' and (kind == 'install' or kind == 'update') then
-            if not ev.data.active then vim.cmd.packadd('fff.nvim') end
-            require('fff.download').download_or_build_binary()
-        end
-        if name == 'treesitter' and kind == 'update' then
-            if not ev.data.active then vim.cmd.packadd('treesitter') end
-            vim.cmd('TSUpdate')
-        end
-    end,
-})
 
 -- TREESITTER
 local treesitter = require("nvim-treesitter")
