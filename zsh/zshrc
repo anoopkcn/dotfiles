@@ -33,11 +33,6 @@ source_file "${ZDOTDIR:-$HOME/.config/zsh}/plugin-manager.sh"
 source_file "${ZDOTDIR:-$HOME/.config/zsh}/minimal-prompt.sh"
 # source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
 
-alias duh="du -h -d 0 [^.]*"
-alias notes="cd ~/Dropbox/notes"
-alias ls="ls --color"
-alias vim="nvim"
-
 plugin add "zshzoo/macos"
 plugin add "zsh-users/zsh-syntax-highlighting"
 plugin add "anoopkcn/zig-shell-completions"
@@ -56,3 +51,9 @@ bindkey '^Xe' edit-command-line
 eval "$(zenv hook zsh)"
 
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
+
+alias duh="du -h -d 0 [^.]*"
+alias NOTES="/Users/akc/Library/Mobile\ Documents/com~apple~CloudDocs/Documents/notes"
+alias ls="ls --color"
+alias vim="nvim"
+
