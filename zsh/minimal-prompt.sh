@@ -58,11 +58,11 @@ precmd() {
 # user@host sits before the prompt char: with Rex, panes from several machines
 # sit side by side, so every prompt says where it is
 # On macOS the system hostname is unreliable (falls back to a generic "Mac"),
-# so use LocalHostName, shortened: MacBook-Pro-M6 -> MBP-M6
+# so use LocalHostName, shortened and lowercased: MacBook-Pro-M6 -> mbp-m6
 PROMPT_HOST='%m'
 if [[ $OSTYPE == darwin* ]] && (( $+commands[scutil] )); then
     PROMPT_HOST=$(scutil --get LocalHostName 2>/dev/null)
-    PROMPT_HOST=${${PROMPT_HOST/MacBook-Pro/MBP}//\%/%%}
+    PROMPT_HOST=${${(L)PROMPT_HOST/MacBook-Pro/mbp}//\%/%%}
     : ${PROMPT_HOST:=%m}
 fi
 
