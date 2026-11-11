@@ -1,0 +1,48 @@
+{
+  "name": "onehalfdark",
+  "base": "dark-ansi",
+  "overrides": {
+    "text": "#dcdfe4",
+    "inverseText": "#282c34",
+    "inactive": "#5c6370",
+    "subtle": "#373c45",
+    "claude": "#e5c07b",
+    "claudeShimmer": "#f0d49a",
+    "permission": "#c678dd",
+    "remember": "#56b6c2",
+
+    "success": "#98c379",
+    "successShimmer": "#b5d99a",
+    "error": "#e06c75",
+    "errorShimmer": "#ec8b93",
+    "warning": "#e5c07b",
+    "warningShimmer": "#f0d49a",
+    "merged": "#c678dd",
+
+    "promptBorder": "#373c45",
+    "planMode": "#56b6c2",
+    "autoAccept": "#98c379",
+    "bashBorder": "#c678dd",
+    "ide": "#61afef",
+    "fastMode": "#ff5fbf",
+
+    "diffAdded": "#2c3a26",
+    "diffAddedDimmed": "#232c1f",
+    "diffAddedWord": "#4a6b3c",
+    "diffRemoved": "#3a2628",
+    "diffRemovedDimmed": "#2c1e20",
+    "diffRemovedWord": "#6b3a40",
+
+    "userMessageBackground": "#313640",
+    "selectionBg": "#474e5d",
+
+    "red_FOR_SUBAGENTS_ONLY": "#e06c75",
+    "blue_FOR_SUBAGENTS_ONLY": "#61afef",
+    "green_FOR_SUBAGENTS_ONLY": "#98c379",
+    "yellow_FOR_SUBAGENTS_ONLY": "#e5c07b",
+    "purple_FOR_SUBAGENTS_ONLY": "#c678dd",
+    "orange_FOR_SUBAGENTS_ONLY": "#e5a87b",
+    "pink_FOR_SUBAGENTS_ONLY": "#e06c9f",
+    "cyan_FOR_SUBAGENTS_ONLY": "#56b6c2"
+  }
+}
