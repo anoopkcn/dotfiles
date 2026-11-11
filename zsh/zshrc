@@ -15,6 +15,7 @@ export PATH
 export EDITOR='nvim'
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export CONDA_CHANGEPS1=no
+export NOTES="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Documents/notes"
 
 bindkey -e
 
@@ -43,17 +44,9 @@ if [ -n "$ZSH_VERSION" ]; then
 
 fi
 
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey '^Xe' edit-command-line
-
-
 eval "$(zenv hook zsh)"
 
-[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
-
 alias duh="du -h -d 0 [^.]*"
-alias NOTES="/Users/akc/Library/Mobile\ Documents/com~apple~CloudDocs/Documents/notes"
 alias ls="ls --color"
 alias vim="nvim"
 
