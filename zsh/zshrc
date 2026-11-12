@@ -45,7 +45,7 @@ bindkey '^N' down-line-or-beginning-search
 source_file() {  [ -f "$1" ] && source "$1"  }
 path() { echo -e ${PATH//:/\\n} }
 
-source_file $HOME/.privaterc
+source_file ${HOME}/.privaterc
 source_file "${ZDOTDIR:-$HOME/.config/zsh}/plugin-manager.sh"
 source_file "${ZDOTDIR:-$HOME/.config/zsh}/minimal-prompt.sh"
 # source_file "${ZDOTDIR:-$HOME/.config/zsh}/fzf.sh"
