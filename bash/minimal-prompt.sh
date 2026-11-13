@@ -39,13 +39,13 @@ __prompt_command() {
     # trim surrounding whitespace
     env_text="${env_text#"${env_text%%[![:space:]]*}"}"
     env_text="${env_text%"${env_text##*[![:space:]]}"}"
-    # venv and conda may already wrap the name in parens; add them exactly once
+    # venv and conda may wrap the name in parens; show it bare
     env_text="${env_text#(}"
     env_text="${env_text%)}"
 
     local env_segment=""
     if [ -n "$env_text" ]; then
-        env_segment=" ${c_magenta}(${env_text})${c_reset}"
+        env_segment=" ${c_dim}env:${c_magenta}${env_text}${c_reset}"
     fi
 
     local pchar
@@ -63,14 +63,14 @@ __prompt_command() {
         __prompt_started=1
     fi
 
-    # line 1: [user@host dir] branch (env); line 2: the prompt char
-    local ps1_pre="${gap}${ident}"
-    local ps1_post="${env_segment}\n${pchar} "
+    # line 1: [user@host dir] env:name git:branch; line 2: the prompt char
+    local ps1_pre="${gap}${ident}${env_segment}"
+    local ps1_post="\n${pchar} "
 
     # git segment: in this 3-arg form __git_ps1 sets PS1 itself (needed for
     # color hints); outside a repo it just sets PS1="$pre$post"
     if declare -F __git_ps1 >/dev/null; then
-        __git_ps1 "$ps1_pre" "$ps1_post" " %s"
+        __git_ps1 "$ps1_pre" "$ps1_post" " ${c_dim}git:${c_reset}%s"
         # git-prompt hardcodes green for the branch; swap in our own color
         # (detached HEAD keeps git's red)
         local green_branch="${__git_SOH}${__git_ESC}[32m${__git_STX}\${__git_ps1_branch_name}"
