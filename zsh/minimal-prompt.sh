@@ -3,14 +3,30 @@ setopt prompt_subst
 autoload -Uz vcs_info add-zsh-hook
 zmodload zsh/datetime
 
-# Git segment: branch, then * for unstaged and + for staged changes.
+# Git segment: branch, then the same markers bash's git-prompt.sh shows:
+#   *  unstaged changes      +  staged changes
+#   $  stash present         %  untracked files
 # `enable git` keeps vcs_info from probing every VCS backend on each prompt.
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '*'
 zstyle ':vcs_info:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats '%F{8}git:%F{blue}%b%F{yellow}%u%F{green}%c%f'
-zstyle ':vcs_info:git:*' actionformats '%F{8}git:%F{blue}%b|%a%F{yellow}%u%F{green}%c%f'
+zstyle ':vcs_info:git:*' formats '%F{8}git:%F{blue}%b%F{yellow}%u%F{green}%c%m%f'
+zstyle ':vcs_info:git:*' actionformats '%F{8}git:%F{blue}%b|%a%F{yellow}%u%F{green}%c%m%f'
+zstyle ':vcs_info:git*+set-message:*' hooks git-stash git-untracked
+
+# Stash and untracked go in %m, using the same checks as git-prompt.sh
++vi-git-stash() {
+    git rev-parse --verify --quiet refs/stash >/dev/null &&
+        hook_com[misc]+='%B%F{blue}$%b'
+}
++vi-git-untracked() {
+    # same opt-out as bash: git config bash.showUntrackedFiles false
+    [[ $(git config --bool bash.showUntrackedFiles) != false ]] &&
+        git ls-files --others --exclude-standard --directory --no-empty-directory \
+            --error-unmatch -- ':/*' >/dev/null 2>&1 &&
+        hook_com[misc]+='%F{red}%%'
+}
 
 # Command duration: shown on the info line when the last command took >= 5s
 _prompt_timer_start() { _PROMPT_CMD_START=$EPOCHREALTIME }

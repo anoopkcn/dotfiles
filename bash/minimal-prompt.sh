@@ -76,6 +76,10 @@ __prompt_command() {
         local green_branch="${__git_SOH}${__git_ESC}[32m${__git_STX}\${__git_ps1_branch_name}"
         local my_branch="${__git_SOH}${__git_ESC}[${GIT_PROMPT_BRANCH_COLOR:-34}m${__git_STX}\${__git_ps1_branch_name}"
         PS1="${PS1/"$green_branch"/"$my_branch"}"
+        # unstaged * is yellow in zsh; git-prompt makes it red
+        local red_dirty="${__git_SOH}${__git_ESC}[31m${__git_STX}*"
+        local yellow_dirty="${__git_SOH}${__git_ESC}[33m${__git_STX}*"
+        PS1="${PS1/"$red_dirty"/"$yellow_dirty"}"
     else
         PS1="${ps1_pre}${ps1_post}"
     fi
