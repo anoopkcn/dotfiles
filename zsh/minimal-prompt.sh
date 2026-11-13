@@ -9,8 +9,8 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '*'
 zstyle ':vcs_info:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats 'git:%F{blue}%b%F{yellow}%u%F{green}%c%f'
-zstyle ':vcs_info:git:*' actionformats 'git:%F{blue}%b|%a%F{yellow}%u%F{green}%c%f'
+zstyle ':vcs_info:git:*' formats '%F{blue}%b%F{yellow}%u%F{green}%c%f'
+zstyle ':vcs_info:git:*' actionformats '%F{blue}%b|%a%F{yellow}%u%F{green}%c%f'
 
 # Command duration: shown on the info line when the last command took >= 5s
 _prompt_timer_start() { _PROMPT_CMD_START=$EPOCHREALTIME }
@@ -47,19 +47,24 @@ precmd() {
         env_text="(${VIRTUAL_ENV:t})"
     fi
 
-    env_text="${env_text##[[:space:]]##}"
-    env_text="${env_text%%[[:space:]]##}"
+    # env names have no spaces, so drop all of them (venv's "(name) " style)
+    env_text="${env_text//[[:space:]]/}"
+    # venv and conda may already wrap the name in parens; add them exactly once
+    env_text="${${env_text#\(}%\)}"
 
     if [[ -n "$env_text" ]]; then
-        PROMPT_ENV_SEGMENT="%F{magenta}${env_text//\%/%%}%f"
+        PROMPT_ENV_SEGMENT="%F{magenta}(${env_text//\%/%%})%f"
     fi
 }
 
-# user@host sits before the prompt char: with Rex, panes from several machines
-# sit side by side, so every prompt says where it is. macOS leaves HostName
-# unset (so %m can be a generic "Mac"); use LocalHostName there instead.
+# Line 1: [user@host dir] branch (env) duration; line 2: the prompt char.
+# user@host is always shown: with Rex, panes from several machines sit side
+# by side, so every prompt says where it is. The host turns yellow over SSH.
+# macOS leaves HostName unset (so %m can be a generic "Mac"); use
+# LocalHostName there instead.
 PROMPT_HOST='%m'
 [[ $OSTYPE == darwin* ]] && PROMPT_HOST=${$(scutil --get LocalHostName 2>/dev/null):-%m}
+[[ -n ${SSH_CONNECTION:-} ]] && PROMPT_HOST="%F{yellow}${PROMPT_HOST}%f"
 
-PROMPT='%F{cyan}%~%f${PROMPT_ENV_SEGMENT:+ env:${PROMPT_ENV_SEGMENT}}${vcs_info_msg_0_:+ ${vcs_info_msg_0_}}${PROMPT_DURATION_SEGMENT:+ ${PROMPT_DURATION_SEGMENT}}
-%F{yellow}%n@${PROMPT_HOST}%f %(?.%F{cyan}❯%f.%F{red}❯%f) '
+PROMPT='%F{8}[%f%n%F{8}@%f${PROMPT_HOST} %F{cyan}%1~%f%F{8}]%f${vcs_info_msg_0_:+ ${vcs_info_msg_0_}}${PROMPT_ENV_SEGMENT:+ ${PROMPT_ENV_SEGMENT}}${PROMPT_DURATION_SEGMENT:+ ${PROMPT_DURATION_SEGMENT}}
+%(?.%F{cyan}❯%f.%F{red}❯%f) '

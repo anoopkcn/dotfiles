@@ -1,5 +1,5 @@
 # PROMPT 
-# %~  -> \w        (cwd with ~ abbreviation)
+# %1~ -> \W        (cwd basename, ~ at home)
 # %F{c}..%f        -> \[\e[..m\]..\[\e[0m\]
 # %(?.a.b)         -> exit-status branch, computed in __prompt_command
 # git segment      -> git-prompt.sh (__git_ps1), sourced below
@@ -16,12 +16,15 @@ __prompt_command() {
     local c_yellow='\[\e[33m\]'
     local c_reset='\[\e[0m\]'
 
-    # user@host segment, only over SSH, so a remote shell is never mistaken
-    # for a local one; local prompts stay minimal
-    local host_segment=""
+    local c_dim='\[\e[90m\]'
+
+    # [user@host dir], always shown so panes from several machines can be
+    # told apart; the host turns yellow over SSH
+    local host="\h"
     if [ -n "${SSH_CONNECTION:-}" ]; then
-        host_segment="${c_yellow}\u@\h${c_reset} "
+        host="${c_yellow}\h${c_reset}"
     fi
+    local ident="${c_dim}[${c_reset}\u${c_dim}@${c_reset}${host} ${c_cyan}\W${c_reset}${c_dim}]${c_reset}"
 
     # environment segment: venv > conda > bare VIRTUAL_ENV
     local env_text=""
@@ -36,10 +39,13 @@ __prompt_command() {
     # trim surrounding whitespace
     env_text="${env_text#"${env_text%%[![:space:]]*}"}"
     env_text="${env_text%"${env_text##*[![:space:]]}"}"
+    # venv and conda may already wrap the name in parens; add them exactly once
+    env_text="${env_text#(}"
+    env_text="${env_text%)}"
 
     local env_segment=""
     if [ -n "$env_text" ]; then
-        env_segment=" env:${c_magenta}${env_text}${c_reset}"
+        env_segment=" ${c_magenta}(${env_text})${c_reset}"
     fi
 
     local pchar
@@ -57,17 +63,18 @@ __prompt_command() {
         __prompt_started=1
     fi
 
-    local ps1_pre="${gap}${host_segment}${c_cyan}\w${c_reset}${env_segment}"
-    local ps1_post="\n${pchar} "
+    # line 1: [user@host dir] branch (env); line 2: the prompt char
+    local ps1_pre="${gap}${ident}"
+    local ps1_post="${env_segment}\n${pchar} "
 
     # git segment: in this 3-arg form __git_ps1 sets PS1 itself (needed for
     # color hints); outside a repo it just sets PS1="$pre$post"
     if declare -F __git_ps1 >/dev/null; then
-        __git_ps1 "$ps1_pre" "$ps1_post" " git:%s"
+        __git_ps1 "$ps1_pre" "$ps1_post" " %s"
         # git-prompt hardcodes green for the branch; swap in our own color
         # (detached HEAD keeps git's red)
         local green_branch="${__git_SOH}${__git_ESC}[32m${__git_STX}\${__git_ps1_branch_name}"
-        local my_branch="${__git_SOH}${__git_ESC}[${GIT_PROMPT_BRANCH_COLOR:-33}m${__git_STX}\${__git_ps1_branch_name}"
+        local my_branch="${__git_SOH}${__git_ESC}[${GIT_PROMPT_BRANCH_COLOR:-34}m${__git_STX}\${__git_ps1_branch_name}"
         PS1="${PS1/"$green_branch"/"$my_branch"}"
     else
         PS1="${ps1_pre}${ps1_post}"
