@@ -57,8 +57,8 @@ precmd() {
     fi
 }
 
-# Line 1: [user@host dir] env:name git:branch duration; line 2: the prompt char.
-# user@host is always shown: with Rex, panes from several machines sit side
+# Line 1: host:dir env:name git:branch duration; line 2: the prompt char.
+# The host is always shown: with Rex, panes from several machines sit side
 # by side, so every prompt says where it is. The host turns yellow over SSH.
 # macOS leaves HostName unset (so %m can be a generic "Mac"); use
 # LocalHostName there instead.
@@ -66,5 +66,5 @@ PROMPT_HOST='%m'
 [[ $OSTYPE == darwin* ]] && PROMPT_HOST=${$(scutil --get LocalHostName 2>/dev/null):-%m}
 [[ -n ${SSH_CONNECTION:-} ]] && PROMPT_HOST="%F{yellow}${PROMPT_HOST}%f"
 
-PROMPT='%F{8}[%f%n%F{8}@%f${PROMPT_HOST} %F{cyan}%1~%f%F{8}]%f${PROMPT_ENV_SEGMENT:+ ${PROMPT_ENV_SEGMENT}}${vcs_info_msg_0_:+ ${vcs_info_msg_0_}}${PROMPT_DURATION_SEGMENT:+ ${PROMPT_DURATION_SEGMENT}}
+PROMPT='%F{8}${PROMPT_HOST}%F{8}:%F{cyan}%1~%f${PROMPT_ENV_SEGMENT:+ ${PROMPT_ENV_SEGMENT}}${vcs_info_msg_0_:+ ${vcs_info_msg_0_}}${PROMPT_DURATION_SEGMENT:+ ${PROMPT_DURATION_SEGMENT}}
 %(?.%F{cyan}❯%f.%F{red}❯%f) '

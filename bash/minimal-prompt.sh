@@ -18,13 +18,13 @@ __prompt_command() {
 
     local c_dim='\[\e[90m\]'
 
-    # [user@host dir], always shown so panes from several machines can be
+    # host:dir, always shown so panes from several machines can be
     # told apart; the host turns yellow over SSH
     local host="\h"
     if [ -n "${SSH_CONNECTION:-}" ]; then
-        host="${c_yellow}\h${c_reset}"
+        host="${c_yellow}\h"
     fi
-    local ident="${c_dim}[${c_reset}\u${c_dim}@${c_reset}${host} ${c_cyan}\W${c_reset}${c_dim}]${c_reset}"
+    local ident="${c_dim}${host}${c_dim}:${c_cyan}\W${c_reset}"
 
     # environment segment: venv > conda > bare VIRTUAL_ENV
     local env_text=""
@@ -63,7 +63,7 @@ __prompt_command() {
         __prompt_started=1
     fi
 
-    # line 1: [user@host dir] env:name git:branch; line 2: the prompt char
+    # line 1: host:dir env:name git:branch; line 2: the prompt char
     local ps1_pre="${gap}${ident}${env_segment}"
     local ps1_post="\n${pchar} "
 
