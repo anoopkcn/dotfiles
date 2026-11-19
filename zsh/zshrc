@@ -6,7 +6,7 @@ setopt extended_glob null_glob
 path=(
     /Users/akc/.local/bin
     /Library/TeX/texbin
-    /Users/akc/.opencode/bin
+    # /Users/akc/.opencode/bin
     $path
 )
 typeset -U path
@@ -41,6 +41,12 @@ bindkey '^[OA' up-line-or-beginning-search
 bindkey '^[OB' down-line-or-beginning-search
 bindkey '^P' up-line-or-beginning-search
 bindkey '^N' down-line-or-beginning-search
+
+# Ctrl-X Ctrl-E (or Ctrl-X e) opens the current command line in $EDITOR
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
+bindkey '^Xe' edit-command-line
 
 source_file() {  [ -f "$1" ] && source "$1"  }
 path() { echo -e ${PATH//:/\\n} }
