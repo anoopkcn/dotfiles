@@ -237,8 +237,9 @@ cmd_refresh() {
 
 # This machine's rows, fetched now, and the other hosts' rows as the last
 # refresh left them, since a host that is down would hold the palette up for
-# its whole timeout. One JSON list: open sessions first, then projects, then
-# notes about hosts that failed. The host name goes in detail only when there
+# its whole timeout. One JSON list: open sessions first, the current one last
+# among them so the one used before sits on top, then projects, then notes
+# about hosts that failed. The host name goes in detail only when there
 # is more than one host.
 cmd_list() {
     [[ -z ${1-} ]] || REX_SESSION=$1
@@ -250,12 +251,13 @@ cmd_list() {
         fetch_rows "" 0 "$name"
         cat "$cache/remote" 2>/dev/null || true
     } |
-        jq -Rn --argjson hosts "$(grep -c . <<< "$hosts")" '
+        jq -Rn --argjson hosts "$(grep -c . <<< "$hosts")" --arg cur "|${REX_SESSION-}" '
             [inputs | split("\t")
              | {id: .[0], icon: .[1], title: .[2], subtitle: .[3], detail: .[4]}
              | if $hosts == 1 then del(.detail) else . end
              | with_entries(select(.value != null and .value != ""))]
-            | sort_by(if .icon == "terminal" then 0 elif .icon == "folder" then 1 else 2 end)'
+            | sort_by(if .id == $cur then 1 elif .icon == "terminal" then 0
+                      elif .icon == "folder" then 2 else 3 end)'
 }
 
 # Switch the app to session $2 on host $1 (empty for this machine). The request
