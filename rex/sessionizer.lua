@@ -270,7 +270,7 @@ local function list(current)
     end
   end
 
-  local icons = { session = "terminal", current = "terminal", project = "folder", note = "server" }
+  local icons = { session = "code", current = "code", project = "folder", note = "server" }
   local items, by_id = {}, {}
   for _, kind in ipairs{ "session", "current", "project", "note" } do
     for _, row in ipairs(rows) do
